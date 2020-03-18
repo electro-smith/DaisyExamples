@@ -42,4 +42,11 @@ git submodule update --remote
 ```
 
 
+# Things coming
+
+Along with several more exciting examples, we'll add examples of other integrations and more here.
+
+- gen~ examples with exported code and how to use that.
+- pd export via hvcc examples.
+
 
