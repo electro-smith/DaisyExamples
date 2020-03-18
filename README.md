@@ -1,5 +1,7 @@
 # Daisy_Examples
 
+**THIS REPO IS STILL BEING CONFIGURED AND SET UP, NOT ALL SCRIPTS, ETC WILL WORK YET**
+
 This repo is home to a functional pipeline utilizing libDaisy and DaisySP libraries.
 
 Examples are broken down by hardware platform.
