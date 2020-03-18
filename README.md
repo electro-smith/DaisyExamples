@@ -9,3 +9,37 @@ Included as well are:
 - Scripts for rebuildling the libraries as well as all examples.
 - cube/ folder with .ioc files and example projects that use STM32CubeMX generated code via the STM32 HAL.
 
+
+## Getting Started
+
+First off there are a few ways to clone and initialize the repo (with its submodules).
+
+You can do either of the following:
+
+```
+git clone --recursive https://github.com/Electro-Smith/Daisy_Examples
+```
+
+or 
+
+```
+git clone https://github.com/Electro-Smith/Daisy_Examples
+git submodule update --init
+```
+
+## Updating the submodules
+
+To pull everything for the repo and submodules:
+
+```
+git pull --recurse-submodules
+```
+
+to only pull changes for the submodules:
+
+```
+git submodule update --remote
+```
+
+
+
