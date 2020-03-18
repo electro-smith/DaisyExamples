@@ -115,4 +115,23 @@ LLVM/
 *.suo
 *.user
 .ipynb_checkpoints/
-Transcode Report.txt
+transcode report.txt
+/examples/verb/build
+/examples/bypass/build
+/examples/template/build
+/examples/ledplay/build
+/examples/*/build
+/example_projects/*/build
+/libdaisy/build
+/daisysp/build
+/libdaisy/examples/*/build
+/daisysp/examples/*/build
+hardware_platforms/*/examples/*/build
+hardware_platforms/*/examples/*/VisualGDB/
+hardware_platforms/*/*/*/build
+hardware_platforms/*/*/*/VisualGDB
+daisysp/doc/*.md
+libdaisy/doc/*.md
+core/build
+cube/Daisy_Seed_Rev2/
+
