@@ -2,7 +2,7 @@
 echo "rebuilding examples:"
 start_dir=$PWD
 HW=hardware_platforms
-example_dirs=( daisysp/examples $HW/field/examples $HW/patch/examples $HW/petal/examples $HW/pod/examples $HW/seed/tests )
+example_dirs=( daisysp/examples $HW/field/examples $HW/patch/examples $HW/petal/examples $HW/pod/examples $HW/seed/tests $HW/seed/examples )
 for e in ${example_dirs[@]}; do
     for d in $e/*/; do
         echo "rebuilding $d"
