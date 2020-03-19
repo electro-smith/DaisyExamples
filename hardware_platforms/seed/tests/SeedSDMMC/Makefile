@@ -18,6 +18,6 @@ C_SOURCES = \
 	$(FATFS_DIR)/option/ccsbcs.c \
 
 # Core location, and generic makefile.
-SYSTEM_FILES_DIR = ../../../../core
+SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
 include $(SYSTEM_FILES_DIR)/Makefile
 

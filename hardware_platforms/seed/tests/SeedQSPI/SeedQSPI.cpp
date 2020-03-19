@@ -37,9 +37,9 @@ int main(void)
 //	}
 	dsy_tim_start();
 	uint32_t res;
-	uint32_t val = 0;
-	uint32_t small_buff[1024];
-	uint32_t writesize = 1024 * sizeof(test_buff[0]);
+	//uint32_t val = 0;
+	//uint32_t small_buff[1024];
+	//uint32_t writesize = 1024 * sizeof(test_buff[0]);
 	dur_write_4m	   = 0;
 	// Get into write mode.
 	hw.qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
