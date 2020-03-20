@@ -5,7 +5,6 @@
 using namespace daisy;
 using namespace daisysp;
 
-//static float mtof(float m);
 
 daisy_patch	hw;
 Oscillator	 osc;
