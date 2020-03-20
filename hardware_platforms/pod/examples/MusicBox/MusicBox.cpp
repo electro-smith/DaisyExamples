@@ -10,7 +10,6 @@ Oscillator osc;
 Svf        filt;
 ReverbSc   verb;
 AdEnv      env;
-
 parameter p_xf, p_vamt, p_dec, p_vtime;
 
 const static float scale[7] = {0, 2, 4, 5, 7, 9, 11};
@@ -66,32 +65,30 @@ static void  audio(float *in, float *out, size_t size)
     }
 }
 
-void InitSynth()
+void InitSynth(float samplerate)
 {
     // Synth Parameters.
-    p_xf.init(knob1, 10.0f, 12000.0f, parameter::LOG);
-    p_dec.init(knob1, 0.2f, 5.0f, parameter::EXP);
-    p_vamt.init(knob2, 0.0f, 1.0f, parameter::LINEAR);
-    p_vtime.init(knob2, 0.4f, 0.95f, parameter::LINEAR);
+    p_xf.init(hw.knob1, 10.0f, 12000.0f, parameter::LOG);
+    p_dec.init(hw.knob1, 0.2f, 5.0f, parameter::EXP);
+    p_vamt.init(hw.knob2, 0.0f, 1.0f, parameter::LINEAR);
+    p_vtime.init(hw.knob2, 0.4f, 0.95f, parameter::LINEAR);
     dec = 0.02;
-
     // Init Osc and Nse
-    osc.Init(SAMPLE_RATE);
+    osc.Init(samplerate);
     osc.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
     osc.SetAmp(0.5f);
-    env.Init(SAMPLE_RATE);
+    env.Init(samplerate);
     env.SetCurve(-15.0f);
     env.SetTime(ADENV_SEG_ATTACK, 0.002f);
     env.SetTime(ADENV_SEG_DECAY, 0.6f);
-    filt.Init(SAMPLE_RATE);
+    filt.Init(samplerate);
     filt.SetRes(0.5f);
     filt.SetDrive(0.8f);
     filt.SetFreq(2400.0f);
-    verb.Init(SAMPLE_RATE);
+    verb.Init(samplerate);
     verb.SetFeedback(0.87);
     verb.SetLpFreq(10000.0f);
 }
-
 
 int main(void)
 {
@@ -101,7 +98,7 @@ int main(void)
     hw.Init();
     hw.ClearLeds();
     // Init Synth
-    InitSynth();
+    InitSynth(samplerate);
     // Start Callbacks
     hw.StartAdc();
     hw.StartAudio(audio);
