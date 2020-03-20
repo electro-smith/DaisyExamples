@@ -11,7 +11,7 @@
 
 using namespace daisy;
 
-daisy_pod    hw;
+DaisyPod hw;
 SdmmcHandler sdcard;
 WavPlayer    sampler;
 
@@ -20,9 +20,7 @@ void AudioCallback(float *in, float *out, size_t size)
     int32_t inc;
 
     // Debounce digital controls
-    hw.encoder.Debounce();
-    hw.switches[SW_1].Debounce();
-    hw.switches[SW_2].Debounce();
+    hw.DebounceControls();
 
     // Change file with encoder.
     inc = hw.encoder.Increment();
@@ -45,15 +43,16 @@ void AudioCallback(float *in, float *out, size_t size)
         }
     }
 
-    if(hw.switches[SW_2].RisingEdge())
+    if(hw.button2.RisingEdge())
     {
         sampler.Restart();
     }
 
-    if(hw.switches[SW_1].RisingEdge())
+    if(hw.button1.RisingEdge())
     {
         sampler.SetLooping(!sampler.GetLooping());
-        dsy_gpio_write(&hw.leds[LED_2_B],
+        hw.SetLed(DaisyPod::LED_2_B, sampler.GetLooping());
+        dsy_gpio_write(&hw.leds[DaisyPod::LED_2_B],
                        static_cast<uint8_t>(!sampler.GetLooping()));
     }
 
@@ -68,26 +67,18 @@ int main(void)
 {
     // Init hardware
     size_t blocksize = 48;
-    daisy_pod_init(&hw);
-    // Set all LEDs off:
-    for(size_t i = 0; i < LED_LAST; i++)
-    {
-        dsy_gpio_write(&hw.leds[i], true);
-    }
-
+    hw.Init();
+    hw.ClearLeds();
     sdcard.Init();
     sampler.Init();
     sampler.SetLooping(true);
 
     // SET LED to indicate Looping status.
-    dsy_gpio_write(&hw.leds[LED_2_B],
-                   static_cast<uint8_t>(!sampler.GetLooping()));
-
+    hw.SetLed(DaisyPod::LED_2_B, sampler.GetLooping());
 
     // Init Audio
-    dsy_audio_set_blocksize(DSY_AUDIO_INTERNAL, blocksize);
-    dsy_audio_set_callback(DSY_AUDIO_INTERNAL, AudioCallback);
-    dsy_audio_start(DSY_AUDIO_INTERNAL);
+    hw.SetAudioBlockSize(blocksize);
+    hw.StartAudio(AudioCallback);
     // Loop forever...
     for(;;)
     {
