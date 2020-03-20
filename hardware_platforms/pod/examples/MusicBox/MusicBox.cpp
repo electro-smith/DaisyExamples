@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-daisy_pod  hw;
+DaisyPod  hw;
 Oscillator osc;
 Svf        filt;
 ReverbSc verb;
@@ -26,34 +26,30 @@ static float get_new_note()
     return scale[idx] + (12 * oct);
 }
 
-static void clear_leds()
-{
-    for (int i = 0; i < LED_LAST; i++)
-    {
-        dsy_gpio_write(&hw.leds[i], 1);
-    }
-}
-
-
 static float freq;
 float sig, rawsig, filtsig, sendsig, wetvl, wetvr;
 float xf, vamt, dec, time;
 static void  audio(float *in, float *out, size_t size)
 {
-    hw.switches[SW_1].Debounce();
-    if(hw.switches[SW_1].RisingEdge())
+    hw.button1.Debounce();
+    if(hw.button1.RisingEdge())
     {
         freq = mtof(48.0f + get_new_note());
         osc.SetFreq(freq);
         env.SetTime(ADENV_SEG_DECAY, dec);
         env.Trigger();
     }
-    clear_leds();
-    if(hw.switches[SW_1].Pressed())
+    
+    hw.ClearLeds();
+    
+    if(hw.button1.Pressed())
     {
-        dsy_gpio_write(&hw.leds[LED_2_G], 0);
-        dsy_gpio_write(&hw.leds[LED_2_B], 0);
-    }
+        //dsy_gpio_write(&hw.leds[LED_2_G], 0);
+        hw.SetLed(DaisyPod::LED_2_G, 0);
+        //dsy_gpio_write(&hw.leds[LED_2_B], 0);
+        hw.SetLed(DaisyPod::LED_2_B, 0);
+}
+    
     // Audio Loop
     for(size_t i = 0; i < size; i += 2)
     {
@@ -78,17 +74,20 @@ static void  audio(float *in, float *out, size_t size)
 int main(void)
 {
     // Initialize Hardware
-    //hw.Init();
     AnalogControl knob1, knob2;
-    daisy_pod_init(&hw);
-    clear_leds();
-    knob1.Init(dsy_adc_get_rawptr(KNOB_1), SAMPLE_RATE);
-    knob2.Init(dsy_adc_get_rawptr(KNOB_2), SAMPLE_RATE);
+    //daisy_pod_init(&hw);
+    hw.Init();
+    hw.ClearLeds();
+    
+    //knob1.Init(dsy_adc_get_rawptr(KNOB_1), SAMPLE_RATE);
+    //knob2.Init(dsy_adc_get_rawptr(KNOB_2), SAMPLE_RATE);
+    
     p_xf.init(knob1, 10.0f, 12000.0f, parameter::LOG);
     p_vamt.init(knob2, 0.0f, 1.0f, parameter::LINEAR);
     p_vtime.init(knob2, 0.4f, 0.95f, parameter::LINEAR);
     p_dec.init(knob1, 0.2f, 5.0f, parameter::EXP);
     dec = 0.02;
+    
     // Init Osc and Nse
     dsy_tim_start();
     osc.Init(SAMPLE_RATE);
