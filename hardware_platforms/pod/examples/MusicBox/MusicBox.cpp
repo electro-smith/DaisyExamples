@@ -5,15 +5,13 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPod  hw;
+DaisyPod   hw;
 Oscillator osc;
 Svf        filt;
-ReverbSc verb;
+ReverbSc   verb;
 AdEnv      env;
 
 parameter p_xf, p_vamt, p_dec, p_vtime;
-
-//static float mtof(float m);
 
 const static float scale[7] = {0, 2, 4, 5, 7, 9, 11};
 
@@ -27,11 +25,11 @@ static float get_new_note()
 }
 
 static float freq;
-float sig, rawsig, filtsig, sendsig, wetvl, wetvr;
-float xf, vamt, dec, time;
+float        sig, rawsig, filtsig, sendsig, wetvl, wetvr;
+float        xf, vamt, dec, time;
 static void  audio(float *in, float *out, size_t size)
 {
-    hw.button1.Debounce();
+    hw.DebounceControls();
     if(hw.button1.RisingEdge())
     {
         freq = mtof(48.0f + get_new_note());
@@ -39,24 +37,22 @@ static void  audio(float *in, float *out, size_t size)
         env.SetTime(ADENV_SEG_DECAY, dec);
         env.Trigger();
     }
-    
+
     hw.ClearLeds();
-    
+
     if(hw.button1.Pressed())
     {
-        //dsy_gpio_write(&hw.leds[LED_2_G], 0);
-        hw.SetLed(DaisyPod::LED_2_G, 0);
-        //dsy_gpio_write(&hw.leds[LED_2_B], 0);
-        hw.SetLed(DaisyPod::LED_2_B, 0);
-}
-    
+        hw.SetLed(DaisyPod::LED_2_G, 1);
+        hw.SetLed(DaisyPod::LED_2_B, 1);
+    }
+
     // Audio Loop
     for(size_t i = 0; i < size; i += 2)
     {
         // Get Parameters
-        xf = p_xf.process();
+        xf   = p_xf.process();
         vamt = p_vamt.process();
-        dec = p_dec.process();
+        dec  = p_dec.process();
 
         // Process
         rawsig = osc.Process();
@@ -70,26 +66,16 @@ static void  audio(float *in, float *out, size_t size)
     }
 }
 
-
-int main(void)
+void InitSynth()
 {
-    // Initialize Hardware
-    AnalogControl knob1, knob2;
-    //daisy_pod_init(&hw);
-    hw.Init();
-    hw.ClearLeds();
-    
-    //knob1.Init(dsy_adc_get_rawptr(KNOB_1), SAMPLE_RATE);
-    //knob2.Init(dsy_adc_get_rawptr(KNOB_2), SAMPLE_RATE);
-    
+    // Synth Parameters.
     p_xf.init(knob1, 10.0f, 12000.0f, parameter::LOG);
+    p_dec.init(knob1, 0.2f, 5.0f, parameter::EXP);
     p_vamt.init(knob2, 0.0f, 1.0f, parameter::LINEAR);
     p_vtime.init(knob2, 0.4f, 0.95f, parameter::LINEAR);
-    p_dec.init(knob1, 0.2f, 5.0f, parameter::EXP);
     dec = 0.02;
-    
+
     // Init Osc and Nse
-    dsy_tim_start();
     osc.Init(SAMPLE_RATE);
     osc.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
     osc.SetAmp(0.5f);
@@ -104,22 +90,25 @@ int main(void)
     verb.Init(SAMPLE_RATE);
     verb.SetFeedback(0.87);
     verb.SetLpFreq(10000.0f);
-    // Old style still
-    dsy_audio_set_blocksize(DSY_AUDIO_INTERNAL, 128);
-    dsy_audio_set_callback(DSY_AUDIO_INTERNAL, audio);
-    dsy_audio_start(DSY_AUDIO_INTERNAL);
-    dsy_adc_start();
+}
 
-//    for(uint16_t i = 0; i < daisy_patch::LED_LAST; i++)
-//    {
-//        dsy_led_driver_set_led(i, 0.0f);
-//    }
+
+int main(void)
+{
+    float samplerate;
+    // Initialize Hardware
+    AnalogControl knob1, knob2;
+    hw.Init();
+    hw.ClearLeds();
+    // Init Synth
+    InitSynth();
+    // Start Callbacks
+    hw.StartAdc();
+    hw.StartAudio(audio);
     while(1)
     {
-        dsy_tim_delay_ms(20);
-//        for(uint16_t i = 0; i < daisy_patch::LED_LAST; i++)
-//        {
-//            dsy_led_driver_set_led(i, param_bright.value());
-//        }
+        //  Blink the Seed's on board LED.
+        hw.DelayMs(250);
+        dsy_gpio_toggle(&hw.seed.led);
     }
 }
