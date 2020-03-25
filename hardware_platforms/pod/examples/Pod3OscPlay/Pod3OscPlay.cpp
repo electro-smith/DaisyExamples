@@ -1,32 +1,33 @@
-// # Seed3Dev
+// # Pod3OscPlay
 // ## Description
 // Dev Playground for Seed3
 //
 #include <stdio.h>
 #include <string.h>
 //#include "daisy_seed.h"
-//#include "daisy_pod.h"
-#include "daisy_petal.h"
+#include "daisy_pod.h"
 #include "daisysp.h"
 using namespace daisy;
 
 // Globals
-DaisyPetal          hw;
+DaisyPod            hw;
 daisysp::Oscillator DSY_SDRAM_BSS osc;
 uint8_t                           wave;
 
-float amp, targetamp;
+float bright, amp, targetamp;
 
 void AudioTest(float *in, float *out, size_t size)
 {
-    hw.UpdateAnalogControls();
+    hw.UpdateKnobs();
     hw.DebounceControls();
     float sig, note;
     // One way to get value
-    note = hw.GetKnobValue(DaisyPetal::KNOB_6) * 127.0f;
+    note = hw.GetKnobValue(DaisyPod::KNOB_1) * 127.0f;
+    // Or
+    bright = hw.knob2.Value();
     osc.SetFreq(daisysp::mtof(note));
 
-    // Handle Encoder for waveform switching test.
+	// Handle Encoder for waveform switching test.
     int32_t inc;
     inc = hw.encoder.Increment();
     if(inc > 0)
@@ -42,23 +43,15 @@ void AudioTest(float *in, float *out, size_t size)
     }
 
     // Turn amplitude on when pressing button.
-    targetamp = (hw.encoder.Pressed() || hw.switches[DaisyPetal::SW_5].Pressed()) ? 1.0f : 0.0f;
+    targetamp = hw.encoder.Pressed() ? 1.0f : 0.0f;
 
     for(size_t i = 0; i < size; i += 2)
 
     {
         daisysp::fonepole(amp, targetamp, 0.005f);
         osc.SetAmp(amp);
-        if(hw.switches[DaisyPetal::SW_6].Pressed())
-        {
-            sig    = osc.Process();
-            out[i] = out[i + 1] = sig;
-        }
-        else
-        {
-            out[i] = in[i];
-            out[i + 1] = in[i + 1];
-        }
+        sig    = osc.Process();
+        out[i] = out[i + 1] = sig;
     }
 }
 
@@ -73,13 +66,13 @@ int main(void)
     hw.StartAdc();
     hw.StartAudio(AudioTest);
     hw.ClearLeds();
-    char outbuff[64];
-    size_t size;
-	sprintf(outbuff, "Daisy USB Testing...\r\n");
-	size = strlen(outbuff);
+    bright = 0.0f;
+    hw.led1.Set(0.0f, 0.0f, bright);
+    hw.led2.Set(0.0f, 0.0f, bright);
     for(;;)
     {
-        hw.DelayMs(1000);
-        hw.seed.usb_handle.TransmitExternal((uint8_t*)(outbuff), size);
+        hw.led1.Set(bright, bright, bright);
+        hw.led2.Set(bright, bright, bright);
+        hw.UpdateLeds();
     }
 }
