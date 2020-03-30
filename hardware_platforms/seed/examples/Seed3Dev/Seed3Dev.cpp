@@ -27,12 +27,13 @@ daisysp::Oscillator osc;
 #define NUM_SWARM 70
 daisysp::Oscillator swarm[NUM_SWARM];
 uint8_t             wave;
+daisysp::ReverbSc   verb;
 //SdmmcHandler        sdcard;
 //WavPlayer           sampler;
 
 arm_rfft_fast_instance_f32 fft;
-float                      DSY_SDRAM_BSS fftinbuff[1024];
-float                      DSY_SDRAM_BSS fftoutbuff[1024];
+float DSY_SDRAM_BSS fftinbuff[1024];
+float DSY_SDRAM_BSS fftoutbuff[1024];
 
 float amp, targetamp;
 
@@ -135,12 +136,68 @@ void AudioTest(float *in, float *out, size_t size)
     }
 }
 
+void verbthru(float *in, float *out, size_t size)
+{
+    for(size_t i = 0; i < size; i += 2)
+    {
+        float wetl, wetr, dryl, dryr, sendl, sendr;
+        wetl  = 0.0f;
+        wetr  = 0.0f;
+        dryl  = in[i + 1] * 0.45f;
+        dryr  = in[i] * 0.45f;
+        sendl = dryl * 0.65f;
+        sendr = dryr * 0.65f;
+        verb.Process(sendl, sendr, &wetl, &wetr);
+        out[i]     = (wetl + dryl) * 0.507f;
+        out[i + 1] = (wetr + dryr) * 0.507f;
+        //        out[i]     = in[i + 1];
+        //        out[i + 1] = in[i];
+    }
+}
 void passthru(float *in, float *out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {
         out[i]     = in[i + 1];
         out[i + 1] = in[i];
+    }
+}
+
+uint8_t waveform;
+void    r2d2(float *in, float *out, size_t size)
+{
+    float sig, freq;
+    hw.DebounceControls();
+    hw.UpdateAnalogControls();
+
+    freq = daisysp::mtof(hw.GetKnobValue(DaisyPod::KNOB_1) * 127.0f);
+    amp = (hw.button2.Pressed()) ? 1.0f : 0.0f;
+    int32_t inc;
+    inc = hw.encoder.Increment();
+    uint8_t prev_waveform;
+    prev_waveform = waveform;
+    if(inc > 0)
+    {
+        waveform = (waveform + 1) % daisysp::Oscillator::WAVE_LAST;
+    }
+    else if(inc < 0)
+    {
+        waveform = (waveform + daisysp::Oscillator::WAVE_LAST - 1)
+                   % daisysp::Oscillator::WAVE_LAST;
+    }
+    if(waveform != prev_waveform) 
+    {
+        osc.SetWaveform(waveform);
+    }
+    osc.SetFreq(freq);
+    osc.SetAmp(amp);
+
+    for(size_t i = 0; i < size; i += 2)
+    {
+        osc.SetAmp(amp);
+        sig        = osc.Process();
+        out[i]     = sig;
+        out[i + 1] = sig;
     }
 }
 
@@ -154,31 +211,31 @@ int   main(void)
     samplerate = hw.AudioSampleRate();
     hw.SetAudioBlockSize(128);
     // Init Synthesis
-    osc.Init(samplerate);
-    for(size_t i = 0; i < NUM_SWARM; i++)
-    {
-        swarm[i].Init(samplerate);
-        swarm[i].SetAmp(0.1f);
-        swarm[i].SetFreq(200.0f + (i * 1.0f));
-        swarm[i].SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
-    }
-    del.Init();
-    del.SetDelay(samplerate * 0.25f);
-    arm_rfft_fast_init_f32(&fft, 1024);
-    //    verb.Init(samplerate);
+//    osc.Init(samplerate);
+//    for(size_t i = 0; i < NUM_SWARM; i++)
+//    {
+//        swarm[i].Init(samplerate);
+//        swarm[i].SetAmp(0.1f);
+//        swarm[i].SetFreq(200.0f + (i * 1.0f));
+//        swarm[i].SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
+//    }
+//    del.Init();
+//    del.SetDelay(samplerate * 0.25f);
+//    arm_rfft_fast_init_f32(&fft, 1024);
+//    verb.Init(samplerate);
     //    sdcard.Init();
     //    sampler.Init();
     //    sampler.SetLooping(true);
     // Start
-//    hw.StartAdc();
-//    hw.StartAudio(AudioTest);
+        hw.StartAdc();
+    //    hw.StartAudio(AudioTest);
     hw.StartAudio(passthru);
-//    hw.ClearLeds();
+    //    hw.ClearLeds();
     for(;;)
     {
         //        now = dsy_system_getnow();
         //        sampler.Prepare();
-		arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+//        arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
 
 
         //        r        = hw.GetKnobValue(DEV_NAMESPACE::KNOB_1);
