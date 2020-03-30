@@ -42,6 +42,55 @@
     <None Include="stm32.xml">
       <Filter>VisualGDB settings</Filter>
     </None>
+    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\option\ccsbcs.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_rfft_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\CommonTables\arm_common_tables.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\CommonTables\arm_const_structs.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_rfft_fast_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_rfft_fast_init_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_cfft_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_cfft_radix2_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_cfft_radix2_init_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_cfft_radix4_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_cfft_radix4_init_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_cfft_radix8_f32.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_bitreversal.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Source\TransformFunctions\arm_bitreversal2.S" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.h">
@@ -54,6 +103,15 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\integer.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Include\arm_common_tables.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Include\arm_const_structs.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\libdaisy\Drivers\CMSIS\DSP\Include\arm_math.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
