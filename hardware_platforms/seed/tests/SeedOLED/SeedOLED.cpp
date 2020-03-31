@@ -5,7 +5,7 @@
 
 using namespace daisy;
 
-static daisy_handle hw;
+static DaisySeed hw;
 OledDisplay         display;
 
 bool    state;
@@ -14,7 +14,7 @@ uint8_t message_idx;
 
 int     main(void)
 {
-	daisy_seed_init(&hw);
+	hw.Init();
 	display.Init();
 	state = true;
 	xcnt = ycnt = 0;
