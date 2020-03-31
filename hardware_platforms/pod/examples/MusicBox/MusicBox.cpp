@@ -33,32 +33,25 @@ static void  audio(float *in, float *out, size_t size)
     {
         freq = mtof(48.0f + get_new_note());
         osc.SetFreq(freq);
-//        env.SetTime(ADENV_SEG_DECAY, dec);
+        env.SetTime(ADENV_SEG_DECAY, dec);
         env.Trigger();
     }
 
-    hw.UpdateAnalogControls();
-    float val = hw.GetKnobValue(DaisyPod::KNOB_1);
-    hw.led2.Set(val, val, val);
-//	hw.led2.Update(); // Handles the PWM
+    // Get Parameters
+    xf   = p_xf.process();
+    vamt = p_vamt.process();
+    dec  = p_dec.process();
 
     // Audio Loop
     for(size_t i = 0; i < size; i += 2)
     {
-        // Get Parameters
-//        xf   = p_xf.process();
-//        vamt = p_vamt.process();
-//        dec  = p_dec.process();
-
         // Process
         rawsig = osc.Process();
         sig    = rawsig * env.Process();
         filt.Process(sig);
         filtsig = filt.Low();
         sendsig = filtsig * vamt;
-        //        verb.Process(sendsig, sendsig, &wetvl, &wetvr);
-        wetvl      = 0.0f;
-        wetvr      = 0.0f;
+        verb.Process(sendsig, sendsig, &wetvl, &wetvr);
         out[i]     = (filtsig + (wetvl)) * 0.707f;
         out[i + 1] = (filtsig + (wetvr)) * 0.707f;
     }
@@ -67,10 +60,10 @@ static void  audio(float *in, float *out, size_t size)
 void InitSynth(float samplerate)
 {
     // Synth Parameters.
-//    p_xf.init(hw.knob1, 10.0f, 12000.0f, parameter::LOG);
-//    p_dec.init(hw.knob1, 0.2f, 5.0f, parameter::EXP);
-//    p_vamt.init(hw.knob2, 0.0f, 1.0f, parameter::LINEAR);
-//    p_vtime.init(hw.knob2, 0.4f, 0.95f, parameter::LINEAR);
+    p_xf.init(hw.knob1, 10.0f, 12000.0f, parameter::LOG);
+    p_dec.init(hw.knob1, 0.2f, 5.0f, parameter::EXP);
+    p_vamt.init(hw.knob2, 0.0f, 1.0f, parameter::LINEAR);
+    p_vtime.init(hw.knob2, 0.4f, 0.95f, parameter::LINEAR);
     dec = 0.62;
     // Init Osc and Nse
     osc.Init(samplerate);
@@ -85,9 +78,9 @@ void InitSynth(float samplerate)
     filt.SetRes(0.5f);
     filt.SetDrive(0.8f);
     filt.SetFreq(2400.0f);
-//    verb.Init(samplerate);
-//    verb.SetFeedback(0.87);
-//    verb.SetLpFreq(10000.0f);
+    verb.Init(samplerate);
+    verb.SetFeedback(0.87);
+    verb.SetLpFreq(10000.0f);
 }
 
 int main(void)
@@ -100,12 +93,7 @@ int main(void)
     // Start Callbacks
 	hw.StartAdc();
 	hw.StartAudio(audio);
-
-
     while(1)
     {
-        //  Blink the Seed's on board LED.
-//        hw.DelayMs(250);
-//        dsy_gpio_toggle(&hw.seed.led);
     }
 }
