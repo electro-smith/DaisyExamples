@@ -194,10 +194,12 @@ int main(void)
     dsy_audio_set_callback(DSY_AUDIO_INTERNAL, AudioCallback);
     dsy_audio_set_blocksize(DSY_AUDIO_INTERNAL, blocksize);
     dsy_audio_start(DSY_AUDIO_INTERNAL);
-
+    bool ledstate;
+    ledstate = true;
     for(;;)
     {
         dsy_tim_delay_ms(250);
-        dsy_gpio_toggle(&hw.seed.led);
+        hw.seed.SetLed(ledstate);
+        ledstate = !ledstate;
     }
 }

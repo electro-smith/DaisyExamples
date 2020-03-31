@@ -18,7 +18,7 @@ float bright, amp, targetamp;
 
 void AudioTest(float *in, float *out, size_t size)
 {
-    hw.UpdateKnobs();
+    hw.UpdateAnalogControls();
     hw.DebounceControls();
     float sig, note;
     // One way to get value

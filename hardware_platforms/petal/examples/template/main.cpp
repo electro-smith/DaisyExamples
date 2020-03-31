@@ -1,8 +1,10 @@
 #include "daisy_petal.h"
 //#include "daisysp.h" // Uncomment this if you want to use the DSP library.
 
+using namespace daisy;
+
 // Declare a local daisy_petal for hardware access
-daisy_petal hw;
+DaisyPetal hw;
 
 // This runs at a fixed rate, to prepare audio samples
 void callback(float *in, float *out, size_t size)
@@ -17,9 +19,9 @@ void callback(float *in, float *out, size_t size)
 
 int main(void)
 {
-    daisy_petal_init(&hw);
-    dsy_audio_set_callback(DSY_AUDIO_INTERNAL, callback);
     // Initialize Stuff Here
+    hw.Init();
+    hw.StartAudio(callback);
     while(1) 
     {
         // Do Stuff Infinitely Here

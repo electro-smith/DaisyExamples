@@ -181,7 +181,7 @@ uint32_t DSY_SDRAM_BSS huge_friggin_ram_buff[BIG_BUFF_SIZE];
 // 4 MB QSPI Test
 uint32_t DSY_QSPI_BSS qspi_buff[BIG_BUFF_SIZE];
 
-daisy_handle hw;
+DaisySeed hw;
 
 uint32_t phasor = 0;
 float    sig;
@@ -205,7 +205,7 @@ void AudioTest(float *in, float *out, size_t size)
 
 int main(void)
 {
-    daisy_seed_init(&hw);
+    hw.Init();
 
     osc.Init(DSY_AUDIO_SAMPLE_RATE);
     osc.SetAmp(0.75f);

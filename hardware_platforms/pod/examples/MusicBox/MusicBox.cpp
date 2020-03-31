@@ -37,7 +37,7 @@ static void  audio(float *in, float *out, size_t size)
         env.Trigger();
     }
 
-    hw.UpdateKnobs();
+    hw.UpdateAnalogControls();
     float val = hw.GetKnobValue(DaisyPod::KNOB_1);
     hw.led2.Set(val, val, val);
 //	hw.led2.Update(); // Handles the PWM
