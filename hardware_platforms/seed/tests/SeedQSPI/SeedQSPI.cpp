@@ -15,7 +15,7 @@ static uint32_t __attribute__((section(".dtcmram_bss"))) outbuff[TEST_BUFF_SIZE]
 static uint32_t  axi_outbuff[TEST_BUFF_SIZE];
 uint32_t inbuff[TEST_BUFF_SIZE];
 
-static daisy_handle hw;
+static DaisySeed hw;
 static uint32_t start, end;
 static uint32_t		dur_erase, dur_write_4k, dur_write_4m, dur_read_qspi, dur_read_flash, dur_read_axi;
 
@@ -23,7 +23,7 @@ static uint32_t		dur_erase, dur_write_4k, dur_write_4m, dur_read_qspi, dur_read_
 int main(void)
 {
 	// Initialize Hardware
-	daisy_seed_init(&hw);
+	hw.Init();
 //	for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++) 
 //	{
 //		test_buff[i] = i;
@@ -93,10 +93,13 @@ int main(void)
 //		dur_write_4k = (end - start) / 200;
 //		dur_write_4m += dur_write_4k;
 //	}
+	bool ledstate;
+    ledstate = true;
 	while(1) 
 	{
 		dsy_tim_delay_ms(250);
-		dsy_gpio_toggle(&hw.led);
+        hw.SetLed(ledstate);
+        ledstate = !ledstate;
 	}
 }
 

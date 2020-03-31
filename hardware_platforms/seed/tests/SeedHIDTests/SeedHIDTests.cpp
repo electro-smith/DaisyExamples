@@ -90,7 +90,7 @@ enum class LedState
 daisysp::Oscillator osc;
 
 // Functional Modules
-daisy_handle hw;
+DaisySeed hw;
 dsy_gpio led_blue;
 Switch sw_1;
 Encoder enc;
@@ -154,37 +154,34 @@ void AudioCallback(float *in, float *out, size_t size)
 int main(void)
 {
     // Initialize Hardware
-    daisy_seed_init(&hw);
+    float sample_rate;
+    hw.Init();
+    sample_rate = hw.AudioSampleRate();
     init_pod_adcs();
-    osc.Init(DSY_AUDIO_SAMPLE_RATE);
+    osc.Init(sample_rate);
     osc.SetAmp(1.00f);
     osc.SetWaveform(daisysp::Oscillator::WAVE_TRI);
     dsy_tim_start();
     init_led();
 
-    led2.Init({seed_ports[0], seed_pins[0]},
-              {seed_ports[25], seed_pins[25]},
-              {seed_ports[24], seed_pins[24]});
+    led2.Init(hw.GetPin(0), hw.GetPin(25), hw.GetPin(24));
 
     // Testing New Switch
-    sw_1.Init({seed_ports[28], seed_pins[28]},
-              DSY_AUDIO_SAMPLE_RATE / 24,
+    sw_1.Init(hw.GetPin(28),
+              sample_rate / 24,
               Switch::TYPE_MOMENTARY,
               Switch::POLARITY_INVERTED,
               Switch::PULL_UP);
-    // Testing New Encoder
-    enc.Init({seed_ports[27], seed_pins[27]},
-             {seed_ports[26], seed_pins[26]},
-             {seed_ports[1], seed_pins[1]},
-             DSY_AUDIO_SAMPLE_RATE / 24);
 
-    pot1.Init(dsy_adc_get_rawptr(0), DSY_AUDIO_SAMPLE_RATE);
+    // Testing New Encoder
+    enc.Init(hw.GetPin(27), hw.GetPin(26), hw.GetPin(1),
+             sample_rate / 24);
+    
+    pot1.Init(dsy_adc_get_rawptr(0), sample_rate);
     p.init(pot1, 12.0f, 96.0f, parameter::LINEAR);
 
-    // Audio will get converted LAST
-    dsy_audio_set_callback(DSY_AUDIO_INTERNAL, AudioCallback);
-    dsy_audio_start(DSY_AUDIO_INTERNAL);
     dsy_adc_start();
+    hw.StartAudio(AudioCallback);
 
     while(1) {}
 }
@@ -193,8 +190,7 @@ void init_led()
 {
     // Still old style so as not to break
     // pure-c modules..
-    led_blue.pin.port = seed_ports[19];
-    led_blue.pin.pin  = seed_pins[19];
+    led_blue.pin = hw.GetPin(19);
     led_blue.mode     = DSY_GPIO_MODE_OUTPUT_PP;
     led_blue.pull     = DSY_GPIO_NOPULL;
     dsy_gpio_init(&led_blue);

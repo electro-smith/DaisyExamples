@@ -2,11 +2,13 @@
 #include <string.h>
 #include "daisy_seed.h"
 
-static daisy_handle hw;
+using namespace daisy;
+
+static DaisySeed hw;
 
 int main(void)
 {
-    daisy_seed_init(&hw);
+    hw.Init();
     int  tick_cnt = 0;
     char buff[512];
     while(1)

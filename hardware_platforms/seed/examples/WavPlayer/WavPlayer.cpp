@@ -11,7 +11,8 @@
 
 using namespace daisy;
 
-DaisyPod hw;
+//DaisyPod hw;
+DaisyPod   hw;
 SdmmcHandler sdcard;
 WavPlayer    sampler;
 
@@ -43,17 +44,17 @@ void AudioCallback(float *in, float *out, size_t size)
         }
     }
 
-    if(hw.button2.RisingEdge())
+    if(hw.button1.RisingEdge())
     {
         sampler.Restart();
     }
 
-    if(hw.button1.RisingEdge())
+    if(hw.button2.RisingEdge())
     {
         sampler.SetLooping(!sampler.GetLooping());
-        hw.SetLed(DaisyPod::LED_2_B, sampler.GetLooping());
-        dsy_gpio_write(&hw.leds[DaisyPod::LED_2_B],
-                       static_cast<uint8_t>(!sampler.GetLooping()));
+        //hw.SetLed(DaisyPod::LED_2_B, sampler.GetLooping());
+        //dsy_gpio_write(&hw.leds[DaisyPod::LED_2_B],
+        //               static_cast<uint8_t>(!sampler.GetLooping()));
     }
 
     for(size_t i = 0; i < size; i += 2)
@@ -74,7 +75,7 @@ int main(void)
     sampler.SetLooping(true);
 
     // SET LED to indicate Looping status.
-    hw.SetLed(DaisyPod::LED_2_B, sampler.GetLooping());
+    //hw.SetLed(DaisyPod::LED_2_B, sampler.GetLooping());
 
     // Init Audio
     hw.SetAudioBlockSize(blocksize);

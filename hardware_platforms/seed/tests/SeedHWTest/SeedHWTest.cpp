@@ -11,7 +11,7 @@ using namespace daisysp;
 
 static uint32_t DSY_SDRAM_BSS test_buff[TEST_BUFF_SIZE];
 
-static daisy_handle hw;
+static DaisySeed hw;
 static uint32_t     start, end, dur;
 
 void bad_callback(float *in, float *out, size_t size)
@@ -38,7 +38,7 @@ void passthru(float *in, float *out, size_t size)
 int main(void)
 {
 	// Initialize Hardware
-	daisy_seed_init(&hw);
+	hw.Init();
 	for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++) 
 	{
 		test_buff[i] = i;

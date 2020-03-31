@@ -27,9 +27,11 @@
 
 #define TEST_FILE_NAME "test.txt"
 
-static daisy_handle hw;
+using namespace daisy;
 
-daisy::SdmmcHandler sd;
+static DaisySeed hw;
+
+SdmmcHandler sd;
 
 int main(void)
 {
@@ -43,7 +45,7 @@ int main(void)
     failcnt = 0;
 
     // Init hardware
-    daisy_seed_init(&hw);
+    hw.Init();
 
     // Init SD Card
     sd.Init();
@@ -83,10 +85,13 @@ int main(void)
     {
         asm("bkpt 255");
     }
+    bool ledstate;
+    ledstate = true; 
     // Otherwise the onboard LED will begin to blink.
     for(;;)
     {
         dsy_system_delay(250);
-        dsy_gpio_toggle(&hw.led);
+        hw.SetLed(ledstate);
+        ledstate = !ledstate; 
     }
 }
