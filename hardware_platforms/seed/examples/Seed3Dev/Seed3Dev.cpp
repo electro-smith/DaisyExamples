@@ -24,7 +24,8 @@ DEV_NAMESPACE hw;
 daisysp::DelayLine<float, 48000 * 4> DSY_SDRAM_BSS del;
 
 daisysp::Oscillator osc;
-#define NUM_SWARM 70
+//#define NUM_SWARM 70
+#define NUM_SWARM 15
 daisysp::Oscillator swarm[NUM_SWARM];
 uint8_t             wave;
 daisysp::ReverbSc   verb;
@@ -72,22 +73,23 @@ void AudioTest(float *in, float *out, size_t size)
     {
         fftinbuff[i] = in[i * 2];
     }
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
-    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    //    arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+    float delsig;
 
     for(size_t i = 0; i < size; i += 2)
 
@@ -115,22 +117,20 @@ void AudioTest(float *in, float *out, size_t size)
             float wetl, wetr, dryl, dryr, sendl, sendr;
             wetl = 0.0f;
             wetr = 0.0f;
-            //            dryl = in[i];
-            //            dryr = in[i + 1];
-            dryl = tempo;
-            dryr = temps;
-            //                    verb.Process(sendl, sendr, &wetl, &wetr);
-            wetl  = del.Read();
-            sendl = dryl + (wetl * 0.5f);
-            sendr = dryr + (wetr * 0.5f);
+            dryl = in[i] * 0.45f;
+            dryr = in[i + 1] * 0.45f;
+            //            dryl  = tempo;
+            //            dryr  = temps;
+            delsig = del.Read();
+            sendl  = (dryl * 0.5f) + (delsig * 0.5f);
+            sendr  = (dryr * 0.5f) + (delsig * 0.5f);
             del.Write(sendl);
-            wetl = 0.0f;
-            wetr = 0.0f;
-            dryl = in[i];
-            dryr = in[i + 1];
+            //            wetl = 0.0f;
+            //            wetr = 0.0f;
+            verb.Process(sendl, sendr, &wetl, &wetr);
 
-            out[i]     = dryr + wetl;
-            out[i + 1] = dryl + wetl;
+            out[i]     = (dryr + wetl + delsig) * 0.6f;
+            out[i + 1] = (dryl + wetl + delsig) * 0.6f;
             //                    out[i + 1] = dryr + wetr;
         }
     }
@@ -171,7 +171,7 @@ void    r2d2(float *in, float *out, size_t size)
     hw.UpdateAnalogControls();
 
     freq = daisysp::mtof(hw.GetKnobValue(DaisyPod::KNOB_1) * 127.0f);
-    amp = (hw.button2.Pressed()) ? 1.0f : 0.0f;
+    amp  = (hw.button2.Pressed()) ? 1.0f : 0.0f;
     int32_t inc;
     inc = hw.encoder.Increment();
     uint8_t prev_waveform;
@@ -185,7 +185,7 @@ void    r2d2(float *in, float *out, size_t size)
         waveform = (waveform + daisysp::Oscillator::WAVE_LAST - 1)
                    % daisysp::Oscillator::WAVE_LAST;
     }
-    if(waveform != prev_waveform) 
+    if(waveform != prev_waveform)
     {
         osc.SetWaveform(waveform);
     }
@@ -208,34 +208,46 @@ int   main(void)
     uint32_t tick, now;
     uint8_t  active_led;
     hw.Init();
+    dsy_gpio p;
+    p.pin = {DSY_GPIOC, 0};
+    p.mode = DSY_GPIO_MODE_INPUT;
+    p.pull = DSY_GPIO_PULLDOWN;
+    dsy_gpio_init(&p);
+    for(size_t i = 0; i < 32; i++) {
+        p.pin = hw.seed.GetPin(i);
+		dsy_gpio_deinit(&p);
+		p.mode = DSY_GPIO_MODE_INPUT;
+		p.pull = DSY_GPIO_PULLDOWN;
+		dsy_gpio_init(&p);
+    }
     samplerate = hw.AudioSampleRate();
     hw.SetAudioBlockSize(128);
     // Init Synthesis
-//    osc.Init(samplerate);
-//    for(size_t i = 0; i < NUM_SWARM; i++)
-//    {
-//        swarm[i].Init(samplerate);
-//        swarm[i].SetAmp(0.1f);
-//        swarm[i].SetFreq(200.0f + (i * 1.0f));
-//        swarm[i].SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
-//    }
-//    del.Init();
-//    del.SetDelay(samplerate * 0.25f);
-//    arm_rfft_fast_init_f32(&fft, 1024);
-//    verb.Init(samplerate);
+    osc.Init(samplerate);
+    for(size_t i = 0; i < NUM_SWARM; i++)
+    {
+        swarm[i].Init(samplerate);
+        swarm[i].SetAmp(0.1f);
+        swarm[i].SetFreq(200.0f + (i * 1.0f));
+        swarm[i].SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
+    }
+    del.Init();
+    del.SetDelay(samplerate * 0.25f);
+    arm_rfft_fast_init_f32(&fft, 1024);
+    verb.Init(samplerate);
     //    sdcard.Init();
     //    sampler.Init();
     //    sampler.SetLooping(true);
     // Start
-        hw.StartAdc();
-    //    hw.StartAudio(AudioTest);
-    hw.StartAudio(passthru);
+    hw.StartAdc();
+    hw.StartAudio(AudioTest);
+    //    hw.StartAudio(passthru);
     //    hw.ClearLeds();
     for(;;)
     {
         //        now = dsy_system_getnow();
         //        sampler.Prepare();
-//        arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
+        arm_rfft_fast_f32(&fft, fftinbuff, fftoutbuff, 0);
 
 
         //        r        = hw.GetKnobValue(DEV_NAMESPACE::KNOB_1);
