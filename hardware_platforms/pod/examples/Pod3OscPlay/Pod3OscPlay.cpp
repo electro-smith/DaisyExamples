@@ -75,6 +75,7 @@ void callback(float *in, float *out, size_t size)
     float dryl, dryr, wetl, wetr, sendl, sendr;
     // Audio is interleaved stereo by default
     hw.UpdateAnalogControls();
+    hw.DebounceControls();
     mix  = hw.GetKnobValue(DaisyPetal::KNOB_1);
     time = hw.GetKnobValue(DaisyPetal::KNOB_2);
     damp = 1000.0f + (hw.GetKnobValue(DaisyPetal::KNOB_3) * 12000.0f);
@@ -87,8 +88,16 @@ void callback(float *in, float *out, size_t size)
         sendl = dryl * mix;
         sendr = dryr * mix;
         rev.Process(sendl, sendr, &wetl, &wetr);
-        out[i + 1] = dryl + wetl;
-        out[i]     = dryr + wetr;
+        if(hw.switches[DaisyPetal::SW_6].Pressed())
+        {
+            out[i + 1] = dryl + wetl;
+            out[i]     = dryr + wetr;
+        }
+        else
+        {
+            out[i + 1] = in[i];
+            out[i]     = in[i + 1];
+        }
     }
 }
 
@@ -102,11 +111,13 @@ int main(void)
     rev.Init(samplerate);
     // Start
     hw.StartAdc();
+    hw.SetAudioBlockSize(128);
+//    hw.SetAudioBlockSize(6);
     hw.StartAudio(callback);
     hw.ClearLeds();
     bright = 0.0f;
-//    hw.led1.Set(0.0f, 0.0f, bright);
-//    hw.led2.Set(0.0f, 0.0f, bright);
+    //    hw.led1.Set(0.0f, 0.0f, bright);
+    //    hw.led2.Set(0.0f, 0.0f, bright);
     for(;;)
     {
 //        hw.led1.Set(bright, bright, bright);
