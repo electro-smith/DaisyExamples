@@ -33,11 +33,38 @@ void AudioCallback(float *in, float *out, size_t size)
         waveidx = (waveidx + 4 - 1) % 4;
         osc.SetWaveform(waveforms[waveidx]);
     }
+    if(hw.encoder.FallingEdge()
+       || hw.gate_input[DaisyPatch::GateInput::GATE_IN_1].Trig())
+    {
+        waveidx = 0;
+        osc.SetWaveform(waveforms[waveidx]);
+    }
+    if(hw.gate_input[DaisyPatch::GateInput::GATE_IN_2].Trig()) 
+    {
+        waveidx = 3;
+        osc.SetWaveform(waveforms[waveidx]);
+    }
     for(size_t i = 0; i < size; i += 2)
     {
         sig = osc.Process();
         filt.Process(sig);
         out[i] = out[i + 1] = filt.Low();
+    }
+    dsy_gpio_toggle(&hw.gate_output);
+    dsy_dac_write(DSY_DAC_CHN1,
+                  (hw.GetCtrlValue(DaisyPatch::Ctrl::CTRL_1) + 1.f) * 4095.0f);
+    dsy_dac_write(DSY_DAC_CHN2,
+                  (hw.GetCtrlValue(DaisyPatch::Ctrl::CTRL_2) + 1.f) * 4095.0f);
+}
+
+void BypassTest(float *in, float *out, size_t size)
+{
+    hw.UpdateAnalogControls();
+    hw.DebounceControls();
+    for(size_t i = 0; i < size; i += 2)
+    {
+        out[i]     = in[i];
+        out[i + 1] = in[i + 1];
     }
 }
 
@@ -131,8 +158,8 @@ int main(void)
                 size_t dest;
                 curx = (barspacing * i + 1) + (barwidth * i);
                 cury = SSD1309_HEIGHT;
-				v    = hw.GetCtrlValue(static_cast<DaisyPatch::Ctrl>(i)) + 1.0f;
-				dest = (v * SSD1309_HEIGHT);
+                v    = hw.GetCtrlValue(static_cast<DaisyPatch::Ctrl>(i)) + 1.0f;
+                dest = (v * SSD1309_HEIGHT);
                 for(size_t j = dest; j > 0; j--)
                 {
                     for(size_t k = 0; k < barwidth; k++)
