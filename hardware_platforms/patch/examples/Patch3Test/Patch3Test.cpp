@@ -143,32 +143,6 @@ int main(void)
         {
             HandleMidiMessage(hw.midi.PopEvent());
         }
-        if(dsy_system_getnow() - screen_update_last > screen_update_period)
-        {
-            // Graph Knobs
-            size_t barwidth, barspacing, barheight;
-            size_t curx, cury;
-            barwidth   = 15;
-            barspacing = 20;
-            hw.display.Fill(false);
-            // Bars for all four knobs.
-            for(size_t i = 0; i < DaisyPatch::CTRL_LAST; i++)
-            {
-                float  v;
-                size_t dest;
-                curx = (barspacing * i + 1) + (barwidth * i);
-                cury = SSD1309_HEIGHT;
-                v    = hw.GetCtrlValue(static_cast<DaisyPatch::Ctrl>(i)) + 1.0f;
-                dest = (v * SSD1309_HEIGHT);
-                for(size_t j = dest; j > 0; j--)
-                {
-                    for(size_t k = 0; k < barwidth; k++)
-                    {
-                        hw.display.DrawPixel(curx + k, cury - j, true);
-                    }
-                }
-            }
-            hw.display.Update();
-        }
+        hw.DisplayControls();
     }
 }
