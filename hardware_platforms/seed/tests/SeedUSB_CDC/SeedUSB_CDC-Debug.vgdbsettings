@@ -96,7 +96,7 @@
     </HexSettings>
     <LineEnding>LF</LineEnding>
     <TreatLFAsCRLF>false</TreatLFAsCRLF>
-    <KeepOpenAfterExit>true</KeepOpenAfterExit>
+    <KeepOpenAfterExit>false</KeepOpenAfterExit>
     <ShowAfterProgramming>false</ShowAfterProgramming>
   </DeviceTerminalSettings>
   <CustomShortcuts>
@@ -110,7 +110,7 @@
     <ExtraSettings>
       <HideErrorsInSystemHeaders>true</HideErrorsInSystemHeaders>
       <SupportLightweightReferenceAnalysis>true</SupportLightweightReferenceAnalysis>
-      <CheckForClangFormatFiles>true</CheckForClangFormatFiles>
+      <CheckForClangFormatFiles xsi:nil="true" />
       <FormattingEngine xsi:nil="true" />
     </ExtraSettings>
     <CodeAnalyzerSettings>
@@ -154,8 +154,10 @@
     </AdditionalGDBSettings>
     <DebugMethod>
       <ID>com.sysprogs.arm.openocd</ID>
+      <InterfaceID>stlink-v2</InterfaceID>
+      <InterfaceSerialNumber>7&amp;34131B2E&amp;0&amp;7</InterfaceSerialNumber>
       <Configuration xsi:type="com.visualgdb.edp.openocd.settings">
-        <CommandLine>-f interface/stlink.cfg -f target/stm32h7x.cfg -c init -c "reset init"</CommandLine>
+        <CommandLine>-f interface/stlink-v2.cfg -f target/stm32h7x.cfg -c init -c "reset init"</CommandLine>
         <ExtraParameters>
           <Frequency xsi:nil="true" />
           <BoostedFrequency xsi:nil="true" />
@@ -170,7 +172,6 @@
           <string>mon reset init</string>
           <string>load</string>
         </StartupCommands>
-        <ProgramFLASHUsingExternalTool>false</ProgramFLASHUsingExternalTool>
         <PreferredGDBPort>0</PreferredGDBPort>
         <PreferredTelnetPort>0</PreferredTelnetPort>
       </Configuration>

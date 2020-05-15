@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|VisualGDB">
+      <Configuration>Debug</Configuration>
+      <Platform>VisualGDB</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|VisualGDB">
+      <Configuration>Release</Configuration>
+      <Platform>VisualGDB</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{57592878-441A-4056-8BE7-87649D5D0D6B}</ProjectGuid>
+    <BSP_ID>com.sysprogs.arm.stm32</BSP_ID>
+    <BSP_VERSION>2019.06</BSP_VERSION>
+    <InPlaceBSPSubdir />
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <MCUPropertyListFile>$(ProjectDir)stm32.props</MCUPropertyListFile>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <MCUPropertyListFile>$(ProjectDir)stm32.props</MCUPropertyListFile>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <GNUConfigurationType>Debug</GNUConfigurationType>
+    <ToolchainID>com.sysprogs.gnuarm.arm-eabi</ToolchainID>
+    <ToolchainVersion>8.3.1/8.0/r1</ToolchainVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <ToolchainID>com.sysprogs.gnuarm.arm-eabi</ToolchainID>
+    <ToolchainVersion>8.3.1/8.0/r1</ToolchainVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>Drivers/CMSIS/Include;Inc;Drivers\CMSIS\Device\ST\STM32H7xx\Include;Drivers\STM32H7xx_HAL_Driver\Inc;Middlewares\ST\STM32_USB_Device_Library\Core\Inc;Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc;Drivers\STM32H7xx_HAL_Driver\Inc\Legacy;Middlewares\Third_Party\FatFs\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG=1;flash_layout;STM32H750xx;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions />
+      <CLanguageStandard />
+      <CPPLanguageStandard />
+    </ClCompile>
+    <Link>
+      <LibrarySearchDirectories>%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <AdditionalOptions />
+      <LinkerScript />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>Inc;Drivers\CMSIS\Device\ST\STM32H7xx\Include;Drivers\STM32H7xx_HAL_Driver\Inc;Middlewares\ST\STM32_USB_Device_Library\Core\Inc;Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc;Drivers\STM32H7xx_HAL_Driver\Inc\Legacy;Middlewares\Third_Party\FatFs\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;flash_layout;STM32H750xx;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions />
+      <CLanguageStandard />
+      <CPPLanguageStandard />
+    </ClCompile>
+    <Link>
+      <LibrarySearchDirectories>%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <AdditionalOptions />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\gpio.c" />
+    <ClCompile Include="Src\adc.c" />
+    <ClCompile Include="Src\dac.c" />
+    <ClCompile Include="Src\debug.c" />
+    <ClCompile Include="Src\dma.c" />
+    <ClCompile Include="Src\bsp_driver_sd.c" />
+    <ClCompile Include="Src\sd_diskio.c" />
+    <ClCompile Include="Src\fatfs.c" />
+    <ClCompile Include="Src\fmc.c" />
+    <ClCompile Include="Src\i2c.c" />
+    <ClCompile Include="Src\opamp.c" />
+    <ClCompile Include="Src\quadspi.c" />
+    <ClCompile Include="Src\rng.c" />
+    <ClCompile Include="Src\sai.c" />
+    <ClCompile Include="Src\sdmmc.c" />
+    <ClCompile Include="Src\spi.c" />
+    <ClCompile Include="Src\tim.c" />
+    <ClCompile Include="Src\usart.c" />
+    <ClCompile Include="Src\stm32h7xx_it.c" />
+    <ClCompile Include="Src\stm32h7xx_hal_msp.c" />
+    <ClCompile Include="Src\main.c" />
+    <ClCompile Include="Drivers\CMSIS\Device\ST\STM32H7xx\Source\Templates\system_stm32h7xx.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_adc.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_adc_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rng.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_fmc.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_mdma.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_sdmmc.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_delayblock.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sd.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sd_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_hsem.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_cortex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dma.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dma_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_opamp.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_opamp_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dac.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dac_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_gpio.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sai.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sai_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sdram.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_qspi.c" />
+    <ClCompile Include="Middlewares\Third_Party\FatFs\src\diskio.c" />
+    <ClCompile Include="Middlewares\Third_Party\FatFs\src\ff.c" />
+    <ClCompile Include="Middlewares\Third_Party\FatFs\src\ff_gen_drv.c" />
+    <ClCompile Include="Middlewares\Third_Party\FatFs\src\option\syscall.c" />
+    <ClCompile Include="Middlewares\Third_Party\FatFs\src\option\ccsbcs.c" />
+    <None Include="stm32.props" />
+    <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h750xx.c" />
+    <ClInclude Include="Inc\gpio.h" />
+    <ClInclude Include="Inc\adc.h" />
+    <ClInclude Include="Inc\dac.h" />
+    <ClInclude Include="Inc\debug.h" />
+    <ClInclude Include="Inc\dma.h" />
+    <ClInclude Include="Inc\ffconf.h" />
+    <ClInclude Include="Inc\bsp_driver_sd.h" />
+    <ClInclude Include="Inc\sd_diskio.h" />
+    <ClInclude Include="Inc\fatfs.h" />
+    <ClInclude Include="Inc\fmc.h" />
+    <ClInclude Include="Inc\i2c.h" />
+    <ClInclude Include="Inc\opamp.h" />
+    <ClInclude Include="Inc\quadspi.h" />
+    <ClInclude Include="Inc\rng.h" />
+    <ClInclude Include="Inc\sai.h" />
+    <ClInclude Include="Inc\sdmmc.h" />
+    <ClInclude Include="Inc\spi.h" />
+    <ClInclude Include="Inc\tim.h" />
+    <ClInclude Include="Inc\usart.h" />
+    <ClInclude Include="Inc\stm32h7xx_it.h" />
+    <ClInclude Include="Inc\stm32h7xx_hal_conf.h" />
+    <ClInclude Include="Inc\main.h" />
+    <ClInclude Include="Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h" />
+    <ClInclude Include="Drivers\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_def.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_adc.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rng.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_spi.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_spi_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_fmc.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_mdma.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_sdmmc.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_sd.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_delayblock.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_sd_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_hsem.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_cortex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_dma.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_dma_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_i2c.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_i2c_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_opamp.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_opamp_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_dac.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_dac_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_flash.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_flash_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_gpio_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_tim.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_tim_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_sai.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_sai_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_sdram.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_qspi.h" />
+    <ClInclude Include="Middlewares\Third_Party\FatFs\src\diskio.h" />
+    <ClInclude Include="Middlewares\Third_Party\FatFs\src\ff.h" />
+    <ClInclude Include="Middlewares\Third_Party\FatFs\src\ff_gen_drv.h" />
+    <ClInclude Include="Middlewares\Third_Party\FatFs\src\integer.h" />
+    <None Include="Daisy_Seed_Rev2-Debug.vgdbsettings" />
+    <None Include="Daisy_Seed_Rev2-Release.vgdbsettings" />
+    <None Include="stm32.xml" />
+    <ClCompile Include="Src\usb_device.c" />
+    <ClCompile Include="Src\usbd_conf.c" />
+    <ClCompile Include="Src\usbd_desc.c" />
+    <ClCompile Include="Src\usbd_cdc_if.c" />
+    <ClCompile Include="Src\usb_otg_hs.c" />
+    <ClCompile Include="Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c" />
+    <ClCompile Include="Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c" />
+    <ClCompile Include="Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c" />
+    <ClCompile Include="Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pcd.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pcd_ex.c" />
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_usb.c" />
+    <ClInclude Include="Inc\usb_device.h" />
+    <ClInclude Include="Inc\usbd_conf.h" />
+    <ClInclude Include="Inc\usbd_desc.h" />
+    <ClInclude Include="Inc\usbd_cdc_if.h" />
+    <ClInclude Include="Inc\usb_otg_hs.h" />
+    <ClInclude Include="Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h" />
+    <ClInclude Include="Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h" />
+    <ClInclude Include="Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_def.h" />
+    <ClInclude Include="Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h" />
+    <ClInclude Include="Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc\usbd_cdc.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h" />
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h" />
+  </ItemGroup>
+</Project>
