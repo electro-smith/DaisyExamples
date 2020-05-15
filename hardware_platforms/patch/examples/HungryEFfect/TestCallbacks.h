@@ -8,94 +8,82 @@ using namespace daisysp;
 
 #define NUM_OSC 25
 
-DaisyPatch          hw;
+class NewClass
+{
+  public:
+    NewClass() {}
+    ~NewClass() {}
+
+  private:
+    float sr_, fc_, res_, drive_, freq_, damp_;
+    float notch_, low_, high_, band_, peak_;
+    float input_;
+    float out_low_, out_high_, out_band_, out_peak_, out_notch_;
+};
+
+
+DaisyPatch hw;
+
+parameter p_xf, p_res;
 
 ReverbSc verb;
-//DelayLine<float, 300000> DSY_SDRAM_BSS delay_left, delay_right;
-Oscillator                             osc[NUM_OSC];
+//Svf DSY_SDRAM_BSS filter;
+//newclass newclass;
+Svf filter;
 
+#define NUM_BYTES 1 * 1024 // 41 is threshold to break everything.
+uint8_t                  bytes[NUM_BYTES];
+Oscillator               osc[NUM_OSC];
 DelayLine<float, 300000> DSY_SDRAM_BSS delay[4];
+bool                                   bypass_state;
+float                                  delaytime;
 
-bool bypass_state;
+// All floats from making one filter in normal RAM -- is the problem?
+//            float sr_, fc_, res_, drive_, freq_, damp_;
+//            float notch_, low_, high_, band_, peak_;
+//            float input_;
+//            float out_low_, out_high_, out_band_, out_peak_, out_notch_;
 
-float delaytime;
+float major_chord[4] = {0, 4, 7, 11};
+float minor_chord[4] = {0, 3, 7, 10};
 
-//void AudioCallback(float *in, float *out, size_t size)
-//{
-//    float dryl, dryr, sendl, sendr, wetl, wetr;
-//    float verbsend, verbtime, newdelaytime, delayamt;
-//    // meta params
-//    float dfb, dmix;
-//    hw.UpdateAnalogControls();
-//    hw.DebounceControls();
-//    verbsend = (1.f + hw.GetCtrlValue(DaisyPatch::CTRL_1));
-//    verbtime = (1.f + hw.GetCtrlValue(DaisyPatch::CTRL_2));
-//    newdelaytime = (1.f + hw.GetCtrlValue(DaisyPatch::CTRL_3)) * 5.0f;
-//    delayamt = (1.f + hw.GetCtrlValue(DaisyPatch::CTRL_4));
-//    dmix      = delayamt * 0.75f;
-//    dfb       = delayamt * delayamt * 0.8f;
-//    delaytime += 0.002f * (newdelaytime - delaytime);
-//    delay_left.SetDelay(hw.AudioSampleRate() * delaytime);
-//    delay_right.SetDelay(hw.AudioSampleRate() * delaytime);
-//    if(hw.encoder.FallingEdge()) {
-//        bypass_state = !bypass_state;
-//    }
-//    float somesig;
-//    for(size_t i = 0; i < size; i += 2)
-//    {
-//		somesig = 0.0f;
-//        for(size_t j = 0; j < NUM_OSC; j++) {
-//            somesig += osc[j].Process();
-//		}
-//        float dinl, dinr;
-//        float verboutl, verboutr;
-//        dryl       = in[i];
-//        dryr       = in[i+1];
-////        dryr       = somesig;
-//        sendl      = verbsend * dryl;
-//        sendr      = verbsend * dryr;
-//        verb.SetFeedback(verbtime * verbtime);
-//        dinl = delay_left.Read();
-//        dinr = delay_right.Read();
-//        delay_left.Write((dinl * dfb) + dryl);
-//        delay_right.Write((dinr * dfb) + dryr);
-//        verb.Process(sendl, sendr, &verboutl, &verboutr);
-//        wetl       = verboutl + (dinl * dmix) + (dryl * (1.0f - dmix));
-//        wetr       = verboutr + (dinr * dmix) + (dryr * (1.0f - dmix));
-//        if(bypass_state)
-//        {
-//            out[i] = in[i];
-//            out[i+1] = in[i+1];
-//        }
-//        else
-//        {
-//			out[i]     = wetl;
-//			out[i + 1] = somesig;
-//        }
-//    }
-//}
-//void SecondaryCallback(float *in, float *out, size_t size)
-//{
-//    for(size_t i = 0; i < size; i += 2)
-//    {
-//		float somesig = 0.0f;
-//        for(size_t j = 0; j < NUM_OSC; j++) {
-//            somesig += osc[j].Process();
-//		}
-//        if(bypass_state)
-//        {
-//            out[i]     = in[i];
-//            out[i + 1] = in[i + 1];
-//        }
-//        else
-//        {
-//			out[i] = somesig;
-//			out[i + 1] = somesig;
-//        }
-//    }
-//}
+void ChordCallback(float **in, float **out, size_t size)
+{
+    size_t num_channels = 4;
+    float  root, third, fifth, seventh;
+    float  rootnote;
+    hw.UpdateAnalogControls();
+    rootnote = 24.f + ((hw.GetCtrlValue(DaisyPatch::CTRL_1)) * 60.0f);
+    for(size_t i = 0; i < size; i++)
+    {
+        for(size_t chn = 0; chn < num_channels; chn++)
+        {
+            float *chord;
+            chord = (hw.GetCtrlValue(DaisyPatch::CTRL_2)) > 0.5f ? major_chord
+                                                                 : minor_chord;
+            osc[chn].SetFreq(mtof(rootnote + chord[chn]));
+            out[chn][i] = osc[chn].Process();
+        }
+    }
+}
+void MultiOutputFilter(float **in, float **out, size_t size)
+{
+    size_t num_channels = 4;
+    hw.UpdateAnalogControls();
+    for(size_t i = 0; i < size; i++)
+    {
+        filter.SetFreq(p_xf.process());
+        filter.SetRes(p_res.process());
+        filter.Process(in[0][i]);
+        out[0][i] = filter.Low();
+        out[1][i] = filter.Band();
+        out[2][i] = filter.High();
+        out[3][i] = filter.Notch();
+    }
+}
 
-void SimplerCallback(float **in, float **out, size_t size) 
+
+void SimplerCallback(float **in, float **out, size_t size)
 {
     float dryl, dryr, sendl, sendr, wetl, wetr;
     float verbsend, verbtime, newdelaytime, delayamt;
@@ -104,18 +92,22 @@ void SimplerCallback(float **in, float **out, size_t size)
     hw.UpdateAnalogControls();
     hw.DebounceControls();
     verbsend = (1.f + hw.GetCtrlValue(DaisyPatch::CTRL_1));
-    verbtime = (DSY_CLAMP((1.f + hw.GetCtrlValue(DaisyPatch::CTRL_2)), 0.0f, 1.0f) * 0.25f) + 0.74f;
-    newdelaytime = 0.0015f + (1.f + hw.GetCtrlValue(DaisyPatch::CTRL_3)) * 0.6f;
-    delayamt = (1.f + hw.GetCtrlValue(DaisyPatch::CTRL_4));
-    dmix      = delayamt * 0.75f;
-    dfb       = delayamt * delayamt * 0.9f;
-	delaytime += 0.001f * (newdelaytime - delaytime);
-    if(hw.encoder.FallingEdge()) {
+    verbtime
+        = (DSY_CLAMP((hw.GetCtrlValue(DaisyPatch::CTRL_2)), 0.0f, 1.0f) * 0.25f)
+          + 0.74f;
+    newdelaytime = 0.0015f + (hw.GetCtrlValue(DaisyPatch::CTRL_3)) * 0.6f;
+    delayamt     = (hw.GetCtrlValue(DaisyPatch::CTRL_4));
+    dmix         = delayamt * 0.75f;
+    dfb          = delayamt * delayamt * 0.9f;
+    delaytime += 0.001f * (newdelaytime - delaytime);
+    if(hw.encoder.FallingEdge())
+    {
         bypass_state = !bypass_state;
     }
     for(size_t i = 0; i < 4; i++)
     {
-		delay[i].SetDelay(hw.AudioSampleRate() * (delaytime + (i * (delaytime * 0.2f))));
+        delay[i].SetDelay(hw.AudioSampleRate()
+                          * (delaytime + (i * (delaytime * 0.2f))));
         if(bypass_state)
         {
             for(size_t j = 0; j < size; j++)
@@ -128,17 +120,17 @@ void SimplerCallback(float **in, float **out, size_t size)
             float dry, wet, del;
             for(size_t j = 0; j < size; j++)
             {
-				dry = in[i][j];
-                del       = delay[i].Read();
+                dry = in[i][j];
+                del = delay[i].Read();
                 delay[i].Write(dry + (del * dfb));
-                wet       = (dry * sinf((1.0f - verbsend))) + (del * sinf(verbsend));
+                wet = (dry * sinf((1.0f - verbsend))) + (del * sinf(verbsend));
                 out[i][j] = wet;
             }
         }
     }
 }
 
-void RunTestCallbacksMain() 
+void RunTestCallbacksMain()
 {
     float samplerate;
     // Init
@@ -146,10 +138,10 @@ void RunTestCallbacksMain()
     samplerate = hw.AudioSampleRate();
     verb.Init(samplerate);
     verb.SetLpFreq(12000.0f);
-    delay[0].Init();
-    delay[1].Init();
-    delay[2].Init();
-    delay[3].Init();
+        for(size_t i = 0; i < NUM_BYTES; i++)
+        {
+            bytes[i] = 0;
+    	}
     for(size_t i = 0; i < NUM_OSC; i++)
     {
         osc[i].Init(samplerate);
@@ -159,19 +151,20 @@ void RunTestCallbacksMain()
     }
     size_t initial_delay;
     initial_delay = 48000;
-    delay[0].SetDelay(initial_delay);
-    delay[1].SetDelay(initial_delay);
-    delay[2].SetDelay(initial_delay);
-    delay[3].SetDelay(initial_delay);
+    for(size_t i = 0; i < 4; i++)
+    {
+        delay[i].Init();
+        delay[i].SetDelay(initial_delay);
+    }
+    filter.Init(samplerate);
+    p_xf.init(hw.controls[DaisyPatch::CTRL_1], 20.f, 16000.f, parameter::LOG);
+    p_res.init(hw.controls[DaisyPatch::CTRL_2], 0.f, 1.f, parameter::LINEAR);
     // Display Test
     hw.StartAdc();
-//    dsy_audio_set_callback(DSY_AUDIO_EXTERNAL, SecondaryCallback);
-//    dsy_audio_start(DSY_AUDIO_EXTERNAL);
-
-    hw.StartAudio(SimplerCallback);
+    hw.StartAudio(ChordCallback);
+    //    hw.StartAudio(MultiOutputFilter);
     for(;;)
     {
-        // Handle MIDI Events
         hw.DisplayControls();
     }
 }
