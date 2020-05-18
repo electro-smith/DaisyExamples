@@ -8,15 +8,32 @@ DaisyPod   hw;
 Oscillator osc;
 parameter  p_freq;
 
-static float freq;
-float        sig, waveform;
+static float   freq;
+float          sig, waveform;
+static int32_t inc, octave = 2;
 
-static void  audioCallback(float *in, float *out, size_t size)
+static void audioCallback(float *in, float *out, size_t size)
 {
+    hw.encoder.Debounce();
+    inc = hw.encoder.Increment();
+    if(inc > 0)
+    {
+        octave *= 2;
+        if(octave >= 10)
+            octave = 10;
+    }
+
+    if(inc < 0)
+    {
+        octave *= .5;
+        if(octave <= 2)
+            octave = 2;
+    }
+    
     // Get Parameters
     freq = p_freq.process();
 
-    osc.SetFreq(freq);
+    osc.SetFreq(freq*octave);
 
     // Audio Loop
     for(size_t i = 0; i < size; i += 2)
