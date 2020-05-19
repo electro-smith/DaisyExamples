@@ -3,10 +3,10 @@
 using namespace daisy;
 
 DaisyPod hw;
-bool     on = 0;
 
 int main(void)
 {
+    bool state1 = 0, state2 = 0;
     hw.Init();
 
     while(1)
@@ -15,24 +15,18 @@ int main(void)
 
         // using button1 as momentary switch for turning on/off led1
         if(hw.button1.Pressed())
-        {
-            hw.led1.Set(.5, .5, .5);
-        }
+            state1 = 1;
         else
-        {
-            hw.led1.Set(0, 0, 0);
-        }
+            state1 = 0;
 
         // using button2 as latching switch for toggling led2
         if(hw.button2.RisingEdge())
         {
-            if(on)
-                hw.led2.Set(0, 0, 0);
-            else
-                hw.led2.Set(.5, .5, .5);
-
-            on = !on;
+            state2 = !state2;
         }
+        
+        hw.led1.Set(state1, state1, state1);
+        hw.led2.Set(state2, state2, state2);
         hw.UpdateLeds();
     }
 }
