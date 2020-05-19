@@ -1,6 +1,5 @@
 # Project Name
-TARGET = ex_podVs
-
+TARGET = SimpleButton
 # Sources
 CPP_SOURCES = SimpleButton.cpp
 
