@@ -1,10 +1,15 @@
-# Button
+#SimpleButton
+**Author:** Andrew Ikenberry
 
-Simple Example using VisualGDB extension for Visual Studio.
+**Date:** May 2020
 
-Pretty much a playground for testing, or creating new vs projects.
+**Hardware:** Daisy Pod
 
-This may not always be configured to run on the pod, but should be able to work on all platforms with relatively few changes to any of the code.
+##Description:
+Example showing basic usage of pushbutton switches for momentary and latching behavior.
 
-Can be built in Visual Studio with MSBuild, or using local Makefile.
+##Controls:
 
+SW 1: Configured as momentary switch for controlling LED1
+
+SW 2: Configured as latching switch for controlling LED2

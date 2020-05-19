@@ -6,7 +6,9 @@ DaisyPod hw;
 
 int main(void)
 {
-    bool state1 = 0, state2 = 0;
+    bool brightness1, brightness2;
+    brightness1 = false;
+    brightness2 = false;
     hw.Init();
 
     while(1)
@@ -14,19 +16,15 @@ int main(void)
         hw.DebounceControls();
 
         // using button1 as momentary switch for turning on/off led1
-        if(hw.button1.Pressed())
-            state1 = 1;
-        else
-            state1 = 0;
+        brightness1 = hw.button1.Pressed();
 
         // using button2 as latching switch for toggling led2
         if(hw.button2.RisingEdge())
-        {
-            state2 = !state2;
-        }
+            brightness2 = !brightness2;
         
-        hw.led1.Set(state1, state1, state1);
-        hw.led2.Set(state2, state2, state2);
+        // assign brightness levels to each led (R, G, B)
+        hw.led1.Set(brightness1, brightness1, brightness1);
+        hw.led2.Set(brightness2, brightness2, brightness2);
         hw.UpdateLeds();
     }
 }

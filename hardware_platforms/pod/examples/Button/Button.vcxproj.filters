@@ -793,4 +793,9 @@
       <Filter>VisualGDB settings</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md">
+      <Filter>Source files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

@@ -65,6 +65,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="system_stm32h7xx.c" />
+    <None Include="README.md" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h750xx.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c" />
