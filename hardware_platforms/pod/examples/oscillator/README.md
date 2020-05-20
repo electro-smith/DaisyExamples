@@ -1,10 +1,17 @@
-# oscillator
+#SimpleOscillator Author: Andrew Ikenberry
 
-Simple Example using VisualGDB extension for Visual Studio.
+Date: May 2020
 
-Pretty much a playground for testing, or creating new vs projects.
+Hardware: Daisy Pod
 
-This may not always be configured to run on the pod, but should be able to work on all platforms with relatively few changes to any of the code.
+##Description: Example showing a basic oscillator with controls.
 
-Can be built in Visual Studio with MSBuild, or using local Makefile.
+##Controls:
 
+Pot 1: Coarse frequency 10Hz - 12kHz
+
+SW 1: Octave down
+
+SW 2: Octave up
+
+Encoder: Waveform choice (sine, triangle, band-limited sawtooth, band-limited square)
