@@ -39,9 +39,6 @@
     <ClCompile Include="SimpleOscillator.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="system_stm32h7xx.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
     </None>

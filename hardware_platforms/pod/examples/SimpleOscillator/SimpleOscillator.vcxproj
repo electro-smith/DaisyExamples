@@ -64,7 +64,6 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="SimpleOscillator.cpp" />
-    <ClCompile Include="system_stm32h7xx.c" />
     <None Include="README.md" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h750xx.c" />
