@@ -1,4 +1,4 @@
-# SimpleSimpleLed
+#SimpleLed
 Author: Andrew Ikenberry
 
 Date: May 2020
