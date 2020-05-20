@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Daisy_Seed_Rev2", "Daisy_Seed_Rev2.vcxproj", "{57592878-441A-4056-8BE7-87649D5D0D6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|VisualGDB = Debug|VisualGDB
+		Release|VisualGDB = Release|VisualGDB
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57592878-441A-4056-8BE7-87649D5D0D6B}.Debug|VisualGDB.ActiveCfg = Debug|VisualGDB
+		{57592878-441A-4056-8BE7-87649D5D0D6B}.Debug|VisualGDB.Build.0 = Debug|VisualGDB
+		{57592878-441A-4056-8BE7-87649D5D0D6B}.Release|VisualGDB.ActiveCfg = Release|VisualGDB
+		{57592878-441A-4056-8BE7-87649D5D0D6B}.Release|VisualGDB.Build.0 = Release|VisualGDB
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6543798-3488-4A13-AE5C-329929096A2F}
+	EndGlobalSection
+EndGlobal

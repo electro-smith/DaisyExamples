@@ -225,7 +225,7 @@ void SystemInit (void)
 
   /* Configure the Vector Table location add offset address for cortex-M7 ------------------*/
 #ifdef VECT_TAB_SRAM
-  SCB->VTOR = D1_AXISRAM_BASE  | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal D1 AXI-RAM */
+  SCB->VTOR = D1_DTCMRAM_BASE  | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal D1 AXI-RAM */
 #else
   SCB->VTOR = FLASH_BANK1_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
 #endif

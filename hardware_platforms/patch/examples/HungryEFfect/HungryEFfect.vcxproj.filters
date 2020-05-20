@@ -44,8 +44,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <LinkerScript Include="STM32H750IB_flash.lds">
-      <Filter>Source files</Filter>
-    </LinkerScript>
+    <ClInclude Include="TestCallbacks.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

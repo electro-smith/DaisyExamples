@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<MemoryUtilizationReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Memories>
+    <MemoryUtilization>
+      <MemoryName>FLASH</MemoryName>
+      <Used>99068</Used>
+      <Total>131072</Total>
+    </MemoryUtilization>
+    <MemoryUtilization>
+      <MemoryName>DTCMRAM</MemoryName>
+      <Used>0</Used>
+      <Total>131072</Total>
+    </MemoryUtilization>
+    <MemoryUtilization>
+      <MemoryName>SRAM</MemoryName>
+      <Used>10712</Used>
+      <Total>524288</Total>
+    </MemoryUtilization>
+    <MemoryUtilization>
+      <MemoryName>RAM_D2</MemoryName>
+      <Used>0</Used>
+      <Total>294912</Total>
+    </MemoryUtilization>
+    <MemoryUtilization>
+      <MemoryName>RAM_D3</MemoryName>
+      <Used>0</Used>
+      <Total>65536</Total>
+    </MemoryUtilization>
+    <MemoryUtilization>
+      <MemoryName>ITCMRAM</MemoryName>
+      <Used>0</Used>
+      <Total>65536</Total>
+    </MemoryUtilization>
+  </Memories>
+</MemoryUtilizationReport>
