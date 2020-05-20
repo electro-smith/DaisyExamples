@@ -16,52 +16,28 @@ uint8_t waveforms[NUM_WAVEFORMS] = {
     Oscillator::WAVE_POLYBLEP_SAW,
     Oscillator::WAVE_POLYBLEP_SQUARE,
 };
-uint8_t octave_factor[5] = {
-    1,
-    2,
-    4,
-    8,
-    16,
-};
 
 static float   freq;
 float          sig;
-static int32_t waveform = 0, octave = 0;
+static int     waveform, octave;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
     hw.DebounceControls();
 
-    // read state from encoder and increment waveform accordingly
     waveform += hw.encoder.Increment();
-
-    // clamp if waveform exceeds limits
-    if(waveform >= NUM_WAVEFORMS)
-        waveform = NUM_WAVEFORMS - 1;
-    else if(waveform <= 0)
-        waveform = 0;
-
+    waveform = DSY_CLAMP(waveform, 0, NUM_WAVEFORMS);
     osc.SetWaveform(waveforms[waveform]);
 
-    // if button2 has been pressed, octave up
     if(hw.button2.RisingEdge())
-    {
         octave++;
-        if(octave > 4)
-            octave = 4;
-    }
-
-    // if button1 has been pressed, octave down
     if(hw.button1.RisingEdge())
-    {
         octave--;
-        if(octave < 0)
-            octave = 0;
-    }
+    octave = DSY_CLAMP(octave, 0, 4);
 
-    // assign freq value from pot
-    freq = p_freq.Process();
-    osc.SetFreq(freq * octave_factor[octave]);
+    // convert MIDI to frequency and multiply by octave size
+    freq = mtof(p_freq.Process() + (octave * 12));
+    osc.SetFreq(freq);
 
     // Audio Loop
     for(size_t i = 0; i < size; i += 2)
@@ -75,12 +51,15 @@ static void AudioCallback(float *in, float *out, size_t size)
 
 void InitSynth(float samplerate)
 {
-    // init freq parameter to knob1, min 10, max 12k, curve log
-    p_freq.Init(hw.knob1, 10.0f, 12000.0f, Parameter::LOGARITHMIC);
+    // init freq parameter to knob1 using MIDI note numbers
+    // min 10, max 127, curve linear
+    p_freq.Init(hw.knob1, 0, 127, Parameter::LINEAR);
 
-    // init Osc
     osc.Init(samplerate);
     osc.SetAmp(0.5f);
+
+    waveform = 0;
+    octave   = 0;
 }
 
 int main(void)
