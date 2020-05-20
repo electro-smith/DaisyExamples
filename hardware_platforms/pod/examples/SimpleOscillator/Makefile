@@ -1,5 +1,5 @@
 # Project Name
-TARGET = SimpleOscillator 
+TARGET = SimpleOscillator
 
 # Sources
 CPP_SOURCES = SimpleOscillator.cpp
