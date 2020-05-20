@@ -47,6 +47,16 @@ float                                  delaytime;
 float major_chord[4] = {0, 4, 7, 11};
 float minor_chord[4] = {0, 3, 7, 10};
 
+void QuadBypass(float **in, float **out, size_t size) 
+{
+    
+    for(size_t i = 0; i < size; i++) {
+        for(size_t chn = 0; chn < 4; chn++) {
+            out[chn][i] = in[chn][i];
+        }
+    }
+}
+
 void ChordCallback(float **in, float **out, size_t size)
 {
     size_t num_channels = 4;
@@ -161,7 +171,7 @@ void RunTestCallbacksMain()
     p_res.init(hw.controls[DaisyPatch::CTRL_2], 0.f, 1.f, parameter::LINEAR);
     // Display Test
     hw.StartAdc();
-    hw.StartAudio(ChordCallback);
+    hw.StartAudio(QuadBypass);
     //    hw.StartAudio(MultiOutputFilter);
     for(;;)
     {
