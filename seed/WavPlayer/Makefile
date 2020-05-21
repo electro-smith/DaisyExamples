@@ -5,8 +5,8 @@ TARGET = ex_WavPlayer
 CPP_SOURCES = WavPlayer.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../../libdaisy
-DAISYSP_DIR = ../../../../daisysp
+LIBDAISY_DIR = ../../libdaisy
+DAISYSP_DIR = ../../daisysp
 
 # FatFs
 FATFS_DIR = $(LIBDAISY_DIR)/Middlewares/Third_Party/FatFs/src

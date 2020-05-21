@@ -5,8 +5,8 @@ TARGET = ex_SeedOLED
 CPP_SOURCES = SeedOLED.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../../libdaisy
-DAISYSP_DIR = ../../../../daisysp
+LIBDAISY_DIR = ../../libdaisy
+DAISYSP_DIR = ../../daisysp
 
 # Core location, and generic makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

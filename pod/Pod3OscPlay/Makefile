@@ -5,8 +5,8 @@ TARGET = ex_Pod3OscPlay
 CPP_SOURCES = Pod3OscPlay.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../../libdaisy
-DAISYSP_DIR = ../../../../daisysp
+LIBDAISY_DIR = ../../libdaisy
+DAISYSP_DIR = ../../daisysp
 
 # FatFs
 #FATFS_DIR = $(LIBDAISY_DIR)/Middlewares/Third_Party/FatFs/src

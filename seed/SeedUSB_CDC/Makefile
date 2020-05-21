@@ -5,8 +5,8 @@ TARGET = ex_SeedUSB_CDC
 CPP_SOURCES = SeedUSB_CDC.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../../libdaisy
-DAISYSP_DIR = ../../../../daisysp
+LIBDAISY_DIR = ../../libdaisy
+DAISYSP_DIR = ../../daisysp
 
 # Core location, and generic makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

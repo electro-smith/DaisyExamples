@@ -5,8 +5,8 @@ TARGET = SimpleLed
 CPP_SOURCES = SimpleLed.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../../libdaisy
-DAISYSP_DIR = ../../../../daisysp
+LIBDAISY_DIR = ../../libdaisy
+DAISYSP_DIR = ../../daisysp
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

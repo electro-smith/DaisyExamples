@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../../../libdaisy/src;../../../../daisysp;../../../../libdaisy/Middlewares/Third_Party/FatFs/src;../../../../cube/Daisy_Rev3/Drivers/CMSIS/DSP/Include;../../../../cube/Daisy_Rev3/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../libdaisy/src;../../daisysp;../../libdaisy/Middlewares/Third_Party/FatFs/src;../../cube/Daisy_Rev3/Drivers/CMSIS/DSP/Include;../../cube/Daisy_Rev3/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;STM32H750xx;__FPU_PRESENT=1;;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard />
@@ -51,7 +51,7 @@
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <LinkerScript>../../../../libdaisy/core/STM32H750IB_flash.lds</LinkerScript>
+      <LinkerScript>../../libdaisy/core/STM32H750IB_flash.lds</LinkerScript>
       <AdditionalOptions />
     </Link>
   </ItemDefinitionGroup>

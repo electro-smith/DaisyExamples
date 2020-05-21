@@ -5,8 +5,8 @@ TARGET = ex_Seed3Test
 CPP_SOURCES = Seed3Test.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../../libdaisy
-DAISYSP_DIR = ../../../../daisysp
+LIBDAISY_DIR = ../../libdaisy
+DAISYSP_DIR = ../../daisysp
 
 # FatFs
 #FATFS_DIR = $(LIBDAISY_DIR)/Middlewares/Third_Party/FatFs/src
