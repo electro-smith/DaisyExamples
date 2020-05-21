@@ -3,10 +3,10 @@
 //
 // I'll be using the daisy pod to test most of the hardware,
 // but won't be using the Pod BSP. Just to make sure the
-// initialization for each component is nice and clean.
+// Initialization for each component is nice and clean.
 //
 // Once everything's ironed out. I'll back annotate the
-// init changes, etc. to the bsp files.
+// Init changes, etc. to the bsp files.
 #include <string.h>
 #include "daisy_seed.h"
 #include "daisysp.h"
@@ -14,8 +14,8 @@
 
 using namespace daisy;
 
-static void init_led();
-static void init_pod_adcs();
+static void Init_led();
+static void Init_pod_adcs();
 
 class BasicRgb
 {
@@ -96,7 +96,7 @@ Switch sw_1;
 Encoder enc;
 BasicRgb led2;
 AnalogControl pot1;
-parameter     p;
+Parameter     p;
 
 // Module in progress.
 
@@ -144,7 +144,7 @@ void AudioCallback(float *in, float *out, size_t size)
     {
         // Ticks at FS
         //osc.set_freq(daisysp::mtof(12.0f + (pot1.Process() * 96.0f)));
-        osc.SetFreq(daisysp::mtof(p.process()));
+        osc.SetFreq(daisysp::mtof(p.Process()));
         out[i] = osc.Process();
         out[i + 1] = out[i];
     }
@@ -157,12 +157,12 @@ int main(void)
     float sample_rate;
     hw.Init();
     sample_rate = hw.AudioSampleRate();
-    init_pod_adcs();
+    Init_pod_adcs();
     osc.Init(sample_rate);
     osc.SetAmp(1.00f);
     osc.SetWaveform(daisysp::Oscillator::WAVE_TRI);
     dsy_tim_start();
-    init_led();
+    Init_led();
 
     led2.Init(hw.GetPin(0), hw.GetPin(25), hw.GetPin(24));
 
@@ -178,7 +178,7 @@ int main(void)
              sample_rate / 24);
     
     pot1.Init(dsy_adc_get_rawptr(0), sample_rate);
-    p.init(pot1, 12.0f, 96.0f, parameter::LINEAR);
+    p.Init(pot1, 12.0f, 96.0f, Parameter::LINEAR);
 
     dsy_adc_start();
     hw.StartAudio(AudioCallback);
@@ -186,7 +186,7 @@ int main(void)
     while(1) {}
 }
 
-void init_led()
+void Init_led()
 {
     // Still old style so as not to break
     // pure-c modules..
@@ -196,7 +196,7 @@ void init_led()
     dsy_gpio_init(&led_blue);
 }
 
-void init_pod_adcs()  
+void Init_pod_adcs()  
 {
     uint8_t channel_order[2] = {DSY_ADC_PIN_CHN11, DSY_ADC_PIN_CHN10};
     hw.adc_handle.channels      = 2;

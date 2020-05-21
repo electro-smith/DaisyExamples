@@ -66,9 +66,6 @@ int main(void)
 {
     // Init
     float samplerate;
-    char  outbuff[64];
-    size_t len;
-    uint32_t now, tick;
     hw.Init();
     hw.seed.usb_handle.Init(UsbHandle::FS_EXTERNAL);
     midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);

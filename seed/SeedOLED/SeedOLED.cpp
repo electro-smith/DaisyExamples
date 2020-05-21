@@ -10,8 +10,6 @@ OledDisplay display;
 
 int main(void)
 {
-    bool    state;
-    uint8_t xcnt, ycnt;
     uint8_t message_idx;
     dsy_gpio_pin oled_pins[OledDisplay::NUM_PINS];
     hw.Configure();
@@ -19,8 +17,6 @@ int main(void)
     oled_pins[OledDisplay::DATA_COMMAND] = hw.GetPin(10);
     oled_pins[OledDisplay::RESET] = hw.GetPin(31);
     display.Init(oled_pins);
-    state = true;
-    xcnt = ycnt = 0;
     message_idx = 0;
     char strbuff[128];
     while(1)

@@ -7,13 +7,13 @@
 //
 #include <stdio.h>
 #include <string.h>
-//#include "daisy_pod.h"
-#include "daisy_patch.h"
+#include "daisy_pod.h"
+//#include "daisy_patch.h"
 
 using namespace daisy;
 
-//DaisyPatch hw;
-DaisyPatch   hw;
+//DaisyPatch   hw;
+DaisyPod hw;
 SdmmcHandler sdcard;
 WavPlayer    sampler;
 

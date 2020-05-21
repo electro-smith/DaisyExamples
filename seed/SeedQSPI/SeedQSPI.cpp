@@ -77,6 +77,8 @@ int main(void)
 	end = dsy_tim_get_tick();
 	dur_read_axi = (end - start) / 200;
 	
+    if (res)
+        asm("bkpt 255");
 
 	// READ test
 	// Write 4kb chunks at a time

@@ -24,6 +24,6 @@ int main(void)
     hw.StartAudio(callback);
     while(1) 
     {
-        // Do Stuff Infinitely Here
+        // Do Stuff InfInitely Here
     }
 }

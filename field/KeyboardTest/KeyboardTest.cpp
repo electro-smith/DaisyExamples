@@ -2,12 +2,13 @@
 #include "daisysp.h"
 
 #define NUM_VOICES 16
+
 daisy_field hw;
 
 
 struct voice
 {
-    void init()
+    void Init()
     {
         osc_.Init(DSY_AUDIO_SAMPLE_RATE);
         amp_ = 0.0f;
@@ -15,7 +16,7 @@ struct voice
         osc_.SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
         on_ = false;
     }
-    float process()
+    float Process()
     {
         float sig;
         amp_ += 0.0025f * ((on_ ? 1.0f : 0.0f) - amp_);
@@ -129,7 +130,7 @@ void AudioCallback(float *in, float *out, size_t size)
         for(int i = 0; i < NUM_VOICES; i++)
         {
             if(i != 10 && i != 14 && i != 15)
-                sig += v[i].process();
+                sig += v[i].Process();
         }
         send = sig * 0.35f;
         verb.Process(send, send, &wetl, &wetr);
@@ -159,7 +160,7 @@ int main(void)
 {
     size_t blocksize = 48;
     daisy_field_init(&hw);
-    // initialize controls.
+    // Initialize controls.
     int potmap[8]
         = {KNOB_1, KNOB_2, KNOB_3, KNOB_4, KNOB_5, KNOB_6, KNOB_7, KNOB_8};
     for(int i = 0; i < 8; i++)
@@ -178,7 +179,7 @@ int main(void)
     octaves = 2;
     for(int i = 0; i < NUM_VOICES; i++)
     {
-        v[i].init();
+        v[i].Init();
         v[i].set_note((12.0f * octaves) + 24.0f + scale[i]);
     }
     verb.Init(DSY_AUDIO_SAMPLE_RATE);
