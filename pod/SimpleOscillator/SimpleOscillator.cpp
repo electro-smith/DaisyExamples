@@ -51,7 +51,7 @@ static void AudioCallback(float *in, float *out, size_t size)
 
 void InitSynth(float samplerate)
 {
-    // init freq parameter to knob1 using MIDI note numbers
+    // Init freq Parameter to knob1 using MIDI note numbers
     // min 10, max 127, curve linear
     p_freq.Init(hw.knob1, 0, 127, Parameter::LINEAR);
 
@@ -66,7 +66,7 @@ int main(void)
 {
     float samplerate;
 
-    // init everything
+    // Init everything
     hw.Init();
     samplerate = hw.AudioSampleRate();
     InitSynth(samplerate);

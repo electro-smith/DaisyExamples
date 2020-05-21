@@ -22,6 +22,6 @@ int main(void)
     // Initialize Stuff Here
     while(1) 
     {
-        // Do Stuff Infinitely Here
+        // Do Stuff InfInitely Here
     }
 }

@@ -6,7 +6,7 @@ using namespace daisysp;
 
 daisy_patch patch;
 Oscillator osc;
-parameter freqctrl, wavectrl, ampctrl;
+Parameter freqctrl, wavectrl, ampctrl;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
@@ -15,14 +15,14 @@ static void AudioCallback(float *in, float *out, size_t size)
     for (size_t i = 0; i < size; i += 2)
     {
         // Read Knobs
-        freq = mtof(freqctrl.process());
-        wave = wavectrl.process();
-        amp = ampctrl.process();
+        freq = mtof(freqctrl.Process());
+        wave = wavectrl.Process();
+        amp = ampctrl.Process();
         // Set osc params
         osc.SetFreq(freq);
         osc.SetWaveform(wave);
         osc.SetAmp(amp);
-        // process
+        //.Process
     	sig = osc.Process();
     	// left out
         out[i] = sig;
@@ -34,17 +34,17 @@ static void AudioCallback(float *in, float *out, size_t size)
 int main(void)
 {
     int num_waves = Oscillator::WAVE_LAST - 1;
-    patch.Init(); // initialize hardware (daisy seed, and patch)
-    osc.Init(SAMPLE_RATE); // init oscillator
+    patch.Init(); // Initialize hardware (daisy seed, and patch)
+    osc.Init(SAMPLE_RATE); // Init oscillator
 
     // This is with the GetCtrl, but it can also be done with the public members.
-    //freqctrl.init(patch.GetCtrl(daisy_patch::KNOB_1), 10.0, 110.0, parameter::LINEAR);
-    //wavectrl.init(patch.GetCtrl(daisy_patch::KNOB_2), 0.0, num_waves, parameter::LINEAR);
-    //ampctrl.init(patch.GetCtrl(daisy_patch::KNOB_2), 0.0, 0.5, parameter::LINEAR);
+    //freqctrl.Init(patch.GetCtrl(daisy_patch::KNOB_1), 10.0, 110.0, Parameter::LINEAR);
+    //wavectrl.Init(patch.GetCtrl(daisy_patch::KNOB_2), 0.0, num_waves, Parameter::LINEAR);
+    //ampctrl.Init(patch.GetCtrl(daisy_patch::KNOB_2), 0.0, 0.5, Parameter::LINEAR);
     // Like this:
-    freqctrl.init(patch.knob1, 10.0, 110.0f, parameter::LINEAR);
-    wavectrl.init(patch.knob2, 0.0, num_waves, parameter::LINEAR);
-    ampctrl.init(patch.knob3, 0.0, 0.5f, parameter::LINEAR);
+    freqctrl.Init(patch.knob1, 10.0, 110.0f, Parameter::LINEAR);
+    wavectrl.Init(patch.knob2, 0.0, num_waves, Parameter::LINEAR);
+    ampctrl.Init(patch.knob3, 0.0, 0.5f, Parameter::LINEAR);
 
     dsy_adc_start();
     patch.StartAudio(AudioCallback);

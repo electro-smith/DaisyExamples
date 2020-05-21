@@ -276,7 +276,7 @@ int main(void)
     writesize = (sizeof(qspi_buff[0]) * BIG_BUFF_SIZE);
     dsy_qspi_erase(baseaddr, baseaddr + writesize);
     dsy_qspi_write(baseaddr, writesize, (uint8_t *)huge_friggin_ram_buff);
-    // Now reinit to memory mapped
+    // Now reInit to memory mapped
     hw.qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
     dsy_qspi_init(&hw.qspi_handle);
     // Check contents of QSPI, and crash if fails

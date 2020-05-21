@@ -43,7 +43,7 @@ PolyPluck<NUM_VOICES> synth;
 DelayLine<float, MAX_DELAY> DSY_SDRAM_BSS delay;
 ReverbSc  verb;
 
-// Persistent filtered value for smooth delay time changes.
+// Persistent filtered Value for smooth delay time changes.
 float smooth_time;
 
 void AudioCallback(float *in, float *out, size_t size)

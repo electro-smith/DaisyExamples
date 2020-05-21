@@ -10,7 +10,7 @@ Oscillator osc;
 Svf        filt;
 ReverbSc   verb;
 AdEnv      env;
-parameter p_xf, p_vamt, p_dec, p_vtime;
+Parameter p_xf, p_vamt, p_dec, p_vtime;
 
 const static float scale[7] = {0, 2, 4, 5, 7, 9, 11};
 
@@ -38,9 +38,9 @@ static void  audio(float *in, float *out, size_t size)
     }
 
     // Get Parameters
-    xf   = p_xf.process();
-    vamt = p_vamt.process();
-    dec  = p_dec.process();
+    xf   = p_xf.Process();
+    vamt = p_vamt.Process();
+    dec  = p_dec.Process();
 
     // Audio Loop
     for(size_t i = 0; i < size; i += 2)
@@ -60,10 +60,10 @@ static void  audio(float *in, float *out, size_t size)
 void InitSynth(float samplerate)
 {
     // Synth Parameters.
-    p_xf.init(hw.knob1, 10.0f, 12000.0f, parameter::LOG);
-    p_dec.init(hw.knob1, 0.2f, 5.0f, parameter::EXP);
-    p_vamt.init(hw.knob2, 0.0f, 1.0f, parameter::LINEAR);
-    p_vtime.init(hw.knob2, 0.4f, 0.95f, parameter::LINEAR);
+    p_xf.Init(hw.knob1, 10.0f, 12000.0f, Parameter::LOGARITHMIC);
+    p_dec.Init(hw.knob1, 0.2f, 5.0f, Parameter::EXPONENTIAL);
+    p_vamt.Init(hw.knob2, 0.0f, 1.0f, Parameter::LINEAR);
+    p_vtime.Init(hw.knob2, 0.4f, 0.95f, Parameter::LINEAR);
     dec = 0.62;
     // Init Osc and Nse
     osc.Init(samplerate);

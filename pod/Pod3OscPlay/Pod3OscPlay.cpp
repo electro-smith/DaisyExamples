@@ -21,7 +21,7 @@ float bright, amp, targetamp;
 //    hw.UpdateAnalogControls();
 //    hw.DebounceControls();
 //    float sig, note;
-//    // One way to get value
+//    // One way to get Value
 //    note = hw.GetKnobValue(DaisyPetal::KNOB_1) * 127.0f;
 //    // Or
 //    bright = hw.knob2.Value();

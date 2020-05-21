@@ -24,7 +24,7 @@ class NewClass
 
 DaisyPatch hw;
 
-parameter p_xf, p_res;
+Parameter p_xf, p_res;
 
 ReverbSc verb;
 //Svf DSY_SDRAM_BSS filter;
@@ -82,8 +82,8 @@ void MultiOutputFilter(float **in, float **out, size_t size)
     hw.UpdateAnalogControls();
     for(size_t i = 0; i < size; i++)
     {
-        filter.SetFreq(p_xf.process());
-        filter.SetRes(p_res.process());
+        filter.SetFreq(p_xf.Process());
+        filter.SetRes(p_res.Process());
         filter.Process(in[0][i]);
         out[0][i] = filter.Low();
         out[1][i] = filter.Band();
@@ -167,8 +167,8 @@ void RunTestCallbacksMain()
         delay[i].SetDelay(initial_delay);
     }
     filter.Init(samplerate);
-    p_xf.init(hw.controls[DaisyPatch::CTRL_1], 20.f, 16000.f, parameter::LOG);
-    p_res.init(hw.controls[DaisyPatch::CTRL_2], 0.f, 1.f, parameter::LINEAR);
+    p_xf.init(hw.controls[DaisyPatch::CTRL_1], 20.f, 16000.f, Parameter::LOGARITHMIC);
+    p_res.init(hw.controls[DaisyPatch::CTRL_2], 0.f, 1.f, Parameter::LINEAR);
     // Display Test
     hw.StartAdc();
     hw.StartAudio(QuadBypass);

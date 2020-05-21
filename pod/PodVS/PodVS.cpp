@@ -10,8 +10,8 @@ daisy_patch	hw;
 Oscillator	 osc;
 WhiteNoise	 nse;
 static uint8_t wf;
-parameter	  param_freq, param_nse_amp, param_osc_amp, param_bright;
-parameter	  param_ampcv;
+Parameter	  param_freq, param_nse_amp, param_osc_amp, param_bright;
+Parameter	  param_ampcv;
 
 static float freq;
 static void audio(float *in, float *out, size_t size)
@@ -29,13 +29,13 @@ static void audio(float *in, float *out, size_t size)
 	for(size_t i = 0; i < size; i += 2)
 	{
 		// Get Parameters
-		param_bright.process(); // for LEDs below
-		freq  = param_freq.process();
-		namp  = param_nse_amp.process();
-		oamp  = param_osc_amp.process();
-		oamp += param_ampcv.process();
-		namp += (param_ampcv.value() * param_ampcv.value()); // exp only for noise
-		// Set module parameters
+		param_bright.Process(); // for LEDs below
+		freq  = param_freq.Process();
+		namp  = param_nse_amp.Process();
+		oamp  = param_osc_amp.Process();
+		oamp += param_ampcv.Process();
+		namp += (param_ampcv.Value() * param_ampcv.Value()); // exp only for noise
+		// Set module Parameters
 		osc.SetFreq(freq);
 		osc.SetAmp(oamp);
 		nse.SetAmp(namp);
@@ -50,11 +50,11 @@ int main(void)
 {
 	// Initialize Hardware
 	hw.Init();
-	param_freq.init(hw.GetCtrl(daisy_patch::KNOB_1), 10.0f, 20000.0f, parameter::LOG);
-	param_nse_amp.init(hw.GetCtrl(daisy_patch::KNOB_2), 0.0f, 1.0f, parameter::EXP);
-	param_osc_amp.init(hw.GetCtrl(daisy_patch::KNOB_3), 0.0f, 0.4f, parameter::LINEAR);
-	param_bright.init(hw.GetCtrl(daisy_patch::KNOB_4), 0.0f, 1.0f, parameter::CUBE);
-	param_ampcv.init(hw.GetCtrl(daisy_patch::CV_2), 0.0f, 1.0f, parameter::LINEAR);
+	param_freq.Init(hw.GetCtrl(daisy_patch::KNOB_1), 10.0f, 20000.0f, Parameter::LOGARITHMIC);
+	param_nse_amp.Init(hw.GetCtrl(daisy_patch::KNOB_2), 0.0f, 1.0f, Parameter::EXPONENTIAL);
+	param_osc_amp.Init(hw.GetCtrl(daisy_patch::KNOB_3), 0.0f, 0.4f, Parameter::LINEAR);
+	param_bright.Init(hw.GetCtrl(daisy_patch::KNOB_4), 0.0f, 1.0f, Parameter::CUBE);
+	param_ampcv.Init(hw.GetCtrl(daisy_patch::CV_2), 0.0f, 1.0f, Parameter::LINEAR);
 	// Init Osc and Nse
 	dsy_tim_start();
 	osc.Init(SAMPLE_RATE);
@@ -73,7 +73,7 @@ int main(void)
 		dsy_tim_delay_ms(20);
 		for(uint16_t i = 0; i < daisy_patch::LED_LAST; i++)
 		{
-			dsy_led_driver_set_led(i, param_bright.value());
+			dsy_led_driver_set_led(i, param_bright.Value());
 		}
 	}
 }

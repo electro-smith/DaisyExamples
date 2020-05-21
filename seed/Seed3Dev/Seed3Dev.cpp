@@ -43,7 +43,7 @@ void AudioTest(float *in, float *out, size_t size)
     hw.UpdateAnalogControls();
     hw.DebounceControls();
     float sig, note;
-    // One way to get value
+    // One way to get Value
     note = hw.GetKnobValue(DEV_NAMESPACE::KNOB_1) * 127.0f;
     osc.SetFreq(daisysp::mtof(note));
 
@@ -215,7 +215,7 @@ int   main(void)
     dsy_gpio_init(&p);
     for(size_t i = 0; i < 32; i++) {
         p.pin = hw.seed.GetPin(i);
-		dsy_gpio_deinit(&p);
+		dsy_gpio_deInit(&p);
 		p.mode = DSY_GPIO_MODE_INPUT;
 		p.pull = DSY_GPIO_PULLDOWN;
 		dsy_gpio_init(&p);
