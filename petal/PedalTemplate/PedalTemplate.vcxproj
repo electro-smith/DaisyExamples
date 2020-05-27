@@ -63,10 +63,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\daisysp\daisysp.vcxproj">
+    <ProjectReference Include="..\..\daisysp\daisysp.vcxproj">
       <Project>{44f4aea3-a6b2-4f03-9c28-34b2336bdf57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\libdaisy\libdaisy.vcxproj">
+    <ProjectReference Include="..\..\libdaisy\libdaisy.vcxproj">
       <Project>{1b07a9d3-1e1b-488a-9817-4b13eeca191c}</Project>
     </ProjectReference>
   </ItemGroup>

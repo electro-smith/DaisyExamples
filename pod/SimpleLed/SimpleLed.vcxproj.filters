@@ -39,9 +39,6 @@
     <ClCompile Include="SimpleLed.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="system_stm32h7xx.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
     </None>
@@ -369,9 +366,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_utils.c">
       <Filter>Source files\Device-specific files\LL</Filter>
     </ClCompile>
-    <ClInclude Include="stm32h7xx_hal_conf.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h">
       <Filter>Header files\Device-specific files\HAL</Filter>
     </ClInclude>

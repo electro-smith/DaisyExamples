@@ -52,10 +52,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\daisysp\daisysp.vcxproj">
+    <ProjectReference Include="..\..\daisysp\daisysp.vcxproj">
       <Project>{44f4aea3-a6b2-4f03-9c28-34b2336bdf57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\libdaisy\libdaisy.vcxproj">
+    <ProjectReference Include="..\..\libdaisy\libdaisy.vcxproj">
       <Project>{1b07a9d3-1e1b-488a-9817-4b13eeca191c}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -64,7 +64,6 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="SimpleLed.cpp" />
-    <ClCompile Include="system_stm32h7xx.c" />
     <None Include="README.md" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h750xx.c" />
@@ -175,7 +174,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_usart.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_usb.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_utils.c" />
-    <ClInclude Include="stm32h7xx_hal_conf.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32H7xxxx\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc_ex.h" />

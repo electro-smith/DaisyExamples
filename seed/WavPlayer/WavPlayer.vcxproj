@@ -52,10 +52,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\daisysp\daisysp.vcxproj">
+    <ProjectReference Include="..\..\daisysp\daisysp.vcxproj">
       <Project>{44f4aea3-a6b2-4f03-9c28-34b2336bdf57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\libdaisy\libdaisy.vcxproj">
+    <ProjectReference Include="..\..\libdaisy\libdaisy.vcxproj">
       <Project>{1b07a9d3-1e1b-488a-9817-4b13eeca191c}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -63,10 +63,10 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.c" />
-    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff.c" />
-    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c" />
-    <ClCompile Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\option\ccsbcs.c" />
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.c" />
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff.c" />
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c" />
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\option\ccsbcs.c" />
     <ClCompile Include="WavPlayer.cpp" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h750xx.c" />
@@ -75,9 +75,9 @@
     <None Include="stm32.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.h" />
-    <ClInclude Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff.h" />
-    <ClInclude Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff_gen_drv.h" />
-    <ClInclude Include="..\..\..\..\libdaisy\Middlewares\Third_Party\FatFs\src\integer.h" />
+    <ClInclude Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.h" />
+    <ClInclude Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff.h" />
+    <ClInclude Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff_gen_drv.h" />
+    <ClInclude Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\integer.h" />
   </ItemGroup>
 </Project>
