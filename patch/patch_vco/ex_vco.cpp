@@ -42,7 +42,7 @@ int main(void)
     freqctrl.Init(patch.controls[patch.CTRL_1], 10.0, 110.0f, Parameter::LINEAR);
     wavectrl.Init(patch.controls[patch.CTRL_2], 0.0, num_waves, Parameter::LINEAR);
     ampctrl.Init(patch.controls[patch.CTRL_3], 0.0, 0.5f, Parameter::LINEAR);
-    dsy_adc_start();
+    patch.StartAdc();
     patch.StartAudio(AudioCallback);
     while(1) {} // loop forever
 }

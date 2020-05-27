@@ -53,7 +53,7 @@ int main(void)
     blk[0].Init(samplerate);
     blk[1].Init(samplerate);
 
-    dsy_adc_start();
+    patch.StartAdc();
     patch.StartAudio(VerbCallback);
 
     while(1) {}

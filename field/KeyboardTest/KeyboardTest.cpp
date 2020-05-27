@@ -3,6 +3,8 @@
 
 #define NUM_VOICES 16
 
+using namespace daisy;
+
 daisy_field hw;
 
 
@@ -88,11 +90,11 @@ void AudioCallback(float *in, float *out, size_t size)
     for(int i = 0; i < 8; i++)
     {
         //kvals[i] = knobs[i].Process();
-        kvals[i] = dsy_adc_get_mux_float(0, i);
+        kvals[i] = hw.knobs[i].Process();
         if(i < 4)
         {
             //cvvals[i] = cvs[i].Process();
-            cvvals[i] = dsy_adc_get_float(i + 1);
+            cvvals[i] = hw.cvs[i].Process();
         }
     }
 
@@ -146,11 +148,11 @@ void LightCallback(float *in, float *out, size_t size)
 {
     for(int i = 0; i < 8; i++)
     {
-        kvals[i] = knobs[i].Process();
+        kvals[i] = hw.knobs[i].Process();
         //        kvals[i] = dsy_adc_get_mux_float(0, i);
         if(i < 4)
         {
-            cvvals[i] = cvs[i].Process();
+            cvvals[i] = hw.cvs[i].Process();
             //            cvvals[i] = dsy_adc_get_float(i + 1);
         }
     }
@@ -161,21 +163,6 @@ int main(void)
     size_t blocksize = 48;
     daisy_field_init(&hw);
     // Initialize controls.
-    int potmap[8]
-        = {KNOB_1, KNOB_2, KNOB_3, KNOB_4, KNOB_5, KNOB_6, KNOB_7, KNOB_8};
-    for(int i = 0; i < 8; i++)
-    {
-        knobs[i].Init(dsy_adc_get_mux_rawptr(0, potmap[i]),
-                      DSY_AUDIO_SAMPLE_RATE / blocksize);
-    }
-    cvs[0].InitBipolarCv(dsy_adc_get_rawptr(1),
-                         DSY_AUDIO_SAMPLE_RATE / blocksize);
-    cvs[1].InitBipolarCv(dsy_adc_get_rawptr(2),
-                         DSY_AUDIO_SAMPLE_RATE / blocksize);
-    cvs[2].InitBipolarCv(dsy_adc_get_rawptr(3),
-                         DSY_AUDIO_SAMPLE_RATE / blocksize);
-    cvs[3].InitBipolarCv(dsy_adc_get_rawptr(4),
-                         DSY_AUDIO_SAMPLE_RATE / blocksize);
     octaves = 2;
     for(int i = 0; i < NUM_VOICES; i++)
     {
@@ -191,10 +178,9 @@ int main(void)
     foo.pin  = {DSY_GPIOA, 7};
     foo.pull = DSY_GPIO_NOPULL;
     dsy_gpio_init(&foo);
-    dsy_adc_start();
     dsy_audio_set_callback(DSY_AUDIO_INTERNAL, AudioCallback);
     dsy_audio_set_blocksize(DSY_AUDIO_INTERNAL, blocksize);
-    dsy_audio_start(DSY_AUDIO_INTERNAL);
+    hw.seed.adc.Start();
     bool ledstate;
     ledstate = true;
     for(;;)
