@@ -4,38 +4,12 @@
 using namespace daisy;
 using namespace daisysp;
 
-#define LEFT (i)
-#define RIGHT (i+1)
-
 #define NUM_VOICES 32
-#define MAX_DELAY ((size_t)(10.0f * SAMPLE_RATE))
+#define MAX_DELAY ((size_t)(10.0f * 48000.0f))
 
-// Simple Gate In -- to be moved to a libdaisy class soon.
-struct GateIn
-{
-    void Init(dsy_gpio *gatepin)
-    {
-        pin        = gatepin;
-        prev_state = 0;
-    }
-
-    // Call this periodically, it checks if
-    bool Trig()
-    {
-        bool new_state, out;
-        new_state  = !dsy_gpio_read(pin); // inverted because of hardware
-        out        = new_state && !prev_state;
-        prev_state = new_state;
-        return out;
-    }
-
-    dsy_gpio *pin;
-    uint8_t   prev_state;
-};
 
 // Hardware
-daisy_patch hw;
-GateIn      trig_in;
+DaisyPatch hw;
 
 // Synthesis
 PolyPluck<NUM_VOICES> synth;
@@ -46,32 +20,40 @@ ReverbSc  verb;
 // Persistent filtered Value for smooth delay time changes.
 float smooth_time;
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(float **in, float **out, size_t size)
 {
     float sig, delsig; // Mono Audio Vars
     float trig, nn, decay; // Pluck Vars
     float deltime, delfb, kval; // Delay Vars
     float dry, send, wetl, wetr; // Effects Vars
+    float samplerate;
+
+    // Assign Output Buffers
+    float *out_left, *out_right;
+    out_left = out[0];
+    out_right = out[1];
+
+    samplerate = hw.AudioSampleRate();
+    hw.DebounceControls();
+    hw.UpdateAnalogControls();
 
 	// Handle Triggering the Plucks
     trig = 0.0f;
-    hw.button1.Debounce();
-    if(hw.button1.RisingEdge() || trig_in.Trig())
+    if(hw.encoder.RisingEdge() || hw.gate_input[DaisyPatch::GATE_IN_1].Trig())
         trig = 1.0f;
 
 	// Set MIDI Note for new Pluck notes.
-    nn = 24.0f + hw.knob1.Process() * 60.0f;
-    nn += hw.cv3.Process() * 60.0f;
+    nn = 24.0f + hw.GetCtrlValue(DaisyPatch::CTRL_1) * 60.0f;
     nn = static_cast<int32_t>(nn); // Quantize to semitones
 
     // Read knobs for decay;
-    decay = 0.5f + (hw.knob2.Process() * 0.5f);
+    decay = 0.5f + (hw.GetCtrlValue(DaisyPatch::CTRL_2) * 0.5f);
     synth.SetDecay(decay);
 
     // Get Delay Parameters from knobs.
-    kval    = hw.knob3.Process();
-    deltime = (0.001f + (kval*kval) * 5.0f) * SAMPLE_RATE;
-    delfb   = hw.knob4.Process();
+    kval    = hw.GetCtrlValue(DaisyPatch::CTRL_3);
+    deltime = (0.001f + (kval*kval) * 5.0f) * samplerate;
+    delfb   = hw.GetCtrlValue(DaisyPatch::CTRL_4);
 
     // Synthesis.
     for(size_t i = 0; i < size; i += 2)
@@ -93,20 +75,21 @@ void AudioCallback(float *in, float *out, size_t size)
         verb.Process(send,send, &wetl, &wetr);
 
 		// Output 
-        out[LEFT]     = dry + wetl;
-        out[RIGHT] = dry + wetr;
+        out_left[i] = dry + wetl;
+        out_right[i]     = dry + wetr;
     }
 }
 
 int main(void)
 {
 	// Init everything.
+    float samplerate;
     hw.Init();
-    trig_in.Init(&hw.gate_in1);
-    synth.Init(SAMPLE_RATE);
+    samplerate = hw.AudioSampleRate();
+    synth.Init(samplerate);
     delay.Init();
-    delay.SetDelay(SAMPLE_RATE * 0.8f); // half second delay
-    verb.Init(SAMPLE_RATE);
+    delay.SetDelay(samplerate * 0.8f); // half second delay
+    verb.Init(samplerate);
     verb.SetFeedback(0.85f);
     verb.SetLpFreq(2000.0f);
     // Start the ADC and Audio Peripherals on the Hardware
