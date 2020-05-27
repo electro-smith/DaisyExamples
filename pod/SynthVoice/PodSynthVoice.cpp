@@ -1,3 +1,10 @@
+// Simple Synth voice example. Turning the encoder cycles through three control modes. Each mode has different knob functions.
+// In mode one, knob one controls filter cutoff and knob two controls oscillator frequency.
+// In mode two, knob one 1 controls envelope attack time and knob two controls envelope decay time.
+// In mode three, knob one controls vibrato rate and knob two controls vibrato depth. Very fast vibratos are heard as simple FM synthesis!
+// Click the encoder to cycle through waveforms. Press either button to trigger the envelope.
+// Leds light to indicate what mode is selected.
+
 #include "daisysp.h"
 #include "daisy_pod.h"
 
@@ -13,11 +20,6 @@ static Parameter pitch, cutoff, lfof;
 int wave, mode;
 float v, p;
 
-
-// Simple Synth voice example. Encoder cycles through three modes. Mode one controls cutoff and oscillator frequency. Mode 2 controls attack and decay times. Mode 3 controls vibrato rate and depth.
-// Click encoder to change waveform. Press either button to trigger the envelope.
-// Leds light to indicate what mode is selected.
-
 static void AudioCallback(float *in, float *out, size_t size)
 {
   float sig, c, ad_out, attack, release, lf, la;
@@ -30,7 +32,7 @@ static void AudioCallback(float *in, float *out, size_t size)
     osc.SetWaveform(wave);
     
     mode += pod.encoder.Increment();
-    mode %= 3;
+    mode = (mode % 3 + 3) % 3;
     
     switch (mode) {
       case 0:
@@ -118,8 +120,8 @@ int main(void)
     ad.SetCurve(0.5);
 
     //set parameters for cutoff parameter
-    cutoff.Init(pod.knob1, 0, 10000, cutoff.EXPONENTIAL);
-    pitch.Init(pod.knob2, 0, 10000, pitch.EXPONENTIAL);
+    cutoff.Init(pod.knob1, 0, 10000, cutoff.LOGARITHMIC);
+    pitch.Init(pod.knob2, 0, 10000, pitch.LOGARITHMIC);
     lfof.Init(pod.knob1, 0, 1000, lfof.LOGARITHMIC);
     
     // start callback
