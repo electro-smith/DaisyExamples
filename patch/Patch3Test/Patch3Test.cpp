@@ -17,7 +17,7 @@ uint8_t waveforms[4] = {
 
 uint8_t waveidx = 0;
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(float **in, float **out, size_t size)
 {
     float sig;
     hw.UpdateAnalogControls();
@@ -44,11 +44,14 @@ void AudioCallback(float *in, float *out, size_t size)
         waveidx = 3;
         osc.SetWaveform(waveforms[waveidx]);
     }
-    for(size_t i = 0; i < size; i += 2)
+    for(size_t i = 0; i < size; i++)
     {
         sig = osc.Process();
         filt.Process(sig);
-        out[i] = out[i + 1] = filt.Low();
+        out[0][i] = filt.Low();
+        out[1][i] = filt.High();
+        out[2][i] = filt.Band();
+        out[3][i] = filt.Notch();
     }
     dsy_gpio_toggle(&hw.gate_output);
     dsy_dac_write(DSY_DAC_CHN1,
@@ -57,14 +60,16 @@ void AudioCallback(float *in, float *out, size_t size)
                   (hw.GetCtrlValue(DaisyPatch::Ctrl::CTRL_2) + 1.f) * 4095.0f);
 }
 
-void BypassTest(float *in, float *out, size_t size)
+void BypassTest(float **in, float **out, size_t size)
 {
     hw.UpdateAnalogControls();
     hw.DebounceControls();
-    for(size_t i = 0; i < size; i += 2)
+    for (size_t chn = 0; chn < 4; chn++)
     {
-        out[i]     = in[i];
-        out[i + 1] = in[i + 1];
+        for(size_t i = 0; i < size; i += 2)
+        {
+            out[chn][i]     = in[chn][i];
+        }
     }
 }
 
@@ -110,13 +115,10 @@ void HandleMidiMessage(MidiEvent m)
 // Main -- Init, and Midi Handling
 int main(void)
 {
-    uint32_t screen_update_period, screen_update_last;
     float    samplerate;
     // Init
     hw.Init();
     samplerate           = hw.AudioSampleRate();
-    screen_update_period = 17; // roughly 60Hz
-    screen_update_last   = dsy_system_getnow();
 
     // Synthesis
     osc.Init(samplerate);
