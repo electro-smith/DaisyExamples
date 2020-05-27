@@ -1,6 +1,8 @@
 #include "daisy_field.h"
 //#include "daisysp.h" // Uncomment this if you want to use the DSP library.
 
+using namespace daisy;
+
 // Declare a local daisy_field for hardware access
 daisy_field hw;
 
@@ -20,6 +22,9 @@ int main(void)
     daisy_field_init(&hw);
     dsy_audio_set_callback(DSY_AUDIO_INTERNAL, callback);
     // Initialize Stuff Here
+    // Start Callback
+    hw.seed.adc.Start();
+    dsy_audio_start(DSY_AUDIO_INTERNAL);
     while(1) 
     {
         // Do Stuff InfInitely Here
