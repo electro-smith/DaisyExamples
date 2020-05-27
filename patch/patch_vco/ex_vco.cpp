@@ -4,11 +4,11 @@
 using namespace daisy;
 using namespace daisysp;
 
-daisy_patch patch;
+DaisyPatch patch;
 Oscillator osc;
 Parameter freqctrl, wavectrl, ampctrl;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(float **in, float **out, size_t size)
 {
 	float sig, freq, amp;
 	size_t wave;
@@ -24,30 +24,25 @@ static void AudioCallback(float *in, float *out, size_t size)
         osc.SetAmp(amp);
         //.Process
     	sig = osc.Process();
-    	// left out
-        out[i] = sig;
-        // right out
-        out[i+1] = sig;
+        // Assign Synthesized Waveform to all four outputs.
+        for (size_t chn = 0; chn < 4; chn++)
+        {
+            out[chn][i] = sig;
+        }
     }
 }
 
 int main(void)
 {
+    float samplerate;
     int num_waves = Oscillator::WAVE_LAST - 1;
     patch.Init(); // Initialize hardware (daisy seed, and patch)
-    osc.Init(SAMPLE_RATE); // Init oscillator
-
-    // This is with the GetCtrl, but it can also be done with the public members.
-    //freqctrl.Init(patch.GetCtrl(daisy_patch::KNOB_1), 10.0, 110.0, Parameter::LINEAR);
-    //wavectrl.Init(patch.GetCtrl(daisy_patch::KNOB_2), 0.0, num_waves, Parameter::LINEAR);
-    //ampctrl.Init(patch.GetCtrl(daisy_patch::KNOB_2), 0.0, 0.5, Parameter::LINEAR);
-    // Like this:
-    freqctrl.Init(patch.knob1, 10.0, 110.0f, Parameter::LINEAR);
-    wavectrl.Init(patch.knob2, 0.0, num_waves, Parameter::LINEAR);
-    ampctrl.Init(patch.knob3, 0.0, 0.5f, Parameter::LINEAR);
-
+    samplerate = patch.AudioSampleRate();
+    osc.Init(samplerate); // Init oscillator
+    freqctrl.Init(patch.controls[patch.CTRL_1], 10.0, 110.0f, Parameter::LINEAR);
+    wavectrl.Init(patch.controls[patch.CTRL_2], 0.0, num_waves, Parameter::LINEAR);
+    ampctrl.Init(patch.controls[patch.CTRL_3], 0.0, 0.5f, Parameter::LINEAR);
     dsy_adc_start();
     patch.StartAudio(AudioCallback);
-
     while(1) {} // loop forever
 }
