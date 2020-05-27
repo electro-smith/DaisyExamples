@@ -10,10 +10,12 @@ static DaisyPod pod;
 
 bool first = true; //first loop (sets length)
 bool rec = false; //currently recording
-int pos = 0;
+bool play = false;
+float pos = 0;
 float buf[MAX_SIZE];
 int mod = MAX_SIZE;
-int size = 0;
+int len = 0;
+int lastpos = 0;
 
 void Reset()
 {
@@ -23,9 +25,10 @@ void Reset()
   }
   first = true;
   rec = false;
-  size = 0;
   mod = MAX_SIZE;
   pos = 0;
+  play = false;
+  len = 0;
 }
 
 static void AudioCallback(float *in, float *out, size_t size)
@@ -34,15 +37,25 @@ static void AudioCallback(float *in, float *out, size_t size)
   
     pod.UpdateAnalogControls();
     pod.DebounceControls();
+
+    float speed = pod.knob1.Process() * 5 + 1;
     
     if (pod.button1.RisingEdge())
     {
         if (first && rec)
 	{
-	  first = false;
-	  //mod = size;
+	    first = false;
+	    mod = len;
+	    len = 0;
 	}
+
+	play = true;	
         rec = !rec;
+    }
+
+    if (pod.button2.RisingEdge())
+    {
+        play = ! play;
     }
     
     if (pod.button1.TimeHeldMs() >= 1000)
@@ -52,29 +65,36 @@ static void AudioCallback(float *in, float *out, size_t size)
     
     for (size_t i = 0; i < size; i += 2)
     {
+        float posrem = pos - (int) pos;
+	int posflr = (int) floor(pos);
+	int posceil = (int) ceil(pos);
+	
 	if (rec)
 	{
-	    buf[pos] = .5 * in[i] + .5 * buf[pos];
-	    if (first)
+	  buf[(int)floor(pos)] = ((1 - posrem) * buf[posflr] + posrem * buf[posceil]) * 0.5 + in[i] * 0.5;
+	  if (first)
 	    {
-	        size++;
-	    }
+		len++;
+	    }	  
 	}
 
-      	output = buf[pos];
 	
-	if (size >= MAX_SIZE)
+      	output = (1 - posrem) * buf[(int)floor(pos)] + posrem * buf[(int)ceil(pos)]; //linear interpolation
+	
+	if (len >= MAX_SIZE)
 	{
 	    first = false;
 	    rec   = false;
-	    mod   = size;
-	    size  = 0;
-	    return;
+	    mod   = MAX_SIZE;
+	    len = 0;
 	}
 
-	pos++; //speed control goes here
-	pos = pos % mod;
-     	
+	if (play)
+	{
+	    pos += speed;
+	    pos = fmod(pos, mod);
+	}
+	
 	// left out
 	out[i]   = output;
 	
