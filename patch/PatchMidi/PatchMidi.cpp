@@ -3,19 +3,22 @@
 
 using namespace daisy;
 
-daisy_patch         hw;
+DaisyPatch          hw;
 MidiHandler         midi;
 daisysp::Oscillator osc;
 daisysp::Svf        filt;
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(float **in, float **out, size_t size)
 {
     float sig;
     for(size_t i = 0; i < size; i += 2)
     {
         sig = osc.Process();
         filt.Process(sig);
-        out[i] = out[i + 1] = filt.Low();
+        for (size_t chn; chn < 4; chn++)
+        {
+            out[chn][i] = filt.Low();
+        }
     }
 }
 
@@ -62,13 +65,15 @@ void HandleMidiMessage(MidiEvent m)
 int main(void)
 {
     // Init
+    float samplerate;
     hw.Init();
+    samplerate = hw.AudioSampleRate();
     midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
 
     // Synthesis
-    osc.Init(SAMPLE_RATE);
+    osc.Init(samplerate);
     osc.SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
-    filt.Init(SAMPLE_RATE);
+    filt.Init(samplerate);
 
     // Start stuff.
     midi.StartReceive();
