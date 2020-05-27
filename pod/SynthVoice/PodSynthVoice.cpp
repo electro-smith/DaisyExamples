@@ -13,7 +13,7 @@ using namespace daisy;
 
 static DaisyPod pod;
 static Oscillator osc, lfo;
-static Tone flt;
+static MoogLadder flt;
 static AdEnv ad;
 static Parameter pitch, cutoff, lfof;
 
@@ -91,7 +91,7 @@ int main(void)
 {
     // initialize pod hardware and oscillator daisysp module
     float sample_rate;
-    mode = wave = 0;
+    mode = 0;
     v = 0.0f;
     p = 1000.0f;
     
@@ -101,9 +101,14 @@ int main(void)
     flt.Init(sample_rate);
     ad.Init(sample_rate);
     lfo.Init(sample_rate);
+
+    //Set filter parameters
+    flt.SetFreq(1000);
+    flt.SetRes(0.8);
     
     // Set parameters for oscillator
-    osc.SetWaveform(osc.WAVE_SIN);
+    osc.SetWaveform(osc.WAVE_SAW);
+    wave = osc.WAVE_SAW;
     osc.SetFreq(440);
     osc.SetAmp(0.5);
 
@@ -120,8 +125,8 @@ int main(void)
     ad.SetCurve(0.5);
 
     //set parameters for cutoff parameter
-    cutoff.Init(pod.knob1, 0, 10000, cutoff.LOGARITHMIC);
-    pitch.Init(pod.knob2, 0, 10000, pitch.LOGARITHMIC);
+    cutoff.Init(pod.knob1, 100, 10000, cutoff.LOGARITHMIC);
+    pitch.Init(pod.knob2, 200, 10000, pitch.LOGARITHMIC);
     lfof.Init(pod.knob1, 0, 1000, lfof.LOGARITHMIC);
     
     // start callback
