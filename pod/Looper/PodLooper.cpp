@@ -1,4 +1,4 @@
-// Press button one to record. First recording sets loop length. Automatically starts looping  if 1 second limit is hit.
+// Press button one to record. First recording sets loop length. Automatically starts looping  if 5 minute limit is hit.
 // After first loop sound on sound recording begins. Press button one to toggle SOS recording. Hold button one to clear loop.
 // Red lights indicate record enable.
 // Press button 2 to pause/play loop buffer.
@@ -7,7 +7,7 @@
 #include "daisysp.h"
 #include "daisy_pod.h"
 
-#define MAX_SIZE (48000 * 2) //2 seconds of floats at 48kHz
+#define MAX_SIZE (48000 * 60 * 5) // 5 minutes of floats at 48 khz
 
 using namespace daisysp;
 using namespace daisy;
@@ -19,7 +19,7 @@ bool rec = false; //currently recording
 bool play = false; //currently playing
 
 int pos = 0;
-float buf[MAX_SIZE];
+float DSY_SDRAM_BSS buf[MAX_SIZE];
 int mod = MAX_SIZE;
 int len = 0;
 
