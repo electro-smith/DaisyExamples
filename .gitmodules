@@ -1,6 +1,6 @@
 [submodule "libdaisy"]
 	path = libdaisy
-	url = https://github.com/andrewikenberry/ES_libdaisy
+	url = https://github.com/electro-smith/libDaisy
 	branch = master
 [submodule "DaisySP"]
 	path = DaisySP
