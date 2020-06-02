@@ -1,7 +1,7 @@
-// Press button one to record. First recording sets loop length. Automatically starts looping  if 5 minute limit is hit.
-// After first loop sound on sound recording begins. Press button one to toggle SOS recording. Hold button one to clear loop.
+// Press button two to record. First recording sets loop length. Automatically starts looping if 5 minute limit is hit.
+// After first loop sound on sound recording enabled. Press button two to toggle SOS recording. Hold button two to clear loop.
 // Red lights indicate record enable.
-// Press button 2 to pause/play loop buffer.
+// Press button one to pause/play loop buffer.
 
 
 #include "daisysp.h"
