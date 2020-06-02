@@ -220,6 +220,12 @@
     <Filter Include="Header files\STM32Cube HAL\PCD">
       <UniqueIdentifier>{c83c9418-2ed2-44ad-b25f-1495d1b192cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\STM32Cube HAL\EXTI">
+      <UniqueIdentifier>{f1d0bd25-173a-4cbe-a714-3c2f2332dd51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\STM32Cube HAL\EXTI">
+      <UniqueIdentifier>{2585adf1-1bf4-4b1d-aa19-40ff80698cb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\gpio.c">
@@ -710,6 +716,18 @@
     </ClInclude>
     <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h">
       <Filter>Header files\STM32Cube HAL\PCD</Filter>
+    </ClInclude>
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_exti.c">
+      <Filter>Source files\STM32Cube HAL\EXTI</Filter>
+    </ClCompile>
+    <ClCompile Include="Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rng_ex.c">
+      <Filter>Source files\STM32Cube HAL\RNG</Filter>
+    </ClCompile>
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_exti.h">
+      <Filter>Header files\STM32Cube HAL\EXTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rng_ex.h">
+      <Filter>Header files\STM32Cube HAL\RNG</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

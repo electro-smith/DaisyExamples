@@ -70,6 +70,7 @@ uint8_t mybuff[32];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+void CheckClockFreq();
 
 /* USER CODE END PFP */
 
@@ -87,7 +88,6 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -102,6 +102,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+    CheckClockFreq();
 
   /* USER CODE END SysInit */
 
@@ -126,44 +127,44 @@ int main(void)
   MX_USB_OTG_HS_USB_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-    uint8_t buff[512];
-    uint8_t check_buff[512];
-    for(size_t i = 0; i < 512; i++)
-    {
-        buff[i]       = (uint8_t)(i & 0xff);
-        check_buff[i] = 0;
-    }
-
-    uint8_t status;
-    size_t  byteswritten;
-    if(f_mount(&SDFatFS, SDPath, 1) == FR_OK)
-    {
-        FIL f;
-        if(f_open(&f, "myfile.bin", (FA_CREATE_ALWAYS | FA_WRITE)) == FR_OK)
-        {
-            f_write(&f, buff, 512, &byteswritten);
-            f_close(&f);
-        }
-        if(f_open(&f, "myfile.bin", (FA_READ)) == FR_OK)
-        {
-            f_read(&f, check_buff, 512, &byteswritten);
-            f_close(&f);
-        }
-    }
-    // Check
-    size_t fail_cnt;
-    fail_cnt = 0;
-    for(size_t i = 0; i < 512; i++)
-    {
-        if(check_buff[i] != buff[i])
-        {
-            fail_cnt += 1;
-        }
-    }
-    if(fail_cnt) 
-    {
-        asm("bkpt 255");
-    }
+    //    uint8_t buff[512];
+    //    uint8_t check_buff[512];
+    //    for(size_t i = 0; i < 512; i++)
+    //    {
+    //        buff[i]       = (uint8_t)(i & 0xff);
+    //        check_buff[i] = 0;
+    //    }
+    //
+    //    uint8_t status;
+    //    size_t  byteswritten;
+    //    if(f_mount(&SDFatFS, SDPath, 1) == FR_OK)
+    //    {
+    //        FIL f;
+    //        if(f_open(&f, "myfile.bin", (FA_CREATE_ALWAYS | FA_WRITE)) == FR_OK)
+    //        {
+    //            f_write(&f, buff, 512, &byteswritten);
+    //            f_close(&f);
+    //        }
+    //        if(f_open(&f, "myfile.bin", (FA_READ)) == FR_OK)
+    //        {
+    //            f_read(&f, check_buff, 512, &byteswritten);
+    //            f_close(&f);
+    //        }
+    //    }
+    //    // Check
+    //    size_t fail_cnt;
+    //    fail_cnt = 0;
+    //    for(size_t i = 0; i < 512; i++)
+    //    {
+    //        if(check_buff[i] != buff[i])
+    //        {
+    //            fail_cnt += 1;
+    //        }
+    //    }
+    //    if(fail_cnt)
+    //    {
+    //        asm("bkpt 255");
+    //    }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -255,7 +256,7 @@ void SystemClock_Config(void)
   PeriphClkInitStruct.PLL3.PLL3R = 16;
   PeriphClkInitStruct.PLL3.PLL3RGE = RCC_PLL3VCIRANGE_3;
   PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
-  PeriphClkInitStruct.PLL3.PLL3FRACN = 2366;
+  PeriphClkInitStruct.PLL3.PLL3FRACN = 2360;
   PeriphClkInitStruct.FmcClockSelection = RCC_FMCCLKSOURCE_PLL2;
   PeriphClkInitStruct.QspiClockSelection = RCC_QSPICLKSOURCE_PLL;
   PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL2;
@@ -277,6 +278,20 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void CheckClockFreq()
+{
+    PLL1_ClocksTypeDef clk1;
+    PLL2_ClocksTypeDef clk2;
+    PLL3_ClocksTypeDef clk3;
+    HAL_RCCEx_GetPLL1ClockFreq(&clk1);
+    HAL_RCCEx_GetPLL2ClockFreq(&clk2);
+    HAL_RCCEx_GetPLL3ClockFreq(&clk3);
+    if(clk3.PLL3_R_Frequency != 12288818)
+    {
+        __asm("bkpt 255");
+    }
+}
 
 /* USER CODE END 4 */
 
