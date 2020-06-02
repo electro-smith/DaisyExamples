@@ -40,7 +40,7 @@
   </CustomDebug>
   <DeviceTerminalSettings>
     <Connection xsi:type="com.sysprogs.terminal.connection.serial">
-      <ComPortName>COM5</ComPortName>
+      <ComPortName>COM59</ComPortName>
       <AdvancedSettings>
         <BaudRate>115200</BaudRate>
         <DataBits>8</DataBits>
@@ -125,14 +125,14 @@
     <AdditionalGDBSettings>
       <Features>
         <DisableAutoDetection>false</DisableAutoDetection>
-        <UseFrameParameter>false</UseFrameParameter>
-        <SimpleValuesFlagSupported>false</SimpleValuesFlagSupported>
-        <ListLocalsSupported>false</ListLocalsSupported>
-        <ByteLevelMemoryCommandsAvailable>false</ByteLevelMemoryCommandsAvailable>
-        <ThreadInfoSupported>false</ThreadInfoSupported>
-        <PendingBreakpointsSupported>false</PendingBreakpointsSupported>
-        <SupportTargetCommand>false</SupportTargetCommand>
-        <ReliableBreakpointNotifications>false</ReliableBreakpointNotifications>
+        <UseFrameParameter>true</UseFrameParameter>
+        <SimpleValuesFlagSupported>true</SimpleValuesFlagSupported>
+        <ListLocalsSupported>true</ListLocalsSupported>
+        <ByteLevelMemoryCommandsAvailable>true</ByteLevelMemoryCommandsAvailable>
+        <ThreadInfoSupported>true</ThreadInfoSupported>
+        <PendingBreakpointsSupported>true</PendingBreakpointsSupported>
+        <SupportTargetCommand>true</SupportTargetCommand>
+        <ReliableBreakpointNotifications>true</ReliableBreakpointNotifications>
       </Features>
       <EnableSmartStepping>false</EnableSmartStepping>
       <FilterSpuriousStoppedNotifications>false</FilterSpuriousStoppedNotifications>
@@ -144,7 +144,7 @@
       <UseRelativePathsOnly>false</UseRelativePathsOnly>
       <ExitAction>None</ExitAction>
       <DisableDisassembly>false</DisableDisassembly>
-      <ExamineMemoryWithXCommand>false</ExamineMemoryWithXCommand>
+      <ExamineMemoryWithXCommand>true</ExamineMemoryWithXCommand>
       <StepIntoNewInstanceEntry>main</StepIntoNewInstanceEntry>
       <ExamineRegistersInRawFormat>true</ExamineRegistersInRawFormat>
       <DisableSignals>false</DisableSignals>
