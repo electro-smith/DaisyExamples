@@ -1,7 +1,7 @@
 // Simple Synth voice example. Turning the encoder cycles through three control modes. Each mode has different knob functions.
-// In mode one, knob one controls filter cutoff and knob two controls oscillator frequency.
-// In mode two, knob one 1 controls envelope attack time and knob two controls envelope decay time.
-// In mode three, knob one controls vibrato rate and knob two controls vibrato depth. Very fast vibratos are heard as simple FM synthesis!
+// In mode one (blue), knob one controls filter cutoff and knob two controls oscillator frequency.
+// In mode two (green), knob one 1 controls envelope attack time and knob two controls envelope decay time.
+// In mode three (red), knob one controls vibrato rate and knob two controls vibrato depth. Very fast vibratos are heard as simple FM synthesis!
 // Click the encoder to cycle through waveforms. Press either button to trigger the envelope.
 // Leds light to indicate what mode is selected.
 
