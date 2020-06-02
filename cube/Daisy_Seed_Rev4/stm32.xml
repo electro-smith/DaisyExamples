@@ -48,7 +48,7 @@
     <AllDependencies>
       <ProjectDependency>
         <RelativePath>Daisy_Seed_Rev2.gpdsc</RelativePath>
-        <Timestamp>132289483713568197</Timestamp>
+        <Timestamp>132355911792716615</Timestamp>
       </ProjectDependency>
     </AllDependencies>
     <RootDirectory>
@@ -114,6 +114,17 @@
               </Files>
             </VirtualDirectorySnapshot>
             <VirtualDirectorySnapshot>
+              <Name>EXTI</Name>
+              <Files>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_exti.h</RelativePath>
+                </VirtualFileSnapshot>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_exti.c</RelativePath>
+                </VirtualFileSnapshot>
+              </Files>
+            </VirtualDirectorySnapshot>
+            <VirtualDirectorySnapshot>
               <Name>RNG</Name>
               <Files>
                 <VirtualFileSnapshot>
@@ -121,6 +132,23 @@
                 </VirtualFileSnapshot>
                 <VirtualFileSnapshot>
                   <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rng.c</RelativePath>
+                </VirtualFileSnapshot>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rng_ex.h</RelativePath>
+                </VirtualFileSnapshot>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rng_ex.c</RelativePath>
+                </VirtualFileSnapshot>
+              </Files>
+            </VirtualDirectorySnapshot>
+            <VirtualDirectorySnapshot>
+              <Name>NAND</Name>
+              <Files>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_fmc.h</RelativePath>
+                </VirtualFileSnapshot>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_fmc.c</RelativePath>
                 </VirtualFileSnapshot>
               </Files>
             </VirtualDirectorySnapshot>
@@ -138,17 +166,6 @@
                 </VirtualFileSnapshot>
                 <VirtualFileSnapshot>
                   <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi_ex.c</RelativePath>
-                </VirtualFileSnapshot>
-              </Files>
-            </VirtualDirectorySnapshot>
-            <VirtualDirectorySnapshot>
-              <Name>NAND</Name>
-              <Files>
-                <VirtualFileSnapshot>
-                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_fmc.h</RelativePath>
-                </VirtualFileSnapshot>
-                <VirtualFileSnapshot>
-                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_fmc.c</RelativePath>
                 </VirtualFileSnapshot>
               </Files>
             </VirtualDirectorySnapshot>
@@ -260,6 +277,17 @@
               </Files>
             </VirtualDirectorySnapshot>
             <VirtualDirectorySnapshot>
+              <Name>FMC</Name>
+              <Files>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_fmc.h</RelativePath>
+                </VirtualFileSnapshot>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_fmc.c</RelativePath>
+                </VirtualFileSnapshot>
+              </Files>
+            </VirtualDirectorySnapshot>
+            <VirtualDirectorySnapshot>
               <Name>OPAMP</Name>
               <Files>
                 <VirtualFileSnapshot>
@@ -273,17 +301,6 @@
                 </VirtualFileSnapshot>
                 <VirtualFileSnapshot>
                   <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_opamp_ex.c</RelativePath>
-                </VirtualFileSnapshot>
-              </Files>
-            </VirtualDirectorySnapshot>
-            <VirtualDirectorySnapshot>
-              <Name>FMC</Name>
-              <Files>
-                <VirtualFileSnapshot>
-                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_fmc.h</RelativePath>
-                </VirtualFileSnapshot>
-                <VirtualFileSnapshot>
-                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_fmc.c</RelativePath>
                 </VirtualFileSnapshot>
               </Files>
             </VirtualDirectorySnapshot>
@@ -382,17 +399,6 @@
               </Files>
             </VirtualDirectorySnapshot>
             <VirtualDirectorySnapshot>
-              <Name>SRAM</Name>
-              <Files>
-                <VirtualFileSnapshot>
-                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_fmc.h</RelativePath>
-                </VirtualFileSnapshot>
-                <VirtualFileSnapshot>
-                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_fmc.c</RelativePath>
-                </VirtualFileSnapshot>
-              </Files>
-            </VirtualDirectorySnapshot>
-            <VirtualDirectorySnapshot>
               <Name>FLASH</Name>
               <Files>
                 <VirtualFileSnapshot>
@@ -406,6 +412,17 @@
                 </VirtualFileSnapshot>
                 <VirtualFileSnapshot>
                   <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash_ex.c</RelativePath>
+                </VirtualFileSnapshot>
+              </Files>
+            </VirtualDirectorySnapshot>
+            <VirtualDirectorySnapshot>
+              <Name>SRAM</Name>
+              <Files>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_fmc.h</RelativePath>
+                </VirtualFileSnapshot>
+                <VirtualFileSnapshot>
+                  <RelativePath>Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_fmc.c</RelativePath>
                 </VirtualFileSnapshot>
               </Files>
             </VirtualDirectorySnapshot>
@@ -749,13 +766,13 @@
       <ImportedConfiguration>
         <Settings>
           <IncludeDirectories>
-            <string>C:\Users\shensley\Documents\Mothership\electrosmith\libdaisy\cube\Daisy_Seed_Rev2_UART\Inc</string>
-            <string>C:\Users\shensley\Documents\Mothership\electrosmith\libdaisy\cube\Daisy_Seed_Rev2_UART\Drivers\CMSIS\Device\ST\STM32H7xx\Include</string>
-            <string>C:\Users\shensley\Documents\Mothership\electrosmith\libdaisy\cube\Daisy_Seed_Rev2_UART\Drivers\STM32H7xx_HAL_Driver\Inc</string>
-            <string>C:\Users\shensley\Documents\Mothership\electrosmith\libdaisy\cube\Daisy_Seed_Rev2_UART\Middlewares\ST\STM32_USB_Device_Library\Core\Inc</string>
-            <string>C:\Users\shensley\Documents\Mothership\electrosmith\libdaisy\cube\Daisy_Seed_Rev2_UART\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc</string>
-            <string>C:\Users\shensley\Documents\Mothership\electrosmith\libdaisy\cube\Daisy_Seed_Rev2_UART\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy</string>
-            <string>C:\Users\shensley\Documents\Mothership\electrosmith\libdaisy\cube\Daisy_Seed_Rev2_UART\Middlewares\Third_Party\FatFs\src</string>
+            <string>C:\Users\shensley\Documents\Mothership\daisy\Daisy_Examples\cube\Daisy_Seed_Rev4\Inc</string>
+            <string>C:\Users\shensley\Documents\Mothership\daisy\Daisy_Examples\cube\Daisy_Seed_Rev4\Drivers\CMSIS\Device\ST\STM32H7xx\Include</string>
+            <string>C:\Users\shensley\Documents\Mothership\daisy\Daisy_Examples\cube\Daisy_Seed_Rev4\Drivers\STM32H7xx_HAL_Driver\Inc</string>
+            <string>C:\Users\shensley\Documents\Mothership\daisy\Daisy_Examples\cube\Daisy_Seed_Rev4\Middlewares\ST\STM32_USB_Device_Library\Core\Inc</string>
+            <string>C:\Users\shensley\Documents\Mothership\daisy\Daisy_Examples\cube\Daisy_Seed_Rev4\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc</string>
+            <string>C:\Users\shensley\Documents\Mothership\daisy\Daisy_Examples\cube\Daisy_Seed_Rev4\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy</string>
+            <string>C:\Users\shensley\Documents\Mothership\daisy\Daisy_Examples\cube\Daisy_Seed_Rev4\Middlewares\Third_Party\FatFs\src</string>
           </IncludeDirectories>
           <PreprocessorMacros>
             <string>$$com.sysprogs.bspoptions.primary_memory$$_layout</string>
