@@ -13,10 +13,6 @@
 //      *Knob one sets delay time
 //      *Knob two sets feedback level
 // ~~
-// ## Mode three (blue) : wahwah
-//      *Knob one sets wah depth
-//      *Knob two sets wah rate
-// ~~
 // ## Mode three (purple) : bitcrush 
 //      *Knob one sets lowpass filter cutoff
 //      *Knob two sets crush rate
@@ -34,11 +30,9 @@ static DaisyPod  pod;
 
 static ReverbSc  rev;
 static DelayLine <float, MAX_DELAY>  del;
-static Biquad biquad;
-static Oscillator lfo;
 static Bitcrush  crush;
 static Tone tone;
-static Parameter zero_one_l, zero_one_r,  deltime, cutoff, crushrate, lfofreq, wahdepth;
+static Parameter zero_one_l, zero_one_r,  deltime, cutoff, crushrate;
 
 int mode;
 
@@ -50,7 +44,7 @@ static void AudioCallback(float *in, float *out, size_t size)
     pod.DebounceControls();
     
     mode += pod.encoder.Increment();
-    mode = (mode % 4 + 4) % 4;
+    mode = (mode % 3 + 3) % 3;
 
     k1 = zero_one_l.Process();
     k2 = zero_one_r.Process(); 
@@ -70,12 +64,6 @@ static void AudioCallback(float *in, float *out, size_t size)
 	    pod.led2.Set(0,k2,0);
 	    break;
         case 2:
-	    lfo.SetFreq(lfofreq.Process() * .01);
-	    lfo.SetAmp(wahdepth.Process());
-	    pod.led1.Set(0,0,k1);
-	    pod.led2.Set(0,0,k2);
-	    break;
-        case 3:
 	    c = cutoff.Process();
 	    tone.SetFreq(c);
 	    crush.SetCrushRate(crushrate.Process());
@@ -104,10 +92,6 @@ static void AudioCallback(float *in, float *out, size_t size)
 	        del.Write(feedback * sigl + (1 - feedback) * inl);
                 break;
 	    case 2:
-	        biquad.SetCutoff(lfo.Process() + 6000);
-		sigl = sigr = biquad.Process(inl);
-		break;
-	    case 3:
 	        inl = crush.Process(inl);
 		sigl = sigr = tone.Process(inl);
 	    default:
@@ -135,8 +119,6 @@ int main(void)
     del.Init();
     crush.Init(sample_rate);
     tone.Init(sample_rate);
-    lfo.Init(sample_rate);
-    biquad.Init(sample_rate);
     
     //set parameters
     zero_one_l.Init(pod.knob1, 0, 1, zero_one_l.LINEAR);
@@ -144,8 +126,6 @@ int main(void)
     deltime.Init(pod.knob1, 1, MAX_DELAY, deltime.LOGARITHMIC);
     cutoff.Init(pod.knob1, 500, 20000, cutoff.LOGARITHMIC);
     crushrate.Init(pod.knob2, 100 , 30000, crushrate.LOGARITHMIC);
-    wahdepth.Init(pod.knob1, 2000 , 5000, wahdepth.LOGARITHMIC);
-    lfofreq.Init(pod.knob2, 100, 3000, lfofreq.LOGARITHMIC);
     
     //reverb parameters
     rev.SetLpFreq(18000.0f);
@@ -158,12 +138,6 @@ int main(void)
     //crush parameters
     crush.SetBitDepth(2);
     crush.SetCrushRate(10000);
-
-    //biquad parameters
-    biquad.SetRes(.6);
-
-    //lfo parameters
-    lfo.SetWaveform(lfo.WAVE_SIN);
     
     // start callback
     pod.StartAdc();
