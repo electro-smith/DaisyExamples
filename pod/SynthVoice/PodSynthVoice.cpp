@@ -19,10 +19,11 @@ static Parameter pitch, cutoff, lfof;
 
 int wave, mode;
 float v, p;
+float oldk1, oldk2;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
-  float sig, c, ad_out, attack, release, lf, la;
+    float sig, c, ad_out, attack, release, lf, la;
 
     pod.UpdateAnalogControls();
     pod.DebounceControls();
@@ -33,41 +34,65 @@ static void AudioCallback(float *in, float *out, size_t size)
     
     mode += pod.encoder.Increment();
     mode = (mode % 3 + 3) % 3;
-    
-    switch (mode) {
-      case 0:
-          p  = pitch.Process();
-	  c = cutoff.Process();
-	  flt.SetFreq(c);
-	  pod.led1.Set(0,0,1);
-	  pod.led2.Set(0,0,0);
-	  break;
-      case 1:
-   	  attack   = pod.GetKnobValue(pod.KNOB_1);
-	  release  = pod.GetKnobValue(pod.KNOB_2);
-	  ad.SetTime(ADENV_SEG_ATTACK, attack);
-	  ad.SetTime(ADENV_SEG_DECAY, release);
-	  pod.led1.Set(0,0,0);
-	  pod.led2.Set(0,1,0);
-	  break;
-      case 2:
-  	  lf = lfof.Process();
-	  la = pod.GetKnobValue(pod.KNOB_2);
-	  lfo.SetFreq(lf * 500);
-	  lfo.SetAmp(la * 100);
-	  pod.led1.Set(1,0,0);
-	  pod.led2.Set(1,0,0);
-      default:
-	  break;
-    }	  
 
-    pod.UpdateLeds();
+    float k1 = pod.knob1.Process();
+    float k2 = pod.knob2.Process();
+
+    //knobs
+    if (abs(oldk1 - k1) > 0.0005 || abs(oldk2 - k2) > 0.0005){
+        switch (mode)
+	{
+	    case 0:
+	        p  = pitch.Process();
+		c = cutoff.Process();
+		flt.SetFreq(c);
+		break;
+	    case 1:
+  	        attack   = pod.GetKnobValue(pod.KNOB_1);
+		release  = pod.GetKnobValue(pod.KNOB_2);
+		ad.SetTime(ADENV_SEG_ATTACK, attack);
+		ad.SetTime(ADENV_SEG_DECAY, release);
+		break;
+	    case 2:
+  	        lf = lfof.Process();
+		la = pod.GetKnobValue(pod.KNOB_2);
+		lfo.SetFreq(lf * 500);
+		lfo.SetAmp(la * 100);
+	    default:
+	        break;
+	}
+    }
+
+    //leds
+    switch (mode)
+    {
+        case 0:
+	    pod.led1.Set(0,0,1);
+	    pod.led2.Set(0,0,1);
+	    break;
+        case 1:
+	    pod.led1.Set(0,1,0);
+	    pod.led2.Set(0,1,0);
+	    break;
+        case 2:
+	    pod.led1.Set(1,0,0);
+	    pod.led2.Set(1,0,0);
+        default: 
+	    break;
+    }
     
+    oldk1 = k1;
+    oldk2 = k2;
+    
+    pod.UpdateLeds();
+
+    //buttons
     if (pod.button1.RisingEdge() || pod.button2.RisingEdge())
     {
   	ad.Trigger();
     }
-    
+
+    //audio
     for (size_t i = 0; i < size; i += 2)
     {
         ad_out = ad.Process();
@@ -94,6 +119,7 @@ int main(void)
     mode = 0;
     v = 0.0f;
     p = 1000.0f;
+    oldk1 = oldk2 = 0;
     
     pod.Init();
     sample_rate = pod.AudioSampleRate();
