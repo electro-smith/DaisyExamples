@@ -30,12 +30,13 @@
 
 /* USER CODE END 1 */
 
-/** Configure pins as 
-        * Analog 
-        * Input 
-        * Output
-        * EVENT_OUT
-        * EXTI
+/** Configure pins
+     PB3 (JTDO/TRACESWO)   ------> DEBUG_JTDO-SWO
+     PA15 (JTDI)   ------> DEBUG_JTDI
+     PA14 (JTCK/SWCLK)   ------> DEBUG_JTCK-SWCLK
+     PA13 (JTMS/SWDIO)   ------> DEBUG_JTMS-SWDIO
+     PH0-OSC_IN (PH0)   ------> RCC_OSC_IN
+     PH1-OSC_OUT (PH1)   ------> RCC_OSC_OUT
      PB12   ------> USB_OTG_HS_ID
      PB14   ------> USB_OTG_HS_DM
      PB15   ------> USB_OTG_HS_DP

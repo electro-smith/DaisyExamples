@@ -18,7 +18,8 @@
   */
 /* USER CODE END Header */
 
-/* Note: code generation based on sd_diskio_template.c v2.0.2 as "Use dma template" is disabled. */
+/* Note: code generation based on sd_diskio_template_bspv1.c v2.1.4 
+   as "Use dma template" is disabled. */
 
 /* USER CODE BEGIN firstSection */
 /* can be used to modify / undefine following code or add new definitions */
@@ -61,10 +62,10 @@ DSTATUS SD_initialize (BYTE);
 DSTATUS SD_status (BYTE);
 DRESULT SD_read (BYTE, BYTE*, DWORD, UINT);
 #if _USE_WRITE == 1
-  DRESULT SD_write (BYTE, const BYTE*, DWORD, UINT);
+DRESULT SD_write (BYTE, const BYTE*, DWORD, UINT);
 #endif /* _USE_WRITE == 1 */
 #if _USE_IOCTL == 1
-  DRESULT SD_ioctl (BYTE, BYTE, void*);
+DRESULT SD_ioctl (BYTE, BYTE, void*);
 #endif  /* _USE_IOCTL == 1 */
 
 const Diskio_drvTypeDef  SD_Driver =
@@ -86,6 +87,7 @@ const Diskio_drvTypeDef  SD_Driver =
 /* USER CODE END beforeFunctionSection */
 
 /* Private functions ---------------------------------------------------------*/
+
 static DSTATUS SD_CheckStatus(BYTE lun)
 {
   Stat = STA_NOINIT;
@@ -105,7 +107,8 @@ static DSTATUS SD_CheckStatus(BYTE lun)
   */
 DSTATUS SD_initialize(BYTE lun)
 {
-  Stat = STA_NOINIT;
+Stat = STA_NOINIT;  
+
 #if !defined(DISABLE_SD_INIT)
 
   if(BSP_SD_Init() == MSD_OK)
@@ -116,6 +119,7 @@ DSTATUS SD_initialize(BYTE lun)
 #else
   Stat = SD_CheckStatus(lun);
 #endif
+
   return Stat;
 }
 
@@ -140,6 +144,7 @@ DSTATUS SD_status(BYTE lun)
   * @param  count: Number of sectors to read (1..128)
   * @retval DRESULT: Operation result
   */
+              
 DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 {
   DRESULT res = RES_ERROR;
@@ -170,6 +175,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
   * @retval DRESULT: Operation result
   */
 #if _USE_WRITE == 1
+              
 DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
 {
   DRESULT res = RES_ERROR;
