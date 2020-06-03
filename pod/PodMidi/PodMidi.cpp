@@ -30,6 +30,10 @@ void HandleMidiMessage(MidiEvent m)
         case NoteOn:
         {
             NoteOnEvent p = m.AsNoteOn();
+			char buff[512];
+			sprintf(
+				buff, "Note Received:\t%d\t%d\t%d\r\n", m.channel, m.data[0], m.data[1]);
+			hw.seed.usb_handle.TransmitInternal((uint8_t*)buff, strlen(buff));
             // This is to avoid Max/MSP Note outs for now..
             if(m.data[1] != 0)
             {
@@ -67,7 +71,8 @@ int main(void)
     // Init
     float samplerate;
     hw.Init();
-    hw.seed.usb_handle.Init(UsbHandle::FS_EXTERNAL);
+    hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
+    dsy_system_delay(250);
     midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
 
     // Synthesis
@@ -77,9 +82,9 @@ int main(void)
     filt.Init(samplerate);
 
     // Start stuff.
-    midi.StartReceive();
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
+    midi.StartReceive();
     for(;;)
     {
         midi.Listen();
