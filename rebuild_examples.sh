@@ -2,7 +2,7 @@
 echo "rebuilding examples:"
 start_dir=$PWD
 HW=hardware_platforms
-example_dirs=( daisysp/examples seed pod patch petal field )
+example_dirs=( DaisySP/examples seed pod patch petal field )
 for e in ${example_dirs[@]}; do
     for d in $e/*/; do
         echo "rebuilding $d"
