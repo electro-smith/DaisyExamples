@@ -3,15 +3,19 @@
 // Edit and play mode, press encoder to switch modes. Edit is red, play is green.
 
 // Edit mode
-// Rotate encoder to run through steps. Knob one sets decay time, knob two sets pitch.
-// Press either button to activate or deactivate a step.
-// If the led is lit, the step is active.
+//   *Rotate encoder to run through steps.
+//   *Knob one sets decay time,
+//   *Knob two sets pitch. (A pentatonic major)
+//   *Press the right button to activate or deactivate a step
+//   *Press the left button to hear the step you're editing (ping the envelope) (Also activates inactive steps)
+//   *If the led is lit, the step is active.
+//   *!!!Led color indicates step number
 
 // Play mode
 // Knob one controls tempo.
 // Knob two controls filter cutoff
 // Turning the encoder switches waveform.
-// 
+
 
 #include "daisy_pod.h"
 #include "daisysp.h"
@@ -34,6 +38,8 @@ float dec[8];
 float pitch[8];
 bool   active[8];
 float env_out;
+
+float pent[] = {110.f,128.33f,146.66f,174.166f,192.5f};
 
 float oldk1, oldk2;
 
@@ -62,28 +68,42 @@ static void AudioCallback(float *in, float *out, size_t size)
 	if (abs(oldk1 - k1) > .0001 || abs(oldk2 - k2) > .0001)
 	{
 	    dec[step] = parame1.Process();
-	    pitch[step] = (int)parame2.Process();
-	    pitch[step] = mtof(pitch[step]) + 110;
+	    int temp = (int) parame2.Process();
+	    pitch[step] = pent[temp % 5] * (temp / (int) 5 + 1);
 	}
 
-	if (pod.button1.RisingEdge() || pod.button2.RisingEdge())
+	if (pod.button1.RisingEdge())
 	{
 	    active[step] = !active[step];
 	}
-	
-	pod.led1.Set(active[step],0,0);
-	pod.led2.Set(active[step],0,0);
+
+	if (pod.button2.RisingEdge())
+	{
+  	    active[step] = true;
+   	    env.SetTime(ADENV_SEG_DECAY, dec[step]);
+	    env.Trigger();
+	}
+
+	//Tried to be clever, but this means step 0 is off...
+	if (active[step])
+	{
+  	    float l4 = (step & 4) * 0.25f;
+	    float l2 = (step & 2) * 0.25f;
+	    float l1 = (step & 1) * 0.25f;
+	    pod.led1.Set(l4,l2,l1);
+	    pod.led2.Set(l4,l2,l1);
+	}
+	else
+	{
+	    pod.ClearLeds();
+	}
     }
 
     else
     {
         wave += pod.encoder.Increment();
 	wave = (wave % osc.WAVE_LAST + osc.WAVE_LAST) % osc.WAVE_LAST;
-	osc.SetWaveform(wave);
-	
-	osc.SetFreq(pitch[step]);
-	
-	env.SetTime(ADENV_SEG_DECAY, dec[step]);	
+	osc.SetWaveform(wave);	
 
 	if (abs(oldk1 - k1) > .0001 || abs(oldk2 - k2) > .0001)
 	{
@@ -95,6 +115,8 @@ static void AudioCallback(float *in, float *out, size_t size)
 	pod.led1.Set(0,env_out,0);
     }
 
+    osc.SetFreq(pitch[step]);
+
     oldk1 = k1;
     oldk2 = k2;
     pod.UpdateLeds();
@@ -102,14 +124,11 @@ static void AudioCallback(float *in, float *out, size_t size)
     // Audio Loop
     sig = 0;
     for(size_t i = 0; i < size; i += 2)
-    {
-        if (!edit)
-	{
-            env_out = env.Process();
-	    osc.SetAmp(env_out);
-	    sig = osc.Process();
-	    sig = flt.Process(sig);
-	}
+    {  
+        env_out = env.Process();
+	osc.SetAmp(env_out);
+	sig = osc.Process();
+	sig = flt.Process(sig);
 
         if (tick.Process() && !edit)
 	{
@@ -117,6 +136,7 @@ static void AudioCallback(float *in, float *out, size_t size)
 	    step %= 8;
 	    if (active[step])
 	    {
+	        env.SetTime(ADENV_SEG_DECAY, dec[step]);
 	        env.Trigger();
 	    }
 	}
@@ -139,8 +159,8 @@ int main(void)
     
     //Set up parameters
     parame1.Init(pod.knob1, .03, 1, parame1.LINEAR);
-    parame2.Init(pod.knob2, 0, 72, parame2.LINEAR);
-    paramp1.Init(pod.knob1, 1, 15, paramp1.LINEAR);
+    parame2.Init(pod.knob2, 0, 10, parame2.LINEAR);
+    paramp1.Init(pod.knob1, 4, 13, paramp1.LINEAR);
     paramp2.Init(pod.knob2, 100, 10000, paramp2.LOGARITHMIC);
 
     //Osc parameters
@@ -152,7 +172,7 @@ int main(void)
     env.SetMax(1);
     
     //Set filter parameters
-    flt.SetFreq(1000);
+    flt.SetFreq(20000);
     flt.SetRes(0.7);
     
     //Global variables
