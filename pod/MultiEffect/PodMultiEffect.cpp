@@ -11,17 +11,21 @@
 // ~~
 // ## Mode two (green) : delay
 //      *Knob one sets delay time
-//      *Knob two sets feedback level
+//      *Knob two sets feedback level / drywet amount
 // ~~
-// ## Mode three (purple) : bitcrush 
+// ## Mode three (purple) : downsampler
 //      *Knob one sets lowpass filter cutoff
-//      *Knob two sets crush rate
+//      *Knob two sets downsample amount
 
 #include "daisysp.h"
 #include "daisy_pod.h"
 
 // Set max delay time to 0.75 of samplerate.
-#define MAX_DELAY static_cast<size_t>(48000 * 0.5f)
+#define MAX_DELAY static_cast<size_t>(48000 * 2.5f)
+#define REV 0
+#define DEL 1
+#define CRU 2
+
 
 using namespace daisysp;
 using namespace daisy;
@@ -29,21 +33,26 @@ using namespace daisy;
 static DaisyPod  pod;
 
 static ReverbSc  rev;
-static DelayLine <float, MAX_DELAY>  del;
-static Bitcrush  crush;
+static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS dell;
+static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS delr;
 static Tone tone;
 static Parameter zero_one_l, zero_one_r,  deltime, cutoff, crushrate;
+int mode = REV;
 
-int mode;
+float delt;
+
+int crushmod, crushcount;
+float crushsl, crushsr;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
-  float sigl, sigr, inl, inr, k1, k2, drywet, feedback, c;
+    float sigl, sigr, inl, inr, k1, k2, drywet, feedback, c, d;
+    d = feedback = drywet = 0;
     
     pod.UpdateAnalogControls();
     pod.DebounceControls();
     
-    mode += pod.encoder.Increment();
+    mode = mode + pod.encoder.Increment();
     mode = (mode % 3 + 3) % 3;
 
     k1 = zero_one_l.Process();
@@ -51,30 +60,27 @@ static void AudioCallback(float *in, float *out, size_t size)
     
     switch (mode)
     {
-        case 0:
+        case REV:
    	    drywet = k1;
 	    rev.SetFeedback(k2);
-	    pod.led1.Set(k1,0,0);
-	    pod.led2.Set(k2,0,0);
 	    break;
-        case 1:
- 	    del.SetDelay(deltime.Process());
+        case DEL:
+	    d = deltime.Process();
 	    feedback = k2;
-	    pod.led1.Set(0,k1,0);
-	    pod.led2.Set(0,k2,0);
 	    break;
-        case 2:
+        case CRU:
 	    c = cutoff.Process();
 	    tone.SetFreq(c);
-	    crush.SetCrushRate(crushrate.Process());
-	    pod.led1.Set(k1,0,k1);
-	    pod.led2.Set(k2,0,k2);
-        default:
-	    break;
+	    crushmod = (int) crushrate.Process();
     }	 
 
-    pod.UpdateLeds();
+    //leds
+    pod.led1.Set(k1 * (mode == 2), k1 * (mode == 1), k1 * (mode == 0 || mode == 2));
+    pod.led2.Set(k2 * (mode == 2), k2 * (mode == 1), k2 * (mode == 0 || mode == 2));
     
+    pod.UpdateLeds();
+
+    //audio
     for (size_t i = 0; i < size; i += 2)
     {
         inl = in[i];
@@ -82,20 +88,34 @@ static void AudioCallback(float *in, float *out, size_t size)
 	
 	switch (mode)
 	{
-	    case 0:
+	    case REV:
 	        rev.Process(inl, inr, &sigl, &sigr);
 		sigl = drywet * sigl + (1 - drywet) * inl;
 		sigr = drywet * sigr + (1 - drywet) * inr;
 		break;
-	    case 1:
-	        sigl = sigr = del.Read();
-	        del.Write(feedback * sigl + (1 - feedback) * inl);
-                break;
-	    case 2:
-	        inl = crush.Process(inl);
-		sigl = sigr = tone.Process(inl);
-	    default:
-	        break;	      
+	    case DEL:
+	        fonepole(delt, d, .00007f);
+ 	        delr.SetDelay(delt);
+		dell.SetDelay(delt);
+		sigl = dell.Read();
+		sigr = delr.Read();
+
+		dell.Write((feedback * sigl) + inl);
+		sigl = (feedback * sigl) + ((1.0f - feedback) * inl);
+
+		delr.Write((feedback * sigr) + inr);
+		sigr = (feedback * sigr) + ((1.0f - feedback) * inr);
+		break;
+	    case CRU:
+	        crushcount++;
+		crushcount %= crushmod;
+		if (crushcount == 0)
+		{
+		    crushsr = inr;
+		    crushsl = inl;
+		}
+		sigl = tone.Process(crushsl);
+		sigr = tone.Process(crushsr);
 	}
 	
 	// left out
@@ -110,22 +130,21 @@ int main(void)
 {
     // initialize pod hardware and oscillator daisysp module
     float sample_rate;
-    mode = 0;
     
     //Inits and sample rate
     pod.Init();
     sample_rate = pod.AudioSampleRate();
     rev.Init(sample_rate);
-    del.Init();
-    crush.Init(sample_rate);
+    dell.Init();
+    delr.Init();
     tone.Init(sample_rate);
     
     //set parameters
     zero_one_l.Init(pod.knob1, 0, 1, zero_one_l.LINEAR);
     zero_one_r.Init(pod.knob2, 0, 1, zero_one_r.LINEAR);
-    deltime.Init(pod.knob1, 1, MAX_DELAY, deltime.LOGARITHMIC);
+    deltime.Init(pod.knob1, sample_rate * .05, MAX_DELAY, deltime.LOGARITHMIC);
     cutoff.Init(pod.knob1, 500, 20000, cutoff.LOGARITHMIC);
-    crushrate.Init(pod.knob2, 100 , 30000, crushrate.LOGARITHMIC);
+    crushrate.Init(pod.knob2, 1, 50, crushrate.LOGARITHMIC);
     
     //reverb parameters
     rev.SetLpFreq(18000.0f);
@@ -133,11 +152,9 @@ int main(void)
 
     //delay parameters
     // Set Delay time to 0.75 seconds
-    del.SetDelay(sample_rate * 0.75f);
-
-    //crush parameters
-    crush.SetBitDepth(2);
-    crush.SetCrushRate(10000);
+    delt = sample_rate * 0.75f;
+    dell.SetDelay(delt);
+    delr.SetDelay(delt);
     
     // start callback
     pod.StartAdc();
