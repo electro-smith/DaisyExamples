@@ -2,7 +2,8 @@
 // After first loop sound on sound recording enabled. Press button two to toggle SOS recording. Hold button two to clear loop.
 // Red lights indicate record enable.
 // Press button one to pause/play loop buffer.
-
+//
+// Knob one mixes live input and loop output. Left is only live thru, right is only loop output.
 
 #include "daisysp.h"
 #include "daisy_pod.h"
@@ -22,64 +23,15 @@ int   pos = 0;
 float DSY_SDRAM_BSS buf[MAX_SIZE];
 int                 mod = MAX_SIZE;
 int                 len = 0;
+float drywet = 0;
+bool res = false;
 
-void Reset()
-{
-    for(int i = 0; i < MAX_SIZE; i++)
-    {
-        buf[i] = 0;
-    }
-    first = true;
-    rec   = false;
-    mod   = MAX_SIZE;
-    pos   = 0;
-    play  = false;
-    len   = 0;
-}
-
-void Controls()
-{
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
-
-    if(pod.button1.RisingEdge())
-    {
-        if(first && rec)
-        {
-            first = false;
-            mod   = len;
-            len   = 0;
-        }
-
-        play = true;
-        rec  = !rec;
-    }
-
-    if(pod.button2.RisingEdge())
-    {
-        play = !play;
-    }
-
-    if(pod.button1.TimeHeldMs() >= 1000)
-    {
-        Reset();
-    }
-
-    if(rec)
-    {
-        pod.led1.Set(1, 0, 0);
-        pod.led2.Set(1, 0, 0);
-    }
-    else
-    {
-        pod.ClearLeds();
-    }
-    pod.UpdateLeds();
-}
+void Reset();
+void Controls();
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
-    float output;
+    float output = 0;
 
     Controls();
 
@@ -93,7 +45,6 @@ static void AudioCallback(float *in, float *out, size_t size)
                 len++;
             }
         }
-
 
         output = buf[pos];
 
@@ -109,13 +60,11 @@ static void AudioCallback(float *in, float *out, size_t size)
             pos++;
             pos %= mod;
         }
-
-        // left out
-        out[i] = output;
-
-        // right out
-        out[i + 1] = output;
+	
+        // left and right outs
+        out[i] = out[i+1] = output * drywet + in[i] * (1 -drywet);
     }
+
 }
 
 int main(void)
@@ -131,3 +80,65 @@ int main(void)
 
     while(1) {}
 }
+
+//Resets the buffer
+void Reset()
+{
+    play  = false;
+    rec   = false;
+    first = true;
+    pos   = 0;
+    len   = 0;
+    for(int i = 0; i < mod; i++)
+    {
+        buf[i] = 0;
+    }
+    mod   = MAX_SIZE;
+}
+
+//Deals with analog controls 
+void Controls()
+{
+    pod.UpdateAnalogControls();
+    pod.DebounceControls();
+
+    drywet = pod.knob1.Process();
+    
+    if(pod.button1.RisingEdge())
+    {
+        if(first && rec)
+        {
+            first = false;
+            mod   = len;
+            len   = 0;
+        }
+
+	res = true;
+        play = true;
+        rec  = !rec;
+    }
+
+    if(pod.button2.RisingEdge())
+    {
+        play = !play;
+    }
+
+    if(pod.button1.TimeHeldMs() >= 1000 && res)
+    {
+        Reset();
+	res = false;
+    }
+
+    if(rec)
+    {
+        pod.led1.Set(1, 0, 0);
+        pod.led2.Set(1, 0, 0);
+    }
+    else
+    {
+        pod.ClearLeds();
+    }
+    pod.UpdateLeds();
+}
+
+
