@@ -18,13 +18,15 @@ static AdEnv ad;
 static Parameter pitch, cutoff, lfof;
 
 int wave, mode;
-float v, p;
+float v, p, lf, la, attack, release, c;
 float oldk1, oldk2;
+
+void ConditionalParameter(float o, float n, float &param, float update);
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
-    float sig, c, ad_out, attack, release, lf, la;
-
+    float sig, ad_out;
+    
     pod.UpdateAnalogControls();
     pod.DebounceControls();
     
@@ -39,47 +41,30 @@ static void AudioCallback(float *in, float *out, size_t size)
     float k2 = pod.knob2.Process();
 
     //knobs
-    if (abs(oldk1 - k1) > 0.0005 || abs(oldk2 - k2) > 0.0005){
-        switch (mode)
-	{
-	    case 0:
-	        p  = pitch.Process();
-		c = cutoff.Process();
-		flt.SetFreq(c);
-		break;
-	    case 1:
-  	        attack   = pod.GetKnobValue(pod.KNOB_1);
-		release  = pod.GetKnobValue(pod.KNOB_2);
-		ad.SetTime(ADENV_SEG_ATTACK, attack);
-		ad.SetTime(ADENV_SEG_DECAY, release);
-		break;
-	    case 2:
-  	        lf = lfof.Process();
-		la = pod.GetKnobValue(pod.KNOB_2);
-		lfo.SetFreq(lf * 500);
-		lfo.SetAmp(la * 100);
-	    default:
-	        break;
-	}
-    }
-
-    //leds
     switch (mode)
     {
         case 0:
-	    pod.led1.Set(0,0,1);
-	    pod.led2.Set(0,0,1);
+	    ConditionalParameter(oldk1, k1, c, cutoff.Process());
+	    ConditionalParameter(oldk2, k2, p, pitch.Process());
+	    flt.SetFreq(c);
 	    break;
         case 1:
-	    pod.led1.Set(0,1,0);
-	    pod.led2.Set(0,1,0);
+	    ConditionalParameter(oldk1, k1, attack, pod.knob1.Process());
+	    ConditionalParameter(oldk2, k2, release, pod.knob2.Process());
+	    ad.SetTime(ADENV_SEG_ATTACK, attack);
+	    ad.SetTime(ADENV_SEG_DECAY, release);
 	    break;
-        case 2:
-	    pod.led1.Set(1,0,0);
-	    pod.led2.Set(1,0,0);
-        default: 
+	case 2:
+	    ConditionalParameter(oldk1, k1, lf, lfof.Process());
+	    ConditionalParameter(oldk2, k2, la, pod.knob2.Process());
+	    lfo.SetFreq(lf * 500);
+	    lfo.SetAmp(la * 100);
+	default:
 	    break;
     }
+
+    pod.led1.Set(mode == 2, mode == 1, mode == 0);
+    pod.led2.Set(mode == 2, mode == 1, mode == 0);
     
     oldk1 = k1;
     oldk2 = k2;
@@ -120,6 +105,11 @@ int main(void)
     v = 0.0f;
     p = 1000.0f;
     oldk1 = oldk2 = 0;
+    attack = .01f;
+    release = .2f;
+    c = 10000;
+    la = 1.0f;
+    lf = 0.1f;
     
     pod.Init();
     sample_rate = pod.AudioSampleRate();
@@ -129,14 +119,14 @@ int main(void)
     lfo.Init(sample_rate);
 
     //Set filter parameters
-    flt.SetFreq(1000);
+    flt.SetFreq(10000);
     flt.SetRes(0.8);
     
     // Set parameters for oscillator
     osc.SetWaveform(osc.WAVE_SAW);
     wave = osc.WAVE_SAW;
     osc.SetFreq(440);
-    osc.SetAmp(0.5);
+    osc.SetAmp(1);
 
     // Set parameters for lfo
     lfo.SetWaveform(osc.WAVE_SIN);
@@ -151,8 +141,8 @@ int main(void)
     ad.SetCurve(0.5);
 
     //set parameters for cutoff parameter
-    cutoff.Init(pod.knob1, 100, 10000, cutoff.LOGARITHMIC);
-    pitch.Init(pod.knob2, 200, 10000, pitch.LOGARITHMIC);
+    cutoff.Init(pod.knob1, 100, 5000, cutoff.LOGARITHMIC);
+    pitch.Init(pod.knob2, 200, 5000, pitch.LOGARITHMIC);
     lfof.Init(pod.knob1, 0, 1000, lfof.LOGARITHMIC);
     
     // start callback
@@ -160,4 +150,12 @@ int main(void)
     pod.StartAudio(AudioCallback);
 
     while(1) {}
+}
+
+void ConditionalParameter(float o, float n, float &param, float update)
+{
+    if (abs(o - n) > 0.0005)
+    {
+        param = update;
+    }
 }
