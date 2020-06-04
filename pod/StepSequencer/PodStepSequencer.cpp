@@ -9,7 +9,16 @@
 //   *Press the right button to activate or deactivate a step
 //   *Press the left button to hear the step you're editing (ping the envelope) (Also activates inactive steps)
 //   *If the led is lit, the step is active.
-//   *!!!Led color indicates step number
+
+//  *In edit mode the LEDS indicate which step you're on.
+//  *One: Red
+//  *Two: Green
+//  *Three:  Blue
+//  *Four: White
+//  *Five: Purple
+//  *Six: Cyan
+//  *Seven: Gold
+//  *Eight: Yellow
 
 // Play mode
 // Knob one controls tempo.
@@ -39,9 +48,13 @@ float pitch[8];
 bool   active[8];
 float env_out;
 
+Color colors[8];
 float pent[] = {110.f,128.33f,146.66f,174.166f,192.5f};
 
 float oldk1, oldk2;
+float tf, ff;
+
+void ConditionalParameter(float o, float n, float &param, float update);
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
@@ -65,12 +78,11 @@ static void AudioCallback(float *in, float *out, size_t size)
         step += pod.encoder.Increment();
 	step = (step % 8 + 8) % 8;
         
-	if (abs(oldk1 - k1) > .0001 || abs(oldk2 - k2) > .0001)
-	{
-	    dec[step] = parame1.Process();
-	    int temp = (int) parame2.Process();
-	    pitch[step] = pent[temp % 5] * (temp / (int) 5 + 1);
-	}
+	ConditionalParameter(oldk1, k1, dec[step], parame1.Process());
+
+	int temp = (int) parame2.Process();
+	ConditionalParameter(oldk2, k2, pitch[step], pent[temp % 5] * (temp / (int) 5 + 1));
+	
 
 	if (pod.button1.RisingEdge())
 	{
@@ -84,14 +96,11 @@ static void AudioCallback(float *in, float *out, size_t size)
 	    env.Trigger();
 	}
 
-	//Tried to be clever, but this means step 0 is off...
 	if (active[step])
 	{
-  	    float l4 = (step & 4) * 0.25f;
-	    float l2 = (step & 2) * 0.25f;
-	    float l1 = (step & 1) * 0.25f;
-	    pod.led1.Set(l4,l2,l1);
-	    pod.led2.Set(l4,l2,l1);
+	    Color cur_color = colors[step];
+	    pod.led1.SetColor(cur_color);
+	    pod.led2.SetColor(cur_color);
 	}
 	else
 	{
@@ -105,11 +114,11 @@ static void AudioCallback(float *in, float *out, size_t size)
 	wave = (wave % osc.WAVE_LAST + osc.WAVE_LAST) % osc.WAVE_LAST;
 	osc.SetWaveform(wave);	
 
-	if (abs(oldk1 - k1) > .0001 || abs(oldk2 - k2) > .0001)
-	{
-	    tick.SetFreq(paramp1.Process());
-	    flt.SetFreq(paramp2.Process());
-	}
+	ConditionalParameter(oldk1, k1, tf, paramp1.Process());
+	ConditionalParameter(oldk2, k2, ff, paramp2.Process());
+
+	tick.SetFreq(tf);
+	flt.SetFreq(ff);
 	
 	pod.led2.Set(0,env_out,0);
 	pod.led1.Set(0,env_out,0);
@@ -151,6 +160,8 @@ int main(void)
     float sample_rate;
     pod.Init();
     sample_rate = pod.AudioSampleRate();
+    tf = 3.f;
+    ff = 20000.f;
     
     osc.Init(sample_rate);
     env.Init(sample_rate);
@@ -186,11 +197,21 @@ int main(void)
     {
         dec[i] = .5;
 	active[i] = false;
-	pitch[i] = 12;
+	pitch[i] = 110;
+	colors[i].Init((Color::PresetColor)i);
     }
+    colors[7].Init(1,1,0);
 
     pod.StartAdc();
     pod.StartAudio(AudioCallback);
 
     while (1){}
+}
+
+void ConditionalParameter(float o, float n, float &param, float update)
+{
+    if (abs(o - n) > 0.0005)
+    {
+        param = update;
+    }
 }
