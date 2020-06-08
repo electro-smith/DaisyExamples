@@ -103,14 +103,8 @@ void ResetBuffer()
     mod   = MAX_SIZE;
 }
 
-//Deals with analog controls 
-void Controls()
+void UpdateButtons()
 {
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
-
-    drywet = pod.knob1.Process();
-
     //button1 pressed
     if(pod.button1.RisingEdge())
     {
@@ -138,6 +132,17 @@ void Controls()
     {
         play = !play;
     }
+}
+
+//Deals with analog controls 
+void Controls()
+{
+    pod.UpdateAnalogControls();
+    pod.DebounceControls();
+
+    drywet = pod.knob1.Process();
+
+    UpdateButtons();
 
     //leds
     pod.led1.Set(0, play == true, 0);
