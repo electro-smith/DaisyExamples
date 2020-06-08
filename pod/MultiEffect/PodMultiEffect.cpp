@@ -36,93 +36,37 @@ static ReverbSc  rev;
 static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS dell;
 static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS delr;
 static Tone tone;
-static Parameter zero_one_l, zero_one_r,  deltime, cutoff, crushrate;
+static Parameter deltime, cutoff, crushrate;
 int mode = REV;
 
-float delt;
+float currentDelay, feedback, delayTarget;
 
 int crushmod, crushcount;
-float crushsl, crushsr;
+float crushsl, crushsr, drywet;
+
+void NextSamples(float &outl, float &outr, float inl, float inr);
+
+void Controls();
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
-    float sigl, sigr, inl, inr, k1, k2, drywet, feedback, c, d;
-    d = feedback = drywet = 0;
-    
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
-    
-    mode = mode + pod.encoder.Increment();
-    mode = (mode % 3 + 3) % 3;
+    float outl, outr, inl, inr;
 
-    k1 = zero_one_l.Process();
-    k2 = zero_one_r.Process(); 
+    Controls();
     
-    switch (mode)
-    {
-        case REV:
-   	    drywet = k1;
-	    rev.SetFeedback(k2);
-	    break;
-        case DEL:
-	    d = deltime.Process();
-	    feedback = k2;
-	    break;
-        case CRU:
-	    c = cutoff.Process();
-	    tone.SetFreq(c);
-	    crushmod = (int) crushrate.Process();
-    }	 
-
-    //leds
-    pod.led1.Set(k1 * (mode == 2), k1 * (mode == 1), k1 * (mode == 0 || mode == 2));
-    pod.led2.Set(k2 * (mode == 2), k2 * (mode == 1), k2 * (mode == 0 || mode == 2));
-    
-    pod.UpdateLeds();
-
     //audio
     for (size_t i = 0; i < size; i += 2)
     {
         inl = in[i];
         inr = in[i + 1];
 	
-	switch (mode)
-	{
-	    case REV:
-	        rev.Process(inl, inr, &sigl, &sigr);
-		sigl = drywet * sigl + (1 - drywet) * inl;
-		sigr = drywet * sigr + (1 - drywet) * inr;
-		break;
-	    case DEL:
-	        fonepole(delt, d, .00007f);
- 	        delr.SetDelay(delt);
-		dell.SetDelay(delt);
-		sigl = dell.Read();
-		sigr = delr.Read();
-
-		dell.Write((feedback * sigl) + inl);
-		sigl = (feedback * sigl) + ((1.0f - feedback) * inl);
-
-		delr.Write((feedback * sigr) + inr);
-		sigr = (feedback * sigr) + ((1.0f - feedback) * inr);
-		break;
-	    case CRU:
-	        crushcount++;
-		crushcount %= crushmod;
-		if (crushcount == 0)
-		{
-		    crushsr = inr;
-		    crushsl = inl;
-		}
-		sigl = tone.Process(crushsl);
-		sigr = tone.Process(crushsr);
-	}
+	NextSamples(outl, outr, inl, inr);
 	
 	// left out
-	out[i] = sigl;
+	out[i] = outl;
 	
 	// right out
-	out[i+1] = sigr;
+	out[i+1] = outr;
     }
 }
 
@@ -140,8 +84,6 @@ int main(void)
     tone.Init(sample_rate);
     
     //set parameters
-    zero_one_l.Init(pod.knob1, 0, 1, zero_one_l.LINEAR);
-    zero_one_r.Init(pod.knob2, 0, 1, zero_one_r.LINEAR);
     deltime.Init(pod.knob1, sample_rate * .05, MAX_DELAY, deltime.LOGARITHMIC);
     cutoff.Init(pod.knob1, 500, 20000, cutoff.LOGARITHMIC);
     crushrate.Init(pod.knob2, 1, 50, crushrate.LOGARITHMIC);
@@ -151,14 +93,85 @@ int main(void)
     rev.SetFeedback(0.85f);
 
     //delay parameters
-    // Set Delay time to 0.75 seconds
-    delt = sample_rate * 0.75f;
-    dell.SetDelay(delt);
-    delr.SetDelay(delt);
+    currentDelay = delayTarget = sample_rate * 0.75f;
+    dell.SetDelay(currentDelay);
+    delr.SetDelay(currentDelay);
     
     // start callback
     pod.StartAdc();
     pod.StartAudio(AudioCallback);
 
     while(1) {}
+}
+
+void Controls()
+{
+    float k1, k2, cutoffValue;
+    delayTarget = feedback = drywet = 0;
+    
+    pod.UpdateAnalogControls();
+    pod.DebounceControls();
+    
+    mode = mode + pod.encoder.Increment();
+    mode = (mode % 3 + 3) % 3;
+
+    k1 = pod.knob1.Process();
+    k2 = pod.knob2.Process(); 
+    
+    switch (mode)
+    {
+        case REV:
+   	    drywet = k1;
+	    rev.SetFeedback(k2);
+	    break;
+        case DEL:
+	    delayTarget = deltime.Process();
+	    feedback = k2;
+	    break;
+        case CRU:
+	    cutoffValue = cutoff.Process();
+	    tone.SetFreq(cutoffValue);
+	    crushmod = (int) crushrate.Process();
+    }	 
+
+    //leds
+    pod.led1.Set(k1 * (mode == 2), k1 * (mode == 1), k1 * (mode == 0 || mode == 2));
+    pod.led2.Set(k2 * (mode == 2), k2 * (mode == 1), k2 * (mode == 0 || mode == 2));
+    
+    pod.UpdateLeds();
+}
+
+void NextSamples(float &outl, float &outr, float inl, float inr)
+{
+  	switch (mode)
+	{
+	    case REV:
+	        rev.Process(inl, inr, &outl, &outr);
+		outl = drywet * outl + (1 - drywet) * inl;
+		outr = drywet * outr + (1 - drywet) * inr;
+		break;
+	    case DEL:
+	        fonepole(currentDelay, delayTarget, .00007f);
+ 	        delr.SetDelay(currentDelay);
+		dell.SetDelay(currentDelay);
+		outl = dell.Read();
+		outr = delr.Read();
+
+		dell.Write((feedback * outl) + inl);
+		outl = (feedback * outl) + ((1.0f - feedback) * inl);
+
+		delr.Write((feedback * outr) + inr);
+		outr = (feedback * outr) + ((1.0f - feedback) * inr);
+		break;
+	    case CRU:
+	        crushcount++;
+		crushcount %= crushmod;
+		if (crushcount == 0)
+		{
+		    crushsr = inr;
+		    crushsl = inl;
+		}
+		outl = tone.Process(crushsl);
+		outr = tone.Process(crushsr);
+	}
 }
