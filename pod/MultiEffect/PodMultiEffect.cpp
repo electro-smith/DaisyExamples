@@ -36,10 +36,10 @@ static ReverbSc  rev;
 static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS dell;
 static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS delr;
 static Tone tone;
-static Parameter deltime, cutoff, crushrate;
+static Parameter deltime, cutoffParam, crushrate;
 int mode = REV;
 
-float currentDelay, feedback, delayTarget;
+float currentDelay, feedback, delayTarget, cutoff;
 
 int crushmod, crushcount;
 float crushsl, crushsr, drywet;
@@ -48,7 +48,7 @@ void NextSamples(float &outl, float &outr, float inl, float inr);
 
 void Controls();
 
-static void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(float *in, float *out, size_t size)
 {
     float outl, outr, inl, inr;
 
@@ -85,7 +85,7 @@ int main(void)
     
     //set parameters
     deltime.Init(pod.knob1, sample_rate * .05, MAX_DELAY, deltime.LOGARITHMIC);
-    cutoff.Init(pod.knob1, 500, 20000, cutoff.LOGARITHMIC);
+    cutoffParam.Init(pod.knob1, 500, 20000, cutoffParam.LOGARITHMIC);
     crushrate.Init(pod.knob2, 1, 50, crushrate.LOGARITHMIC);
     
     //reverb parameters
@@ -120,8 +120,8 @@ void UpdateKnobs(float &k1, float &k2)
 	    feedback = k2;
 	    break;
         case CRU:
-	    cutoffValue = cutoff.Process();
-	    tone.SetFreq(cutoffValue);
+	    cutoff = cutoffParam.Process();
+	    tone.SetFreq(cutoff);
 	    crushmod = (int) crushrate.Process();
     }
 }
@@ -132,7 +132,7 @@ void UpdateEncoder()
     mode = (mode % 3 + 3) % 3;
 }
 
-void UpdateLeds()
+void UpdateLeds(float k1, float k2)
 {
     pod.led1.Set(k1 * (mode == 2), k1 * (mode == 1), k1 * (mode == 0 || mode == 2));
     pod.led2.Set(k2 * (mode == 2), k2 * (mode == 1), k2 * (mode == 0 || mode == 2));
@@ -142,7 +142,7 @@ void UpdateLeds()
 
 void Controls()
 {
-    float k1, k2, cutoffValue;
+    float k1, k2;
     delayTarget = feedback = drywet = 0;
     
     pod.UpdateAnalogControls();
@@ -152,7 +152,7 @@ void Controls()
 
     UpdateEncoder();
 
-    UpdateLeds();
+    UpdateLeds(k1, k2);
 }
 
 void GetReverbSample(float &outl, float &outr, float inl, float inr)
@@ -177,7 +177,7 @@ void GetDelaySample(float &outl, float &outr, float inl, float inr)
     outr = (feedback * outr) + ((1.0f - feedback) * inr);
 }
 
-void GetCrushSample();
+void GetCrushSample(float &outl, float &outr, float inl, float inr)
 {
     crushcount++;
     crushcount %= crushmod;
@@ -200,6 +200,6 @@ void NextSamples(float &outl, float &outr, float inl, float inr)
  	    GetDelaySample(outl, outr, inl, inr);
 	    break;
         case CRU:
-	  GetCrushSample(outl, outr. inl, inr);
+	  GetCrushSample(outl, outr, inl, inr);
     }
 }
