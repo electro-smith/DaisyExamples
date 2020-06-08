@@ -1,6 +1,6 @@
 // Press button two to record. First recording sets loop length. Automatically starts looping if 5 minute limit is hit.
 // After first loop sound on sound recording enabled. Press button two to toggle SOS recording. Hold button two to clear loop.
-// Red lights indicate record enable.
+// The red light indicates record enable. The green light indicates play enable.
 // Press button one to pause/play loop buffer.
 //
 // Knob one mixes live input and loop output. Left is only live thru, right is only loop output.
@@ -26,8 +26,17 @@ int                 len = 0;
 float drywet = 0;
 bool res = false;
 
-void Reset();
+void ResetBuffer();
 void Controls();
+
+void WriteBuffer(float* in, size_t i)
+{
+    buf[pos] = buf[pos] * 0.5 + in[i] * 0.5;
+    if(first)
+    {
+	len++;
+    }
+}
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
@@ -37,17 +46,15 @@ static void AudioCallback(float *in, float *out, size_t size)
 
     for(size_t i = 0; i < size; i += 2)
     {
-        if(rec)
-        {
-            buf[pos] = buf[pos] * 0.5 + in[i] * 0.5;
-            if(first)
-            {
-                len++;
-            }
-        }
-
+      
+        if (rec)
+	{
+	    WriteBuffer(in, i);
+	}
+	
         output = buf[pos];
 
+	//automatic looptime
         if(len >= MAX_SIZE)
         {
             first = false;
@@ -72,7 +79,7 @@ int main(void)
     // initialize pod hardware and oscillator daisysp module
 
     pod.Init();
-    Reset();
+    ResetBuffer();
 
     // start callback
     pod.StartAdc();
@@ -82,7 +89,7 @@ int main(void)
 }
 
 //Resets the buffer
-void Reset()
+void ResetBuffer()
 {
     play  = false;
     rec   = false;
@@ -103,7 +110,8 @@ void Controls()
     pod.DebounceControls();
 
     drywet = pod.knob1.Process();
-    
+
+    //button1 pressed
     if(pod.button1.RisingEdge())
     {
         if(first && rec)
@@ -118,26 +126,23 @@ void Controls()
         rec  = !rec;
     }
 
+    //button1 held
+    if(pod.button1.TimeHeldMs() >= 1000 && res)
+    {
+        ResetBuffer();
+	res = false;
+    }
+    
+    //button2 pressed
     if(pod.button2.RisingEdge())
     {
         play = !play;
     }
 
-    if(pod.button1.TimeHeldMs() >= 1000 && res)
-    {
-        Reset();
-	res = false;
-    }
-
-    if(rec)
-    {
-        pod.led1.Set(1, 0, 0);
-        pod.led2.Set(1, 0, 0);
-    }
-    else
-    {
-        pod.ClearLeds();
-    }
+    //leds
+    pod.led1.Set(0, play == true, 0);
+    pod.led2.Set(rec == true, 0, 0);
+   
     pod.UpdateLeds();
 }
 
