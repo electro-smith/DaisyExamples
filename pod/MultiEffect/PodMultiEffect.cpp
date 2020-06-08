@@ -104,17 +104,8 @@ int main(void)
     while(1) {}
 }
 
-void Controls()
+void UpdateKnobs(float &k1, float &k2)
 {
-    float k1, k2, cutoffValue;
-    delayTarget = feedback = drywet = 0;
-    
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
-    
-    mode = mode + pod.encoder.Increment();
-    mode = (mode % 3 + 3) % 3;
-
     k1 = pod.knob1.Process();
     k2 = pod.knob2.Process(); 
     
@@ -132,46 +123,83 @@ void Controls()
 	    cutoffValue = cutoff.Process();
 	    tone.SetFreq(cutoffValue);
 	    crushmod = (int) crushrate.Process();
-    }	 
+    }
+}
 
-    //leds
+void UpdateEncoder()
+{
+    mode = mode + pod.encoder.Increment();
+    mode = (mode % 3 + 3) % 3;
+}
+
+void UpdateLeds()
+{
     pod.led1.Set(k1 * (mode == 2), k1 * (mode == 1), k1 * (mode == 0 || mode == 2));
     pod.led2.Set(k2 * (mode == 2), k2 * (mode == 1), k2 * (mode == 0 || mode == 2));
     
     pod.UpdateLeds();
 }
 
+void Controls()
+{
+    float k1, k2, cutoffValue;
+    delayTarget = feedback = drywet = 0;
+    
+    pod.UpdateAnalogControls();
+    pod.DebounceControls();
+
+    UpdateKnobs(k1, k2);
+
+    UpdateEncoder();
+
+    UpdateLeds();
+}
+
+void GetReverbSample(float &outl, float &outr, float inl, float inr)
+{
+    rev.Process(inl, inr, &outl, &outr);
+    outl = drywet * outl + (1 - drywet) * inl;
+    outr = drywet * outr + (1 - drywet) * inr;
+}
+
+void GetDelaySample(float &outl, float &outr, float inl, float inr)
+{
+    fonepole(currentDelay, delayTarget, .00007f);
+    delr.SetDelay(currentDelay);
+    dell.SetDelay(currentDelay);
+    outl = dell.Read();
+    outr = delr.Read();
+    
+    dell.Write((feedback * outl) + inl);
+    outl = (feedback * outl) + ((1.0f - feedback) * inl);
+    
+    delr.Write((feedback * outr) + inr);
+    outr = (feedback * outr) + ((1.0f - feedback) * inr);
+}
+
+void GetCrushSample();
+{
+    crushcount++;
+    crushcount %= crushmod;
+    if (crushcount == 0)
+    {
+	crushsr = inr;
+	crushsl = inl;
+    }
+    outl = tone.Process(crushsl);
+    outr = tone.Process(crushsr);
+}
 void NextSamples(float &outl, float &outr, float inl, float inr)
 {
-  	switch (mode)
-	{
-	    case REV:
-	        rev.Process(inl, inr, &outl, &outr);
-		outl = drywet * outl + (1 - drywet) * inl;
-		outr = drywet * outr + (1 - drywet) * inr;
-		break;
-	    case DEL:
-	        fonepole(currentDelay, delayTarget, .00007f);
- 	        delr.SetDelay(currentDelay);
-		dell.SetDelay(currentDelay);
-		outl = dell.Read();
-		outr = delr.Read();
-
-		dell.Write((feedback * outl) + inl);
-		outl = (feedback * outl) + ((1.0f - feedback) * inl);
-
-		delr.Write((feedback * outr) + inr);
-		outr = (feedback * outr) + ((1.0f - feedback) * inr);
-		break;
-	    case CRU:
-	        crushcount++;
-		crushcount %= crushmod;
-		if (crushcount == 0)
-		{
-		    crushsr = inr;
-		    crushsl = inl;
-		}
-		outl = tone.Process(crushsl);
-		outr = tone.Process(crushsr);
-	}
+    switch (mode)
+    {
+        case REV:
+	    GetReverbSample(outl, outr, inl, inr);
+	    break;
+        case DEL:
+ 	    GetDelaySample(outl, outr, inl, inr);
+	    break;
+        case CRU:
+	  GetCrushSample(outl, outr. inl, inr);
+    }
 }
