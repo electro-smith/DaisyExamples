@@ -29,14 +29,7 @@ bool res = false;
 void ResetBuffer();
 void Controls();
 
-void WriteBuffer(float* in, size_t i)
-{
-    buf[pos] = buf[pos] * 0.5 + in[i] * 0.5;
-    if(first)
-    {
-	len++;
-    }
-}
+void NextSamples(float &output, float* in, size_t i);
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
@@ -46,30 +39,10 @@ static void AudioCallback(float *in, float *out, size_t size)
 
     for(size_t i = 0; i < size; i += 2)
     {
-      
-        if (rec)
-	{
-	    WriteBuffer(in, i);
-	}
-	
-        output = buf[pos];
-
-	//automatic looptime
-        if(len >= MAX_SIZE)
-        {
-            first = false;
-            mod   = MAX_SIZE;
-            len   = 0;
-        }
-
-        if(play)
-        {
-            pos++;
-            pos %= mod;
-        }
+        NextSamples(output, in, i);   
 	
         // left and right outs
-        out[i] = out[i+1] = output * drywet + in[i] * (1 -drywet);
+        out[i] = out[i+1] = output;
     }
 
 }
@@ -127,10 +100,11 @@ void UpdateButtons()
 	res = false;
     }
     
-    //button2 pressed
-    if(pod.button2.RisingEdge())
+    //button2 pressed and not empty buffer
+    if(pod.button2.RisingEdge() && !(!rec && first))
     {
         play = !play;
+	rec = false;
     }
 }
 
@@ -151,4 +125,37 @@ void Controls()
     pod.UpdateLeds();
 }
 
+void WriteBuffer(float* in, size_t i)
+{
+    buf[pos] = buf[pos] * 0.5 + in[i] * 0.5;
+    if(first)
+    {
+	len++;
+    }
+}
 
+void NextSamples(float &output, float* in, size_t i)
+{
+    if (rec)
+    {
+	WriteBuffer(in, i);
+    }
+    
+    output = buf[pos];
+    
+    //automatic looptime
+    if(len >= MAX_SIZE)
+    {
+        first = false;
+	mod   = MAX_SIZE;
+	len   = 0;
+    }
+    
+    if(play)
+    {
+	pos++;
+	pos %= mod;
+    }
+	
+    output = output * drywet + in[i] * (1 -drywet);
+}
