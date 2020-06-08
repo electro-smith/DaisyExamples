@@ -8,8 +8,9 @@
 //
 // Click the encoder to cycle through waveforms.
 // Press the left button to trigger the synth.
+//
 // Press the right button to set the envelope to self cycle (loop).
-// The right led lights green if the envelope is set to self cycle.
+// The right led lights purple if the envelope is set to self cycle.
 //
 
 #include "daisysp.h"
@@ -172,7 +173,7 @@ void UpdateKnobs()
 void UpdateLeds()
 {
     pod.led1.Set(mode == 2, mode == 1, mode == 0);
-    pod.led2.Set(0, selfCycle, 0);
+    pod.led2.Set(0, selfCycle, selfCycle);
     
     oldk1 = k1;
     oldk2 = k2;
@@ -182,12 +183,12 @@ void UpdateLeds()
 
 void UpdateButtons()
 {
-    if (pod.button1.RisingEdge() || (selfCycle && !ad.IsRunning()))
+    if (pod.button2.RisingEdge() || (selfCycle && !ad.IsRunning()))
     {
   	ad.Trigger();
     }
 
-    if (pod.button2.RisingEdge())
+    if (pod.button1.RisingEdge())
     {
         selfCycle = !selfCycle;
     }
