@@ -1,9 +1,16 @@
 // Simple Synth voice example. Turning the encoder cycles through three control modes. Each mode has different knob functions.
-// In mode one (blue), knob one controls filter cutoff and knob two controls oscillator frequency.
-// In mode two (green), knob one 1 controls envelope attack time and knob two controls envelope decay time.
-// In mode three (red), knob one controls vibrato rate and knob two controls vibrato depth. Very fast vibratos are heard as simple FM synthesis!
-// Click the encoder to cycle through waveforms. Press either button to trigger the envelope.
-// Leds light to indicate what mode is selected.
+//
+// Modes:  Led one shows mode.
+//
+//   In mode one (blue), knob one controls filter cutoff and knob two controls oscillator frequency.
+//   In mode two (green), knob one 1 controls envelope attack time and knob two controls envelope decay time.
+//   In mode three (red), knob one controls vibrato rate and knob two controls vibrato depth. Very fast vibratos are heard as simple FM synthesis!
+//
+// Click the encoder to cycle through waveforms.
+// Press the left button to trigger the synth.
+// Press the right button to set the envelope to self cycle (loop).
+// The right led lights green if the envelope is set to self cycle.
+//
 
 #include "daisysp.h"
 #include "daisy_pod.h"
@@ -20,6 +27,7 @@ static Parameter pitchParam, cutoffParam, lfoParam;
 int wave, mode;
 float vibrato, oscFreq, lfoFreq, lfoAmp, attack, release, cutoff;
 float oldk1, oldk2, k1, k2;
+bool selfCycle;
 
 void ConditionalParameter(float oldVal, float newVal, float &param, float update);
 
@@ -68,7 +76,8 @@ int main(void)
     cutoff = 10000;
     lfoAmp = 1.0f;
     lfoFreq = 0.1f;
-
+    selfCycle = false;
+    
     //Init everything
     pod.Init();
     sample_rate = pod.AudioSampleRate();
@@ -100,9 +109,9 @@ int main(void)
     ad.SetCurve(0.5);
 
     //set parameter parameters
-    cutoffParam.Init(pod.knob1, 100, 5000, cutoffParam.LOGARITHMIC);
-    pitchParam.Init(pod.knob2, 200, 5000, pitchParam.LOGARITHMIC);
-    lfoParam.Init(pod.knob1, 0, 1000, lfoParam.LOGARITHMIC);
+    cutoffParam.Init(pod.knob1, 100, 20000, cutoffParam.LOGARITHMIC);
+    pitchParam.Init(pod.knob2, 50, 5000, pitchParam.LOGARITHMIC);
+    lfoParam.Init(pod.knob1, 0.25, 1000, lfoParam.LOGARITHMIC);
     
     // start callback
     pod.StartAdc();
@@ -153,7 +162,7 @@ void UpdateKnobs()
 	case 2:
 	    ConditionalParameter(oldk1, k1, lfoFreq, lfoParam.Process());
 	    ConditionalParameter(oldk2, k2, lfoAmp, pod.knob2.Process());
-	    lfo.SetFreq(lfoFreq * 500);
+	    lfo.SetFreq(lfoFreq);
 	    lfo.SetAmp(lfoAmp * 100);
 	default:
 	    break;
@@ -163,7 +172,7 @@ void UpdateKnobs()
 void UpdateLeds()
 {
     pod.led1.Set(mode == 2, mode == 1, mode == 0);
-    pod.led2.Set(mode == 2, mode == 1, mode == 0);
+    pod.led2.Set(0, selfCycle, 0);
     
     oldk1 = k1;
     oldk2 = k2;
@@ -173,9 +182,14 @@ void UpdateLeds()
 
 void UpdateButtons()
 {
-    if (pod.button1.RisingEdge() || pod.button2.RisingEdge())
+    if (pod.button1.RisingEdge() || (selfCycle && !ad.IsRunning()))
     {
   	ad.Trigger();
+    }
+
+    if (pod.button2.RisingEdge())
+    {
+        selfCycle = !selfCycle;
     }
 }
 
