@@ -48,6 +48,12 @@ void NextSamples(float &outl, float &outr, float inl, float inr);
 
 void Controls();
 
+void GetReverbSample(float &outl, float &outr, float inl, float inr);
+
+void GetDelaySample(float &outl, float &outr, float inl, float inr)
+
+void GetCrushSample(float &outl, float &outr, float inl, float inr)
+
 void AudioCallback(float *in, float *out, size_t size)
 {
     float outl, outr, inl, inr;
@@ -60,7 +66,19 @@ void AudioCallback(float *in, float *out, size_t size)
         inl = in[i];
         inr = in[i + 1];
 	
-	NextSamples(outl, outr, inl, inr);
+        switch (mode)
+	{
+            case REV:
+	        GetReverbSample(outl, outr, inl, inr);
+		break;
+            case DEL:
+ 	        GetDelaySample(outl, outr, inl, inr);
+		break;
+            case CRU:
+	        GetCrushSample(outl, outr, inl, inr);
+            case default:
+	        outl = outr = 0;
+	}
 	
 	// left out
 	out[i] = outl;
@@ -188,18 +206,4 @@ void GetCrushSample(float &outl, float &outr, float inl, float inr)
     }
     outl = tone.Process(crushsl);
     outr = tone.Process(crushsr);
-}
-void NextSamples(float &outl, float &outr, float inl, float inr)
-{
-    switch (mode)
-    {
-        case REV:
-	    GetReverbSample(outl, outr, inl, inr);
-	    break;
-        case DEL:
- 	    GetDelaySample(outl, outr, inl, inr);
-	    break;
-        case CRU:
-	  GetCrushSample(outl, outr, inl, inr);
-    }
 }
