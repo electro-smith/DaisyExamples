@@ -156,6 +156,9 @@ void NextSamples(float &output, float* in, size_t i)
 	pos++;
 	pos %= mod;
     }
-	
-    output = output * drywet + in[i] * (1 -drywet);
+
+    if (!rec)
+    {
+	output = output * drywet + in[i] * (1 -drywet);
+    }
 }
