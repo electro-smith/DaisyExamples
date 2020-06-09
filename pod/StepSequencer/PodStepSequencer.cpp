@@ -4,11 +4,12 @@
 
 // Edit mode
 //   *Rotate encoder to run through steps.
-//   *Knob one sets decay time,
+//   *Knob one sets decay time.
 //   *Knob two sets pitch. (A pentatonic major)
-//   *Press the right button to activate or deactivate a step
-//   *Press the left button to hear the step you're editing (ping the envelope) (Also activates inactive steps)
-//   *If the led is lit, the step is active.
+//   *Press either button to activate or deactivate a step.
+//   *Led one tells you which step you're on (color).
+//   *Led two is lit if the current step is active.
+//   *When a step is activated, its envelope will cycle. Listen for pitch and envelope shape.
 
 //  *In edit mode the LEDS indicate which step you're on.
 //  *One: Red
@@ -17,7 +18,7 @@
 //  *Four: White
 //  *Five: Purple
 //  *Six: Cyan
-//  *Seven: Gold
+//  *Seven: Gold / Orange
 //  *Eight: Yellow
 
 // Play mode
@@ -168,16 +169,9 @@ void UpdateButtons()
 {
   if (edit)
     {
-      	if (pod.button1.RisingEdge())
+        if (pod.button1.RisingEdge() || pod.button2.RisingEdge())
 	{
 	    active[step] = !active[step];
-	}
-
-	if (pod.button2.RisingEdge())
-	{
-  	    active[step] = true;
-   	    env.SetTime(ADENV_SEG_DECAY, dec[step]);
-	    env.Trigger();
 	}
     }
 }
@@ -193,6 +187,7 @@ void UpdateKnobs()
       
 	int temp = (int) pitchParam.Process();
 	ConditionalParameter(oldk2, k2, pitch[step], pent[temp % 5] * (temp / (int) 5 + 1));
+	osc.SetFreq(pitch[step]);
     }
 
     else
@@ -210,16 +205,20 @@ void UpdateKnobs()
 
 void UpdateLedEdit()
 {
+    Color cur_color = colors[step];
+    pod.led1.SetColor(cur_color);
+
     if (active[step])
     {
-	Color cur_color = colors[step];
-	pod.led1.SetColor(cur_color);
 	pod.led2.SetColor(cur_color);
     }
+    
     else
     {
-	pod.ClearLeds();
+        pod.led2.Set(0,0,0);
     }
+
+    pod.UpdateLeds();
 }
 
 void UpdateLeds()
@@ -250,8 +249,6 @@ void Controls()
     UpdateKnobs();
 
     UpdateLeds();
-    
-    osc.SetFreq(pitch[step]);
 }
 
 void NextSamples(float& sig)
@@ -267,7 +264,16 @@ void NextSamples(float& sig)
 	step %= 8;
 	if (active[step])
 	{
-	    env.SetTime(ADENV_SEG_DECAY, dec[step]);
+	    env.Trigger();	   
+	}
+    }
+    
+    if (active[step])
+    {
+	env.SetTime(ADENV_SEG_DECAY, dec[step]);
+	osc.SetFreq(pitch[step]);
+	if (edit && ! env.IsRunning())
+	{
 	    env.Trigger();
 	}
     }
