@@ -44,16 +44,18 @@ float currentDelay, feedback, delayTarget, cutoff;
 int crushmod, crushcount;
 float crushsl, crushsr, drywet;
 
-void NextSamples(float &outl, float &outr, float inl, float inr);
 
+//Helper functions
 void Controls();
 
 void GetReverbSample(float &outl, float &outr, float inl, float inr);
 
-void GetDelaySample(float &outl, float &outr, float inl, float inr)
+void GetDelaySample(float &outl, float &outr, float inl, float inr);
 
-void GetCrushSample(float &outl, float &outr, float inl, float inr)
+void GetCrushSample(float &outl, float &outr, float inl, float inr);
 
+
+  
 void AudioCallback(float *in, float *out, size_t size)
 {
     float outl, outr, inl, inr;
@@ -76,7 +78,8 @@ void AudioCallback(float *in, float *out, size_t size)
 		break;
             case CRU:
 	        GetCrushSample(outl, outr, inl, inr);
-            case default:
+		break;
+            default:
 	        outl = outr = 0;
 	}
 	
