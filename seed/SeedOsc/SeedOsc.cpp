@@ -12,8 +12,6 @@ Oscillator osc;
 AdEnv env;
 
 Switch button1;
-AnalogControl knob1;
-Parameter knobParam;
 
 void AudioCallback(float* in, float* out, size_t size)
 {
@@ -26,7 +24,9 @@ void AudioCallback(float* in, float* out, size_t size)
 	env.Trigger();
     }
 
-    osc.SetFreq(knobParam.Process());
+    //Convert floating point knob to midi (0-127)
+    //Then convert midi to freq. in Hz
+    osc.SetFreq(mtof(hardware.adc.GetFloat(0) * 127));
     
     for (size_t i = 0; i < size; i+=2)
     {
@@ -57,13 +57,6 @@ int main(void)
     adcConfig.InitSingle(hardware.GetPin(21));
     hardware.adc.Init(&adcConfig, 1);
     hardware.adc.Start();
-    knob1.Init(hardware.adc.GetPtr(0), callbackrate);
-
-    //Set up knob parameter (sets range and logarithmic scaling)
-    knobParam.Init(knob1, 50, 5000, Parameter::LOGARITHMIC);
-    
-    //Set up button
-    button1.Init(hardware.GetPin(28), callbackrate);
 
     //Set up oscillator
     osc.Init(samplerate);
