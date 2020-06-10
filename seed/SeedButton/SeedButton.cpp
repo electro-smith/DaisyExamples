@@ -18,8 +18,6 @@ int main(void)
     //Configure and initialize button
     Switch button1;
     button1.Init(hw.GetPin(28), 10000);
-
-    //hw.adc.Start();
     
     // Loop forever
     for(;;)
