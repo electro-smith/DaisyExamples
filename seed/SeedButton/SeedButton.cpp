@@ -17,12 +17,15 @@ int main(void)
     
     //Configure and initialize button
     Switch button1;
-    button1.Init(hw.GetPin(28), 10000);
+    button1.Init(hw.GetPin(28),1000);
+    dsy_tim_start();
+
     
     // Loop forever
     for(;;)
     {
         button1.Debounce();
 	hw.SetLed(button1.Pressed());	
+	dsy_tim_delay_ms(1);
     }
 }
