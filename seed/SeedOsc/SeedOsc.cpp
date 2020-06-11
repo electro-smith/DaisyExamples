@@ -53,8 +53,7 @@ int main(void)
     // These are separate to allow reconfiguration of any of the internal
     // components before initialization.
     hardware.Configure();
-    hardware.Init();
-    hardware.SetAudioBlockSize(48);
+    hardware.Init();;
 
     //How many samples we'll output per second
     float samplerate = hardware.AudioSampleRate();
@@ -64,6 +63,9 @@ int main(void)
     //Add pin 21 as an analog input in this config. We'll use this to read the knob
     adcConfig.InitSingle(hardware.GetPin(21));
 
+    //Initialize the button on pin 28
+    button1.Init(hardware.GetPin(28), samplerate / 48.f );
+    
     //Set the ADC to use our configuration
     hardware.adc.Init(&adcConfig, 1);
     
