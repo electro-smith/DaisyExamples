@@ -19,9 +19,6 @@ int main(void)
     Switch button1;
     //Set button to pin 28, to be updated at a 1kHz  samplerate
     button1.Init(hw.GetPin(28),1000);
-    //Start timer class, used to enforce 1kHz samplerate
-    dsy_tim_start();
-
     
     // Loop forever
     for(;;)
@@ -31,6 +28,6 @@ int main(void)
 	//If the button is pressed, turn the LED on
 	hw.SetLed(button1.Pressed());
 	//wait 1 ms
-	dsy_tim_delay_ms(1);
+	dsy_system_delay(1);
     }
 }
