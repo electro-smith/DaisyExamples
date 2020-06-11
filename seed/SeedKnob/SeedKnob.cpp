@@ -14,30 +14,22 @@ int main(void)
     // components before initialization.
     hardware.Configure();
     hardware.Init();
-
     
     Led led1;
     //Initialize led1. We'll plug it into pin 28.
     //false here indicates the value is uninverted
     led1.Init(hardware.GetPin(28), false);
-
     
     //This is our ADC configuration
     AdcChannelConfig adcConfig;
     //Configure pin 21 as an ADC input. This is where we'll read the knob.
     adcConfig.InitSingle(hardware.GetPin(21));
-
     
     //Initialize the adc with the config we just made
     hardware.adc.Init(&adcConfig, 1);
     //Start reading values
     hardware.adc.Start();
 
-    
-    //Start the timer, so we can later use the delay
-    dsy_tim_start();
-
-    
     // Loop forever
     for(;;)
     {
@@ -48,6 +40,6 @@ int main(void)
 	led1.Update();
 	
 	//wait 1 ms
-	dsy_tim_delay_ms(1);
+	dsy_system_delay(1);
     }
 }
