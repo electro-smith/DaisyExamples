@@ -56,26 +56,16 @@ int main(void)
     hardware.Init();
     hardware.SetAudioBlockSize(48);
 
-    //How many samples in one block of audio. We fill one block every callback
-    float blocksize = 48;
-    
     //How many samples we'll output per second
     float samplerate = hardware.AudioSampleRate();
-
-    // (sample / second) / (samples / callback) = callbacks / second
-    // Each callback fills one block, so here block = callback.
-    float callbackrate = samplerate / blocksize;
     
-    //Create and ADC configuration
+    //Create an ADC configuration
     AdcChannelConfig adcConfig;
     //Add pin 21 as an analog input in this config. We'll use this to read the knob
     adcConfig.InitSingle(hardware.GetPin(21));
 
     //Set the ADC to use our configuration
     hardware.adc.Init(&adcConfig, 1);
-    //Start the adc
-    hardware.adc.Start();
-
     
     //Set up oscillator
     osc.Init(samplerate);
@@ -92,6 +82,9 @@ int main(void)
     env.SetMin(0.0);
     env.SetMax(.5);
     env.SetCurve(0); // linear
+
+    //Start the adc				
+    hardware.adc.Start();
 
     //Start calling the audio callback
     hardware.StartAudio(AudioCallback);
