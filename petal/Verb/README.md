@@ -1,16 +1,11 @@
-# Keyboard Test
+# Verb
 
-SW 1 and SW 2 function as octave up/down buttons
+Simple Stereo Reverb for Daisy Petal
 
-All 13 of the keyboard buttons work as a chromatic keyboard with 13-note polyphony.
+## Controls
 
-oscillators are each Bandlimited Saw waves
-
-SW 3 enables/disables the reverb.
-
-## building
-
-Currently for some reason this only works when built with VisualStudio/VisualGDB..
-
-It builds correctly with Make, but doesn't run. Likely just something not being correctly included with Make or something.
-
+| Control | Description | Comment |
+| Knob 1 | Reverb Time | Small room to near-infinite |
+| Knob 2 | Reverb Damping | Internal Cutoff filter from about 500Hz to 20kHz |
+| Knob 3 | Send Amount | Controls amount of dry signal sent to reverb |
+| Switch 1 | Pass Thru | Disables the wet signal, passing the input directly to the output when LED is illuminated |
