@@ -6,7 +6,7 @@ Button between ground and pin 28.
 Knob across power and ground. Sensor pin connected to seed pin 21.
 
 # Schematic
-![SeedOsc_schem.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/SeedOsc/resource/SeedOsc_schem.png)
+![SeedOsc_schem.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/SeedOsc/resources/SeedOsc_schem.png)
 
 # Breadboard
-![SeedOsc_bb.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/SeedOsc/resource/SeedOsc_bb.png)
+![SeedOsc_bb.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/SeedOsc/resources/SeedOsc_bb.png)
