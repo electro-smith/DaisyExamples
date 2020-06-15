@@ -9,14 +9,17 @@
 #    this can contain Description, as well as breadboard images, etc.
 #
 # Data we want:
-# {
-#   "Example": {
+# [
+#   {
 #       "name": "Name"
 #       "platform": "seed"
 #       "filepath": "./bin/platform/Name.bin"
 #       "description": "Short Description"
-#   }
-#}
+#   },
+#   {
+#       etc. . . 
+#   },
+# ]
 #
 ##############################
 # Script Begin ###############
@@ -90,17 +93,11 @@ def run():
     for example in olist:
         example.CopyToDeploy()
     jsonout = list(example.DumpObject() for example in olist if example.Valid())
+    
     # Creating JSON file
     with open('./bin/examples.json', 'w') as f:
         json.dump(jsonout, f)
-    #with open('./bin/examples.json', 'w') as f:
-    #    for example in olist:
-    #        example.DumpJson(f)
 
 if __name__ == '__main__':
     run()
-##############################
-# Script End ###############
-##############################
-
 
