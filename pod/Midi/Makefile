@@ -2,7 +2,7 @@
 TARGET = ex_patch_pluck_echo
 
 # Sources
-CPP_SOURCES = PodMidi.cpp
+CPP_SOURCES = Midi.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy

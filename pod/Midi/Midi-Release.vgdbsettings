@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <VisualGDBProjectSettings2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ConfigurationName>Debug</ConfigurationName>
+  <ConfigurationName>Release</ConfigurationName>
   <Project xsi:type="com.visualgdb.project.embedded">
     <CustomSourceDirectories>
       <Directories />
@@ -17,12 +17,8 @@
         <Revision>0</Revision>
       </Version>
     </ToolchainID>
-    <ProjectFile>PodMidi.vcxproj</ProjectFile>
-    <RemoteBuildEnvironment>
-      <Records />
-      <EnvironmentSetupFiles />
-    </RemoteBuildEnvironment>
-    <ParallelJobCount>1</ParallelJobCount>
+    <ProjectFile>Midi.vcxproj</ProjectFile>
+    <ParallelJobCount>0</ParallelJobCount>
     <SuppressDirectoryChangeMessages>true</SuppressDirectoryChangeMessages>
   </Build>
   <CustomBuild>
@@ -38,73 +34,11 @@
     <DebugStopActions />
     <BreakMode>Default</BreakMode>
   </CustomDebug>
-  <DeviceTerminalSettings>
-    <Connection xsi:type="com.sysprogs.terminal.connection.serial">
-      <ComPortName>COM59</ComPortName>
-      <AdvancedSettings>
-        <BaudRate>115200</BaudRate>
-        <DataBits>8</DataBits>
-        <Parity>None</Parity>
-        <StopBits>One</StopBits>
-        <FlowControl>None</FlowControl>
-      </AdvancedSettings>
-    </Connection>
-    <LastConnectionTime>0</LastConnectionTime>
-    <EchoTypedCharacters>false</EchoTypedCharacters>
-    <ClearContentsWhenReconnecting>false</ClearContentsWhenReconnecting>
-    <ReconnectAutomatically>false</ReconnectAutomatically>
-    <DisplayMode>ASCII</DisplayMode>
-    <Colors>
-      <Background>
-        <Alpha>255</Alpha>
-        <Red>0</Red>
-        <Green>0</Green>
-        <Blue>0</Blue>
-      </Background>
-      <Disconnected>
-        <Alpha>255</Alpha>
-        <Red>169</Red>
-        <Green>169</Green>
-        <Blue>169</Blue>
-      </Disconnected>
-      <Text>
-        <Alpha>255</Alpha>
-        <Red>211</Red>
-        <Green>211</Green>
-        <Blue>211</Blue>
-      </Text>
-      <Echo>
-        <Alpha>255</Alpha>
-        <Red>144</Red>
-        <Green>238</Green>
-        <Blue>144</Blue>
-      </Echo>
-      <Inactive>
-        <Alpha>255</Alpha>
-        <Red>169</Red>
-        <Green>169</Green>
-        <Blue>169</Blue>
-      </Inactive>
-    </Colors>
-    <HexSettings>
-      <MaximumBytesPerLine>16</MaximumBytesPerLine>
-      <ShowTextView>true</ShowTextView>
-      <BreaksAroundEcho>true</BreaksAroundEcho>
-      <AutoSend>true</AutoSend>
-      <SendAsHex>true</SendAsHex>
-      <TimeoutForAutoBreak>0</TimeoutForAutoBreak>
-    </HexSettings>
-    <LineEnding>CRLF</LineEnding>
-    <TreatLFAsCRLF>false</TreatLFAsCRLF>
-    <KeepOpenAfterExit>true</KeepOpenAfterExit>
-    <ShowAfterProgramming>false</ShowAfterProgramming>
-  </DeviceTerminalSettings>
   <CustomShortcuts>
     <Shortcuts />
     <ShowMessageAfterExecuting>true</ShowMessageAfterExecuting>
   </CustomShortcuts>
   <UserDefinedVariables />
-  <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
     <ExtraSettings>
@@ -118,21 +52,19 @@
     </CodeAnalyzerSettings>
   </CodeSense>
   <BuildContextDirectory>VisualGDB\VisualGDBCache</BuildContextDirectory>
-  <Configurations />
-  <ProgramArgumentsSuggestions />
   <Debug xsi:type="com.visualgdb.debug.embedded">
     <AdditionalStartupCommands />
     <AdditionalGDBSettings>
       <Features>
         <DisableAutoDetection>false</DisableAutoDetection>
-        <UseFrameParameter>true</UseFrameParameter>
-        <SimpleValuesFlagSupported>true</SimpleValuesFlagSupported>
-        <ListLocalsSupported>true</ListLocalsSupported>
-        <ByteLevelMemoryCommandsAvailable>true</ByteLevelMemoryCommandsAvailable>
-        <ThreadInfoSupported>true</ThreadInfoSupported>
-        <PendingBreakpointsSupported>true</PendingBreakpointsSupported>
-        <SupportTargetCommand>true</SupportTargetCommand>
-        <ReliableBreakpointNotifications>true</ReliableBreakpointNotifications>
+        <UseFrameParameter>false</UseFrameParameter>
+        <SimpleValuesFlagSupported>false</SimpleValuesFlagSupported>
+        <ListLocalsSupported>false</ListLocalsSupported>
+        <ByteLevelMemoryCommandsAvailable>false</ByteLevelMemoryCommandsAvailable>
+        <ThreadInfoSupported>false</ThreadInfoSupported>
+        <PendingBreakpointsSupported>false</PendingBreakpointsSupported>
+        <SupportTargetCommand>false</SupportTargetCommand>
+        <ReliableBreakpointNotifications>false</ReliableBreakpointNotifications>
       </Features>
       <EnableSmartStepping>false</EnableSmartStepping>
       <FilterSpuriousStoppedNotifications>false</FilterSpuriousStoppedNotifications>
@@ -144,7 +76,7 @@
       <UseRelativePathsOnly>false</UseRelativePathsOnly>
       <ExitAction>None</ExitAction>
       <DisableDisassembly>false</DisableDisassembly>
-      <ExamineMemoryWithXCommand>true</ExamineMemoryWithXCommand>
+      <ExamineMemoryWithXCommand>false</ExamineMemoryWithXCommand>
       <StepIntoNewInstanceEntry>main</StepIntoNewInstanceEntry>
       <ExamineRegistersInRawFormat>true</ExamineRegistersInRawFormat>
       <DisableSignals>false</DisableSignals>

@@ -67,11 +67,11 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
-    <ClCompile Include="PodMidi.cpp" />
+    <ClCompile Include="Midi.cpp" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h750xx.c" />
-    <None Include="PodMidi-Debug.vgdbsettings" />
-    <None Include="PodMidi-Release.vgdbsettings" />
+    <None Include="Midi-Debug.vgdbsettings" />
+    <None Include="Midi-Release.vgdbsettings" />
     <None Include="stm32.xml" />
   </ItemGroup>
   <ItemGroup>
