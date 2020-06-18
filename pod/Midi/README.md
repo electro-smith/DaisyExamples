@@ -8,6 +8,27 @@ oscillators are each Bandlimited Saw waves
 
 SW 3 enables/disables the reverb.
 
+# Code Snippet
+
+    midi.Listen();
+    // Handle MIDI Events
+    while(midi.HasEvents())
+    {   
+        HandleMidiMessage(midi.PopEvent());
+    }
+
+    .......
+
+    void HandleMidiMessage(MidiEvent m)
+    {
+    switch(m.type)
+    {
+        case NoteOn:
+        {
+
+    ...
+    
+
 ## building
 
 Currently for some reason this only works when built with VisualStudio/VisualGDB..
