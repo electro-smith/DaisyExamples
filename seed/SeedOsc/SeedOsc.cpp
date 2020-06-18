@@ -72,7 +72,7 @@ int main(void)
     //Set up oscillator
     osc.Init(samplerate);
     osc.SetWaveform(osc.WAVE_SIN);
-    osc.SetAmp(1);
+    osc.SetAmp(1.f);
     osc.SetFreq(1000);
 
     //Set up volume envelope
@@ -82,7 +82,7 @@ int main(void)
     env.SetTime(ADENV_SEG_DECAY, .4);
     //minimum and maximum envelope values
     env.SetMin(0.0);
-    env.SetMax(.5);
+    env.SetMax(1.f);
     env.SetCurve(0); // linear
 
     //Start the adc				
