@@ -12,9 +12,9 @@ Color my_colors[5];
 
 static void callback(float *in, float *out, size_t size)
 {
-    // Debounce the encoder at a steady, fixed rate.
-    hw.encoder.Debounce();
-    inc = hw.encoder.Increment();
+    // Debounce the Encoder at a steady, fixed rate.
+    hw.Encoder.Debounce();
+    inc = hw.Encoder.Increment();
     // Change the selected LED based on the increment.
     if (inc > 0)
     {
@@ -37,7 +37,7 @@ static void callback(float *in, float *out, size_t size)
             led_sel -= 1;
         }
     }
-    if (hw.encoder.RisingEdge())
+    if (hw.Encoder.RisingEdge())
     {
         led_sel = 4;
     }

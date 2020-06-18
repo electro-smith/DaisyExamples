@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_pod_encoder
+TARGET = ex_pod_Encoder
 
 # Sources
 CPP_SOURCES = main.cpp
