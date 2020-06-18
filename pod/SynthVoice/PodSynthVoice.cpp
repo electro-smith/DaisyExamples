@@ -105,7 +105,7 @@ int main(void)
     //Set envelope parameters
     ad.SetTime( ADENV_SEG_ATTACK, 0.01);
     ad.SetTime( ADENV_SEG_DECAY, .2);
-    ad.SetMax(0.5);
+    ad.SetMax(1);
     ad.SetMin(0);
     ad.SetCurve(0.5);
 
@@ -135,7 +135,14 @@ void ConditionalParameter(float oldVal, float newVal, float &param, float update
 void UpdateEncoder()
 {
     wave += pod.encoder.RisingEdge();
-    wave %= osc.WAVE_LAST;
+    wave %= osc.WAVE_POLYBLEP_TRI;
+
+    //skip ramp since it sounds like saw
+    if (wave == 3)
+    {  
+        wave = 4;
+    }
+
     osc.SetWaveform(wave);
     
     mode += pod.encoder.Increment();
