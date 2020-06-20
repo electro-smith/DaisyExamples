@@ -1,22 +1,3 @@
-//#PodMultiEffect
-// ~~
-// Multiple effects on audio in.
-// Turn encoder to rotate through modes. (Only one effect active at a time)
-// Led brightness indicates knob position.
-//   * Note: when you cycle through modes it changes their settings!!
-// ~~
-// ## Mode one (red) : reverb
-//       *Knob one sets dry wet
-//       *Knob two sets reverb time (feedback)
-// ~~
-// ## Mode two (green) : delay
-//      *Knob one sets delay time
-//      *Knob two sets feedback level / drywet amount
-// ~~
-// ## Mode three (purple) : downsampler
-//      *Knob one sets lowpass filter cutoff
-//      *Knob two sets downsample amount
-
 #include "daisysp.h"
 #include "daisy_pod.h"
 
