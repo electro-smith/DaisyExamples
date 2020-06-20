@@ -2,6 +2,9 @@
 
 Simple drumset with whitenoise snare and oscillator kick.
 
+# Controls
+Press one button to trigger the kick, and the other to trigger the snare.
+
 # Breadboard
 
 [Drum_bb.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/Drum/resource/Drum_bb.png)
