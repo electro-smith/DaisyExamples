@@ -2,7 +2,7 @@
 TARGET = MultiEffect
 
 # Sources
-CPP_SOURCES = PodMultiEffect.cpp
+CPP_SOURCES = MultiEffect.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
