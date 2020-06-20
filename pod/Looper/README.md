@@ -9,3 +9,27 @@ After first loop sound on sound recording enabled. Press button two to toggle SO
 The red light indicates record enable. The green light indicates play enable.\ 
 Press button one to pause/play loop buffer.\ 
 Knob one mixes live input and loop output. Left is only live thru, right is only loop output.
+
+# Code Snippet
+    void NextSamples(float &output, float* in, size_t i)
+    {
+        if (rec)
+        {
+    	    WriteBuffer(in, i);
+        }
+        
+        output = buf[pos];
+        
+        ......
+    
+        if(play)
+        {
+    	    pos++;
+    	    pos %= mod;
+        }
+    
+        if (!rec)
+        {
+    	    output = output * drywet + in[i] * (1 -drywet);
+        }
+    }
