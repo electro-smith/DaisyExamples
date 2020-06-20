@@ -7,14 +7,14 @@ Simple effects for incoming audio. Includes reverb, delay, and downsampling.
  Led brightness indicates knob position.   
    * Note: when you cycle through modes it changes their settings!!  
  1. Mode one (red) : reverb  
-   * Knob one sets dry wet  
-   * Knob two sets reverb time (feedback)  
+    * Knob one sets dry wet  
+    * Knob two sets reverb time (feedback)  
  2. Mode two (green) : delay   
-   * Knob one sets delay time   
-   * Knob two sets feedback level / drywet amount   
+    * Knob one sets delay time   
+    * Knob two sets feedback level / drywet amount   
  3. Mode three (purple) : downsampler  
-   * Knob one sets lowpass filter cutoff  
-   * Knob two sets downsample amount
+    * Knob one sets lowpass filter cutoff  
+    * Knob two sets downsample amount
 
 # Code Snippet
     void GetReverbSample(float &outl, float &outr, float inl, float inr)
