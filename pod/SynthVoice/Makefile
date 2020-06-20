@@ -1,8 +1,8 @@
 # Project Name
-TARGET = ex_PodSynthVoice
+TARGET = ex_SynthVoice
 
 # Sources
-CPP_SOURCES = PodSynthVoice.cpp
+CPP_SOURCES = SynthVoice.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
