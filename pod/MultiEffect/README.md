@@ -5,7 +5,7 @@ Simple effects for incoming audio. Includes reverb, delay, and downsampling.
  Multiple effects on audio in.\ 
  Turn encoder to rotate through modes. (Only one effect active at a time)\ 
  Led brightness indicates knob position.\ 
-   *Note: when you cycle through modes it changes their settings!!\ 
+   * Note: when you cycle through modes it changes their settings!!\ 
  1. Mode one (red) : reverb\ 
    *Knob one sets dry wet\ 
    *Knob two sets reverb time (feedback)\ 
