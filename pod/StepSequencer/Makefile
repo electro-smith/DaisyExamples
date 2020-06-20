@@ -2,7 +2,7 @@
 TARGET = StepSequencer
 
 # Sources
-CPP_SOURCES = PodStepSequencer.cpp
+CPP_SOURCES = StepSequencer.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
