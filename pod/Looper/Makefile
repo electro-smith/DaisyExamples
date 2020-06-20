@@ -1,8 +1,8 @@
 # Project Name
-TARGET = ex_PodLooper
+TARGET = ex_Looper
 
 # Sources
-CPP_SOURCES = PodLooper.cpp
+CPP_SOURCES = Looper.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
