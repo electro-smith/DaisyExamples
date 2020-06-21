@@ -2,32 +2,34 @@
 Simple 8 step sequencer. Has controls per step for envelope decay, pitch, and step activation.
 
 # Controls
-Edit and play mode, press encoder to switch modes. Edit is red, play is green.\ 
+Edit and play mode, press encoder to switch modes. Edit is multicolored, play is green.  
 
-Edit mode\ 
-  * Rotate encoder to run through steps.\ 
-  * Knob one sets decay time.\ 
-  * Knob two sets pitch. (A pentatonic major)\ 
-  * Press either button to activate or deactivate a step.\ 
-  * Led one tells you which step you're on (color).\ 
-  * Led two is lit if the current step is active.\ 
-  * When a step is activated, its envelope will cycle. Listen for pitch and envelope shape.\ 
+Edit mode  
+  * Rotate encoder to run through steps.  
+  * Knob one sets decay time.  
+  * Knob two sets pitch. (A pentatonic major)  
+  * Press either button to activate or deactivate a step.  
+  * Led one tells you which step you're on (color).  
+  * Led two is lit if the current step is active.  
+  * When a step is activated, its envelope will cycle. Listen for pitch and envelope shape.  
+  * Button one toggles cycling so you can listen to the step.
+  * Button two toggles step activation. If this is on, the step will play when the sequence runs.
 
-  * In edit mode the LEDS indicate which step you're on.\ 
-  * One: Red\ 
-  * Two: Green\ 
-  * Three:  Blue\ 
-  * Four: White\ 
-  * Five: Purple\ 
-  * Six: Cyan\ 
-  * Seven: Gold / Orange\ 
-  * Eight: Yellow\ 
+  * In edit mode the LEDS indicate which step you're on.  
+  * One: Red  
+  * Two: Green  
+  * Three:  Blue  
+  * Four: White  
+  * Five: Purple  
+  * Six: Cyan  
+  * Seven: Gold / Orange  
+  * Eight: Yellow  
 
-Play mode\ 
-  * Knob one controls tempo.\ 
-  * Knob two controls filter cutoff\ 
-  * Turning the encoder switches waveform.
-
+Play mode  
+  * Knob one controls tempo.  
+  * Knob two controls filter cutoff  
+  * Turning the encoder switches waveform. (Ramp or Square)
+  
 # Code Snippet
     void NextSamples(float& sig)
     {

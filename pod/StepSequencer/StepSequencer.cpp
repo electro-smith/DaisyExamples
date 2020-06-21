@@ -1,32 +1,3 @@
-// #PodStepSequencer
-
-// Edit and play mode, press encoder to switch modes. Edit is red, play is green.
-
-// Edit mode
-//   *Rotate encoder to run through steps.
-//   *Knob one sets decay time.
-//   *Knob two sets pitch. (A pentatonic major)
-//   *Press either button to activate or deactivate a step.
-//   *Led one tells you which step you're on (color).
-//   *Led two is lit if the current step is active.
-//   *When a step is activated, its envelope will cycle. Listen for pitch and envelope shape.
-
-//  *In edit mode the LEDS indicate which step you're on.
-//  *One: Red
-//  *Two: Green
-//  *Three:  Blue
-//  *Four: White
-//  *Five: Purple
-//  *Six: Cyan
-//  *Seven: Gold / Orange
-//  *Eight: Yellow
-
-// Play mode
-// Knob one controls tempo.
-// Knob two controls filter cutoff
-// Turning the encoder switches waveform.
-
-
 #include "daisy_pod.h"
 #include "daisysp.h"
 
@@ -42,6 +13,7 @@ Metro tick;
 MoogLadder flt;
 
 bool   edit; //if we aren't editing, we're playing
+bool editCycle;
 uint8_t step;
 uint8_t wave;
 float dec[8];
@@ -55,7 +27,6 @@ float pent[] = {110.f,128.33f,146.66f,174.166f,192.5f};
 float oldk1, oldk2;
 float tickFrequency, filterFrequency;
 float k1, k2;
-
 
 void Controls();
 
@@ -113,6 +84,7 @@ int main(void)
     //Global variables
     oldk1 = oldk2 = 0;
     edit = true;
+    editCycle = false;
     step = 0;
     env_out = 0;
     wave = 2;
@@ -148,6 +120,10 @@ void UpdateEncoderPressed()
         edit = !edit;
 	step = 0;
     }
+    if (edit == false)
+    {
+	editCycle = false;
+    }
 }
 
 void UpdateEncoderIncrement()
@@ -158,10 +134,10 @@ void UpdateEncoderIncrement()
 	step = (step % 8 + 8) % 8;
     }
     else
-    {
+    { 
 	wave += pod.encoder.Increment();
-	wave = (wave % osc.WAVE_LAST + osc.WAVE_LAST) % osc.WAVE_LAST;
-	osc.SetWaveform(wave);	
+	wave = ((wave % 2 + 2) % 2);
+	osc.SetWaveform(wave + 3);	
     }
 }
 
@@ -169,10 +145,15 @@ void UpdateButtons()
 {
   if (edit)
     {
-        if (pod.button1.RisingEdge() || pod.button2.RisingEdge())
+        if (pod.button1.RisingEdge())
 	{
 	    active[step] = !active[step];
 	}
+	if (pod.button2.RisingEdge())
+	{
+	    editCycle = !editCycle;
+	}
+	
     }
 }
 
@@ -272,9 +253,9 @@ void NextSamples(float& sig)
     {
 	env.SetTime(ADENV_SEG_DECAY, dec[step]);
 	osc.SetFreq(pitch[step]);
-	if (edit && ! env.IsRunning())
-	{
-	    env.Trigger();
-	}
+    }
+    if (! env.IsRunning() && editCycle)
+    {
+	env.Trigger();
     }
 }
