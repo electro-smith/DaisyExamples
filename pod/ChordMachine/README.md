@@ -5,7 +5,7 @@ A simple sine wave chord machine. Cycle through different chord types and invers
 Turning the left knob changes the root pitch, and therefore shifts the whole chord.  
 Turning the right knob changes the inversion, from 0 through 4.  
 Pressing the encoder resets to the first chord.  
-Rotate the encoder to cycle through different chord types. Led color indicates the chord.  
+Rotate the encoder to cycle through different chord types. Led color indicates the chord.
   1. Major triad, Red
   2. Minor triad, Green
   3. Augmented triad, Blue
