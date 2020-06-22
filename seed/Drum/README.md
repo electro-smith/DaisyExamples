@@ -7,8 +7,7 @@ Press one button to trigger the kick, and the other to trigger the snare.
 
 # Breadboard
 
-[Drum_bb.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/Drum/resource/Drum_bb.png)
-11
+[Drum_bb.png](https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Drum/resources/Drum_bb.png)
 
 # Code Snippet
     //Get the next volume samples
@@ -32,4 +31,4 @@ Press one button to trigger the kick, and the other to trigger the snare.
 
 # Schematic
 
-[Drum_schem.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/Drum/resource/Drum_schem.png)
+[Drum_schem.png](https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Drum/resources/Drum_schem.png)
