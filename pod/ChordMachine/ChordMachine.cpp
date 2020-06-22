@@ -9,6 +9,7 @@ Oscillator osc[4];
 Parameter  p_freq, p_inversion;
 int notes[4];
 int chord[10][3];
+Color colors[10];
 int chordNum = 0;
 
 void UpdateControls();
@@ -92,6 +93,9 @@ void InitColors()
     {
 	colors[i].Init((Color::PresetColor)i);
     }
+    colors[7].Init(1,1,0);
+    colors[8].Init(1,0,1);
+    colors[9].Init(0,.7,.4);
 }
 
 int main(void)
@@ -135,6 +139,13 @@ void UpdateKnobs()
     notes[3] = freq + chord[chordNum][2] + (12 * (inversion >= 4));
 }
 
+void UpdateLeds()
+{
+    hw.led1.SetColor(colors[chordNum]);
+    hw.led2.SetColor(colors[chordNum]);
+    hw.UpdateLeds();
+}
+
 void UpdateControls()
 {
     hw.UpdateAnalogControls();
@@ -142,4 +153,5 @@ void UpdateControls()
   
     UpdateEncoder();
     UpdateKnobs();
+    UpdateLeds();
 }
