@@ -1,14 +1,12 @@
 #include "daisy_pod.h"
 #include "daisysp.h"
 
-#define NUM_WAVEFORMS 4
-
 using namespace daisy;
 using namespace daisysp;
 
 DaisyPod   hw;
 Oscillator osc[4];
-Parameter  p_freq;
+Parameter  p_freq, p_inversion;
 int notes[4];
 int chord[10][3];
 int chordNum = 0;
@@ -43,7 +41,8 @@ void InitSynth(float samplerate)
     // Init freq Parameter to knob1 using MIDI note numbers
     // min 10, max 127, curve linear
     p_freq.Init(hw.knob1, 0, 127, Parameter::LINEAR);
-
+    p_inversion.Init(hw.knob2, 0, 5, Parameter::LINEAR);
+    
     for (int i = 0; i < 4; i++)
     {
 	osc[i].Init(samplerate);
@@ -55,11 +54,8 @@ void InitSynth(float samplerate)
 
 void InitChords()
 {
-  // 0    1    2     3
   // Maj, min, Aug, Dim
-  //  4     5     6      7
   // Maj7, min7, dom7, min/Maj7
-  //  8        9
   // dim7, half dim7
 
   //set thirds
@@ -68,25 +64,34 @@ void InitChords()
       //every other chord, maj third, min third
       chord[i][0] = 3 + ((i + 1) % 2);
   }
+  //min 3rds
   chord[8][0] = chord[9][0] = 3;
 
   //set fifths
-  // perfect
+  // perfect 5th
   chord[0][1] = chord[1][1] = chord[4][1] = chord[5][1] = chord[6][1] = chord[7][1] = 7;
-  // diminished
+  // diminished 5th
   chord[3][1] = chord[8][1] = chord[9][1] = 6;
-  // augmented
+  // augmented 5th
   chord[2][1] = 8;
 
   //set sevenths
-  // triads
-  chord[0][2] = chord[1][2] = chord[2][2] = chord[3][2] = 0;
-  // major
+  // triads (octave since triad has no 7th)
+  chord[0][2] = chord[1][2] = chord[2][2] = chord[3][2] = 12;
+  // major 7th
   chord[4][2] = chord[7][2] = 11;
-  // minor
+  // minor 7th
   chord[5][2] = chord[6][2] = chord[9][2] = 10;
-  // diminished
+  // diminished 7th
   chord[8][2] = 9;
+}
+
+void InitColors()
+{
+    for (int i = 0; i < 7; i++)
+    {
+	colors[i].Init((Color::PresetColor)i);
+    }
 }
 
 int main(void)
@@ -99,6 +104,7 @@ int main(void)
 
     InitSynth(samplerate);
     InitChords();
+    InitColors();
     
     // start callbacks
     hw.StartAdc();
@@ -120,10 +126,13 @@ void UpdateEncoder()
 
 void UpdateKnobs()
 {
-    notes[0] = p_freq.Process();
-    notes[1] = notes[0] + chord[chordNum][0];
-    notes[2] = notes[0] + chord[chordNum][1];
-    notes[3] = notes[0] + chord[chordNum][2];
+    int freq = (int) p_freq.Process(); 
+    int inversion = (int) p_inversion.Process();
+
+    notes[0] = freq + (12 * (inversion >= 1));
+    notes[1] = freq + chord[chordNum][0] + (12 * (inversion >= 2));
+    notes[2] = freq + chord[chordNum][1] + (12 * (inversion >= 3));
+    notes[3] = freq + chord[chordNum][2] + (12 * (inversion >= 4));
 }
 
 void UpdateControls()
