@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_patch_pluck_echo
+TARGET = PluckEcho
 
 # Sources
 CPP_SOURCES = PluckEcho.cpp
