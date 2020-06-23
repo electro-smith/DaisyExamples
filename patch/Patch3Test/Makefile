@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_patch_pluck_echo
+TARGET = Patch3Test
 
 # Sources
 CPP_SOURCES = Patch3Test.cpp

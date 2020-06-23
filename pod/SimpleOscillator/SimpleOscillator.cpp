@@ -56,7 +56,7 @@ void InitSynth(float samplerate)
     p_freq.Init(hw.knob1, 0, 127, Parameter::LINEAR);
 
     osc.Init(samplerate);
-    osc.SetAmp(0.5f);
+    osc.SetAmp(1.f);
 
     waveform = 0;
     octave   = 0;

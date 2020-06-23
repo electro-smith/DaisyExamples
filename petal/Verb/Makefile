@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_patch_pluck_echo
+TARGET = Verb
 
 # Sources
 CPP_SOURCES = Verb.cpp

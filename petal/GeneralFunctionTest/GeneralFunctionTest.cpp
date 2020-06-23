@@ -29,7 +29,6 @@ int main(void)
 {
     uint32_t led_period, usb_period, now;
     uint32_t last_led_update, last_usb_update;
-    float    samplerate;
 
     // LED Freq = 60Hz
     // USB Freq= 10Hz
@@ -38,7 +37,6 @@ int main(void)
     last_led_update = last_usb_update = now = dsy_system_getnow();
 
     hw.Init();
-    samplerate = hw.AudioSampleRate();
 
     // Init USB as VCOM for sending Serial Data
     hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);

@@ -69,11 +69,13 @@ void InitSynth(float samplerate)
     osc.Init(samplerate);
     osc.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
     osc.SetFreq(100.0f);
-    osc.SetAmp(0.5f);
+    osc.SetAmp(.5f);
     env.Init(samplerate);
     env.SetCurve(-15.0f);
     env.SetTime(ADENV_SEG_ATTACK, 0.002f);
     env.SetTime(ADENV_SEG_DECAY, 2.6f);
+    env.SetMax(1.f);
+    env.SetMin(0.f);
     filt.Init(samplerate);
     filt.SetRes(0.5f);
     filt.SetDrive(0.8f);

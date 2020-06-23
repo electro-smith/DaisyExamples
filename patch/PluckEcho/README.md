@@ -1,16 +1,34 @@
-# Keyboard Test
+# Description
+Plucked string synthesizer into lush delay and reverb algorithms.
+Really easy to create unique sonic spaces!
 
-SW 1 and SW 2 function as octave up/down buttons
+# Controls
+Send a trigger to Gate In 1 to trigger the string.  
+Output can be heard on audio outs 1 and 2.  
+Control one controls the string's pitch.  
+Control two controls the string's decay time.  
+Control three controls delay time.  
+Control four controls delay feedback amount.
 
-All 13 of the keyboard buttons work as a chromatic keyboard with 13-note polyphony.
+# Code Snippet
+```cpp
+// Smooth delaytime, and set.
+fonepole(smooth_time, deltime, 0.0005f);
+delay.SetDelay(smooth_time);
 
-oscillators are each Bandlimited Saw waves
+// Synthesize Plucks
+sig        = synth.Process(trig, nn);
 
-SW 3 enables/disables the reverb.
+// Handle Delay
+delsig     = delay.Read();
+delay.Write(sig + (delsig * delfb));
 
-## building
+// Create Reverb Send
+dry        = sig + delsig;
+send       = dry * 0.6f;
+verb.Process(send,send, &wetl, &wetr);
 
-Currently for some reason this only works when built with VisualStudio/VisualGDB..
-
-It builds correctly with Make, but doesn't run. Likely just something not being correctly included with Make or something.
-
+// Output 
+out_left[i] = dry + wetl;
+out_right[i]     = dry + wetr;
+```

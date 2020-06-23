@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_podVs
+TARGET = MusicBox
 
 # Sources
 CPP_SOURCES = MusicBox.cpp

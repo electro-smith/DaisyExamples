@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_patch_pluck_echo
+TARGET = Template
 
 # Sources
 CPP_SOURCES = PedalTemplate.cpp
