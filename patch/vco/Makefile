@@ -1,8 +1,8 @@
 # Project Name
-TARGET = ex_patch_verb
+TARGET = ex_vco
 
 # Sources
-CPP_SOURCES = ex_verb.cpp
+CPP_SOURCES = ex_vco.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
