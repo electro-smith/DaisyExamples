@@ -16,27 +16,29 @@ Simple effects for incoming audio. Includes reverb, delay, and downsampling.
     * Knob one sets lowpass filter cutoff  
     * Knob two sets downsample amount
 
-# Code Snippet
-    void GetReverbSample(float &outl, float &outr, float inl, float inr)
-    {
-        rev.Process(inl, inr, &outl, &outr);
-        outl = drywet * outl + (1 - drywet) * inl;
-        outr = drywet * outr + (1 - drywet) * inr;
-    }
+# Code Snippet  
+```cpp  
+void GetReverbSample(float &outl, float &outr, float inl, float inr)
+{
+    rev.Process(inl, inr, &outl, &outr);
+    outl = drywet * outl + (1 - drywet) * inl;
+    outr = drywet * outr + (1 - drywet) * inr;
+}
 
-    ......
+......
 
-    void GetCrushSample(float &outl, float &outr, float inl, float inr)
+void GetCrushSample(float &outl, float &outr, float inl, float inr)
+{
+    crushcount++;
+    crushcount %= crushmod;
+    if (crushcount == 0)
     {
-        crushcount++;
-        crushcount %= crushmod;
-        if (crushcount == 0)
-        {
-            crushsr = inr;
-            crushsl = inl;
-        }
-        outl = tone.Process(crushsl);
-        outr = tone.Process(crushsr);
+        crushsr = inr;
+        crushsl = inl;
     }
+    outl = tone.Process(crushsl);
+    outr = tone.Process(crushsr);
+}
+```
 
 

@@ -7,17 +7,18 @@ Turning the Encoder cycles through which LED/color is active.
 Clicking the Encoder resets to LED 1 Red (on press).
 
 # Code snippet
-
-    // Debounce the Encoder at a steady, fixed rate.
-    hw.Encoder.Debounce();
-    inc = hw.Encoder.Increment();
-    // Change the selected LED based on the increment.
-    if (inc > 0)
+```cpp
+// Debounce the Encoder at a steady, fixed rate.
+hw.Encoder.Debounce();
+inc = hw.Encoder.Increment();
+// Change the selected LED based on the increment.
+if (inc > 0)
+{
+    led_sel += 1;
+    // Wrap around
+    if (led_sel > NUM_COLORS - 1)
     {
-        led_sel += 1;
-        // Wrap around
-        if (led_sel > NUM_COLORS - 1)
-        {
-            led_sel = 0;
-        }
+        led_sel = 0;
     }
+}
+```

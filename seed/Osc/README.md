@@ -4,7 +4,8 @@ Simple oscillator for daisy seed. Has button triggered envelope and knob control
 # Breadboard
 ![Osc_bb.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/Osc/resources/Osc_bb.png)
 
-# Code Snippet
+# Code Snippet  
+```cpp
 
     //Nobody likes a bouncy button
     button1.Debounce();
@@ -34,5 +35,7 @@ Simple oscillator for daisy seed. Has button triggered envelope and knob control
 	out[i+1] = osc_out;
     }
 
-# Schematic
+```
+# Schematic  
+
 ![Osc_schem.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/Osc/resources/Osc_schem.png)

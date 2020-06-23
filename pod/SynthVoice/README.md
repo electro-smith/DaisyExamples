@@ -10,18 +10,16 @@ Press the left button to trigger the synth.
 Press the right button to set the envelope to self cycle (loop).   
 The right led lights purple if the envelope is set to self cycle.
 
-# Code Snippet
+# Code Snippet  
+```cpp  
+//Process Samples
+float ad_out = ad.Process();
+vibrato = lfo.Process();
 
-    //Process Samples
-    float ad_out = ad.Process();
-    vibrato = lfo.Process();
-    
-    osc.SetFreq(oscFreq + vibrato);
-    
-    sig = osc.Process();
-    sig = flt.Process(sig);
-    sig *= ad_out;
-    
-    ......
+osc.SetFreq(oscFreq + vibrato);
 
+sig = osc.Process();
+sig = flt.Process(sig);
+sig *= ad_out;
+```
     

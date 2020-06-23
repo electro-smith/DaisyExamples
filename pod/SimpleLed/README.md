@@ -16,11 +16,11 @@ Example showing basic usage of RGB LED by mapping R/G values of LED 1 to knob.
 
 **LED 1:** Changes color based on Pot 1 setting. 
 
-# Code Snippet
+# Code Snippet  
+```cpp  
+r = p_knob1.Process();
+g = p_knob2.Process();
 
-    r = p_knob1.Process();
-    g = p_knob2.Process();
-    
-    hw.led1.Set(r, g, b);    
-    hw.UpdateLeds();
-    
+hw.led1.Set(r, g, b);    
+hw.UpdateLeds();
+```
