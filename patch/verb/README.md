@@ -2,10 +2,10 @@
 Stereo Reverb algorithm.
 
 # Controls
-Control 1 is drywet.
-Control 2 is the amount of the input to send to the reverb.
-Audio ins 1 and 2 are left and right input respectively.
-Audio outs 1 and 2 are left and right dry/wet mixed outputs.
+Control 1 is drywet.  
+Control 2 is the amount of the input to send to the reverb.  
+Audio ins 1 and 2 are left and right input respectively.  
+Audio outs 1 and 2 are left and right dry/wet mixed outputs.  
 Audio outs 3 and 4 are left and right wet only outputs.
 
 # Code Snippet
