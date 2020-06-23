@@ -2,9 +2,9 @@
 Control a synth voice over Midi.
 
 # Controls
-Midi CC 1 is for filter cutoff.
-Midi CC 2 sets the filter resonance.
-Audio will come out of all 4 outputs.
+Midi CC 1 is for filter cutoff.  
+Midi CC 2 sets the filter resonance.  
+Audio will come out of all 4 outputs.  
 
 # Code Snippet
 ```cpp
