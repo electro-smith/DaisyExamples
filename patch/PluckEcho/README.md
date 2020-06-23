@@ -3,11 +3,11 @@ Plucked string synthesizer into lush delay and reverb algorithms.
 Really easy to create unique sonic spaces!
 
 # Controls
-Send a trigger to Gate In 1 to trigger the string.
-Output can be heard on audio outs 1 and 2.
-Control one controls the string's pitch.
-Control two controls the string's decay time.
-Control three controls delay time.
+Send a trigger to Gate In 1 to trigger the string.  
+Output can be heard on audio outs 1 and 2.  
+Control one controls the string's pitch.  
+Control two controls the string's decay time.  
+Control three controls delay time.  
 Control four controls delay feedback amount.
 
 # Code Snippet
