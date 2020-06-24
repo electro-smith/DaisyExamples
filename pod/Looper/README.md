@@ -11,13 +11,14 @@ Press button one to pause/play loop buffer.
 Knob one mixes live input and loop output. Left is only live thru, right is only loop output.
 
 # Code Snippet  
-```cpp  
-void NextSamples(float &output, float* in, size_t i)
-{
-    if (rec)
-    {
-        WriteBuffer(in, i);
-    }
+
+```cpp    
+void NextSamples(float &output, float* in, size_t i)  
+{  
+    if (rec)  
+    {  
+        WriteBuffer(in, i);  
+    }  
     
     output = buf[pos];
     
@@ -33,5 +34,6 @@ void NextSamples(float &output, float* in, size_t i)
     {
         output = output * drywet + in[i] * (1 -drywet);
     }
-}
+}  
+
 ```
