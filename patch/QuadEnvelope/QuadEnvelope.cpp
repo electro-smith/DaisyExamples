@@ -1,3 +1,10 @@
+// Temporary Control Instructions:
+// Press Encoder to cycle between time and curve controls.
+// Turn encoder to cycle between envelopes 1,2 and 3,4
+// In curve mode the pairs of knobs both control the same thing.
+// i.e. If the screen says curve, env1, Both control 1 and control 2 can set envelope 1's curve.
+// The latest one to be turned is in control
+
 #include "daisy_patch.h"
 #include "daisysp.h"
 #include <cstring>
@@ -84,7 +91,7 @@ void UpdateOled()
 {
     hw.display.Fill(false);
 
-    std::string num = std::to_string(envMode * 2);
+    std::string num = std::to_string(envMode * 2 + 1);
     std::string env = "env";
     char envOne[4];
     strcpy(envOne, env.append(num).c_str());
@@ -92,7 +99,7 @@ void UpdateOled()
     hw.display.SetCursor(0,0);
     hw.display.WriteString(envOne, Font_7x10, true);
 
-    num = std::to_string(envMode * 2 + 1);
+    num = std::to_string(envMode * 2 + 2);
     env = "env";
     char envTwo[4];
     strcpy(envTwo, env.append(num).c_str());
