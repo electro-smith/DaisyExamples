@@ -22,6 +22,8 @@ bool lastInput[4];
 int envMode;
 int curveTimeMode;
 
+float envSig[4]; //Envelopes 1 and 3 are available at the CV outputs
+
 void ProcessControls();
 
 void AudioCallback(float **in, float **out, size_t size)
@@ -30,12 +32,11 @@ void AudioCallback(float **in, float **out, size_t size)
     
     for(size_t i = 0; i < size; i++)
     {
-	//dsy_dac_write(DSY_DAC_CHN_BOTH, (i / size) * 4095);
-
-	for (size_t j = 0; j < 4; j++)
+	for (size_t chn = 0; chn < 4; chn++)
 	{
-	    float env = envelopes[j].Process();
-	    out[j][i] = env * in[j][i];
+	    float env = envelopes[chn].Process();
+	    envSig[chn] = env;
+	    out[chn][i] = env * in[chn][i];
 	}
     }
 }
@@ -75,16 +76,17 @@ int main(void)
     envMode = 0;
     curveTimeMode = 0;
     
-    //DAC for CV out
-    dsy_dac_init(& hw.seed.dac_handle , DSY_DAC_CHN_BOTH);
-    dsy_dac_start(DSY_DAC_CHN_BOTH);
-
     UpdateOled();
 	
     // Start the ADC and Audio Peripherals on the Hardware
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
-    for(;;) {}
+    for(;;)
+    {
+	dsy_dac_write(DSY_DAC_CHN1, envSig[0] * 4095);
+	dsy_dac_write(DSY_DAC_CHN2, envSig[2] * 4095);
+	hw.DelayMs(1);
+    }
 }
 
 void UpdateOled()
