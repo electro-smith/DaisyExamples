@@ -1,5 +1,7 @@
 #include "daisy_patch.h"
 #include "daisysp.h"
+#include <cstring>
+#include <string>
 
 using namespace daisy;
 using namespace daisysp;
@@ -9,18 +11,15 @@ AdEnv envelopes[4];
 Parameter timeParam[4];
 Parameter curveParam[4];
 
-
 bool lastInput[4];
 int envMode;
 int curveTimeMode;
 
 void ProcessControls();
-void UpdateOled();
 
 void AudioCallback(float **in, float **out, size_t size)
 {
     ProcessControls();
-    UpdateOled();
     
     for(size_t i = 0; i < size; i++)
     {
@@ -55,6 +54,8 @@ void InitEnvelopes(float samplerate)
     }
 }
 
+void UpdateOled();
+
 int main(void)
 {
     // Init everything.
@@ -65,24 +66,60 @@ int main(void)
     InitEnvelopes(samplerate);
 
     envMode = 0;
-
+    curveTimeMode = 0;
+    
     //DAC for CV out
     dsy_dac_init(& hw.seed.dac_handle , DSY_DAC_CHN_BOTH);
     dsy_dac_start(DSY_DAC_CHN_BOTH);
-    
+
+    UpdateOled();
+	
     // Start the ADC and Audio Peripherals on the Hardware
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
     for(;;) {}
 }
 
+void UpdateOled()
+{
+    hw.display.Fill(false);
+
+    std::string num = std::to_string(envMode * 2);
+    std::string env = "env";
+    char envOne[4];
+    strcpy(envOne, env.append(num).c_str());
+
+    hw.display.SetCursor(0,0);
+    hw.display.WriteString(envOne, Font_7x10, true);
+
+    num = std::to_string(envMode * 2 + 1);
+    env = "env";
+    char envTwo[4];
+    strcpy(envTwo, env.append(num).c_str());
+
+    hw.display.SetCursor(70,0);
+    hw.display.WriteString(envTwo, Font_7x10, true);
+    
+    hw.display.SetCursor(0,50);
+    curveTimeMode ? hw.display.WriteString("curve", Font_7x10, true) : hw.display.WriteString("attack/decay", Font_7x10, true); 
+    
+    hw.display.Update();
+}
+
 void ProcessEncoder()
 {
-    envMode += hw.encoder.Increment();
+    int inc = hw.encoder.Increment();
+    envMode += inc;
     envMode = (envMode % 2 + 2) % 2;
 
-    curveTimeMode += hw.encoder.RisingEdge();
+    int edge = hw.encoder.RisingEdge();
+    curveTimeMode += edge;
     curveTimeMode = curveTimeMode % 2;
+
+    if (edge != 0 || inc != 0)
+    {
+	UpdateOled();
+    }
 }
 
 bool ConditionalParameter(float oldVal, float newVal)
@@ -157,7 +194,4 @@ void ProcessControls()
     ProcessGates();
 }
 
-void UpdateOled()
-{
-    hw.DisplayControls(curveTimeMode);
-}
+
