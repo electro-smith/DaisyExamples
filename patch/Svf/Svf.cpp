@@ -17,11 +17,12 @@ static void AudioCallback(float **in, float **out, size_t size)
 
     svf.SetFreq(cutoff);
     svf.SetRes(res);
-    svf.SetDrive(10 - drive);
+    svf.SetDrive(drive);
     
     for (size_t i = 0; i < size; i ++)
     {
 	svf.Process(in[0][i]);
+	
 	out[0][i] = svf.Low();
 	out[1][i] = svf.High();
 	out[2][i] = svf.Band();
@@ -38,8 +39,8 @@ int main(void)
     svf.Init(samplerate);
     
     cutoff_ctrl.Init(patch.controls[0], 20, 20000, Parameter::LOGARITHMIC);
-    res_ctrl.Init(patch.controls[1], 0, 1, Parameter::LINEAR);
-    drive_ctrl.Init(patch.controls[2], 0, 10, Parameter::LINEAR);
+    res_ctrl.Init(patch.controls[1], .3, 1, Parameter::LINEAR);
+    drive_ctrl.Init(patch.controls[2], .3, 1, Parameter::LINEAR);
     
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
