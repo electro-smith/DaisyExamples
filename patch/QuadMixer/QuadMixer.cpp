@@ -26,11 +26,10 @@ static void AudioCallback(float **in, float **out, size_t size)
 int main(void)
 {
     patch.Init(); // Initialize hardware (daisy seed, and patch)
-
-    patch.display.WriteString("QuadMixer", Font_7x10, true);
-    patch.display.Update();
     
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
-    while(1) {} // loop forever
+    while(1) {
+	patch.DisplayControls(false);
+    } // loop forever
 }
