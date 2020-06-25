@@ -41,8 +41,18 @@ int main(void)
     cutoff_ctrl.Init(patch.controls[0], 20, 20000, Parameter::LOGARITHMIC);
     res_ctrl.Init(patch.controls[1], .3, 1, Parameter::LINEAR);
     drive_ctrl.Init(patch.controls[2], .3, 1, Parameter::LINEAR);
-    
+
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
-    while(1) {} // loop forever
+    while(1)
+    {
+	patch.display.SetCursor(0,0);
+	patch.display.Fill(false);
+	patch.display.Update();
+	dsy_system_delay(300);
+	
+	patch.display.WriteString("SVF!!!", Font_11x18, true);
+	patch.display.Update();
+	dsy_system_delay(300);
+    } 
 }
