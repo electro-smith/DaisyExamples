@@ -14,11 +14,19 @@ static void AudioCallback(float **in, float **out, size_t size)
 	ctrlVal[i] = patch.controls[i].Process();
     }
     
-    for (size_t i = 0; i < size; i += 2)
+    for (size_t i = 0; i < size; i ++)
     {
-        for (size_t chn = 0; chn < 4; chn++)
+	float output = 0.f;
+	for (size_t chn = 0; chn < 4; chn++)
         {
-            out[chn][i] = ctrlVal[chn] * in[chn][i];
+            output += ctrlVal[chn] * in[chn][i];
+        }
+
+	output *= .25f;
+	
+	for (size_t chn = 0; chn < 4; chn++)
+        {
+            out[chn][i] = output;
         }
     }
 }
@@ -29,7 +37,8 @@ int main(void)
     
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
-    while(1) {
+    while(1)
+    {
 	patch.DisplayControls(false);
-    } // loop forever
+    }
 }
