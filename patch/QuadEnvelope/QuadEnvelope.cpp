@@ -111,8 +111,16 @@ void UpdateOled()
 
     
     hw.display.SetCursor(0,50);
-    curveTimeMode ? hw.display.WriteString("curve", Font_7x10, true) : hw.display.WriteString("attack/decay", Font_7x10, true); 
-    
+
+    if (curveTimeMode)
+    {
+	hw.display.WriteString("curve", Font_7x10, true);
+    }
+    else
+    {
+	hw.display.WriteString("attack/decay", Font_7x10, true); 
+    }
+     
     hw.display.Update();
 }
 
