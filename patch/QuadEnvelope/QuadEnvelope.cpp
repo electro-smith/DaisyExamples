@@ -1,10 +1,3 @@
-// Temporary Control Instructions:
-// Press Encoder to cycle between time and curve controls.
-// Turn encoder to cycle between envelopes 1,2 and 3,4
-// In curve mode the pairs of knobs both control the same thing.
-// i.e. If the screen says curve, env1, Both control 1 and control 2 can set envelope 1's curve.
-// The latest one to be turned is in control
-
 #include "daisy_patch.h"
 #include "daisysp.h"
 
@@ -12,66 +5,72 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPatch hw;
-AdEnv envelopes[4];
-Parameter timeParam[4];
-Parameter curveParam[4];
 
-bool lastInput[4];
-int envMode;
 int curveTimeMode;
 
-float envSig[4]; //Envelopes 1 and 3 are available at the CV outputs
+struct envStruct
+{
+    AdEnv env;
+    Parameter attackParam;
+    Parameter decayParam;
+    Parameter curveParam;
+    float envSig;
+};
 
+envStruct envelopes[2];
 void ProcessControls();
 
 void AudioCallback(float **in, float **out, size_t size)
 {
+    //Process control inputs
     ProcessControls();
     
     for(size_t i = 0; i < size; i++)
     {
-	for (size_t chn = 0; chn < 4; chn++)
+	//Get the next envelope samples
+	envelopes[0].envSig = envelopes[0].env.Process();
+	envelopes[1].envSig = envelopes[1].env.Process();
+		
+	for (size_t chn = 0; chn < 2; chn++)
 	{
-	    float env = envelopes[chn].Process();
-	    envSig[chn] = env;
-	    out[chn][i] = env * in[chn][i];
+	    //The envelopes effect the outputs in pairs
+	    out[chn * 2][i] = in[chn * 2][i] * envelopes[chn].envSig;
+	    out[chn * 2 + 1][i] = in[chn * 2 + 1][i] * envelopes[chn].envSig;	    
 	}
     }
 }
 
 void InitEnvelopes(float samplerate)
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 2; i++)
     {
-	//envelope values
-	envelopes[i].Init(samplerate);
-	envelopes[i].SetMax(1);
-	envelopes[i].SetMin(0);
-	envelopes[i].SetTime(ADENV_SEG_ATTACK, .1);
-	envelopes[i].SetTime(ADENV_SEG_DECAY, .4);
-	envelopes[i].SetCurve(0);
-
-	//last trigger in
-	lastInput[i] = false;
-	
-	//envelope parameters (att1, dec1, etc.)
-	timeParam[i].Init(hw.controls[i], .01, 2, Parameter::EXPONENTIAL);
-	curveParam[i].Init(hw.controls[i], -10, 10, Parameter::LINEAR);
+	//envelope values and Init
+	envelopes[i].env.Init(samplerate);
+	envelopes[i].env.SetMax(1);
+	envelopes[i].env.SetMin(0);
+	envelopes[i].env.SetCurve(0);	
     }
+
+    //envelope parameters (control inputs)
+    envelopes[0].attackParam.Init(hw.controls[0], .01, 2, Parameter::EXPONENTIAL);
+    envelopes[0].decayParam.Init(hw.controls[1], .01, 2, Parameter::EXPONENTIAL);
+    envelopes[0].curveParam.Init(hw.controls[0], -10, 10, Parameter::LINEAR);
+
+    envelopes[1].attackParam.Init(hw.controls[2], .01, 2, Parameter::EXPONENTIAL);
+    envelopes[1].decayParam.Init(hw.controls[3], .01, 2, Parameter::EXPONENTIAL);
+    envelopes[1].curveParam.Init(hw.controls[2], -10, 10, Parameter::LINEAR);
 }
 
 void UpdateOled();
 
 int main(void)
 {
-    // Init everything.
     float samplerate;
     hw.Init();
     samplerate = hw.AudioSampleRate();
 
     InitEnvelopes(samplerate);
 
-    envMode = 0;
     curveTimeMode = 0;
     
     UpdateOled();
@@ -81,8 +80,9 @@ int main(void)
     hw.StartAudio(AudioCallback);
     for(;;)
     {
-	dsy_dac_write(DSY_DAC_CHN1, envSig[0] * 4095);
-	dsy_dac_write(DSY_DAC_CHN2, envSig[2] * 4095);
+	//Send the latest envelope values to the CV outs
+	dsy_dac_write(DSY_DAC_CHN1, envelopes[0].envSig * 4095);
+	dsy_dac_write(DSY_DAC_CHN2, envelopes[1].envSig * 4095);
 	hw.DelayMs(1);
     }
 }
@@ -90,28 +90,16 @@ int main(void)
 void UpdateOled()
 {
     hw.display.Fill(false);
-
-    if (! envMode)
-    {
-	hw.display.SetCursor(0,0);
-	hw.display.WriteString("env1", Font_7x10, true);
-
-	 hw.display.SetCursor(70,0);
-	 hw.display.WriteString("env2", Font_7x10, true);
-    }
-
-    else
-    {
-	hw.display.SetCursor(0,0);
-	hw.display.WriteString("env3", Font_7x10, true);
-	
-	hw.display.SetCursor(70,0);
-	hw.display.WriteString("env4", Font_7x10, true);
-    }
-
+    
+    hw.display.SetCursor(0,0);
+    hw.display.WriteString("env1", Font_7x10, true);
+    
+    hw.display.SetCursor(70,0);
+    hw.display.WriteString("env2", Font_7x10, true);
     
     hw.display.SetCursor(0,50);
 
+    //curve or attack/decay mode
     if (curveTimeMode)
     {
 	hw.display.WriteString("curve", Font_7x10, true);
@@ -126,79 +114,40 @@ void UpdateOled()
 
 void ProcessEncoder()
 {
-    int inc = hw.encoder.Increment();
-    envMode += inc;
-    envMode = (envMode % 2 + 2) % 2;
-
     int edge = hw.encoder.RisingEdge();
     curveTimeMode += edge;
     curveTimeMode = curveTimeMode % 2;
 
-    if (edge != 0 || inc != 0)
+    if (edge != 0)
     {
 	UpdateOled();
     }
 }
 
-bool ConditionalParameter(float oldVal, float newVal)
-{
-    return abs(oldVal - newVal) > 0.0005;
-}
-
-
-//this function is UGLY!!
-float oldVals[4];
-void UpdateEnvelopes(float newVals[4])
+void ProcessKnobs()
 {
     for (int i = 0; i < 2; i++)
     {
 	if (curveTimeMode == 0)
 	{
-	    if (ConditionalParameter(oldVals[i * 2], newVals[i * 2]))
-		envelopes[i + 2 * envMode].SetTime(ADENV_SEG_ATTACK, timeParam[i * 2].Process());
-	    
-	    if (ConditionalParameter(oldVals[i * 2 + 1], newVals[i * 2 + 1]))
-		envelopes[i + 2 * envMode].SetTime(ADENV_SEG_DECAY, timeParam[i * 2 + 1].Process());
+	    envelopes[i].env.SetTime(ADENV_SEG_ATTACK, envelopes[i].attackParam.Process());
+	    envelopes[i].env.SetTime(ADENV_SEG_DECAY, envelopes[i].decayParam.Process());
 	}
 	else
 	{
-	    if (ConditionalParameter(oldVals[i * 2], newVals[i * 2]))
-		envelopes[i + 2 * envMode].SetCurve(curveParam[i * 2].Process());
-	    
-	    if (ConditionalParameter(oldVals[i * 2 + 1], newVals[i * 2 + 1]))
-		envelopes[i + 2 * envMode].SetCurve(curveParam[i * 2 + 1].Process());
+	    envelopes[i].env.SetCurve(envelopes[i].curveParam.Process());
 	}
-    }
-}
-
-void ProcessKnobs()
-{
-    float newVals[4];
-    for (int i = 0; i < 4; i++)
-    {
-	newVals[i] = hw.controls[i].Process();
-    }
-    
-    UpdateEnvelopes(newVals);
-
-    for (int i = 0 ; i < 4; i++)
-    {
-	oldVals[i] = newVals[i];
     }
 }
 
 void ProcessGates()
 {
-    if (hw.gate_input[DaisyPatch::GATE_IN_1].Trig())
+    for (int i = 0 ; i < 2; i ++)
     {
-	envelopes[0].Trigger();
-	envelopes[1].Trigger();
-    }
-
-    if (hw.gate_input[DaisyPatch::GATE_IN_2].Trig())
-    {
-	envelopes[2].Trigger();
-	envelopes[3].Trigger();
+	if (hw.gate_input[i].Trig())
+	{
+	    envelopes[i].env.Trigger();
+	}
     }
 }
 
