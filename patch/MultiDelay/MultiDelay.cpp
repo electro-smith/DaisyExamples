@@ -1,17 +1,8 @@
-//fdbk
-//tap1
-//tap2
-//tap3
-//dry/wet on encoder
-
-// allow for multi ins, but rely on normalling
-
-
 #include "daisysp.h"
 #include "daisy_patch.h"
 #include <string>
 
-#define MAX_DELAY static_cast<size_t>(48000 * 2.5f)
+#define MAX_DELAY static_cast<size_t>(48000 * 1.f)
 
 using namespace daisy;
 using namespace daisysp;
@@ -44,16 +35,14 @@ static void AudioCallback(float **in, float **out, size_t size)
 	//update delayline with feedback
 	for (int d = 0; d < 3; d++)
 	{
-	    float sig = delay[d].Read();
-	    float toWrite = ((feedback * sig) + in[0][i]);\
-	    delay[d].Write(toWrite);
-	    mix += toWrite;    
+	    float read = delay[d].Read();
+	    delay[d].Write((feedback * read) + (1 - feedback) * in[0][i]);
+	    mix += read;   
 	}
 
 	//apply drywet and attenuate
 	float fdrywet = (float)drywet / 100.f;
-	mix += .25f * ((fdrywet * mix * .3) + ((1.0f - fdrywet) * in[0][i]));
-
+	mix = ((fdrywet * mix * .3f) + ((1.0f - fdrywet) * in[0][i]));
 	for (size_t chn = 0; chn < 4; chn++)
         {   
 	    out[chn][i] = mix;
@@ -68,7 +57,7 @@ void InitDelays(float samplerate)
 	//Init delays
 	delay[i].Init();
 	//3 delay times
-	params[i].Init(patch.controls[i], samplerate * .05, MAX_DELAY, Parameter::LOGARITHMIC);
+	params[i].Init(patch.controls[i], samplerate * .1, MAX_DELAY, Parameter::LOGARITHMIC);
     }
     
     //feedback
@@ -134,7 +123,7 @@ void ProcessControls()
     //set delays
     for (int i = 0; i < 3; i++)
     {
-	fonepole(delTimes[i].currentDelay, delTimes[i].delayTarget, .00007f);
+	fonepole(delTimes[i].currentDelay, delTimes[i].delayTarget, .004f);
 	delay[i].SetDelay(delTimes[i].currentDelay);
     }
 }
