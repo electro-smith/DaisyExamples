@@ -1,5 +1,5 @@
 # Description
-State variable filter with simultaneous low pass, high pass, band pass, and notch filters.
+State variable filter with simultaneous low pass, high pass, band pass, and notch outputs.
 
 # Controls
 | Control | Description | Comment |
