@@ -50,7 +50,7 @@ int main(void)
     //Put controls onscreen
     patch.display.WriteString("Cut  Res  Drive", Font_7x10, true);
     patch.display.SetCursor(0,50);
-    patch.display.WriteString("HP  LP  BP  Notch", Font_7x10, true);
+    patch.display.WriteString("LP  HP  BP  Notch", Font_7x10, true);
     patch.display.Update();
     
     //start audio
