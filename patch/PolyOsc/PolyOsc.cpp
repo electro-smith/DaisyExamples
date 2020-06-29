@@ -1,7 +1,3 @@
-// pitch, pitch, pitch, master pitch
-// individual waveforms, hold to set global
-// out out out, mix out
-
 #include "daisysp.h"
 #include "daisy_patch.h"
 #include <string>
@@ -12,12 +8,13 @@ using namespace daisysp;
 DaisyPatch patch;
 
 Oscillator osc[3];
-Parameter freqParam[4];
 
 std::string waveNames[5];
 
 int waveform;
 int final_wave;
+
+float testval;
 
 void UpdateControls();
 
@@ -49,14 +46,6 @@ void SetupOsc(float samplerate)
     }
 }
 
-void SetupParams()
-{
-    for (int i = 0; i < 4; i++)
-    {
-	freqParam[i].Init(patch.controls[i], 0, 63, Parameter::LINEAR);
-    }
-}
-
 void SetupWaveNames()
 {
     waveNames[0] = "sine";
@@ -78,8 +67,9 @@ int main(void)
     final_wave = Oscillator::WAVE_POLYBLEP_TRI;
 
     SetupOsc(samplerate);
-    SetupParams();
     SetupWaveNames();
+
+    testval = 0.f;
     
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
@@ -103,6 +93,11 @@ void UpdateOled()
     char* cstr = &waveNames[waveform][0];
     patch.display.WriteString(cstr, Font_7x10, true);
 
+    patch.display.SetCursor(0, 40);
+    std::string str = std::to_string((int)testval);
+    char* bstr = &str[0];
+    patch.display.WriteString(bstr, Font_7x10, true);
+    
     patch.display.Update();
 }
 
@@ -112,12 +107,21 @@ void UpdateControls()
     patch.UpdateAnalogControls();
     
     //knobs
-    int ctrl[4];
+    float ctrl[4];
     for (int i = 0; i < 4; i++)
     {
-	ctrl[i] = round(freqParam[i].Process());
+	ctrl[i] = patch.GetCtrlValue((DaisyPatch::Ctrl)i);
     }
 
+    for (int i = 0; i < 3; i++)
+    {
+	ctrl[i] += ctrl[3];
+	ctrl[i] = ctrl[i] * 5.f; //voltage
+	ctrl[i] = powf(2.f, ctrl[i]) * 55; //Hz
+    }
+
+    testval = patch.GetCtrlValue((DaisyPatch::Ctrl)2) * 5.f;
+    
     //encoder
     waveform += patch.encoder.Increment();
     waveform = (waveform % final_wave + final_wave) % final_wave;
@@ -125,7 +129,7 @@ void UpdateControls()
     //Adjust oscillators based on inputs
     for (int i = 0; i < 3; i++)
     {
-	osc[i].SetFreq(mtof(ctrl[i] + ctrl[3]));
+	osc[i].SetFreq(ctrl[i]);
 	osc[i].SetWaveform((uint8_t)waveform);
     }
 }
