@@ -29,7 +29,7 @@ void InitLfos()
     {
         lfos[i].osc.Init(1000);
         lfos[i].waveform = 0;
-        lfos[i].freqCtrl.Init(patch.controls[i * 2], .01, 5, Parameter::LOGARITHMIC);
+        lfos[i].freqCtrl.Init(patch.controls[i * 2], .5, 10, Parameter::LOGARITHMIC);
         lfos[i].ampCtrl.Init(patch.controls[i * 2 + 1], 0, 1, Parameter::LINEAR);
     }
 }
@@ -97,6 +97,6 @@ void UpdateControls()
 
 void UpdateOutputs()
 {
-	dsy_dac_write(DSY_DAC_CHN1, lfos[0].osc.Process() * 4096);
-	dsy_dac_write(DSY_DAC_CHN2, lfos[1].osc.Process() * 4096);
+ 	dsy_dac_write(DSY_DAC_CHN1, (lfos[0].osc.Process() + 1)/2 * 4096);
+	dsy_dac_write(DSY_DAC_CHN2, (lfos[1].osc.Process() + 1)/2 * 4096);
 }
