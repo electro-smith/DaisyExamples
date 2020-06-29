@@ -1,5 +1,6 @@
 #include "daisysp.h"
 #include "daisy_patch.h"
+#include <string>
 
 using namespace daisy;
 using namespace daisysp;
@@ -48,9 +49,13 @@ int main(void)
     drive_ctrl.Init(patch.controls[2], .3, 1, Parameter::LINEAR);
 
     //Put controls onscreen
-    patch.display.WriteString("Cut  Res  Drive", Font_7x10, true);
+    std::string str = "Cut  Res  Drive  ";
+    char* cstr = &str[0];
+    patch.display.WriteString(cstr, Font_7x10, true);
+
     patch.display.SetCursor(0,50);
-    patch.display.WriteString("LP  HP  BP  Notch", Font_7x10, true);
+    sprintf(cstr, "LP  HP  BP  Notch");
+    patch.display.WriteString(cstr, Font_7x10, true);
     patch.display.Update();
     
     //start audio
