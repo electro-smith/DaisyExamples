@@ -1,5 +1,6 @@
 #include "daisy_patch.h"
 #include "daisysp.h"
+#include <string>
 
 using namespace daisy;
 using namespace daisysp;
@@ -92,23 +93,26 @@ void UpdateOled()
     hw.display.Fill(false);
     
     hw.display.SetCursor(0,0);
-    hw.display.WriteString("env1", Font_7x10, true);
+    std::string str = "env1";
+    char* cstr = &str[0];
+    hw.display.WriteString(cstr, Font_7x10, true);
     
     hw.display.SetCursor(70,0);
-    hw.display.WriteString("env2", Font_7x10, true);
+    str = "env2";
+    hw.display.WriteString(cstr, Font_7x10, true);
     
     hw.display.SetCursor(0,50);
-
     //curve or attack/decay mode
     if (curveTimeMode)
     {
-	hw.display.WriteString("curve", Font_7x10, true);
+	str = "curve";
     }
     else
     {
-	hw.display.WriteString("attack/decay", Font_7x10, true); 
+	str = "attack/decay";
     }
-     
+    hw.display.WriteString(cstr, Font_7x10, true);
+	
     hw.display.Update();
 }
 
