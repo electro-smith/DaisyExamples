@@ -42,7 +42,7 @@ void SetupOsc(float samplerate)
     for (int i = 0; i < 3; i++)
     {
 	osc[i].Init(samplerate);
-	osc[i].SetAmp(1);
+	osc[i].SetAmp(.7);
     }
 }
 
@@ -84,19 +84,17 @@ void UpdateOled()
     patch.display.Fill(false);
 
     patch.display.SetCursor(0,0);
-    patch.display.WriteString("PolyOsc", Font_7x10, true);
-    
-    patch.display.SetCursor(0,30);
-    patch.display.WriteString("waveform:", Font_7x10, true);
-
-    patch.display.SetCursor(70,30);
-    char* cstr = &waveNames[waveform][0];
+    std::string str = "PolyOsc";
+    char* cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
 
-    patch.display.SetCursor(0, 40);
-    std::string str = std::to_string((int)testval);
-    char* bstr = &str[0];
-    patch.display.WriteString(bstr, Font_7x10, true);
+    str = "waveform:";
+    patch.display.SetCursor(0,30);
+    patch.display.WriteString(cstr, Font_7x10, true);
+
+    patch.display.SetCursor(70,30);
+    cstr = &waveNames[waveform][0];
+    patch.display.WriteString(cstr, Font_7x10, true);
     
     patch.display.Update();
 }
