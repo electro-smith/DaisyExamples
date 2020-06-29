@@ -84,6 +84,9 @@ void UpdateEncoder()
 
 void UpdateControls()
 {
+    patch.UpdateAnalogControls();
+    patch.DebounceControls();
+
     UpdateEncoder();
 
     //knobs and update waveform
