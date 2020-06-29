@@ -16,5 +16,23 @@ Set the dry/wet amount of this final mix with the encoder.
 # Code Snippet
 
 ```cpp
-//TODO
+float UpdateDelay(delay &delay, float in)
+{
+    float read = delay.del->Read();
+    delay.del->Write((feedback * read) + (1 - feedback) * in);
+    return read;
+}
+
+    ....
+
+//update delayline with feedback
+for (int d = 0; d < 3; d++)
+{
+    mix += UpdateDelay(delays[d], in[0][i]);
+}
+
+//apply drywet and attenuate
+float fdrywet = (float)drywet / 100.f;
+mix = ((fdrywet * mix * .3f) + ((1.0f - fdrywet) * in[0][i]));
+
 ```
