@@ -54,7 +54,7 @@ int main(void)
     patch.display.WriteString(cstr, Font_7x10, true);
 
     patch.display.SetCursor(0,50);
-    sprintf(cstr, "LP  HP  BP  Notch");
+    str = "LP  HP  BP  Notch";
     patch.display.WriteString(cstr, Font_7x10, true);
     patch.display.Update();
     
