@@ -1,5 +1,6 @@
 #include "daisysp.h"
 #include "daisy_patch.h"
+#include <string>
 
 using namespace daisy;
 using namespace daisysp;
@@ -20,6 +21,7 @@ struct lfoStruct
 
 bool menuSelect;
 int lfoSelect;
+std::string waveNames[5];
 
 lfoStruct lfos[2];
 
@@ -38,6 +40,15 @@ void UpdateOled();
 void UpdateControls();
 void UpdateOutputs();
 
+void SetupWaveNames()
+{
+    waveNames[0] = "sine";
+    waveNames[1] = "triangle";
+    waveNames[2] = "saw";
+    waveNames[3] = "ramp";
+    waveNames[4] = "square";
+}
+
 int main(void)
 {
     patch.Init(); // Initialize hardware (daisy seed, and patch)
@@ -45,6 +56,8 @@ int main(void)
     InitLfos();
 
     lfoSelect = menuSelect = 0;
+
+    SetupWaveNames();
 
     patch.StartAdc();
     while(1) 
@@ -58,7 +71,25 @@ int main(void)
 
 void UpdateOled()
 {
-    patch.display.Fill(true);
+    patch.display.Fill(false);
+
+    patch.display.SetCursor(0,0);
+    std::string str = "Dual LFO";
+    char* cstr = &str[0];
+    patch.display.WriteString(cstr, Font_7x10, true);
+
+    //cursor
+    patch.display.SetCursor(lfoSelect * 70,25);
+    char select = menuSelect ? '@' : 'o';
+    patch.display.WriteChar(select,Font_7x10, true);
+
+    //waveforms
+    for (int i = 0; i < 2; i++){
+        cstr = &waveNames[lfos[i].waveform][0];
+        patch.display.SetCursor(i * 70, 35);
+        patch.display.WriteString(cstr, Font_7x10, true);
+    }
+
     patch.display.Update();
 }
 
