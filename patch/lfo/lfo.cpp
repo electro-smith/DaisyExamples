@@ -25,20 +25,20 @@ std::string waveNames[5];
 
 lfoStruct lfos[2];
 
+void UpdateOled();
+void UpdateControls();
+void UpdateOutputs();
+
 void InitLfos()
 {
     for (int i = 0; i < 2; i++)
     {
         lfos[i].osc.Init(1000);
         lfos[i].waveform = 0;
-        lfos[i].freqCtrl.Init(patch.controls[i * 2], .5, 10, Parameter::LOGARITHMIC);
+        lfos[i].freqCtrl.Init(patch.controls[i * 2], .5, 35, Parameter::LOGARITHMIC);
         lfos[i].ampCtrl.Init(patch.controls[i * 2 + 1], 0, 1, Parameter::LINEAR);
     }
 }
-
-void UpdateOled();
-void UpdateControls();
-void UpdateOutputs();
 
 void SetupWaveNames()
 {
