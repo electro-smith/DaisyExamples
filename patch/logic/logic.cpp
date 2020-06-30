@@ -1,5 +1,6 @@
 #include "daisysp.h"
 #include "daisy_patch.h"
+#include <string>
 
 using namespace daisy;
 using namespace daisysp;
@@ -31,23 +32,51 @@ struct gate
     }
 };
 
-bool cvToBool(float in) { return in > .9; }
+bool isNegated[6]; //we include extra spots to deal with cursorLoc
+
+int cursorLocation;
+bool inSubMenu;  //true if we're in a submenu
 
 gate gates[2];
+std::string gateNames[6];
+
+bool cvToBool(float in) { return in > .9; }
 
 void UpdateControls();
 void UpdateOled();
 void UpdateOutputs();
 
+void InitGateNames()
+{
+    gateNames[0] = " AND  ";
+    gateNames[1] = "  OR  ";
+    gateNames[2] = " XOR  ";
+    gateNames[3] = " NAND ";
+    gateNames[4] = " NOR  ";
+    gateNames[5] = " XNOR ";
+}
+
 int main(void)
 {
     patch.Init();
 
-    gates[0].gateType = gates[1].gateType = 0;
+    InitGateNames();
+
+    gates[0].gateType = 1;
+    gates[1].gateType = 3;
     
+    isNegated[0] = isNegated[1] = false;
+    isNegated[2] = isNegated[3] = false;
+    isNegated[4] = isNegated[5] = false;
+
+    cursorLocation = 0;
+    inSubMenu = false;
+
     patch.StartAdc();
+    
     while(1) 
     {
+        patch.DelayMs(1);
         UpdateControls();
         UpdateOled();
         UpdateOutputs();
@@ -56,9 +85,52 @@ int main(void)
 
 void UpdateControls()
 {
+    if (inSubMenu){
+        int gateNum = (cursorLocation == 4) * 3 + 1;
+        gates[gateNum].gateType += patch.encoder.Increment();
+        gates[gateNum].gateType = (gates[gateNum].gateType % 6 + 6) % 6;
+    }
+
+    else {
+        cursorLocation += patch.encoder.Increment();
+        cursorLocation = (cursorLocation % 5 + 5) % 5;
+    }
+     
+    //if we're on a number and the encoder is pressed, flip the negation
+    if (cursorLocation != 1 && cursorLocation != 4 && patch.encoder.RisingEdge())
+    {
+        isNegated[cursorLocation] = !isNegated[cursorLocation];
+    }
+    //if not, enter or leave the submenu
+    else if (patch.encoder.RisingEdge())
+    {
+        inSubMenu = !inSubMenu;
+    }
+    
 }
 
-void UpdateOled(){}
+void UpdateOled()
+{
+    patch.display.Fill(false);
+
+    patch.display.SetCursor(0,0);
+    std::string str = "Logic";
+    char* cstr = &str[0];
+    patch.display.WriteString(cstr, Font_7x10, true);
+
+    //gates
+    patch.display.SetCursor(0,35);
+    str = "1" + gateNames[gates[0].gateType] + "2";
+    patch.display.WriteString(cstr, Font_6x8, true);
+
+    patch.display.SetCursor(70,35);
+    str = "3" + gateNames[gates[1].gateType] + "4";
+    patch.display.WriteString(cstr, Font_6x8, true);
+
+    //cursor
+
+    patch.display.Update();
+}
 
 void UpdateOutputs()
 {   
@@ -67,6 +139,6 @@ void UpdateOutputs()
     bool c = cvToBool(patch.controls[2].Process());
     bool d = cvToBool(patch.controls[3].Process());
 
-    dsy_dac_write(DSY_DAC_CHN1, gates[0].Process(a,b) * 4096);
-    dsy_dac_write(DSY_DAC_CHN2, gates[1].Process(c,d) * 4096);
+    dsy_dac_write(DSY_DAC_CHN1, gates[0].Process(a,b) * 4095);
+    dsy_dac_write(DSY_DAC_CHN2, gates[1].Process(c,d) * 4095);
 }
