@@ -28,7 +28,7 @@ int main(void)
     sprintf(buff, "Tick:\t%d\r\n", tick_cnt);
     hw.usb_handle.TransmitInternal((uint8_t*)buff, strlen(buff));
 	dsy_system_delay(500);
-    hw.usb_handle.SetReceiveCallback(UsbCallback);
+    hw.usb_handle.SetReceiveCallback(UsbCallback, UsbHandle::FS_INTERNAL);
     while(1)
     {
         dsy_system_delay(500);
