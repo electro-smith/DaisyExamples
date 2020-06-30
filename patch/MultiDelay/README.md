@@ -9,9 +9,10 @@ Set the dry/wet amount of this final mix with the encoder.
 | --- | --- | --- |
 | Ctrls 1 - 3 | Delay Time | Time for delays 1 through 3 |
 | Ctrl 4 | Feedback | Feedback on all three delays |
-| Encoder | Dry/Wet | Set the dry/wet amount for the final mix output |
+| Encoder | Dry/Wet | Set the dry/wet amount for the outputs |
 | Audio In1 | Audio input | |
-| Audio Out 1 - 4 |  Mix Output | Mixed signal based on dry/wet setting |
+| Audio Out 1 - 3 | Individual Delay Outs | Outputs for delays 1 - 3. Dry/wet works here. |  
+| Audio Out 4 | Mix Out | A mix of all three delays. Dry/wet works here as well. |
 
 # Code Snippet
 

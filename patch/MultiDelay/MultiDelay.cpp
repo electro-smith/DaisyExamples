@@ -16,6 +16,18 @@ struct delay
     DelayLine <float, MAX_DELAY>  *del;
     float currentDelay;
     float delayTarget;
+
+    float Process(float feedback, float in)
+    {
+        //set delay times
+        fonepole(currentDelay, delayTarget, .0002f);
+        del -> SetDelay(currentDelay);
+        
+        float read = del -> Read();
+        del -> Write((feedback * read) + in);
+
+        return read;
+    }
 };
 
 delay delays[3];
@@ -26,40 +38,27 @@ int drywet;
 
 void ProcessControls();
 
-float UpdateDelay(delay &delay, float in)
-{
-    //set delay times
-    fonepole(delay.currentDelay, delay.delayTarget, .004f);
-    delay.del->SetDelay(delay.currentDelay);
-    
-    float read = delay.del->Read();
-    delay.del->Write((feedback * read) + (1 - feedback) * in);
-
-    return read;
-}
-
 static void AudioCallback(float **in, float **out, size_t size)
 {
     ProcessControls();
     
-    for (size_t i = 0; i < size; i ++)
+    for (size_t i = 0; i < size; i++)
     {
-	float mix = 0;
+        float mix = 0;
+        float fdrywet = (float)drywet / 100.f;
 
-	//update delayline with feedback
-	for (int d = 0; d < 3; d++)
-	{
-	    mix += UpdateDelay(delays[d], in[0][i]);
-	}
-
-	//apply drywet and attenuate
-	float fdrywet = (float)drywet / 100.f;
-	mix = ((fdrywet * mix * .3f) + ((1.0f - fdrywet) * in[0][i]));
-
-	for (size_t chn = 0; chn < 4; chn++)
-        {   
-	    out[chn][i] = mix;
+        //update delayline with feedback
+        for (int d = 0; d < 3; d++)
+        {
+            float sig = delays[d].Process(feedback, in[0][i]);
+            mix += sig;
+            //out[d][i] = sig * fdrywet + (1.f - fdrywet) * in[0][i];
+            out[d][i] = sig;
         }
+
+        //apply drywet and attenuate
+        mix = fdrywet * mix * .3f + (1.0f - fdrywet) * in[0][i];
+        out[3][i] = mix;
     }
 }
 
@@ -67,11 +66,11 @@ void InitDelays(float samplerate)
 {
     for (int i = 0; i < 3; i++)
     {
-	//Init delays
-	delMems[i].Init();
-	delays[i].del = &delMems[0]; 
-	//3 delay times
-	params[i].Init(patch.controls[i], samplerate * .05, MAX_DELAY, Parameter::LOGARITHMIC);
+        //Init delays
+        delMems[i].Init();
+        delays[i].del = &delMems[0]; 
+        //3 delay times
+        params[i].Init(patch.controls[i], samplerate * .05, MAX_DELAY, Parameter::LOGARITHMIC);
     }
     
     //feedback
@@ -94,7 +93,7 @@ int main(void)
     patch.StartAudio(AudioCallback);
     while(1)
     {
-	UpdateOled();
+	    UpdateOled();
     } 
 }
 
@@ -126,7 +125,7 @@ void ProcessControls()
     //knobs
     for (int i = 0; i < 3; i++)
     {
-	delays[i].delayTarget = params[i].Process();
+	    delays[i].delayTarget = params[i].Process();
     }
     feedback = params[3].Process();
     
@@ -134,5 +133,4 @@ void ProcessControls()
     drywet += 5 * patch.encoder.Increment();
     drywet > 100 ? drywet = 100 : drywet = drywet;
     drywet < 0 ? drywet = 0 : drywet = drywet;
-
 }
