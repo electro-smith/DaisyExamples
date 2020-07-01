@@ -33,12 +33,12 @@ struct gate{
 bool inputs[4];
 gate gates[2];
 std::string gateNames[6];
-bool isInverted[6];
+bool isInverted[4];
 
 //menu logic
 int menuPos; //6 positions
 bool inSubMenu; //only on gate types
-
+int cursorPos[6]; //x positions for the OLED cursor
 
 bool CvToBool(float in) { return in > .8f; }
 int mod(int x, int m) { return (x % m + m) % m; }
@@ -49,12 +49,22 @@ void ProcessOutputs();
 
 void InitGateNames()
 {
-    gateNames[0] = " AND  ";
-    gateNames[1] = " OR   ";
-    gateNames[2] = " XOR  ";
-    gateNames[3] = " NAND ";
-    gateNames[4] = " NOR  ";
-    gateNames[5] = " XNOR ";
+    gateNames[0] = " AND ";
+    gateNames[1] = " OR  ";
+    gateNames[2] = " XOR ";
+    gateNames[3] = " NAND";
+    gateNames[4] = " NOR ";
+    gateNames[5] = " XNOR";
+}
+
+void InitCursorPos()
+{
+    cursorPos[0] = 5;
+    cursorPos[1] = 23;
+    cursorPos[2] = 48;
+    cursorPos[3] = 75;
+    cursorPos[4] = 92;
+    cursorPos[5] = 117;
 }
 
 int main(void)
@@ -62,6 +72,7 @@ int main(void)
     patch.Init(); // Initialize hardware (daisy seed, and patch)
 
     InitGateNames();
+    InitCursorPos();
 
     //both init to AND
     gates[0].gateType = gates[1].gateType = 0; 
@@ -173,12 +184,25 @@ void ProcessOled()
     str = "Logic";
     patch.display.WriteString(cstr, Font_7x10, true);
 
+    //dashes or spaces, depending on negation
+    std::string negStr[4];
+    for (int i = 0; i < 4; i++)
+    {
+        negStr[i] = isInverted[i] ? "-" : " ";
+    }
+
+    //gates and inputs, with negations
     patch.display.SetCursor(0,35);
-    str = "1" + gateNames[gates[0].gateType] + "2";
+    str = negStr[0] + "1" + gateNames[gates[0].gateType] + negStr[1] + "2";
     patch.display.WriteString(cstr, Font_6x8, true);
 
-    patch.display.SetCursor(65,35);
-    str = "3" + gateNames[gates[1].gateType] + "4";
+    patch.display.SetCursor(70,35);
+    str = negStr[2] + "3" + gateNames[gates[1].gateType] + negStr[3] + "4";
+    patch.display.WriteString(cstr, Font_6x8, true);
+
+    //Cursor
+    patch.display.SetCursor(cursorPos[menuPos], 25);
+    str = inSubMenu ? "@" : "o";
     patch.display.WriteString(cstr, Font_6x8, true);
 
     patch.display.Update();
