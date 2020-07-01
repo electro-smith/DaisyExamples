@@ -1,10 +1,15 @@
-# Description
+# Knob
+
+## Description
+
 Using a knob to control the brightness of an led.
 
-# Breadboard
-![SeedKnob_bb.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/Knob/resources/Knob_bb.png)
+## Breadboard
 
-# Code Snippet  
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Knob/resources/Knob_bb.png" alt="SeedKnob_bb.png" style="width: 100%;"/>
+
+## Code Snippet  
+
 ```cpp
 // Loop forever
 for(;;)
@@ -20,6 +25,7 @@ for(;;)
 }
 
 ```
-# Schematic  
 
-![SeedKnob_schem.png](https://github.com/electro-smith/DaisyExamples/blob/master/seed/Knob/resources/Knob_schem.png)
+## Schematic  
+
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Knob/resources/Knob_schem.png" alt="SeedKnob_schem.png" style="width: 100%;"/>
