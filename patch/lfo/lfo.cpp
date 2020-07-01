@@ -17,6 +17,7 @@ struct lfoStruct
     float amp;
     float freq;
     int waveform;
+    float value;
 };
 
 bool menuSelect;
@@ -27,15 +28,23 @@ lfoStruct lfos[2];
 
 void UpdateOled();
 void UpdateControls();
-void UpdateOutputs();
 
-void InitLfos()
+static void AudioCallback(float **in, float **out, size_t size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        dsy_dac_write(DSY_DAC_CHN1, (lfos[0].osc.Process() + 1) / 2 * 4095);
+        dsy_dac_write(DSY_DAC_CHN2, (lfos[1].osc.Process() + 1) / 2 * 4095);
+    }
+}
+
+void InitLfos(float samplerate)
 {
     for (int i = 0; i < 2; i++)
     {
-        lfos[i].osc.Init(1000);
+        lfos[i].osc.Init(samplerate);
         lfos[i].waveform = 0;
-        lfos[i].freqCtrl.Init(patch.controls[i * 2], .5, 35, Parameter::LOGARITHMIC);
+        lfos[i].freqCtrl.Init(patch.controls[i * 2], .1, 35, Parameter::LOGARITHMIC);
         lfos[i].ampCtrl.Init(patch.controls[i * 2 + 1], 0, 1, Parameter::LINEAR);
     }
 }
@@ -53,19 +62,20 @@ int main(void)
 {
     patch.Init(); // Initialize hardware (daisy seed, and patch)
 
-    InitLfos();
+    InitLfos(patch.AudioSampleRate());
 
     lfoSelect = menuSelect = 0;
 
     SetupWaveNames();
 
     patch.StartAdc();
+    patch.StartAudio(AudioCallback);
+    
     while(1) 
     {
         patch.DelayMs(1);
         UpdateOled();
         UpdateControls();
-        UpdateOutputs();
     } 
 }
 
@@ -127,10 +137,4 @@ void UpdateControls()
         lfos[i].osc.SetAmp(lfos[i].ampCtrl.Process());        
         lfos[i].osc.SetWaveform(lfos[i].waveform);   //waveform
     }
-}
-
-void UpdateOutputs()
-{
- 	dsy_dac_write(DSY_DAC_CHN1, (lfos[0].osc.Process() + 1)/2 * 4096);
-	dsy_dac_write(DSY_DAC_CHN2, (lfos[1].osc.Process() + 1)/2 * 4096);
 }
