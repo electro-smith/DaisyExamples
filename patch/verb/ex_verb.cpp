@@ -1,10 +1,13 @@
 #include "daisysp.h"
 #include "daisy_patch.h"
+#include <string>
+
 using namespace daisy;
 using namespace daisysp;
 static DaisyPatch patch;
 static ReverbSc verb;
 static DcBlock blk[2];
+Parameter lpParam;
 static float drylevel, send;
 
 static void VerbCallback(float **in, float **out, size_t size)
@@ -16,6 +19,8 @@ static void VerbCallback(float **in, float **out, size_t size)
         // read some controls
         drylevel = patch.GetCtrlValue(patch.CTRL_1);
         send     = patch.GetCtrlValue(patch.CTRL_2);
+        verb.SetFeedback(patch.GetCtrlValue(patch.CTRL_3) * .94f);
+        verb.SetLpFreq(lpParam.Process());
 
         // Read Inputs (only stereo in are used)
         dryL = in[0][i];
@@ -40,6 +45,8 @@ static void VerbCallback(float **in, float **out, size_t size)
     }
 }
 
+void UpdateOled();
+
 int main(void)
 {
     float samplerate;
@@ -53,8 +60,25 @@ int main(void)
     blk[0].Init(samplerate);
     blk[1].Init(samplerate);
 
+    lpParam.Init(patch.controls[3], 20, 20000, Parameter::LOGARITHMIC);
+
+    //briefly display the module name
+    std::string str = "Stereo Reverb";
+    char* cstr = &str[0];
+    patch.display.WriteString(cstr, Font_7x10, true);
+    patch.display.Update();
+    patch.DelayMs(1000);
+
     patch.StartAdc();
     patch.StartAudio(VerbCallback);
 
-    while(1) {}
+    while(1) 
+    {
+        UpdateOled();
+    }
+}
+
+void UpdateOled()
+{
+    patch.DisplayControls(false);
 }
