@@ -39,7 +39,7 @@ static void AudioCallback(float **in, float **out, size_t size)
 int main(void)
 {
     float samplerate;
-    int num_waves = Oscillator::WAVE_POLYBLEP_TRI;
+    int num_waves = Oscillator::WAVE_LAST - 1;
     patch.Init(); // Initialize hardware (daisy seed, and patch)
     samplerate = patch.AudioSampleRate();
    
