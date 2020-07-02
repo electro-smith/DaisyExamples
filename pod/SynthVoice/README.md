@@ -1,14 +1,20 @@
 # Description
-Simple Synth voice example. Turning the encoder cycles through three control modes.  
-Each mode has different knob functions.  
-Modes:  Led one shows mode.  
-1. In mode one (blue), knob one controls filter cutoff and knob two controls oscillator frequency.  
-2. In mode two (green), knob one 1 controls envelope attack time and knob two controls envelope decay time.   
-3. In mode three (red), knob one controls vibrato rate and knob two controls vibrato depth. Very fast vibratos are heard as simple FM synthesis!  
-Click the encoder to cycle through waveforms.  
-Press the left button to trigger the synth.  
-Press the right button to set the envelope to self cycle (loop).   
-The right led lights purple if the envelope is set to self cycle.
+Simple Synth voice with resonant filter, self cycling envelope, and vibrato control.
+
+# Controls
+| Control | Description | Comment |
+| --- | --- | --- |
+| Mode 1 | Filter / Freq | Knob 1: Cutoff, Knob 2: Osc. Freq. |
+| Mode 2 | Envelope | Knob 1: Attack Knob 2: Decay |
+| Mode 3 | Vibrato | Knob 1: Rate Knob 2: Depth |
+| Led | Mode Indicate | 1. Blue 2. Green 3. Red |
+| Turn Encoder | Mode Select | |
+| Press Encoder | Waveform Select | |
+| Button 1 | Trigger envelope | |
+| Button 2 | Envelope Cycle | Led 2 lights purple when cycling |
+
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/resources/SynthVoice.png" alt="Button_schem.png" style="width: 100%;"/>
 
 # Code Snippet  
 ```cpp  
