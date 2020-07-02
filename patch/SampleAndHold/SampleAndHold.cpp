@@ -45,8 +45,8 @@ void UpdateControls()
     patch.DebounceControls();
 
     //read ctrls and gates, then update sampleholds
-    sampHolds[0].Process(patch.gate_input[0].Trig(), patch.controls[0].Process());
-    sampHolds[1].Process(patch.gate_input[1].Trig(), patch.controls[1].Process());
+    sampHolds[0].Process(patch.gate_input[0].State(), patch.controls[0].Process());
+    sampHolds[1].Process(patch.gate_input[1].State(), patch.controls[1].Process());
 
     //encoder
     menuPos += patch.encoder.Increment();
