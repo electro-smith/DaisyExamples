@@ -3,12 +3,17 @@ Plucked string synthesizer into lush delay and reverb algorithms.
 Really easy to create unique sonic spaces!
 
 # Controls
-Send a trigger to Gate In 1 to trigger the string.  
-Output can be heard on audio outs 1 and 2.  
-Control one controls the string's pitch.  
-Control two controls the string's decay time.  
-Control three controls delay time.  
-Control four controls delay feedback amount.
+| Control | Description | Comment |
+| --- | --- | --- |
+| Ctrl 1 | String Pitch | |
+| Ctrl 2 | String decay time | |
+| Ctrl 3 | Delay Time | |
+| Ctrl 4 | Delay Feedback | |
+| Gate In 1 | Trigger In | Plucks the string |
+| Outs 1-2 | Stereo Outputs | Out 1:L, Out 2: R |
+
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/PluckEcho/resources/PluckEcho.png" alt="PluckEcho.png" style="width: 100%;"/>
 
 # Code Snippet
 ```cpp

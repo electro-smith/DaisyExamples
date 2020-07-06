@@ -1,18 +1,14 @@
-# SimpleButton
-**Author:** Andrew Ikenberry
-
-**Date:** May 2020
-
-**Hardware:** Daisy Pod
-
-## Description:
+# Description:
 Example showing basic usage of pushbutton switches for momentary and latching behavior.
 
-## Controls:
+# Controls:
+| Control | Description |
+| --- | --- |
+| Button 1 | Activate Led 1 |
+| Button 2 | Activate Led 2 |
 
-**SW 1:** Configured as momentary switch for controlling LED1
-
-**SW 2:** Configured as latching switch for controlling LED2
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleButton/resources/SimpleButton.png" alt="Button_schem.png" style="width: 100%;"/>
 
 # Code Snippet  
 ```cpp

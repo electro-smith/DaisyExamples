@@ -1,5 +1,6 @@
 #include "daisy_patch.h"
 #include "daisysp.h"
+#include <string>
 
 using namespace daisy;
 using namespace daisysp;
@@ -86,14 +87,28 @@ int main(void)
     float samplerate;
     hw.Init();
     samplerate = hw.AudioSampleRate();
+    
+    //briefly display the module name
+    std::string str = "Pluck Echo";
+    char* cstr = &str[0];
+    hw.display.WriteString(cstr, Font_7x10, true);
+    hw.display.Update();
+    hw.DelayMs(1000);
+    
     synth.Init(samplerate);
+    
     delay.Init();
     delay.SetDelay(samplerate * 0.8f); // half second delay
+    
     verb.Init(samplerate);
     verb.SetFeedback(0.85f);
     verb.SetLpFreq(2000.0f);
+    
     // Start the ADC and Audio Peripherals on the Hardware
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
-    for(;;) {}
+    for(;;) 
+    {
+        hw.DisplayControls(false);
+    }
 }

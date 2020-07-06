@@ -1,12 +1,14 @@
 # MusicBox
+Generate random melodies.
 
-Simple Example using VisualGDB extension for Visual Studio.
+# Controls
+| Control | Description | Comment |
+| --- | --- | --- |
+| Button 1 | Trigger Envelope | Selects new random note |
+| Knob 1 | Decay Time |  |
 
-Pretty much a playground for testing, or creating new vs projects.
-
-This may not always be configured to run on the pod, but should be able to work on all platforms with relatively few changes to any of the code.
-
-Can be built in Visual Studio with MSBuild, or using local Makefile.
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MusicBox/resources/MusicBox.png" alt="Button_schem.png" style="width: 100%;"/>
 
 # Code Snippet  
 ```cpp  

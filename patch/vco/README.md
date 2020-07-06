@@ -5,11 +5,16 @@ Both standard and bandlimited waveforms are accessible.
 
 # Controls
 
-**Knob 1** = Coarse Frequency
+| Control | Description | Comment |
+| --- | --- | --- |
+| Ctrl1 | Coarse tune | |
+| Ctrl2 | Fine tune | 0 - 7 semitones |
+| Ctrl3 | Waveform | Sine, tri, ramp, square, bandlimited same |
+| Ctrl4 | Amplitude |  |
+| Audio Outs | Oscillator Out | Available on all outputs |
 
-**Knob 2** = Waveform
-
-**Knob 3** = Amplitude
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/vco/resources/vco.png" alt="vco.png" style="width: 100%;"/>
 
 # Code Snippet
 ```cpp

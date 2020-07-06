@@ -2,19 +2,18 @@
 Simple effects for incoming audio. Includes reverb, delay, and downsampling.
 
 # Controls
- Multiple effects on audio in.  
- Turn encoder to rotate through modes. (Only one effect active at a time)  
- Led brightness indicates knob position.   
-   * Note: when you cycle through modes it changes their settings!!  
- 1. Mode one (red) : reverb  
-    * Knob one sets dry wet  
-    * Knob two sets reverb time (feedback)  
- 2. Mode two (green) : delay   
-    * Knob one sets delay time   
-    * Knob two sets feedback level / drywet amount   
- 3. Mode three (purple) : downsampler  
-    * Knob one sets lowpass filter cutoff  
-    * Knob two sets downsample amount
+| Control | Description | Comment |
+| --- | --- | --- |
+| Mode 1 | Reverb | Knob 1: Dry/wet. Knob 2: Reverb time |
+| Mode 2 | Delay | Knob 1: delay time. Knob 2: Feedback |
+| Mode 3 | Bitcrush / Lowpass | Knob 1: LPF cutoff Knob 2: Downsample |
+| Encoder | Mode Select | |
+| Led | Mode Indicate | 1: Red 2: Green 3: Purple | 
+| Audio In | Effect In | |
+| Audio Out | Effect Out | |
+
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/resources/MultiEffect.png" alt="Button_schem.png" style="width: 100%;"/>
 
 # Code Snippet  
 ```cpp  
