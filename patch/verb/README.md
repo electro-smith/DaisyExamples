@@ -8,6 +8,9 @@ Audio ins 1 and 2 are left and right input respectively.
 Audio outs 1 and 2 are left and right dry/wet mixed outputs.  
 Audio outs 3 and 4 are left and right wet only outputs.
 
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/verb/resources/verb.png" alt="verb.png" style="width: 100%;"/>
+
 # Code Snippet
 ```cpp
 // read some controls
