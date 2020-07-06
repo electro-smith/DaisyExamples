@@ -1,5 +1,6 @@
 #include "daisy_patch.h"
 #include "daisysp.h"
+#include <string>
 
 using namespace daisy;
 
@@ -75,6 +76,12 @@ int main(void)
     osc.SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
     filt.Init(samplerate);
 
+    //display
+    std::string str = "Midi";
+    char* cstr = &str[0];
+    hw.display.WriteString(cstr, Font_7x10, true);
+    hw.display.Update();
+    
     // Start stuff.
     midi.StartReceive();
     hw.StartAdc();
