@@ -68,7 +68,7 @@ void InitDelays(float samplerate)
     {
         //Init delays
         delMems[i].Init();
-        delays[i].del = &delMems[0]; 
+        delays[i].del = &delMems[i]; 
         //3 delay times
         params[i].Init(patch.controls[i], samplerate * .05, MAX_DELAY, Parameter::LOGARITHMIC);
     }
