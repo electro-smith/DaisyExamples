@@ -14,8 +14,6 @@ std::string waveNames[5];
 int waveform;
 int final_wave;
 
-float testval;
-
 void UpdateControls();
 
 static void AudioCallback(float **in, float **out, size_t size)
@@ -68,8 +66,6 @@ int main(void)
 
     SetupOsc(samplerate);
     SetupWaveNames();
-
-    testval = 0.f;
     
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
@@ -117,8 +113,6 @@ void UpdateControls()
 	ctrl[i] = ctrl[i] * 5.f; //voltage
 	ctrl[i] = powf(2.f, ctrl[i]) * 55; //Hz
     }
-
-    testval = patch.GetCtrlValue((DaisyPatch::Ctrl)2) * 5.f;
     
     //encoder
     waveform += patch.encoder.Increment();
