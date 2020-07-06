@@ -1,10 +1,13 @@
 # Pod Encoder
-
 Simple example for Daisy Pod showing Encoder use.
 
-Turning the Encoder cycles through which LED/color is active.
+# Controls
+| Control | Description | Comment |
+| --- | --- | --- |
+| Encoder | Led Color | Turn to set color, press to turn off |
 
-Clicking the Encoder sets LEDs to OFF (color 5) on press.
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/Encoder/resources/Encoder.png" alt="Button_schem.png" style="width: 100%;"/>
 
 # Code snippet
 ```cpp

@@ -1,12 +1,14 @@
-# Keyboard Test
+# Description
+Midi Controlled oscillator with resonant LPF.  
 
-SW 1 and SW 2 function as octave up/down buttons
+# Controls
+| Control | Description |
+| --- | --- |
+| CC 1 | Filter Cutoff |
+| CC 2 | Filter resonance |
 
-All 13 of the keyboard buttons work as a chromatic keyboard with 13-note polyphony.
-
-oscillators are each Bandlimited Saw waves
-
-SW 3 enables/disables the reverb.
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/Midi/resources/Midi.png" alt="Button_schem.png" style="width: 100%;"/>
 
 # Code Snippet  
 ```cpp  
@@ -25,9 +27,3 @@ switch(m.type)
     {
     ......
 ```
-## building
-
-Currently for some reason this only works when built with VisualStudio/VisualGDB..
-
-It builds correctly with Make, but doesn't run. Likely just something not being correctly included with Make or something.
-

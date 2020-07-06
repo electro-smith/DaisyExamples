@@ -11,6 +11,9 @@ Both standard and bandlimited waveforms are accessible.
 
 **Knob 3** = Amplitude
 
+# Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/vco/resources/vco.png" alt="vco.png" style="width: 100%;"/>
+
 # Code Snippet
 ```cpp
 // Read Knobs
