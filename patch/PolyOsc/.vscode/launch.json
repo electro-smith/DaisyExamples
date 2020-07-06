@@ -15,8 +15,8 @@
                 "interface/stlink.cfg",
                 "target/stm32h7x.cfg",
             ],
-            "armToolchainPath": "/home/${env:USER}/Developer/gcc-arm-none-eabi-9-2019-q4-major/bin/",
-            "svdFile": "/home/${env:USER}/STMicroelectronics/svd/STM32H750x.svd",
+            //"armToolchainPath": "/home/${env:USER}/Developer/gcc-arm-none-eabi-9-2019-q4-major/bin/",
+            //"svdFile": "/home/${env:USER}/STMicroelectronics/svd/STM32H750x.svd",
             "openOCDLaunchCommands" : ["init", "reset init"],
             "runToMain" : true,
         }
