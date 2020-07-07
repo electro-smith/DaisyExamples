@@ -127,7 +127,7 @@ void ResetBuffer()
     for (int chn = 0; chn < 3; chn++){
         for(int i = 0; i < mod; i++)
         {
-            buf[chn][i] = 0;
+            buf[chn][i] = false;
         }
     }
     
