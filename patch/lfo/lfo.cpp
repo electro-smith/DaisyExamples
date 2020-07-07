@@ -18,6 +18,25 @@ struct lfoStruct
     float freq;
     int waveform;
     float value;
+
+    void Init(float samplerate, AnalogControl freqKnob, AnalogControl ampKnob)
+    {
+        osc.Init(samplerate);
+        osc.SetAmp(1);
+        waveform = 0;
+        freqCtrl.Init(freqKnob, .1, 35, Parameter::LOGARITHMIC);
+        ampCtrl.Init(ampKnob, 0, 1, Parameter::LINEAR);
+    }
+
+    void Process(dsy_dac_channel chn)
+    {
+        //read the knobs and set params
+        osc.SetFreq(freqCtrl.Process());        
+        osc.SetWaveform(waveform);
+
+        //write to the DAC
+        dsy_dac_write(chn, (osc.Process() + 1.f ) * .5f * ampCtrl.Process() * 4095.f);
+    }
 };
 
 bool menuSelect;
@@ -27,28 +46,17 @@ std::string waveNames[5];
 lfoStruct lfos[2];
 
 void UpdateOled();
-void UpdateControls();
+void UpdateEncoder();
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
-        dsy_dac_write(DSY_DAC_CHN1, (lfos[0].osc.Process() + 1) / 2 * 4095);
-        dsy_dac_write(DSY_DAC_CHN2, (lfos[1].osc.Process() + 1) / 2 * 4095);
+        lfos[0].Process(DSY_DAC_CHN1);
+        lfos[1].Process(DSY_DAC_CHN2);
     }
 }
-
-void InitLfos(float samplerate)
-{
-    for (int i = 0; i < 2; i++)
-    {
-        lfos[i].osc.Init(samplerate);
-        lfos[i].waveform = 0;
-        lfos[i].freqCtrl.Init(patch.controls[i * 2], .1, 35, Parameter::LOGARITHMIC);
-        lfos[i].ampCtrl.Init(patch.controls[i * 2 + 1], 0, 1, Parameter::LINEAR);
-    }
-}
-
+        
 void SetupWaveNames()
 {
     waveNames[0] = "sine";
@@ -61,8 +69,11 @@ void SetupWaveNames()
 int main(void)
 {
     patch.Init(); // Initialize hardware (daisy seed, and patch)
+    float samplerate = patch.AudioSampleRate();
 
-    InitLfos(patch.AudioSampleRate());
+    //init the lfos
+    lfos[0].Init(samplerate, patch.controls[0], patch.controls[1]);
+    lfos[1].Init(samplerate, patch.controls[2], patch.controls[3]);
 
     lfoSelect = menuSelect = 0;
 
@@ -75,7 +86,7 @@ int main(void)
     {
         patch.DelayMs(1);
         UpdateOled();
-        UpdateControls();
+        UpdateEncoder();
     } 
 }
 
@@ -105,6 +116,9 @@ void UpdateOled()
 
 void UpdateEncoder()
 {
+    patch.UpdateAnalogControls();
+    patch.DebounceControls();
+
     //annoying menu stuff
     if (patch.encoder.RisingEdge())
     {
@@ -120,21 +134,5 @@ void UpdateEncoder()
     {
         lfoSelect  += patch.encoder.Increment();
         lfoSelect  = (lfoSelect % 2 + 2) % 2;
-    }
-}
-
-void UpdateControls()
-{
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
-
-    UpdateEncoder();
-
-    //knobs and update waveform
-    for (int i = 0; i < 2; i++)
-    {
-        lfos[i].osc.SetFreq(lfos[i].freqCtrl.Process());
-        lfos[i].osc.SetAmp(lfos[i].ampCtrl.Process());        
-        lfos[i].osc.SetWaveform(lfos[i].waveform);   //waveform
     }
 }
