@@ -17,7 +17,6 @@ AdEnv volEnvs[3];
 
 bool first = true;  //first loop (sets length)
 bool rec   = false; //currently recording
-bool play  = false; //currently playing
 
 int  pos = 0;
 bool DSY_SDRAM_BSS buf[3][MAX_SIZE];
@@ -44,11 +43,8 @@ void UpdateEnvs()
         }
     }
  
-    if(play)
-    {
-        pos++;
-        pos %= mod;
-    }
+    pos++;
+    pos %= mod;
 
     if(first && rec)
     {
@@ -67,10 +63,7 @@ static void AudioCallback(float **in, float **out, size_t size)
 {
     UpdateControls();
     
-    if (play)
-    {
-        UpdateEnvs();
-    }
+    UpdateEnvs();
     
     for (size_t i = 0; i < size; i ++){
         float outs[3]; 
@@ -118,7 +111,6 @@ void InitEnvs(float samplerate)
 
 void ResetBuffer()
 {
-    play  = false;
     rec   = false;
     first = true;
     pos   = 0;
@@ -191,7 +183,6 @@ void UpdateControls()
         }
 
     	res = true;
-        play = true;
         rec  = !rec;
     }
 
@@ -221,7 +212,6 @@ void UpdateControls()
         {
             buf[recChan][pos] = true;
             rec = true;
-            play = true;
         }
     }
 }
