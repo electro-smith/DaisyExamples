@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-#define MAX_SIZE (1000 * 1) // 1 minute at 1000Hz
+#define MAX_SIZE (1000 * 60) // 1 minute at 1000Hz
 
 DaisyPatch patch;
 
@@ -50,20 +50,28 @@ void UpdateEnvs()
         pos %= mod;
     }
 
-    //automatic looptime
-    if(len >= MAX_SIZE)
+    if(first && rec)
     {
-        first = false;
-        mod   = MAX_SIZE;
-        len   = 0;
+        len++;
+        //automatic looptime
+        if(len >= MAX_SIZE)
+        {
+            first = false;
+            mod   = MAX_SIZE;
+            len   = 0;
+        }
     }
 }
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
     UpdateControls();
-    UpdateEnvs();
-
+    
+    if (play)
+    {
+        UpdateEnvs();
+    }
+    
     for (size_t i = 0; i < size; i ++){
         float outs[3]; 
 
@@ -77,13 +85,15 @@ static void AudioCallback(float **in, float **out, size_t size)
         outs[2]= noise_out * volEnvs[2].Process();
 
         float mix = 0.f;
+        float mixLevels[] = {.5f, .1f, .05f};
 
         for (size_t chn = 0; chn < 3; chn++)
         {
             out[chn][i] = outs[chn];
-            mix += .3f * outs[chn];
+            mix += mixLevels[chn] * outs[chn];
         }
-        out[4][i] = mix;
+
+        out[3][i] = mix;
     }
 }
 
@@ -95,44 +105,17 @@ void InitEnvs(float samplerate)
     {
         volEnvs[i].Init(samplerate);
         volEnvs[i].SetTime(ADENV_SEG_ATTACK, .01);
+        volEnvs[i].SetCurve(-4);
     }
 
     //This envelope will control the kick oscillator's pitch
     //Note that this envelope is much faster than the volume
     kckPitchEnv.Init(samplerate);
-    kckPitchEnv.SetTime(ADENV_SEG_ATTACK, .01);
-    kckPitchEnv.SetMax(400);
-    kckPitchEnv.SetMin(50);
+    kckPitchEnv.SetTime(ADENV_SEG_ATTACK, .02);
+    kckPitchEnv.SetMax(200);
+    kckPitchEnv.SetCurve(-4);
 }
 
-int main(void)
-{
-    float samplerate;
-    int num_waves = Oscillator::WAVE_LAST - 1;
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
-    samplerate = patch.AudioSampleRate();
-   
-    //Initialize oscillator for kickdrum
-    osc.Init(samplerate);
-    osc.SetWaveform(Oscillator::WAVE_TRI);
-
-    //Initialize noise
-    noise.Init();
-    
-    InitEnvs(samplerate);
-
-    //Init loop stuff
-    ResetBuffer();
-
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
-    while(1) 
-    {
-        UpdateOled();
-    }
-}
-
-//Resets the buffer
 void ResetBuffer()
 {
     play  = false;
@@ -151,9 +134,45 @@ void ResetBuffer()
     mod = MAX_SIZE;
 }
 
+
+int main(void)
+{
+    float samplerate;
+    patch.Init(); // Initialize hardware (daisy seed, and patch)
+    samplerate = patch.AudioSampleRate();
+   
+    //Initialize oscillator for kickdrum
+    osc.Init(samplerate);
+    osc.SetWaveform(Oscillator::WAVE_TRI);
+
+    //Initialize noise
+    noise.Init();
+    
+    patch.display.Fill(false); 
+
+    InitEnvs(samplerate);
+
+    //Init loop stuff
+    ResetBuffer();
+
+    patch.StartAdc();
+    patch.StartAudio(AudioCallback);
+    while(1) 
+    {
+        UpdateOled();
+    }
+}
+
 void UpdateOled()
 {
+    patch.display.Fill(false);
+    
+    patch.display.SetCursor(0,0);
+    std::string str = rec ? "rec" : "play";
+    char* cstr = &str[0];  
+    patch.display.WriteString(cstr, Font_7x10, true);
 
+    patch.display.Update();   
 }
 void UpdateControls()
 {
@@ -168,6 +187,7 @@ void UpdateControls()
             first = false;
             mod   = len;
             len   = 0;
+            pos = 0;
         }
 
     	res = true;
@@ -183,12 +203,25 @@ void UpdateControls()
     }
 
     //encoder turned
-    recChan = patch.encoder.Increment();
+    recChan += patch.encoder.Increment();
     recChan = (recChan % 3 + 3) % 3;
 
+    //parameters
+    volEnvs[0].SetTime(ADENV_SEG_DECAY, patch.controls[0].Process() * 3);
+
+    volEnvs[1].SetTime(ADENV_SEG_DECAY, patch.controls[2].Process());
+    volEnvs[2].SetTime(ADENV_SEG_DECAY, patch.controls[3].Process());
+
+    kckPitchEnv.SetMin((patch.controls[1].Process() * 4 + 1) * 20);
+
     //gate in 
-    if (patch.gate_input[0].Trig() && rec)
+    if (patch.gate_input[0].Trig())
     {
-        buf[recChan][pos] = true;
+        if(rec || first)
+        {
+            buf[recChan][pos] = true;
+            rec = true;
+            play = true;
+        }
     }
 }
