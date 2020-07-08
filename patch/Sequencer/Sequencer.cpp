@@ -87,26 +87,26 @@ void UpdateOled()
 {
     patch.display.Fill(false);
 
-    patch.display.SetCursor(0,0);
-    std::string str = "Sequencer";
+    std::string str = "!";
     char* cstr = &str[0];
+    patch.display.SetCursor(25 * stepNumber, 45);
     patch.display.WriteString(cstr, Font_7x10, true);
 
     //values and trigs
     for (int i = 0; i < 5; i++)
     {   
         sprintf(cstr, "%d", (int)(100.f  * (values[i] / 5)));
-        patch.display.SetCursor(i * 25, 25);
+        patch.display.SetCursor(i * 25, 10);
         patch.display.WriteString(cstr, Font_7x10, true);
     
         str = trigs[i % 5] ? "X" : "O";
-        patch.display.SetCursor(i * 25, 45);
+        patch.display.SetCursor(i * 25, 30);
         patch.display.WriteString(cstr, Font_7x10, true);
     }
 
     //cursor
     str = inSubMenu ? "@" : "o";
-    patch.display.SetCursor((menuPos % 5) * 25, (menuPos > 4) * 20 + 15);
+    patch.display.SetCursor((menuPos % 5) * 25, (menuPos > 4) * 20);
     patch.display.WriteString(cstr, Font_7x10, true);
 
     patch.display.Update();
