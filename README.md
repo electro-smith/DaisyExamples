@@ -18,13 +18,13 @@ First off there are a few ways to clone and initialize the repo (with its submod
 You can do either of the following:
 
 ```
-git clone --recursive https://github.com/Electro-Smith/Daisy_Examples
+git clone --recursive https://github.com/electro-smith/DaisyExamples
 ```
 
 or 
 
 ```
-git clone https://github.com/Electro-Smith/Daisy_Examples
+git clone https://github.com/electro-smith/DaisyExamples
 git submodule update --init
 ```
 
