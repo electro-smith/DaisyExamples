@@ -4,7 +4,7 @@
 using namespace daisy;
 
 // Declare a local daisy_field for hardware access
-daisy_field hw;
+DaisyField hw;
 
 // This runs at a fixed rate, to prepare audio samples
 void callback(float *in, float *out, size_t size)
@@ -19,12 +19,9 @@ void callback(float *in, float *out, size_t size)
 
 int main(void)
 {
-    daisy_field_init(&hw);
-    dsy_audio_set_callback(DSY_AUDIO_INTERNAL, callback);
-    // Initialize Stuff Here
-    // Start Callback
-    hw.seed.adc.Start();
-    dsy_audio_start(DSY_AUDIO_INTERNAL);
+    hw.Init();
+    hw.StartAudio(callback);
+    hw.StartAdc();
     while(1) 
     {
         // Do Stuff InfInitely Here
