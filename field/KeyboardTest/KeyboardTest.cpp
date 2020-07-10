@@ -5,7 +5,7 @@
 
 using namespace daisy;
 
-daisy_field hw;
+DaisyField hw;
 
 
 struct voice
@@ -14,7 +14,7 @@ struct voice
     {
         osc_.Init(DSY_AUDIO_SAMPLE_RATE);
         amp_ = 0.0f;
-        osc_.SetAmp(0.5f);
+        osc_.SetAmp(1.0f);
         osc_.SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
         on_ = false;
     }
@@ -32,7 +32,7 @@ struct voice
     bool                on_;
 };
 
-voice v[NUM_VOICES];
+voice   v[NUM_VOICES];
 uint8_t buttons[16];
 // Use bottom row to set major scale
 // Top row chromatic notes, and the inbetween notes are just the octave.
@@ -57,44 +57,41 @@ int8_t octaves = 0;
 
 static daisysp::ReverbSc verb;
 // Use two side buttons to change octaves.
-daisy::AnalogControl knobs[8];
-daisy::AnalogControl cvs[4];
-float                kvals[8];
-float                cvvals[4];
+float kvals[8];
+float cvvals[4];
+
+size_t knob_idx[] = {DaisyField::KNOB_1,
+                     DaisyField::KNOB_2,
+                     DaisyField::KNOB_3,
+                     DaisyField::KNOB_4,
+                     DaisyField::KNOB_5,
+                     DaisyField::KNOB_6,
+                     DaisyField::KNOB_7,
+                     DaisyField::KNOB_8};
 
 void AudioCallback(float *in, float *out, size_t size)
 {
     bool trig, use_verb;
-    dsy_sr_4021_update(&hw.keyboard_sr);
-    hw.switches[SW_1].Debounce();
-    hw.switches[SW_2].Debounce();
-    hw.switches[SW_3].Debounce();
-    if(hw.switches[SW_1].RisingEdge())
+    hw.ProcessAnalogControls();
+    hw.UpdateDigitalControls();
+    if(hw.GetSwitch(DaisyField::SW_1)->RisingEdge())
     {
         octaves -= 1;
         trig = true;
     }
-    if(hw.switches[SW_2].RisingEdge())
+    if(hw.GetSwitch(DaisyField::SW_2)->RisingEdge())
     {
         octaves += 1;
         trig = true;
     }
-    if(hw.switches[SW_3].Pressed())
-    {
-        use_verb = true;
-    }
-    else
-    {
-        use_verb = false;
-    }
+    use_verb = true;
+
     for(int i = 0; i < 8; i++)
     {
-        //kvals[i] = knobs[i].Process();
-        kvals[i] = hw.knobs[i].Process();
+        kvals[knob_idx[i]] = hw.GetKnobValue(i);
         if(i < 4)
         {
-            //cvvals[i] = cvs[i].Process();
-            cvvals[i] = hw.cvs[i].Process();
+            cvvals[i] = hw.GetCvValue(i);
         }
     }
 
@@ -112,17 +109,7 @@ void AudioCallback(float *in, float *out, size_t size)
     }
     for(size_t i = 0; i < 16; i++)
     {
-        buttons[i] = dsy_sr_4021_state(&hw.keyboard_sr, i) | (buttons[i] << 1);
-        {
-            if(buttons[i] == 0xFF)
-            {
-                v[i].on_ = false;
-            }
-            else if(buttons[i] == 0x00)
-            {
-                v[i].on_ = true;
-            }
-        }
+        v[i].on_ = hw.KeyboardState(i);
     }
     float sig, send;
     float wetl, wetr;
@@ -137,31 +124,30 @@ void AudioCallback(float *in, float *out, size_t size)
         send = sig * 0.35f;
         verb.Process(send, send, &wetl, &wetr);
         //        wetl = wetr = sig;
-        if(use_verb)
+        if(!use_verb)
             wetl = wetr = 0.0f;
         out[i]     = (sig + wetl) * 0.5f;
         out[i + 1] = (sig + wetr) * 0.5f;
     }
 }
 
-void LightCallback(float *in, float *out, size_t size)
+void AudioInputTest(float *in, float *out, size_t size)
 {
-    for(int i = 0; i < 8; i++)
+    float sendL, sendR, wetL, wetR;
+    for(size_t i = 0; i < size; i++)
     {
-        kvals[i] = hw.knobs[i].Process();
-        //        kvals[i] = dsy_adc_get_mux_float(0, i);
-        if(i < 4)
-        {
-            cvvals[i] = hw.cvs[i].Process();
-            //            cvvals[i] = dsy_adc_get_float(i + 1);
-        }
+        sendL = in[i] * 0.7f;
+        sendR = in[i + 1] * 0.7f;
+        verb.Process(sendL, sendR, &wetL, &wetR);
+        out[i]     = in[i] * 0.8f + wetL;
+        out[i + 1] = in[i + 1] * 0.8f + wetR;
     }
 }
 
+
 int main(void)
 {
-    size_t blocksize = 48;
-    daisy_field_init(&hw);
+    hw.Init();
     // Initialize controls.
     octaves = 2;
     for(int i = 0; i < NUM_VOICES; i++)
@@ -169,24 +155,20 @@ int main(void)
         v[i].Init();
         v[i].set_note((12.0f * octaves) + 24.0f + scale[i]);
     }
-    verb.Init(DSY_AUDIO_SAMPLE_RATE);
+
+    verb.Init(hw.SampleRate());
     verb.SetFeedback(0.94f);
     verb.SetLpFreq(8000.0f);
-    // Init muxsel1
-    dsy_gpio foo;
-    foo.mode = DSY_GPIO_MODE_OUTPUT_PP;
-    foo.pin  = {DSY_GPIOA, 7};
-    foo.pull = DSY_GPIO_NOPULL;
-    dsy_gpio_init(&foo);
-    dsy_audio_set_callback(DSY_AUDIO_INTERNAL, AudioCallback);
-    dsy_audio_set_blocksize(DSY_AUDIO_INTERNAL, blocksize);
-    hw.seed.adc.Start();
-    bool ledstate;
-    ledstate = true;
+
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
+
     for(;;)
     {
-        dsy_tim_delay_ms(250);
-        hw.seed.SetLed(ledstate);
-        ledstate = !ledstate;
+        hw.VegasMode();
+        dsy_system_delay(1);
+        dsy_dac_write(DSY_DAC_CHN1, hw.GetKnobValue(0) * 4095);
+        dsy_dac_write(DSY_DAC_CHN2, hw.GetKnobValue(1) * 4095);
+        dsy_gpio_toggle(&hw.gate_out_);
     }
 }
