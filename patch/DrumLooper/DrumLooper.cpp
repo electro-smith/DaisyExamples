@@ -47,8 +47,6 @@ static void AudioCallback(float **in, float **out, size_t size)
 {
     UpdateControls();
     
-    UpdateEnvs();
-    
     for (size_t i = 0; i < size; i ++){
         float outs[3]; 
 
@@ -144,7 +142,7 @@ void UpdateOled()
     patch.display.Fill(false);
     
     patch.display.SetCursor(0,0);
-    std::string str = rec ? "rec" : "play";
+    std::string str = rec ? "rec" : "stop";
     char* cstr = &str[0];  
     patch.display.WriteString(cstr, Font_7x10, true);
 
@@ -164,6 +162,7 @@ void UpdateControls()
     //encoder pressed
     if(patch.encoder.RisingEdge())
     {
+	//set loop len
         if(first && rec)
         {
             first = false;
@@ -203,15 +202,6 @@ void UpdateControls()
         }
     }
 
-    //the only situation in which we don't increment is when \
-    //we're waiting for the first recording
-    if(!(first && !rec))
-    {
-	//array stuff
-	pos++;
-	pos %= mod;
-    }
-	
     //if we're making our first loop
     if(first && rec)
     {
@@ -225,4 +215,21 @@ void UpdateControls()
 	    pos = 0;
         }
     }
+
+    //we want this to happen before we update the pos
+    UpdateEnvs();
+    
+    //the only situation in which we don't increment is when
+    //we're waiting for the first recording
+    if(!(first && !rec))
+    {
+	pos++;
+	pos %= mod;
+	//EOC
+	if (pos == 0)
+	{
+	    patch.GateOut = 1; 
+	}
+    }
+	
 }
