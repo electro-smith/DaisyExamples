@@ -41,22 +41,6 @@ void UpdateEnvs()
             }
         }
     }
- 
-    pos++;
-    pos %= mod;
-
-    if(first && rec)
-    {
-        len++;
-        //automatic looptime
-        if(len >= MAX_SIZE)
-        {
-            first = false;
-            mod   = MAX_SIZE;
-            len   = 0;
-	    pos = 0;
-        }
-    }
 }
 
 static void AudioCallback(float **in, float **out, size_t size)
@@ -216,6 +200,29 @@ void UpdateControls()
         {
             buf[recChan][pos] = true;
             rec = true;
+        }
+    }
+
+    //the only situation in which we don't increment is when \
+    //we're waiting for the first recording
+    if(!(first && !rec))
+    {
+	//array stuff
+	pos++;
+	pos %= mod;
+    }
+	
+    //if we're making our first loop
+    if(first && rec)
+    {
+        len++;
+        //automatic looptime
+        if(len >= MAX_SIZE)
+        {
+            first = false;
+            mod   = MAX_SIZE;
+            len   = 0;
+	    pos = 0;
         }
     }
 }
