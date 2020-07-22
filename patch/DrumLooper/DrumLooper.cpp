@@ -23,7 +23,6 @@ bool DSY_SDRAM_BSS buf[3][MAX_SIZE];
 int   mod = MAX_SIZE;
 int   len = 0;
 float drywet = 0;
-bool  res = false;
 
 int recChan = 0;
 
@@ -55,6 +54,7 @@ void UpdateEnvs()
             first = false;
             mod   = MAX_SIZE;
             len   = 0;
+	    pos = 0;
         }
     }
 }
@@ -164,6 +164,12 @@ void UpdateOled()
     char* cstr = &str[0];  
     patch.display.WriteString(cstr, Font_7x10, true);
 
+    patch.display.SetCursor(0,25);
+    str = recChan == 0 ? "Kick" : "";
+    str = recChan == 1 ? "Snare": str;
+    str = recChan == 2 ? "Hat " : str;
+    patch.display.WriteString(cstr, Font_7x10, true);
+    
     patch.display.Update();   
 }
 void UpdateControls()
@@ -182,15 +188,13 @@ void UpdateControls()
             pos = 0;
         }
 
-    	res = true;
         rec  = !rec;
     }
 
     //encoder held
-    if(patch.encoder.TimeHeldMs() >= 1000 && res)
+    if(patch.encoder.TimeHeldMs() >= 1000)
     {
         ResetBuffer();
-    	res = false;
     }
 
     //encoder turned
