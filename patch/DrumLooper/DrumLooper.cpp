@@ -226,10 +226,7 @@ void UpdateControls()
 	pos++;
 	pos %= mod;
 	//EOC
-	if (pos == 0)
-	{
-	    patch.GateOut = 1; 
-	}
+//	dsy_gpio_write(&patch.gate_output, 1);
     }
-	
+	dsy_gpio_write(&patch.gate_output, 1);
 }
