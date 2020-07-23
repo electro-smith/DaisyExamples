@@ -142,7 +142,8 @@ void UpdateOled()
     patch.display.Fill(false);
     
     patch.display.SetCursor(0,0);
-    std::string str = rec ? "rec" : "stop";
+    std::string str = rec ? "rec" : "play";
+    str = (first && !rec) ? "ready" : str;
     char* cstr = &str[0];  
     patch.display.WriteString(cstr, Font_7x10, true);
 
@@ -226,7 +227,6 @@ void UpdateControls()
 	pos++;
 	pos %= mod;
 	//EOC
-//	dsy_gpio_write(&patch.gate_output, 1);
+	dsy_gpio_write(&patch.gate_output, pos == 0);
     }
-	dsy_gpio_write(&patch.gate_output, 1);
 }
