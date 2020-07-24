@@ -36,7 +36,7 @@ struct Filter{
     {
 	filt.Init(samplerate);
 	filt.SetRes(1);
-	filt.SetDrive(.02);
+	filt.SetDrive(.002);
 	filt.SetFreq(freq);
 	amp = .5f;
     }
@@ -44,7 +44,7 @@ struct Filter{
     float Process(float in)
     {
 	filt.Process(in);
-	return filt.Band() * amp;
+	return filt.Peak() * amp;
     }
 };
 
@@ -54,10 +54,10 @@ static void AudioCallback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
-	float sig = 0;
-	for (int i = 0; i < 16; i++)
+	float sig = 0.f;
+	for (int j = 0; j < 16; j++)
 	{
-	  sig += filters[i].Process(in[0][i]);
+	    sig += filters[j].Process(in[0][i]);
 	}
 	sig *= .06;
 	
