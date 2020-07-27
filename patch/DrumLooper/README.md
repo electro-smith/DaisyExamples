@@ -1,6 +1,7 @@
 # Description
 Free looping drum machine. Record unquantized drums on three different channels.  
-The first recording sets the loop length. The recording can be started by either a trigger or pressing the encoder.  
+The first recording sets the loop length.
+The recording can be launched by a trigger or encoder press.  
 After the first loop, turn record back on to record more drums. There is an end of cycle output available to sync other gear.  
 Try different trigger inputs! Drum pads, switches, and sequencers are all good ideas!  
 
@@ -15,7 +16,7 @@ Try different trigger inputs! Drum pads, switches, and sequencers are all good i
 | Encoder Turn | Select Channel | |
 | Encoder Press | Record | The first loop sets the length. |
 | Encoder long press | Reset looper | |
-| Gate In 1 | Trigger to record | |
+| Gate In 1 | Trigger to record | Starts recording in ready mode |
 | Gate Out | End of Cycle | |
 | Audio Out 1 | Kick Out | |
 | Audio Out 2 | Snare Out |
