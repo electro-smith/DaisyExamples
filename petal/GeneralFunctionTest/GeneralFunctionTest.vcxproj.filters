@@ -42,5 +42,28 @@
     <None Include="stm32.xml">
       <Filter>VisualGDB settings</Filter>
     </None>
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\option\ccsbcs.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\diskio.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libdaisy\Middlewares\Third_Party\FatFs\src\ff_gen_drv.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
