@@ -40,8 +40,8 @@ int main(void)
     //parameter parameters
     threshParam.Init(patch.controls[0], -80.0f, 0.f, Parameter::LINEAR);
     ratioParam.Init(patch.controls[1], 1.f, 40.f, Parameter::LINEAR);
-    attackParam.Init(patch.controls[2], 0.001f, 10.f, Parameter::LINEAR);
-    releaseParam.Init(patch.controls[3], 0.001f, 10.f, Parameter::LINEAR);
+    attackParam.Init(patch.controls[2], 0.001f, 1.f, Parameter::EXPONENTIAL);
+    releaseParam.Init(patch.controls[3], 0.001f, 1.f, Parameter::EXPONENTIAL);
     
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
