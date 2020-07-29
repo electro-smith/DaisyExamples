@@ -7,7 +7,7 @@ using namespace daisysp;
 
 DaisyPatch patch;
 
-float values[5];
+int values[5];
 bool trigs[5];
 int stepNumber;
 bool trigOut;
@@ -68,9 +68,9 @@ void UpdateControls()
 
     else
     {
-        values[menuPos] += .05 * patch.encoder.Increment();
+        values[menuPos] += patch.encoder.Increment();
         values[menuPos] = values[menuPos] < 0.f ? 0.f : values[menuPos];
-        values[menuPos] = values[menuPos] > 5.f ? 5.f : values[menuPos];
+        values[menuPos] = values[menuPos] > 60.f ? 60.f : values[menuPos];
         inSubMenu = patch.encoder.RisingEdge() ? false : true;
     }
 
@@ -95,7 +95,7 @@ void UpdateOled()
     //values and trigs
     for (int i = 0; i < 5; i++)
     {   
-        sprintf(cstr, "%d", (int)(100.f  * (values[i] / 5)));
+        sprintf(cstr, "%d", values[i]);
         patch.display.SetCursor(i * 25, 10);
         patch.display.WriteString(cstr, Font_7x10, true);
     
@@ -114,8 +114,8 @@ void UpdateOled()
 
 void UpdateOutputs()
 {
-    dsy_dac_write(DSY_DAC_CHN1, values[stepNumber] * 819.f);
-    dsy_dac_write(DSY_DAC_CHN2, values[stepNumber] * 819.f);
+    dsy_dac_write(DSY_DAC_CHN1, round(.0833f * values[stepNumber] * 819.f));
+    dsy_dac_write(DSY_DAC_CHN2, round(.0833f * values[stepNumber] * 819.f));
 
     dsy_gpio_write(&patch.gate_output, trigOut);
     trigOut = false;
