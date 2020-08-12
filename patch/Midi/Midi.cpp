@@ -3,20 +3,21 @@
 #include <string>
 
 using namespace daisy;
+using namespace daisysp;
 
 DaisyPatch          hw;
 MidiHandler         midi;
-daisysp::Oscillator osc;
-daisysp::Svf        filt;
+Oscillator osc;
+Svf        filt;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
     float sig;
-    for(size_t i = 0; i < size; i += 2)
+    for(size_t i = 0; i < size; i ++)
     {
         sig = osc.Process();
         filt.Process(sig);
-        for (size_t chn; chn < 4; chn++)
+        for (size_t chn = 0; chn < 4; chn++)
         {
             out[chn][i] = filt.Low();
         }
@@ -35,7 +36,7 @@ void HandleMidiMessage(MidiEvent m)
             if(m.data[1] != 0)
             {
                 p = m.AsNoteOn();
-                osc.SetFreq(daisysp::mtof(p.note));
+                osc.SetFreq(mtof(p.note));
                 osc.SetAmp((p.velocity / 127.0f));
             }
         }
@@ -47,7 +48,7 @@ void HandleMidiMessage(MidiEvent m)
             {
                 case 1:
                     // CC 1 for cutoff.
-                    filt.SetFreq(daisysp::mtof((float)p.value));
+                    filt.SetFreq(mtof((float)p.value));
                     break;
                 case 2:
                     // CC 2 for res.
@@ -73,7 +74,7 @@ int main(void)
 
     // Synthesis
     osc.Init(samplerate);
-    osc.SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
+    osc.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
     filt.Init(samplerate);
 
     //display
