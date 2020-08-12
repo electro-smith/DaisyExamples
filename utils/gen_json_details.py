@@ -15,6 +15,7 @@
 #       "platform": "seed"
 #       "filepath": "./bin/platform/Name.bin"
 #       "description": "Short Description"
+#       "url" : "raw.githubusercontent.com/electro-smith.../README.md"
 #   },
 #   {
 #       etc. . . 
@@ -33,11 +34,14 @@ class Example(object):
     def __init__(self, name, ogdir):
         self.name = name
         self.description = "no desc available yet"
+        self.url = 'https://raw.githubusercontent.com/electro-smith/'
         # Special case for DaisySP examples
         if 'DaisySP' in ogdir:
             self.platform = 'seed'
+            self.url += 'DaisySP/master/examples/' + self.name + '/README.md'
         else:
             self.platform = ogdir
+            self.url += 'DaisyExamples/master/' + self.platform + '/' + self.name + '/README.md'
         self.apath = os.path.abspath('/'.join((ogdir,name)))
         flist = glob.glob('{}/build/*.bin'.format(self.apath))
         if len(flist) > 0:
@@ -59,6 +63,7 @@ class Example(object):
         myobj['platform'] = self.platform
         myobj['filepath'] = self.destpath
         myobj['description'] = self.description
+        myobj['url'] = self.url
         return myobj
 
     def DumpJson(self, filepointer):
