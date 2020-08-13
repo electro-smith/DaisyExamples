@@ -49,12 +49,14 @@ struct Filter{
 };
 
 Filter filters[8];
+bool passthru;
 void UpdateControls();
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
 	UpdateControls();
-		
+
+
     for (size_t i = 0; i < size; i++)
     {
 		float sig = 0.f;
@@ -64,7 +66,15 @@ static void AudioCallback(float **in, float **out, size_t size)
 		}
 		sig *= .06;
 	
-		out[0][i] = out[1][i] = sig;
+        if (!passthru)
+        {
+            out[0][i] = out[1][i] = sig;
+        }
+        else
+        {
+            out[0][i] = in[0][i];
+            out[1][i] = in[1][i];
+        }
     }
 }
 
@@ -84,7 +94,7 @@ void InitFilters(float samplerate)
 {
     for (int i = 0; i < 8; i++)
     {
-	filters[i].Init(samplerate, freqs[i]);
+        filters[i].Init(samplerate, freqs[i]);
     }
 }
 
@@ -100,6 +110,7 @@ int main(void)
     InitFreqs();
     InitFilters(samplerate);
     bank = 0;
+    passthru = false;
     
     petal.StartAdc();
     petal.StartAudio(AudioCallback);
@@ -120,6 +131,10 @@ void UpdateControls()
     bank = (bank % 2 + 2) % 2;
 
     bank = petal.encoder.RisingEdge() ? 0 : bank;
+
+    // Toggle Pass thru
+	if (petal.switches[petal.SW_1].RisingEdge())	
+        passthru = !passthru;
 
     //controls
     for (int i = 0; i < 4; i++)
@@ -142,6 +157,8 @@ void UpdateLeds()
     {
 		petal.SetRingLed((DaisyPetal::RingLed)i, filters[i].amp, (bank == 1) * filters[i].amp, filters[i].amp);
     }
+
+    petal.SetFootswitchLed(DaisyPetal::FOOTSWITCH_LED_1, !passthru);
 
     petal.UpdateLeds();
 }
