@@ -49,19 +49,22 @@ struct Filter{
 };
 
 Filter filters[8];
+void UpdateControls();
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
+	UpdateControls();
+		
     for (size_t i = 0; i < size; i++)
     {
-	float sig = 0.f;
-	for (int j = 0; j < 8; j++)
-	{
-	    sig += filters[j].Process(in[0][i]);
-	}
-	sig *= .06;
+		float sig = 0.f;
+		for (int j = 0; j < 8; j++)
+		{
+			sig += filters[j].Process(in[0][i]);
+		}
+		sig *= .06;
 	
-	out[0][i] = out[1][i] = out[2][i] = out[3][i] = sig;
+		out[0][i] = out[1][i] = sig;
     }
 }
 
@@ -85,7 +88,7 @@ void InitFilters(float samplerate)
     }
 }
 
-void UpdateControls();
+
 void UpdateLeds();
 
 int main(void)
@@ -102,8 +105,8 @@ int main(void)
     petal.StartAudio(AudioCallback);
     while(1) 
     {
-	UpdateControls();
-	UpdateLeds();
+		UpdateLeds();
+		dsy_system_delay(6);
     }
 }
 
@@ -119,13 +122,13 @@ void UpdateControls()
     bank = petal.encoder.RisingEdge() ? 0 : bank;
 
     //controls
-    for (int i = 2 ; i < 6; i++)
+    for (int i = 0; i < 4; i++)
     {
-	float val = petal.knob[i].Process();
-	if (condUpdates[i].Process(val))
-	{
-	    filters[i + bank * 2].amp = val;
-	}
+		float val = petal.knob[i + 2].Process();
+		if (condUpdates[i].Process(val))
+		{
+			filters[i + bank * 4].amp = val;
+		}
     }
 }
 
@@ -133,14 +136,12 @@ void UpdateLeds()
 {
     for (int i = 0; i < 4; i++)
     {
-		petal.ring_led[i].Set(filters[i].amp, (bank == 0) * filters[i].amp, filters[i].amp);
+		petal.SetRingLed((DaisyPetal::RingLed)i, filters[i].amp, (bank == 0) * filters[i].amp, filters[i].amp);
     }
     for (int i = 4; i < 8; i++)
     {
-		petal.ring_led[i].Set(filters[i].amp, (bank == 1) * filters[i].amp, filters[i].amp);
+		petal.SetRingLed((DaisyPetal::RingLed)i, filters[i].amp, (bank == 1) * filters[i].amp, filters[i].amp);
     }
-
-
 
     petal.UpdateLeds();
 }
