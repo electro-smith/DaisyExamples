@@ -16,8 +16,9 @@ struct delay
     DelayLine <float, MAX_DELAY>  *del;
     float currentDelay;
     float delayTarget;
+	float feedback;
 
-    float Process(float feedback, float in)
+    float Process(float in)
     {
         //set delay times
         fonepole(currentDelay, delayTarget, .0002f);
@@ -31,10 +32,11 @@ struct delay
 };
 
 delay delays[3];
-Parameter params[4];
+Parameter params[3];
 
 float feedback;
 int drywet;
+bool passThruOn;
 
 void ProcessControls();
 
@@ -50,7 +52,7 @@ static void AudioCallback(float **in, float **out, size_t size)
         //update delayline with feedback
         for (int d = 0; d < 3; d++)
         {
-            float sig = delays[d].Process(feedback, in[0][i]);
+            float sig = delays[d].Process(in[0][i]);
             mix += sig;
             //out[d][i] = sig * fdrywet + (1.f - fdrywet) * in[0][i];
         }
@@ -69,11 +71,9 @@ void InitDelays(float samplerate)
         delMems[i].Init();
         delays[i].del = &delMems[i]; 
         //3 delay times
-        params[i].Init(petal.knob[i + 2], samplerate * .05, MAX_DELAY, Parameter::LOGARITHMIC);
+        params[i].Init(petal.knob[i * 2], samplerate * .05, MAX_DELAY, Parameter::LOGARITHMIC);
     }
     
-    //feedback
-    params[3].Init(petal.knob[5], 0, 1, Parameter::LINEAR); 
 }
 
 void UpdateOled();
@@ -87,12 +87,18 @@ int main(void)
     InitDelays(samplerate);
 
     drywet = 50;
-    
+	passThruOn = false;
+	
     petal.StartAdc();
     petal.StartAudio(AudioCallback);
     while(1)
     {
-    } 
+		for (int i = 0; i < 8; i++)
+		{
+			petal.SetRingLed((DaisyPetal::RingLed)i, 0.f, 0.f, drywet / 100);
+		}
+		dsy_system_delay(6);
+	} 
 }
 
 void ProcessControls()
@@ -104,11 +110,22 @@ void ProcessControls()
     for (int i = 0; i < 3; i++)
     {
 	    delays[i].delayTarget = params[i].Process();
-    }
-    feedback = params[3].Process();
+		delays[i].feedback = petal.knob[(i * 2 )+ 1].Process();
+	}
     
     //encoder
     drywet += 5 * petal.encoder.Increment();
     drywet > 100 ? drywet = 100 : drywet = drywet;
     drywet < 0 ? drywet = 0 : drywet = drywet;
+	
+	//footswitch
+	if (petal.switches[0].RisingEdge())
+	{
+		passThruOn = !passThruOn;
+	}
+
+	if(passThruOn)
+	{
+		drywet = 0;
+	}
 }

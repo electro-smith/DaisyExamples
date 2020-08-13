@@ -7,8 +7,8 @@ Set the dry/wet amount of this final mix with the encoder.
 
 | Control | Description | Comment |
 | --- | --- | --- |
-| Ctrls 3 - 5 | Delay Time | Time for delays 1 through 3 |
-| Ctrl 6 | Feedback | Feedback on all three delays |
+| Ctrls 1 - 3 - 5| Delay Time | Time for delays 1 through 3 |
+| Ctrl 2 - 4 - 5 | Feedback | Feedback for delays 1 through 3 |
 | Encoder | Dry/Wet | Set the dry/wet amount for the outputs |
 | Audio In 1 | Audio input | |
 | Audio Out 1 - 2 | Mix Out | |
