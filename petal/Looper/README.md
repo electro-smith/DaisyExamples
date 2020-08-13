@@ -6,8 +6,8 @@ Loops can be very long, or very short.
 # Controls
 | Control | Description | Comment |
 | --- | --- | --- |
-| Switch 1 | Play / Pause| |
-| Switch 2 | Record | Press to record/SOS. Hold to reset |
+| Switch 1 | Record | Press to record/SOS. Hold to reset |
+| Switch 2 | Play / Pause| |
 | Leds | Modes | Footswitch Led 1: Play, Footswitch Led 2: Record |
 | Knob 1 | Live In / Loop | Left is in, right is loop |
 

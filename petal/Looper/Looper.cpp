@@ -112,8 +112,8 @@ void Controls()
     UpdateButtons();
 
     //leds
-    petal.footswitch_led[0].Set(play);
-    petal.footswitch_led[1].Set(rec);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, play);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, rec);
    
     petal.UpdateLeds();
 }
