@@ -53,12 +53,11 @@ static void AudioCallback(float **in, float **out, size_t size)
             float sig = delays[d].Process(feedback, in[0][i]);
             mix += sig;
             //out[d][i] = sig * fdrywet + (1.f - fdrywet) * in[0][i];
-            out[d][i] = sig;
         }
 
         //apply drywet and attenuate
         mix = fdrywet * mix * .3f + (1.0f - fdrywet) * in[0][i];
-        out[3][i] = mix;
+        out[0][i] = out[1][i] = mix;
     }
 }
 
@@ -93,7 +92,7 @@ int main(void)
     petal.StartAudio(AudioCallback);
     while(1)
     {
-   } 
+    } 
 }
 
 void ProcessControls()
