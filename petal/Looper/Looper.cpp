@@ -51,7 +51,14 @@ int main(void)
     petal.StartAdc();
     petal.StartAudio(AudioCallback);
 
-    while(1) {}
+    while(1) 
+    {
+        //leds
+        petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, play);
+        petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, rec);
+        petal.UpdateLeds();
+        dsy_system_delay(16); // 60Hz
+    }
 }
 
 //Resets the buffer
@@ -111,11 +118,6 @@ void Controls()
 
     UpdateButtons();
 
-    //leds
-	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, play);
-	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, rec);
-   
-    petal.UpdateLeds();
 }
 
 void WriteBuffer(float* in, size_t i)
