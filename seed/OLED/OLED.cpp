@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "daisy_seed.h"
-#include "hid_oled_display.h"
 
 using namespace daisy;
 
