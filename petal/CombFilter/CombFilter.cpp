@@ -23,6 +23,8 @@ void AudioCallback(float **in, float **out, size_t size)
 	
     for (size_t i = 0; i < size; i++)
     {
+		comb.SetFreq(combFreqParam.Process() + (lfo.Process()) * 10);
+		
 		float inf  = in[0][i];
 		float process = comb.Process(in[0][i]);
 		out[0][i] = out[1][i] = fader.Process(inf, process); 
@@ -38,7 +40,7 @@ int main(void)
 	lfoFreqParam.Init(petal.knob[0], .1, 20, Parameter::LOGARITHMIC);
 	combFreqParam.Init(petal.knob[2], .01, 20, Parameter::LINEAR);
 
-	lfo.Init(petal.AudioCallbackRate());
+	lfo.Init(samplerate);
 	lfo.SetAmp(1);
 	lfo.SetWaveform(Oscillator::WAVE_SIN);
 
@@ -69,7 +71,6 @@ void UpdateControls()
 	//knobs
 	lfo.SetFreq(lfoFreqParam.Process());
 	lfo.SetAmp(petal.knob[1].Process());
-	comb.SetFreq(combFreqParam.Process() + (lfo.Process()) * 10);
 	
 	fader.SetPos(petal.knob[3].Process());
 	if (bypassOn)
