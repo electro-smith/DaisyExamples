@@ -22,6 +22,8 @@ void AudioCallback(float **in, float **out, size_t size)
 	
     for (size_t i = 0; i < size; i++)
     {
+		ps.SetTransposition(shiftTransParam.Process() + (lfo.Process()) * 12);
+
 		float inf  = in[0][i];
 		float process = ps.Process(in[0][i]);
 		out[0][i] = out[1][i] = fader.Process(inf, process); 
@@ -37,7 +39,7 @@ int main(void)
 	lfoFreqParam.Init(petal.knob[0], .1, 20, Parameter::LOGARITHMIC);
 	shiftTransParam.Init(petal.knob[2], -12, 12, Parameter::LINEAR);
 
-	lfo.Init(petal.AudioCallbackRate());
+	lfo.Init(samplerate);
 	lfo.SetAmp(1);
 	lfo.SetWaveform(Oscillator::WAVE_SIN);
 
@@ -62,8 +64,7 @@ void UpdateControls()
 	//knobs
 	lfo.SetFreq(lfoFreqParam.Process());
 	lfo.SetAmp(petal.knob[1].Process());
-	ps.SetTransposition(shiftTransParam.Process() + (lfo.Process()) * 12);
-	
+
 	fader.SetPos(petal.knob[3].Process());
 	if (bypassOn)
 	{
