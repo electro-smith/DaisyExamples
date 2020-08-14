@@ -4,40 +4,44 @@ Simple effects for incoming audio. Includes reverb, delay, downsampling, and aut
 # Controls
 | Control | Description | Comment |
 | --- | --- | --- |
-| Mode 1 | Reverb | Knob 3: Dry/wet. Knob 4: Reverb time |
-| Mode 2 | Delay | Knob 3: delay time. Knob 4: Feedback |
-| Mode 3 | Bitcrush / Lowpass | Knob 3: LPF cutoff Knob 4: Downsample |
-| Mode 4 | Autowah | Knob 3: Dry/Wet Knob 4: Wah Amount |
-| Encoder | Mode Select | |
-| Led | Mode Indicate | Leds rotate around encoder in 2s to indicate mode and knob values | 
-| Audio In | Effect In | |
-| Audio Out | Effect Out | |
+| Knob 1 | Reverb LP Freq | 20Hz - 10kHz |
+| Knob 2 | Reverb Time |  |
+| Knob 3 | Delay Time |  |
+| Knob 4 | Delay Amount |  |
+| Knob 5 | Crush Amount |  |
+| Knob 6 | Wah Amount |  |
+| Encoder | DryWet | Ring leds : brighter = more wet|
+| Footswitches | Effect On | Reverb, Delay, Crush, AutoWah
+| Audio In | Effects In | |
+| Audio Out | Effects Out | |
 
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/resources/MultiEffect.png" alt="Button_schem.png" style="width: 100%;"/>
 
 # Code Snippet  
 ```cpp  
-void GetReverbSample(float &outl, float &outr, float inl, float inr)
+void AudioCallback(float *in, float *out, size_t size)
 {
-    rev.Process(inl, inr, &outl, &outr);
-    outl = drywet * outl + (1 - drywet) * inl;
-    outr = drywet * outr + (1 - drywet) * inr;
-}
-
-......
-
-void GetCrushSample(float &outl, float &outr, float inl, float inr)
-{
-    crushcount++;
-    crushcount %= crushmod;
-    if (crushcount == 0)
+    Controls();
+    
+    //audio
+    for (size_t i = 0; i < size; i += 2)
     {
-        crushsr = inr;
-        crushsl = inl;
+        float sigl = in[i];
+        float sigr = in[i + 1];
+		
+		if(effectOn[0])
+			GetCrushSample(sigl, sigr);
+		if(effectOn[1])
+			GetWahSample(sigl, sigr);
+		if(effectOn[2])
+			GetDelaySample(sigl, sigr);		
+		if(effectOn[3])
+			GetReverbSample(sigl, sigr);
+	
+		out[i]   = sigl * dryWet + in[i] * (1 - dryWet);
+		out[i+1] = sigr * dryWet + in[i + 1] * (1 - dryWet);
     }
-    outl = tone.Process(crushsl);
-    outr = tone.Process(crushsr);
 }
 ```
 

@@ -3,15 +3,6 @@
 
 // Set max delay time to 0.75 of samplerate.
 #define MAX_DELAY static_cast<size_t>(48000 * 2.5f)
-enum 
-{
-    REV,
-    DEL,
-    CRU,
-    WAH,
-    FX_LAST,
-};
-
 
 using namespace daisysp;
 using namespace daisy;
@@ -21,15 +12,13 @@ static DaisyPetal  petal;
 static ReverbSc  rev;
 static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS dell;
 static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS delr;
-static Tone tone;
 static Autowah wah[2];
-static Parameter deltime, cutoffParam, crushrate;
-int mode = REV;
+static Parameter deltime, reverbLpParam, crushrate;
 
-float currentDelay, feedback, delayTarget, cutoff;
+float currentDelay, feedback, delayTarget, cutoff, dryWet;
 
 int crushmod, crushcount;
-float crushsl, crushsr, drywet;
+float crushsl, crushsr;
 bool effectOn[4];
 
 //Helper functions
@@ -39,30 +28,29 @@ void GetReverbSample(float &inl, float &inr);
 void GetDelaySample(float &inl, float &inr);
 void GetCrushSample(float &inl, float &inr);
 void GetWahSample(float &inl, float &inr);
-void UpdateLeds(float k1, float k2);
+void UpdateLeds();
   
 void AudioCallback(float *in, float *out, size_t size)
 {
-    float inl, inr;
-
     Controls();
     
     //audio
     for (size_t i = 0; i < size; i += 2)
     {
-        inl = in[i];
-        inr = in[i + 1];
+        float sigl = in[i];
+        float sigr = in[i + 1];
+		
+		if(effectOn[0])
+			GetCrushSample(sigl, sigr);
+		if(effectOn[1])
+			GetWahSample(sigl, sigr);
+		if(effectOn[2])
+			GetDelaySample(sigl, sigr);		
+		if(effectOn[3])
+			GetReverbSample(sigl, sigr);
 	
-        GetCrushSample(inl, inr);
-        GetWahSample(inl, inr);
-		GetDelaySample(inl, inr);		
-        GetReverbSample(inl, inr);
-	
-		// left out
-		out[i] = inl;
-	
-		// right out
-		out[i+1] = inr;
+		out[i]   = sigl * dryWet + in[i] * (1 - dryWet);
+		out[i+1] = sigr * dryWet + in[i + 1] * (1 - dryWet);
     }
 }
 
@@ -77,12 +65,11 @@ int main(void)
     rev.Init(sample_rate);
     dell.Init();
     delr.Init();
-    tone.Init(sample_rate);
     
     //set parameters
+	reverbLpParam.Init(petal.knob[0], 20, 10000, Parameter::LOGARITHMIC);
     deltime.Init(petal.knob[2], sample_rate * .05, MAX_DELAY, deltime.LOGARITHMIC);
-    cutoffParam.Init(petal.knob[2], 500, 20000, cutoffParam.LOGARITHMIC);
-    crushrate.Init(petal.knob[3], 1, 50, crushrate.LOGARITHMIC);
+    crushrate.Init(petal.knob[4], 1, 50, crushrate.LOGARITHMIC);
     
     //reverb parameters
     rev.SetLpFreq(18000.0f);
@@ -106,50 +93,33 @@ int main(void)
 
     while(1) 
 	{
-		float a, b;
-        a = petal.GetKnobValue(petal.KNOB_1);
-        b = petal.GetKnobValue(petal.KNOB_2);
-        UpdateLeds(a,b);
+        UpdateLeds();
         dsy_system_delay(6);
 	}
 }
 
-void UpdateKnobs(float &k1, float &k2)
+void UpdateKnobs()
 {
-    k1 = petal.knob[2].Process();
-    k2 = petal.knob[3].Process(); 
-    
-    switch (mode)
-    {
-        case REV:
-			drywet = k1;
-			rev.SetFeedback(k2);
-			break;
-        case DEL:
-			delayTarget = deltime.Process();
-			feedback = k2;
-			break;
-        case CRU:
-			cutoff = cutoffParam.Process();
-			tone.SetFreq(cutoff);
-			crushmod = (int) crushrate.Process();
-			break;
-		case WAH:
-			wah[0].SetDryWet(petal.knob[2].Process() * 100);
-			wah[0].SetWah(petal.knob[3].Process());
-			wah[1].SetDryWet(petal.knob[2].Process() * 100);
-			wah[1].SetWah(petal.knob[3].Process());
-			break;
-    }
+	rev.SetLpFreq(reverbLpParam.Process());
+	rev.SetFeedback(petal.knob[1].Process());
+
+	delayTarget = deltime.Process();
+	feedback = petal.knob[3].Process();
+
+	crushmod = (int) crushrate.Process();
+
+	wah[0].SetWah(petal.knob[5].Process());
+	wah[1].SetWah(petal.knob[5].Process());
 }
 
 void UpdateEncoder()
 {
-    mode = mode + petal.encoder.Increment();
-    mode = (mode % FX_LAST + FX_LAST) % FX_LAST;
+	dryWet += petal.encoder.Increment() * .05f;
+	dryWet = dryWet > 1.0f ? 1.0f : dryWet;
+	dryWet = dryWet < 0.0f ? 0.0f : dryWet;
 }
 
-void UpdateLeds(float k1, float k2)
+void UpdateLeds()
 {
 	petal.ClearLeds();
 	
@@ -157,10 +127,12 @@ void UpdateLeds(float k1, float k2)
 	{
 		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)i, effectOn[i]);
 	}
-	
-	petal.SetRingLed(static_cast<DaisyPetal::RingLed>(mode * 2), k1, 0.f, k1);
-    petal.SetRingLed(static_cast<DaisyPetal::RingLed>((mode * 2) + 1), k2, 0.f, k2);
-    
+	    
+	for (int i = 0; i < 8; i++)
+	{
+		petal.SetRingLed((DaisyPetal::RingLed)i, dryWet, dryWet, 0.f);
+	}
+		
     petal.UpdateLeds();
 }
 
@@ -174,14 +146,11 @@ void UpdateSwitches()
 }
 
 void Controls()
-{
-    float k1, k2;
-    delayTarget = feedback = drywet = 0;
-    
+{   
     petal.UpdateAnalogControls();
     petal.DebounceControls();
 
-    UpdateKnobs(k1, k2);
+    UpdateKnobs();
 
     UpdateEncoder();
 	
@@ -190,10 +159,7 @@ void Controls()
 
 void GetReverbSample(float &inl, float &inr)
 {
-	float outl, outr;
-    rev.Process(inl, inr, &outl, &outr);
-    inl = drywet * outl + (1 - drywet) * inl;
-    inr = drywet * outr + (1 - drywet) * inr;
+    rev.Process(inl, inr, &inl, &inr);
 }
 
 void GetDelaySample(float &inl, float &inr)
@@ -220,8 +186,6 @@ void GetCrushSample(float &inl, float &inr)
 		crushsr = inr;
 		crushsl = inl;
     }
-    inl = tone.Process(crushsl);
-    inr = tone.Process(crushsr);
 }
 
 void GetWahSample(float &inl, float &inr)
