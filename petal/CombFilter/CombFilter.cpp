@@ -72,7 +72,9 @@ void UpdateControls()
 	lfo.SetFreq(lfoFreqParam.Process());
 	lfo.SetAmp(petal.knob[1].Process());
 	
-	fader.SetPos(petal.knob[3].Process());
+	comb.SetRevTime(petal.knob[3].Process());
+	
+	fader.SetPos(petal.knob[4].Process());
 	if (bypassOn)
 	{
 		fader.SetPos(0);
