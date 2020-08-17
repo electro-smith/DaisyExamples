@@ -145,11 +145,11 @@ void UpdateButtons()
 {
   if (edit)
     {
-        if (pod.button1.RisingEdge())
+        if (pod.button2.RisingEdge())
 	{
 	    active[step] = !active[step];
 	}
-	if (pod.button2.RisingEdge())
+	if (pod.button1.RisingEdge())
 	{
 	    editCycle = !editCycle;
 	}
