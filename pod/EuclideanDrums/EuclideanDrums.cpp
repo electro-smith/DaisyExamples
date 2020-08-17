@@ -1,17 +1,3 @@
-// This example builds on the drum example from the daisy seed, utilizing its two simple drum voices
-// It adds two simple euclidean rhythm sequencers, one for each voice.
-//
-// Turn the encoder to select the euclidean sequencer (snare or kick).
-// If led 2 is green you're editing the kick. If led2 is blue, you're editing the snare.
-//
-// Knob one changes the pattern density, how many hits to distribute throughout it.
-// Knob two changes the pattern length, from 1 to 32 steps.
-// Since the two sequencers run independently, they can have different lengths leading to complex interlocking patterns
-//
-// The buttons set tempo. Hold button one to increase tempo, and hold button two to decrease.
-// The brightness of red led1 indicates the tempo.
-//
-
 #include "daisy_pod.h"
 #include "daisysp.h"
 
@@ -109,7 +95,7 @@ int main(void)
     
     tick.Init(5, callbackrate);
 
-    lengthParam.Init(hardware.knob2, 1, 32, lengthParam.LINEAR);
+    lengthParam.Init(hardware.knob2, 1, 33, lengthParam.LINEAR);
     
     hardware.StartAdc();
     hardware.StartAudio(AudioCallback);
@@ -215,7 +201,7 @@ void UpdateKnobs()
 {
     float k1 = hardware.knob1.Process();
     float k2 = hardware.knob2.Process();
-    
+    	
     if (mode)
     {
         ConditionalParameter(k1old, k1, snareAmount, k1);
