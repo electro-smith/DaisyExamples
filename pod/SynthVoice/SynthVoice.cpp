@@ -175,12 +175,12 @@ void UpdateLeds()
 
 void UpdateButtons()
 {
-    if (pod.button2.RisingEdge() || (selfCycle && !ad.IsRunning()))
+    if (pod.button1.RisingEdge() || (selfCycle && !ad.IsRunning()))
     {
   	ad.Trigger();
     }
 
-    if (pod.button1.RisingEdge())
+    if (pod.button2.RisingEdge())
     {
         selfCycle = !selfCycle;
     }
