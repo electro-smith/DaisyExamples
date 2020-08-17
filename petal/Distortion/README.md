@@ -1,13 +1,18 @@
 # Description
-Distorts incoming signal
+Distorts incoming signal. There are two stages, a soft clip and a hard clip. Turn on one or both.  
+Signal path is: (pregain) -> (soft clip) -> (gain) -> (hard clip) -> (output)  
 
 # Controls
 | Control | Description | Comment |
 | --- | --- | --- |
-| Knob 1 | Gain  | More gain = more distortion |
-| Knob 2 | Dry/Wet control |
-| In 1 | Distortion In | |
-| Out 1 - 2 | Distortion Output | |
+| Knob 1 | Pregain| Give the signal a small boost |
+| Knob 2 | Gain | Give the signal a BIG boost | 
+| Knob 3 | Dry/wet Control | |
+| Footswitch 1 | Turn soft distortion on/off | |
+| Footswitch 2 | Turn hard distortion on/off | |
+| Leds | If the LED is on, that distortion stage is on | |
+| In 1 -2  | Stereo Distortion In | |
+| Out 1 - 2 | Stereo Distortion Out | |
 
 # Code Snippet  
 ```cpp    

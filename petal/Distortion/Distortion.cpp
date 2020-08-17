@@ -37,16 +37,16 @@ static void AudioCallback(float **in, float **out, size_t size)
 		for (int chn = 0; chn < 2; chn++)
 		{
 			float wet = in[chn][i];
-			
+
+			wet *= softGain;
 			if (!bypassSoft)
 			{
-				wet *= softGain;
 				wet = softClip(wet);
 			}
 		
+			wet *= hardGain;
 			if (!bypassHard)
 			{
-				wet *= hardGain;
 				wet = hardClip(wet);
 			}
 			
