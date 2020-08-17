@@ -1,6 +1,6 @@
 # Daisy_Examples
 
-If you are just getting started with Daisy, check out our [Getting Started Wiki page!](https://github.com/electro-smith/DaisyWiki/wiki/1.-Getting-Started)
+If you are just getting started with Daisy, check out our [Getting Started Wiki page!](https://github.com/electro-smith/DaisyWiki/wiki)
 
 This repo is home to a functional pipeline utilizing libDaisy and DaisySP libraries.
 

@@ -2,10 +2,14 @@
 A simple sine wave chord machine. Cycle through different chord types and inversions.
 
 # Controls
-Turning the left knob changes the root pitch, and therefore shifts the whole chord.  
-Turning the right knob changes the inversion, from 0 through 4.  
-Pressing the encoder resets to the first chord.  
-Rotate the encoder to cycle through different chord types. Led color indicates the chord.
+| Control | Description | Comment |
+| --- | --- | --- |
+| Knob 1 | Root pitch | Shifts the whole chord |
+| Knob 2 | Inversion | 0 – 4 |
+| Encoder | Rotate: Cycle through different chord types<br>Press: Reset to the first chord | |
+| LED | Chord indicator | |
+
+### Chord types
   1. Major triad, Red
   2. Minor triad, Green
   3. Augmented triad, Blue
@@ -19,7 +23,7 @@ Rotate the encoder to cycle through different chord types. Led color indicates t
 
 # Code Snippet
     void UpdateKnobs()
-    {   
+    {
         int freq = (int) p_freq.Process(); 
         int inversion = (int) p_inversion.Process();
         
