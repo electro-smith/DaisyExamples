@@ -72,7 +72,7 @@ void ResetBuffer()
 void UpdateButtons()
 {
     //button1 pressed
-    if(pod.button1.RisingEdge())
+    if(pod.button2.RisingEdge())
     {
         if(first && rec)
         {
@@ -87,14 +87,14 @@ void UpdateButtons()
     }
 
     //button1 held
-    if(pod.button1.TimeHeldMs() >= 1000 && res)
+    if(pod.button2.TimeHeldMs() >= 1000 && res)
     {
         ResetBuffer();
 	res = false;
     }
     
     //button2 pressed and not empty buffer
-    if(pod.button2.RisingEdge() && !(!rec && first))
+    if(pod.button1.RisingEdge() && !(!rec && first))
     {
         play = !play;
 	rec = false;
