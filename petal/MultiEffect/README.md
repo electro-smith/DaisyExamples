@@ -1,5 +1,5 @@
 # Description
-Simple effects for incoming audio. Includes reverb, delay, downsampling, and autowah.
+Simple effects for incoming audio. Includes reverb, delay, downsampling, and autowah.  
 
 # Controls
 | Control | Description | Comment |
@@ -10,8 +10,10 @@ Simple effects for incoming audio. Includes reverb, delay, downsampling, and aut
 | Knob 4 | Delay Amount |  |
 | Knob 5 | Crush Amount |  |
 | Knob 6 | Wah Amount |  |
-| Encoder | DryWet | Ring leds : brighter = more wet|
-| Footswitches | Effect On | Reverb, Delay, Crush, AutoWah
+| Encoder Turn | Dry/Wet | |
+| Encoder Press | Effect Dry/Wet | Select which effect's dry/wet to change, or master dry/wet control |
+| Ring Leds | Dry/Wet Indicator | Crush = Red, Wah = Green, Delay = Blue, Reverb = Yellow, Master = White |
+| Footswitches | Effect On | Reverb, Delay, Crush, AutoWah |
 | Audio In | Effects In | |
 | Audio Out | Effects Out | |
 
@@ -27,20 +29,29 @@ void AudioCallback(float *in, float *out, size_t size)
     //audio
     for (size_t i = 0; i < size; i += 2)
     {
-        float sigl = in[i];
-        float sigr = in[i + 1];
+		float sigl = in[i];
+		float sigr = in[i + 1];
 		
-		if(effectOn[0])
-			GetCrushSample(sigl, sigr);
-		if(effectOn[1])
-			GetWahSample(sigl, sigr);
-		if(effectOn[2])
-			GetDelaySample(sigl, sigr);		
-		if(effectOn[3])
-			GetReverbSample(sigl, sigr);
+		for (int eff = 0; eff < REV; eff++)
+		{
+			float oldSigL = sigl;
+			float oldSigR = sigr;
+			
+			if(effectOn[eff])
+			{
+				GetSample(sigl, sigr, (effectTypes)eff); 
+			}
+			
+			sigl = sigl * dryWet[eff] + oldSigL * (1 - dryWet[eff]);
+			sigl = sigr * dryWet[eff] + oldSigR * (1 - dryWet[eff]);
+		}
 	
-		out[i]   = sigl * dryWet + in[i] * (1 - dryWet);
-		out[i+1] = sigr * dryWet + in[i + 1] * (1 - dryWet);
+		float verbl = sigl * dryWet[REV];
+		float verbr = sigr * dryWet[REV];
+		GetReverbSample(verbl, verbr);
+		
+		out[i]   = sigl * dryWet[ALL] + in[i]     * (1 - dryWet[ALL]) + verbl;
+		out[i+1] = sigr * dryWet[ALL] + in[i + 1] * (1 - dryWet[ALL]) + verbr;
     }
 }
 ```
