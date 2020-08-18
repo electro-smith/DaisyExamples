@@ -1,5 +1,5 @@
-#include "daisy_pod.h"
 #include "daisysp.h"
+#include "daisy_pod.h"
 
 #define UINT32_MSB 0x80000000U
 #define MAX_LENGTH 32U
@@ -159,6 +159,11 @@ void SetArray(bool* seq, int arrayLen, float density)
 	
 	int oneArr[ones];
 	int zeroArr[ones];	
+
+    for (int i = 0; i < ones; i++)
+    {
+        oneArr[i] = zeroArr[i] = 0;
+    }
 	
 	//how many zeroes per each one
 	int idx = 0;
@@ -190,18 +195,18 @@ void SetArray(bool* seq, int arrayLen, float density)
 	idx = 0;
 	for (int i = 0; i < (ones - rem); i++)
 	{
-		//seq[idx] = 1;
+		seq[idx] = 1;
 		idx++;
 		
 		for (int j = 0; j < zeroArr[i]; j++)
 		{
-			//seq[idx] = 0;
+			seq[idx] = 0;
 			idx++;
 		}
 		
 		for (int j = 0; j < oneArr[i]; j++)
 		{
-			//seq[idx] = 1;
+			seq[idx] = 1;
 			idx++;
 		}
 	}
