@@ -15,21 +15,51 @@ static DelayLine <float, MAX_DELAY>  DSY_SDRAM_BSS delr;
 static Autowah wah[2];
 static Parameter deltime, reverbLpParam, crushrate;
 
-float currentDelay, feedback, delayTarget, cutoff, dryWet;
+float currentDelay, feedback, delayTarget, cutoff, dryWet[5];
 
 int crushmod, crushcount;
-float crushsl, crushsr;
+float crushl, crushr;
 bool effectOn[4];
 
 //Helper functions
 void Controls();
+void UpdateLeds();
 
-void GetReverbSample(float &inl, float &inr);
-void GetDelaySample(float &inl, float &inr);
 void GetCrushSample(float &inl, float &inr);
 void GetWahSample(float &inl, float &inr);
-void UpdateLeds();
+void GetDelaySample(float &inl, float &inr);
+void GetReverbSample(float &inl, float &inr);
+
+
+enum effectTypes
+{
+	CRUSH,
+	WAH,
+	DEL,
+	REV,
+	ALL,
+	LAST,
+};
+effectTypes dryWetMode;
   
+void GetSample(float &inl, float &inr, effectTypes type)
+{
+	switch(type)
+	{
+		case CRUSH:
+			GetCrushSample(inl, inr);
+			break;
+		case WAH:
+			GetWahSample(inl, inr);
+			break;
+		case DEL:
+			GetDelaySample(inl, inr);
+			break;
+		default:
+			break;
+	}
+}
+
 void AudioCallback(float *in, float *out, size_t size)
 {
     Controls();
@@ -37,20 +67,29 @@ void AudioCallback(float *in, float *out, size_t size)
     //audio
     for (size_t i = 0; i < size; i += 2)
     {
-        float sigl = in[i];
-        float sigr = in[i + 1];
+		float sigl = in[i];
+		float sigr = in[i + 1];
 		
-		if(effectOn[0])
-			GetCrushSample(sigl, sigr);
-		if(effectOn[1])
-			GetWahSample(sigl, sigr);
-		if(effectOn[2])
-			GetDelaySample(sigl, sigr);		
-		if(effectOn[3])
-			GetReverbSample(sigl, sigr);
+		for (int eff = 0; eff < REV; eff++)
+		{
+			float oldSigL = sigl;
+			float oldSigR = sigr;
+			
+			if(effectOn[eff])
+			{
+				GetSample(sigl, sigr, (effectTypes)eff); 
+			}
+			
+			sigl = sigl * dryWet[eff] + oldSigL * (1 - dryWet[eff]);
+			sigl = sigr * dryWet[eff] + oldSigR * (1 - dryWet[eff]);
+		}
 	
-		out[i]   = sigl * dryWet + in[i] * (1 - dryWet);
-		out[i+1] = sigr * dryWet + in[i + 1] * (1 - dryWet);
+		float verbl = sigl * dryWet[REV];
+		float verbr = sigr * dryWet[REV];
+		GetReverbSample(verbl, verbr);
+		
+		out[i]   = sigl * dryWet[ALL] + in[i]     * (1 - dryWet[ALL]) + verbl;
+		out[i+1] = sigr * dryWet[ALL] + in[i + 1] * (1 - dryWet[ALL]) + verbr;
     }
 }
 
@@ -67,7 +106,7 @@ int main(void)
     delr.Init();
     
     //set parameters
-	reverbLpParam.Init(petal.knob[0], 20, 10000, Parameter::LOGARITHMIC);
+	reverbLpParam.Init(petal.knob[0], 400, 22000, Parameter::LOGARITHMIC);
     deltime.Init(petal.knob[2], sample_rate * .05, MAX_DELAY, deltime.LOGARITHMIC);
     crushrate.Init(petal.knob[4], 1, 50, crushrate.LOGARITHMIC);
     
@@ -87,6 +126,8 @@ int main(void)
 	
 	effectOn[0] = effectOn[1] = effectOn[2] = effectOn[3] = false;
 	
+	dryWetMode = CRUSH;
+	
     // start callback
     petal.StartAdc();
     petal.StartAudio(AudioCallback);
@@ -94,7 +135,7 @@ int main(void)
     while(1) 
 	{
         UpdateLeds();
-        dsy_system_delay(6);
+		dsy_system_delay(6);
 	}
 }
 
@@ -114,26 +155,55 @@ void UpdateKnobs()
 
 void UpdateEncoder()
 {
-	dryWet += petal.encoder.Increment() * .05f;
-	dryWet = dryWet > 1.0f ? 1.0f : dryWet;
-	dryWet = dryWet < 0.0f ? 0.0f : dryWet;
+	//press
+	if (petal.encoder.RisingEdge())
+	{
+		dryWetMode = (effectTypes)(dryWetMode + 1);
+		dryWetMode = (effectTypes)(dryWetMode % LAST);
+	}
+	
+	//turn
+	dryWet[dryWetMode] += petal.encoder.Increment() * .05f;
+	dryWet[dryWetMode] = dryWet[dryWetMode] > 1.0f ? 1.0f : dryWet[dryWetMode];
+	dryWet[dryWetMode] = dryWet[dryWetMode] < 0.0f ? 0.0f : dryWet[dryWetMode];
 }
 
 void UpdateLeds()
 {
 	petal.ClearLeds();
 	
+	//footswitch leds
 	for (int i = 0; i < 4; i++)
 	{
 		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)i, effectOn[i]);
-	}
-	    
-	for (int i = 0; i < 8; i++)
-	{
-		petal.SetRingLed((DaisyPetal::RingLed)i, dryWet, dryWet, 0.f);
-	}
+	}	
 		
-    petal.UpdateLeds();
+	//ring leds
+	int32_t whole;
+    float   frac;
+    whole = (int32_t)(dryWet[dryWetMode] / .125f);
+    frac  = dryWet[dryWetMode] / .125f - whole;
+   
+    // Set full bright
+    for(int i = 0; i < whole; i++)
+    {
+        petal.SetRingLed(
+        static_cast<DaisyPetal::RingLed>(i), 		                 
+						 (dryWetMode == CRUSH || dryWetMode == REV || dryWetMode == ALL) * 1.f,  //red
+						 (dryWetMode == WAH || dryWetMode == ALL) * 1.f,                            //green
+						 (dryWetMode == DEL || dryWetMode == REV || dryWetMode == ALL) * 1.f); //blue
+    }
+
+    // Set Frac
+    if(whole < 7 && whole > 0)
+	{
+        petal.SetRingLed(static_cast<DaisyPetal::RingLed>(whole - 1), 
+		                 (dryWetMode == CRUSH || dryWetMode == REV || dryWetMode == ALL) * frac,  //red
+						 (dryWetMode == WAH || dryWetMode == ALL) * frac,                            //green
+						 (dryWetMode == DEL || dryWetMode == REV || dryWetMode == ALL) * frac); //blue
+    }
+	
+	petal.UpdateLeds();
 }
 
 void UpdateSwitches()
@@ -183,9 +253,12 @@ void GetCrushSample(float &inl, float &inr)
     crushcount %= crushmod;
     if (crushcount == 0)
     {
-		crushsr = inr;
-		crushsl = inl;
+		crushr = inr;
+		crushl = inl;
     }
+	
+	inr = crushr;
+	inl = crushl;
 }
 
 void GetWahSample(float &inl, float &inr)
