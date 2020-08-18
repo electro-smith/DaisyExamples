@@ -16,18 +16,13 @@ AdEnv kickVolEnv, kickPitchEnv, snareEnv;
 Metro tick;
 Parameter lengthParam;
 
-uint32_t kickSeq =  0b10001000100010001000100010001000U;
-uint32_t snareSeq = 0b00001000000010010000100001101101U;
+bool kickSeq[MAX_LENGTH];
+bool snareSeq[MAX_LENGTH];
 uint8_t kickStep = 0;
 uint8_t snareStep = 0;
 
 void ProcessTick();
-
 void ProcessControls();
-
-uint32_t Bjork(uint32_t* array, int arrayLen);
-
-void SetArray(uint32_t* array, int zeroes, int ones);
 
 void AudioCallback(float* in, float* out, size_t size)
 {
@@ -84,6 +79,14 @@ void SetupDrums(float samplerate)
     kickVolEnv.SetMin(0);
 }
 
+void SetSeq(bool* seq, bool in)
+{
+	for (uint32_t i = 0; i < MAX_LENGTH; i++)
+	{
+		seq[i] = in;
+	}
+}
+
 int main(void)
 {
     hardware.Init();
@@ -95,8 +98,11 @@ int main(void)
     
     tick.Init(5, callbackrate);
 
-    lengthParam.Init(hardware.knob2, 1, 33, lengthParam.LINEAR);
+    lengthParam.Init(hardware.knob2, 1, 32, lengthParam.LINEAR);
     
+	SetSeq(snareSeq, 0);
+	SetSeq(kickSeq, 0);
+	
     hardware.StartAdc();
     hardware.StartAudio(AudioCallback);
     
@@ -106,77 +112,99 @@ int main(void)
 
 float snareLength = 32.f;
 float kickLength = 32.f;
-void IncrementSteps(int& snareOffset, int& kickOffset)
+
+void IncrementSteps()
 {
     snareStep++;
     kickStep++;
-    snareStep %= (int)snareLength;
-    snareOffset = 32 - snareLength;
-    
+    snareStep %= (int)snareLength;    
     kickStep %= (int)kickLength;
-    kickOffset = 32 - kickLength; 
 }
 
 void ProcessTick()
 {
     if (tick.Process())
     {
-        int snareOffset, kickOffset;
-	IncrementSteps(snareOffset, kickOffset);
+		IncrementSteps();
+		
+		if (kickSeq[kickStep])
+		{
+			kickVolEnv.Trigger();
+			kickPitchEnv.Trigger();
+		}
+		
+		if (snareSeq[snareStep])
+		{
+			snareEnv.Trigger();
+		}
+    }
+    
+}
+
+void SetArray(bool* seq, int arrayLen, float density)
+{
+	SetSeq(seq, 0);
 	
-	if ((kickSeq << (kickStep + kickOffset)) & UINT32_MSB)
+	int ones = (int)round(arrayLen * density);
+	int zeros = arrayLen - ones;
+	
+	if(ones == 0)
+		return;
+	
+	if (zeros == 0)
 	{
-	    kickVolEnv.Trigger();
-	    kickPitchEnv.Trigger();
+		SetSeq(seq, 1);
+		return;
 	}
 	
-	if ((snareSeq << (snareStep + snareOffset)) & UINT32_MSB)
-        {
-	    snareEnv.Trigger();
-	}
-    }
-    
-}
-
-uint32_t Msb(uint32_t number)
-{
-    for (int i = 15; i >=0; i--)
-    {
-        if ((number >> i) & 1)
+	int oneArr[ones];
+	int zeroArr[ones];	
+	
+	//how many zeroes per each one
+	int idx = 0;
+	for (int i = 0; i < zeros; i++)
 	{
-	    return (uint32_t)(i + 1);
+		zeroArr[idx] += 1;
+		idx++;
+		idx %= ones;
 	}
-    }
-    return 1;
-}
-
-uint32_t Bjork(uint32_t* array, int arrayLen)
-{
-    if (arrayLen == 1)
-    {
-        return array[0];
-    }
-    
-    for (int i = 0; i < arrayLen / 2; i++)
-    {
-        uint32_t secondLen = Msb(array[arrayLen - i - 1]);
-        array[i] = (array[i] << secondLen) + array[arrayLen - i - 1];
-    }
-    
-    int odd = arrayLen % 2;
-    return Bjork(array, arrayLen / 2 + odd);
-}
-
-void SetArray(uint32_t* array, int zeroes, int ones)
-{
-    for (int i = 0; i < ones; i++)
-    {
-	array[i] = 1;
-    }
-    for (int i = 0; i < zeroes; i++)
-    {
-	array[i + ones] = 0;
-    }
+	
+	//how many ones remain
+	int rem = 0;
+	for (int i = 0; i < ones; i++)
+	{
+		if(zeroArr[i] == 0)
+			rem++;
+	}
+	
+	//how many ones on each prior one
+	idx = 0;
+	for (int i = 0; i < rem; i++)
+	{
+		oneArr[idx] += 1;
+		idx++;
+		idx %= ones - rem;
+	}
+	
+	//fill the global seq
+	idx = 0;
+	for (int i = 0; i < (ones - rem); i++)
+	{
+		//seq[idx] = 1;
+		idx++;
+		
+		for (int j = 0; j < zeroArr[i]; j++)
+		{
+			//seq[idx] = 0;
+			idx++;
+		}
+		
+		for (int j = 0; j < oneArr[i]; j++)
+		{
+			//seq[idx] = 1;
+			idx++;
+		}
+	}
 }
 
 uint8_t mode = 0;
@@ -204,13 +232,13 @@ void UpdateKnobs()
     	
     if (mode)
     {
-        ConditionalParameter(k1old, k1, snareAmount, k1);
-	ConditionalParameter(k2old, k2, snareLength, lengthParam.Process());
+		ConditionalParameter(k1old, k1, snareAmount, k1);
+		ConditionalParameter(k2old, k2, snareLength, lengthParam.Process());
     }
     else
     {
-	ConditionalParameter(k1old, k1, kickAmount, k1);
-	ConditionalParameter(k2old, k2, kickLength, lengthParam.Process());
+		ConditionalParameter(k1old, k1, kickAmount, k1);
+		ConditionalParameter(k2old, k2, kickLength, lengthParam.Process());
     }
     
     k1old = k1;
@@ -220,13 +248,13 @@ void UpdateKnobs()
 float tempo = 3;
 void UpdateButtons()
 {
-    if (hardware.button1.Pressed())
+    if (hardware.button2.Pressed())
     {
         tempo += .003;
 	
     }
     
-    else if (hardware.button2.Pressed())
+    else if (hardware.button1.Pressed())
     {
         tempo -= .003;
     }
@@ -240,17 +268,8 @@ void UpdateButtons()
 
 void UpdateVars()
 {
-    uint32_t snareArray[(int)snareLength];
-    uint32_t Ones = (uint32_t)round(snareAmount * snareLength);
-    uint32_t Zeroes = (int)snareLength - Ones;
-    SetArray(snareArray, Zeroes, Ones);
-    snareSeq = Bjork(snareArray, (int)snareLength);
-    
-    uint32_t kickArray[(int)kickLength];
-    Ones = (uint32_t)round(kickAmount * kickLength);
-    Zeroes = (int)kickLength - Ones;
-    SetArray(kickArray, Zeroes, Ones);
-    kickSeq = Bjork(kickArray, (int)kickLength);
+    SetArray(snareSeq, (int)round(snareLength), snareAmount);
+    SetArray(kickSeq, (int)round(kickLength), kickAmount);    
 }
 
 void ProcessControls()
