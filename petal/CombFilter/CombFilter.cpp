@@ -12,8 +12,9 @@ CrossFade fader;
 bool bypassOn;
 float buf[9600];
 
-Parameter lfoFreqParam;
-Parameter combFreqParam;
+Parameter lfoFreqParam, lfoAmpParam;
+Parameter combFreqParam, combRevParam;
+Parameter faderPosParam;
 
 void UpdateControls();
 
@@ -23,7 +24,7 @@ void AudioCallback(float **in, float **out, size_t size)
 	
     for (size_t i = 0; i < size; i++)
     {
-		comb.SetFreq(combFreqParam.Process() + (lfo.Process()) * 10);
+		comb.SetFreq(combFreqParam.Value() + lfo.Process());
 		
 		float inf  = in[0][i];
 		float process = comb.Process(in[0][i]);
@@ -37,8 +38,11 @@ int main(void)
     petal.Init();
     samplerate = petal.AudioSampleRate();
 
-	lfoFreqParam.Init(petal.knob[0], .1, 20, Parameter::LOGARITHMIC);
+	lfoFreqParam.Init(petal.knob[0], 10, 20000, Parameter::LOGARITHMIC);
+	lfoAmpParam.Init(petal.knob[1], 0, 10, Parameter::LINEAR);
 	combFreqParam.Init(petal.knob[2], .01, 20, Parameter::LINEAR);
+	combRevParam.Init(petal.knob[3], 0, 1, Parameter::LINEAR);
+	faderPosParam.Init(petal.knob[4], 0, 1, Parameter::LINEAR);
 
 	lfo.Init(samplerate);
 	lfo.SetAmp(1);
@@ -59,22 +63,23 @@ int main(void)
     while(1) 
     {
 		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, bypassOn);
+		petal.UpdateLeds();
 		dsy_system_delay(6);
 	}
 }
 
 void UpdateControls()
 {
-	petal.UpdateAnalogControls();
 	petal.DebounceControls();
 
 	//knobs
 	lfo.SetFreq(lfoFreqParam.Process());
-	lfo.SetAmp(petal.knob[1].Process());
+	lfo.SetAmp(lfoAmpParam.Process());
+	combFreqParam.Process();
 	
-	comb.SetRevTime(petal.knob[3].Process());
+	comb.SetRevTime(combRevParam.Process());
 	
-	fader.SetPos(petal.knob[4].Process());
+	fader.SetPos(faderPosParam.Process());
 	if (bypassOn)
 	{
 		fader.SetPos(0);
