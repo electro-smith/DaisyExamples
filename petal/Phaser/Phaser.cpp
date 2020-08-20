@@ -1,7 +1,7 @@
 #include "daisy_petal.h"
 #include "daisysp.h" 
 
-#define ALLPASS_STAGES 4
+#define ALLPASS_STAGES 1
 #define BUFFER_SIZE 9600
 
 using namespace daisy;
@@ -11,13 +11,17 @@ DaisyPetal hw;
 Oscillator lfo;
 Allpass filt[ALLPASS_STAGES];
 float buff[ALLPASS_STAGES][BUFFER_SIZE];
+float depth;
+float filterFreq;
 
 float UpdateFilters(float in)
 {
-	float lfoSignal = lfo.Process() + .01;
+	float lfoSignal = lfo.Process() + .5;
+	fonepole(filterFreq, lfoSignal, .01f);
+	
 	for (int i = 0; i < ALLPASS_STAGES; i++)
 	{
-		filt[i].SetFreq(lfoSignal);
+		filt[i].SetFreq(filterFreq);
 		in = filt[i].Process(in);
 	}
 	
@@ -28,7 +32,7 @@ void callback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
-		in[0][i] += UpdateFilters(in[0][i]);
+		in[0][i] += depth * UpdateFilters(in[0][i]);
 		in[0][i] *= .5f;
 		out[0][i] = out[1][i] = in[0][i];
     }
@@ -54,10 +58,13 @@ int main(void)
 	
 	lfo.Init(samplerate);
 	lfo.SetFreq(1);
-	lfo.SetAmp(.01);
+	lfo.SetAmp(.5);
 	lfo.SetWaveform(Oscillator::WAVE_SIN);
 	
 	InitFilters(samplerate);
+
+	filterFreq = 0.f;
+	depth = .5f;
 
     hw.StartAdc();
     hw.StartAudio(callback);
