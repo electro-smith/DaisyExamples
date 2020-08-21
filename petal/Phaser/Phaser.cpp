@@ -2,21 +2,30 @@
 #include "daisysp.h" 
 
 #define FILT_STAGES 4
-#define BUFFER_SIZE 9600
 
 using namespace daisy;
 using namespace daisysp;
 
 DaisyPetal hw;
 Oscillator lfo;
-Svf filt[FILT_STAGES];
-float buff[FILT_STAGES][BUFFER_SIZE];
-float depth;
-float filterFreq;
 
-float UpdateFilters(float in)
+Svf filt[FILT_STAGES];
+
+bool bypass;
+
+void ProcessControls(float& depth)
 {
-	float lfoSignal = lfo.Process() + 10000;
+	//knobs
+	depth = hw.knob[0].Process() * 3.f;
+	lfo.SetFreq(hw.knob[1].Process() * 10);
+
+	//bypass
+	bypass = hw.switches[0].RisingEdge() ? !bypass : bypass;
+}
+
+float UpdateFilters(float in, float lfoSignal)
+{
+	
 	
 	for (int i = 0; i < FILT_STAGES; i++)
 	{
@@ -30,27 +39,33 @@ float UpdateFilters(float in)
 
 void callback(float **in, float **out, size_t size)
 {
+	float depth;
+	ProcessControls(depth);
+	
     for (size_t i = 0; i < size; i++)
     {
-		in[0][i] = depth * UpdateFilters(in[0][i]);
-		in[0][i] *= .5f;
-		out[0][i] = out[1][i] = in[0][i];
+		float lfoSignal = lfo.Process() + 2500; //0Hz - 5kHz
+		
+		for (int chn = 0; chn < 2; chn++)
+		{
+			if (! bypass)
+			{
+				in[chn][i] += depth * UpdateFilters(in[0][i], lfoSignal);
+				in[chn][i] *= .25f;
+			}
+			
+			out[chn][i] = in[chn][i];
+		}
     }
 }
 
 void InitFilters(float samplerate)
 {
 	for (int i = 0; i < FILT_STAGES; i++)
-	{
-		for (int j = 0; j < BUFFER_SIZE; j++)
-		{
-			buff[i][j] = 0.f;
-		}
-	
-		//filt[i].Init(samplerate, buff[i], BUFFER_SIZE);
+	{	
 		filt[i].Init(samplerate);
-		filt[i].SetRes(.8);
-		filt[i].SetDrive(.5);
+		filt[i].SetRes(0);
+		filt[i].SetDrive(0);
 	}
 }
 
@@ -61,18 +76,27 @@ int main(void)
 	
 	lfo.Init(samplerate);
 	lfo.SetFreq(1);
-	lfo.SetAmp(10000);
+	lfo.SetAmp(2500);
 	lfo.SetWaveform(Oscillator::WAVE_SIN);
 	
 	InitFilters(samplerate);
 
-	depth = .5f;
+	bypass = false;
 
     hw.StartAdc();
     hw.StartAudio(callback);
-    while(1) 
+    
+	int i = 0;
+	while(1) 
     {
-        dsy_system_delay(6);
-        hw.UpdateLeds();
+        dsy_system_delay(300);
+		hw.ClearLeds();
+		hw.SetRingLed((DaisyPetal::RingLed)i, 1.f, 0.f, 0.f);
+		i++;
+        i %= 8;
+		
+		hw.SetFootswitchLed((DaisyPetal::FootswitchLed)0, bypass);
+		
+		hw.UpdateLeds();
     }
 }
