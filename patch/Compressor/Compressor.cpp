@@ -16,14 +16,27 @@ Parameter threshParam, ratioParam, attackParam, releaseParam;
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
+    float sig;
+    float dry_in, dry_sidechain;
     UpdateControls();
     
+    // Scales input by 2 and then the output by 0.5 
+    // This is because there are 6dB of headroom on the daisy 
+    // and currently no way to tell where '0dB' is supposed to be
     for (size_t i = 0; i < size; i ++)
     {
-	float sig = isSideChained ? comp.Process(in[0][i], in[1][i]) : comp.Process(in[0][i]);
-	
-	out[0][i] = out[1][i] = sig;
-	out[2][i] = out[3][i] = sig;
+        dry_in = in[0][i] * 2.0f;
+        dry_sidechain = in[1][i] * 2.0f;
+
+        sig = isSideChained ? 
+              comp.Process(dry_in, dry_sidechain) : 
+              comp.Process(dry_in);
+
+        // Writes output to all four outputs.
+        for (size_t chn = 0; chn < 4; chn++)
+        {
+            out[chn][i] = sig * 0.5f;
+        }
     }
 }
 
@@ -39,9 +52,9 @@ int main(void)
 
     //parameter parameters
     threshParam.Init(patch.controls[0], -80.0f, 0.f, Parameter::LINEAR);
-    ratioParam.Init(patch.controls[1], 1.f, 40.f, Parameter::LINEAR);
-    attackParam.Init(patch.controls[2], 0.001f, 1.f, Parameter::EXPONENTIAL);
-    releaseParam.Init(patch.controls[3], 0.001f, 1.f, Parameter::EXPONENTIAL);
+    ratioParam.Init(patch.controls[1], 1.2f, 40.f, Parameter::LINEAR);
+    attackParam.Init(patch.controls[2], 0.01f, 1.f, Parameter::EXPONENTIAL);
+    releaseParam.Init(patch.controls[3], 0.01f, 1.f, Parameter::EXPONENTIAL);
     
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
