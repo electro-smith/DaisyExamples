@@ -1,28 +1,53 @@
-# Description
-Control a synth voice over Midi.
+# Field - MIDI
 
-# Controls  
-| Control | Description |  
-| --- | --- |  
-| Midi CC 1 | Filter Cutoff |  
-| Midi CC 2 | Filter Resonance |  
-| Audio Outs | Oscillator Output|  
+## Description
 
-# Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Midi/resources/Midi.png" alt="Midi.png" style="width: 100%;"/>
+Polyphonic MIDI Synth
 
-# Code Snippet
+24 voices of polyphony. Each voice is a band-limited saw waveform running through a state variable filter.
+
+## Controls
+
+| Control | Description |
+| --- | --- |
+| Button 1 | Choke all voices |
+| Knob 1 | Filter Cutoff |
+| MIDI Input | Note In/Note Off messages with Simple Polyphony (no voice stealing) |
+
+## Diagram
+
+TODO: Add Diagram
+
+## Code Snippet
+
+Basic MIDI Note Message Handling
+
 ```cpp
-switch(p.control_number)
+void HandleMidiMessage(MidiEvent m)
 {
-    case 1:
-        // CC 1 for cutoff.
-        filt.SetFreq(daisysp::mtof((float)p.value));
+    switch(m.type)
+    {
+        case NoteOn:
+        {
+            NoteOnEvent p = m.AsNoteOn();
+            // Note Off can come in as Note On w/ 0 Velocity
+            if(p.velocity == 0.f)
+            {
+                voice_handler.OnNoteOff(p.note, p.velocity);
+            }
+            else
+            {
+                voice_handler.OnNoteOn(p.note, p.velocity);
+            }
+        }
         break;
-    case 2:
-        // CC 2 for res.
-        filt.SetRes(((float)p.value / 127.0f));
+        case NoteOff:
+        {
+            NoteOnEvent p = m.AsNoteOn();
+            voice_handler.OnNoteOff(p.note, p.velocity);
+        }
         break;
-	
-        ......  
+        default: break;
+    }
+}
 ```

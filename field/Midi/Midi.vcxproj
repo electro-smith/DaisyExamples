@@ -14,7 +14,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{2CDA3075-61C7-433F-A065-D5182FB60151}</ProjectGuid>
     <BSP_ID>com.sysprogs.arm.stm32</BSP_ID>
-    <BSP_VERSION>2019.06</BSP_VERSION>
+    <BSP_VERSION>2020.06</BSP_VERSION>
     <InPlaceBSPSubdir />
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -41,24 +41,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../daisysp;../../libdaisy/src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions />
-      <CLanguageStandard />
-      <CPPLanguageStandard />
-    </ClCompile>
-    <Link>
-      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
-      <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <LinkerScript>../../libdaisy/core/STM32H750IB_flash.lds</LinkerScript>
-      <AdditionalOptions />
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>../../libdaisy/src;../../DaisySP;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../daisysp;../../libdaisy/src;../../libdaisy/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG=1;USE_HAL_DRIVER;STM32H750xx;HSE_VALUE=16000000;__FPU_PRESENT=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctions>true</InlineFunctions>
     </ClCompile>
     <Link>
@@ -67,6 +51,43 @@
       <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
       <LinkerScript>../../libdaisy/core/STM32H750IB_flash.lds</LinkerScript>
     </Link>
+    <ToolchainSettingsContainer>
+      <InstructionSet>THUMB</InstructionSet>
+    </ToolchainSettingsContainer>
+    <ToolchainSettingsContainer>
+      <FloatABI>hard</FloatABI>
+    </ToolchainSettingsContainer>
+    <ToolchainSettingsContainer>
+      <ARMFPU>fpv5-d16</ARMFPU>
+    </ToolchainSettingsContainer>
+    <ToolchainSettingsContainer>
+      <ARMCPU>cortex-m7</ARMCPU>
+    </ToolchainSettingsContainer>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../daisysp;../../libdaisy/src;../../libdaisy/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;USE_HAL_DRIVER;STM32H750xx;HSE_VALUE=16000000;__FPU_PRESENT=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InlineFunctions>true</InlineFunctions>
+    </ClCompile>
+    <Link>
+      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <LinkerScript>../../libdaisy/core/STM32H750IB_flash.lds</LinkerScript>
+    </Link>
+    <ToolchainSettingsContainer>
+      <InstructionSet>THUMB</InstructionSet>
+    </ToolchainSettingsContainer>
+    <ToolchainSettingsContainer>
+      <FloatABI>hard</FloatABI>
+    </ToolchainSettingsContainer>
+    <ToolchainSettingsContainer>
+      <ARMFPU>fpv5-d16</ARMFPU>
+    </ToolchainSettingsContainer>
+    <ToolchainSettingsContainer>
+      <ARMCPU>cortex-m7</ARMCPU>
+    </ToolchainSettingsContainer>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\daisysp\daisysp.vcxproj">

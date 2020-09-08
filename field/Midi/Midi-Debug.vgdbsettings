@@ -111,6 +111,8 @@
         <ProgramFLASHUsingExternalTool>false</ProgramFLASHUsingExternalTool>
         <PreferredGDBPort>0</PreferredGDBPort>
         <PreferredTelnetPort>0</PreferredTelnetPort>
+        <AlwaysPassSerialNumber>false</AlwaysPassSerialNumber>
+        <SelectedCoreIndex xsi:nil="true" />
       </Configuration>
     </DebugMethod>
     <AutoDetectRTOS>true</AutoDetectRTOS>
