@@ -209,10 +209,11 @@ void UpdateLeds()
 void UpdateSwitches()
 {
 	//turn the effect on or off if a footswitch is pressed
-	for (int i = 0; i < 4; i++)
-	{
-		effectOn[i] = petal.switches[i].RisingEdge() ? !effectOn[i] : effectOn[i];
-	}
+	
+	effectOn[DEL] = petal.switches[0].RisingEdge() ? !effectOn[DEL] : effectOn[DEL];
+	effectOn[REV] = petal.switches[1].RisingEdge() ? !effectOn[REV] : effectOn[REV];
+	effectOn[CRUSH] = petal.switches[2].RisingEdge() ? !effectOn[CRUSH] : effectOn[CRUSH];
+	effectOn[WAH] = petal.switches[3].RisingEdge() ? !effectOn[WAH] : effectOn[WAH];
 }
 
 void Controls()
