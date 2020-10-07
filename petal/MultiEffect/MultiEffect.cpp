@@ -81,7 +81,7 @@ void AudioCallback(float *in, float *out, size_t size)
 			}
 			
 			sigl = sigl * dryWet[eff] + oldSigL * (1 - dryWet[eff]);
-			sigl = sigr * dryWet[eff] + oldSigR * (1 - dryWet[eff]);
+			sigr = sigr * dryWet[eff] + oldSigR * (1 - dryWet[eff]);
 		}
 	
 		float verbl = sigl * dryWet[REV];
