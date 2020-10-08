@@ -24,6 +24,7 @@ bool bypassHard, bypassSoft;
 static void AudioCallback(float **in, float **out, size_t size)
 {
 	petal.UpdateAnalogControls();
+	petal.DebounceControls();
 	
 	float softGain = petal.knob[0].Process() * 10 + 1.2;
 	float hardGain = petal.knob[1].Process() * 100 + 1.2;
