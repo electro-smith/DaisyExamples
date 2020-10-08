@@ -173,11 +173,13 @@ void UpdateLeds()
 	petal.ClearLeds();
 	
 	//footswitch leds
-	for (int i = 0; i < 4; i++)
-	{
-		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)i, effectOn[i]);
-	}	
-		
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, effectOn[2]);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, effectOn[3]);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)2, effectOn[0]);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)3, effectOn[1]);
+	
+
+	
 	//ring leds
 	int32_t whole;
     float   frac;
