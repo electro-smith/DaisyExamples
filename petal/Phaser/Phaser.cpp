@@ -15,6 +15,9 @@ bool bypass;
 
 void ProcessControls(float& depth)
 {
+	hw.DebounceControls();
+	hw.UpdateAnalogControls();
+	
 	//knobs
 	depth = hw.knob[0].Process() * 3.f;
 	lfo.SetFreq(hw.knob[1].Process() * 10);
