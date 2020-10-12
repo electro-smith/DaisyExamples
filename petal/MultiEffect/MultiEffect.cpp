@@ -88,9 +88,15 @@ void AudioCallback(float *in, float *out, size_t size)
 		float verbr = sigr * dryWet[REV];
 		GetReverbSample(verbl, verbr);
 		
-		out[i]   = sigl * dryWet[ALL] + in[i]     * (1 - dryWet[ALL]) + verbl;
-		out[i+1] = sigr * dryWet[ALL] + in[i + 1] * (1 - dryWet[ALL]) + verbr;
-    }
+		out[i]   = sigl * dryWet[ALL] + in[i]     * (1 - dryWet[ALL]);
+		out[i+1] = sigr * dryWet[ALL] + in[i + 1] * (1 - dryWet[ALL]);
+		
+		if (effectOn[REV])
+		{
+			out[i]   += verbl;
+			out[i+1] += verbr;
+		}
+	}
 }
 
 int main(void)
