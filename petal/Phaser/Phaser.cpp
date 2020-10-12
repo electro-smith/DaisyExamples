@@ -2,6 +2,8 @@
 #include "daisysp.h" 
 
 #define FILT_STAGES 4
+#define CHANNELS 2
+#define BUFF_SIZE static_cast<size_t>(9600)
 
 using namespace daisy;
 using namespace daisysp;
@@ -9,66 +11,75 @@ using namespace daisysp;
 DaisyPetal hw;
 Oscillator lfo;
 
-Svf filt[FILT_STAGES];
+Allpass filt[CHANNELS][FILT_STAGES];
+float DSY_SDRAM_BSS buff[CHANNELS][FILT_STAGES][BUFF_SIZE];
 
 bool bypass;
 
-void ProcessControls(float& depth)
+void ProcessControls(float& depth, float& feedback)
 {
 	hw.DebounceControls();
 	hw.UpdateAnalogControls();
 	
 	//knobs
-	depth = hw.knob[0].Process() * 3.f;
-	lfo.SetFreq(hw.knob[1].Process() * 10);
+	depth = hw.knob[2].Process();
+	lfo.SetFreq(hw.knob[3].Process() * 10);
+	feedback = hw.knob[4].Process();
 
 	//bypass
 	bypass = hw.switches[0].RisingEdge() ? !bypass : bypass;
 }
 
-float UpdateFilters(float in, float lfoSignal)
+float lastFilterOut[CHANNELS];
+
+float ProcessFilters(float in, float lfoSignal, float depth, float feedback, int chn)
 {
-	
+	in = in + feedback * lastFilterOut[chn];
+	in *= .5f;
 	
 	for (int i = 0; i < FILT_STAGES; i++)
 	{
-		filt[i].SetFreq(lfoSignal);
-		filt[i].Process(in);
-		in = filt[i].Notch();
+		filt[chn][i].SetFreq(lfoSignal);
+		in = filt[chn][i].Process(in);
 	}
 	
+	lastFilterOut[chn] = in;
+	
+	in *= depth;	
 	return in;
 }
 
 void callback(float **in, float **out, size_t size)
 {
-	float depth;
-	ProcessControls(depth);
+	float depth, feedback;
+	ProcessControls(depth, feedback);
 	
     for (size_t i = 0; i < size; i++)
     {
-		float lfoSignal = lfo.Process() + 2500; //0Hz - 5kHz
+		float lfoSignal = lfo.Process() + 0.1f; //0s - .2s
 		
-		for (int chn = 0; chn < 2; chn++)
+		for (int chn = 0; chn < CHANNELS; chn++)
 		{
+			out[chn][i] = in[chn][i];
 			if (! bypass)
 			{
-				in[chn][i] += depth * UpdateFilters(in[0][i], lfoSignal);
-				in[chn][i] *= .25f;
+				out[chn][i] += ProcessFilters(in[chn][i], lfoSignal, depth, feedback, chn);
+				out[chn][i] *= .5f;
 			}
-			
-			out[chn][i] = in[chn][i];
 		}
     }
 }
 
 void InitFilters(float samplerate)
 {
-	for (int i = 0; i < FILT_STAGES; i++)
-	{	
-		filt[i].Init(samplerate);
-		filt[i].SetRes(0);
-		filt[i].SetDrive(0);
+	for (int chn = 0; chn < CHANNELS; chn++)
+	{
+		for (int i = 0; i < FILT_STAGES; i++)
+		{	
+			filt[chn][i].Init(samplerate, buff[chn][i], BUFF_SIZE);
+		}
+		
+		lastFilterOut[chn] = 0.f;
 	}
 }
 
@@ -79,7 +90,7 @@ int main(void)
 	
 	lfo.Init(samplerate);
 	lfo.SetFreq(1);
-	lfo.SetAmp(2500);
+	lfo.SetAmp(0.1f);
 	lfo.SetWaveform(Oscillator::WAVE_SIN);
 	
 	InitFilters(samplerate);
@@ -92,7 +103,7 @@ int main(void)
 	int i = 0;
 	while(1) 
     {
-        dsy_system_delay(300);
+        dsy_system_delay(200);
 		hw.ClearLeds();
 		hw.SetRingLed((DaisyPetal::RingLed)i, 1.f, 0.f, 0.f);
 		i++;
