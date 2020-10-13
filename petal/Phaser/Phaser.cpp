@@ -1,7 +1,7 @@
 #include "daisy_petal.h"
 #include "daisysp.h" 
 
-#define FILT_STAGES 4
+#define FILT_STAGES 1
 #define CHANNELS 2
 #define BUFF_SIZE static_cast<size_t>(9600)
 
@@ -34,7 +34,7 @@ float lastFilterOut[CHANNELS];
 
 float ProcessFilters(float in, float lfoSignal, float depth, float feedback, int chn)
 {
-	in = in + feedback * lastFilterOut[chn];
+	in += feedback * lastFilterOut[chn];
 	in *= .5f;
 	
 	for (int i = 0; i < FILT_STAGES; i++)
@@ -56,7 +56,7 @@ void callback(float **in, float **out, size_t size)
 	
     for (size_t i = 0; i < size; i++)
     {
-		float lfoSignal = lfo.Process() + 0.1f; //0s - .2s
+		float lfoSignal = lfo.Process() + 0.05f; //0s - .2s
 		
 		for (int chn = 0; chn < CHANNELS; chn++)
 		{
@@ -77,6 +77,11 @@ void InitFilters(float samplerate)
 		for (int i = 0; i < FILT_STAGES; i++)
 		{	
 			filt[chn][i].Init(samplerate, buff[chn][i], BUFF_SIZE);
+		
+			for (int bufPos = 0; bufPos < (int)BUFF_SIZE; bufPos++){
+				buff[chn][i][bufPos] = 0;
+			}
+		
 		}
 		
 		lastFilterOut[chn] = 0.f;
@@ -90,7 +95,7 @@ int main(void)
 	
 	lfo.Init(samplerate);
 	lfo.SetFreq(1);
-	lfo.SetAmp(0.1f);
+	lfo.SetAmp(0.05f);
 	lfo.SetWaveform(Oscillator::WAVE_SIN);
 	
 	InitFilters(samplerate);
