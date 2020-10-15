@@ -56,8 +56,8 @@ void callback(float **in, float **out, size_t size)
 	
     for (size_t i = 0; i < size; i++)
     {
-		float lfoSignal = lfo.Process() + 1.001;
-		lfoSignal *= .005;
+		float lfoSignal = lfo.Process() + 1.f;
+		lfoSignal *= .001;
 		
 		for (int chn = 0; chn < CHANNELS; chn++)
 		{
@@ -78,7 +78,7 @@ void InitFilters(float samplerate)
 		for (int i = 0; i < FILT_STAGES; i++)
 		{	
 			filt[chn][i].Init(samplerate, buff[chn][i], BUFF_SIZE);
-			filt[chn][i].SetFreq(.05);
+			filt[chn][i].SetFreq(.001);
 			filt[chn][i].SetRevTime(.05);  //.05
 		
 			for (int bufPos = 0; bufPos < (int)BUFF_SIZE; bufPos++){
