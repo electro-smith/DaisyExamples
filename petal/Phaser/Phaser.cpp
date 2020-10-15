@@ -1,7 +1,7 @@
 #include "daisy_petal.h"
 #include "daisysp.h" 
 
-#define FILT_STAGES 6
+#define FILT_STAGES 10
 #define CHANNELS 2
 #define BUFF_SIZE static_cast<size_t>(9600)
 
@@ -23,7 +23,7 @@ void ProcessControls(float& depth, float& feedback)
 	
 	//knobs
 	depth = hw.knob[2].Process();
-	lfo.SetFreq(hw.knob[3].Process() * 10);
+	lfo.SetFreq(hw.knob[3].Process());
 	feedback = hw.knob[4].Process();
 
 	//bypass
@@ -35,7 +35,7 @@ float lastFilterOut[CHANNELS];
 float ProcessFilters(float in, float lfoSignal, float depth, float feedback, int chn)
 {
 	in += feedback * lastFilterOut[chn];
-	in *= .5f;
+	//in *= .5f;
 	
 	for (int i = 0; i < FILT_STAGES; i++)
 	{
@@ -56,7 +56,7 @@ void callback(float **in, float **out, size_t size)
 	
     for (size_t i = 0; i < size; i++)
     {
-		float lfoSignal = lfo.Process() + 1;
+		float lfoSignal = lfo.Process() + 1.001;
 		lfoSignal *= .005;
 		
 		for (int chn = 0; chn < CHANNELS; chn++)
@@ -79,7 +79,7 @@ void InitFilters(float samplerate)
 		{	
 			filt[chn][i].Init(samplerate, buff[chn][i], BUFF_SIZE);
 			filt[chn][i].SetFreq(.05);
-			filt[chn][i].SetRevTime(0.05);
+			filt[chn][i].SetRevTime(.05);  //.05
 		
 			for (int bufPos = 0; bufPos < (int)BUFF_SIZE; bufPos++){
 				buff[chn][i][bufPos] = 0;
