@@ -18,7 +18,13 @@ Simple effects for incoming audio. Includes reverb, delay, downsampling, and aut
 | Audio Out | Effects Out | |
 
 # Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/resources/MultiEffect.png" alt="Button_schem.png" style="width: 100%;"/>
+
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/MultiEffect/resources/Petal_MultiEffect_Diagram.png" alt="MultiDelay.png" style="width: 100%;"/>
+
+
+# Sound Demo
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MzivmxIsOcY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 # Code Snippet  
 ```cpp  
