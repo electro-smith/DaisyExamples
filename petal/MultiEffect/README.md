@@ -24,7 +24,7 @@ Simple effects for incoming audio. Includes reverb, delay, downsampling, and aut
 
 # Sound Demo
 
-<iframe width="100%" height="56.25%" src="https://www.youtube.com/embed/MzivmxIsOcY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MzivmxIsOcY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 # Code Snippet  
 ```cpp  
