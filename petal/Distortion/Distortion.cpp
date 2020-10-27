@@ -26,8 +26,8 @@ static void AudioCallback(float **in, float **out, size_t size)
 	petal.UpdateAnalogControls();
 	petal.DebounceControls();
 	
-	float softGain = petal.knob[0].Process() * 10 + 1.2;
-	float hardGain = petal.knob[1].Process() * 100 + 1.2;
+	float Pregain = petal.knob[0].Process() * 10 + 1.2;
+	float Gain = petal.knob[1].Process() * 100 + 1.2;
 	float drywet = petal.knob[2].Process();
 
 	bypassSoft = petal.switches[0].RisingEdge() ? !bypassSoft : bypassSoft;	
@@ -37,15 +37,18 @@ static void AudioCallback(float **in, float **out, size_t size)
     {	
 		for (int chn = 0; chn < 2; chn++)
 		{
+			in[chn][i] *= Pregain;
 			float wet = in[chn][i];
 
-			wet *= softGain;
+			if (!bypassSoft || !bypassHard){
+				wet *= Gain;
+			}
+	
 			if (!bypassSoft)
 			{
 				wet = softClip(wet);
 			}
 		
-			wet *= hardGain;
 			if (!bypassHard)
 			{
 				wet = hardClip(wet);
