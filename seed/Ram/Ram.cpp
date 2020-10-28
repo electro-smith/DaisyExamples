@@ -51,8 +51,7 @@ int main(void)
 		}
 	}
 	dsy_tim_start();
-	dsy_audio_set_callback(DSY_AUDIO_INTERNAL, bad_callback);
-	dsy_audio_start(DSY_AUDIO_INTERNAL);
+    hw.StartAudio(bad_callback);
 	while(1) {}
 }
 
