@@ -10,9 +10,9 @@ DaisyField hw;
 
 struct voice
 {
-    void Init()
+    void Init(float samplerate)
     {
-        osc_.Init(DSY_AUDIO_SAMPLE_RATE);
+        osc_.Init(samplerate);
         amp_ = 0.0f;
         osc_.SetAmp(0.7f);
         osc_.SetWaveform(daisysp::Oscillator::WAVE_POLYBLEP_SAW);
@@ -163,16 +163,18 @@ void UpdateLeds(float *knob_vals)
 
 int main(void)
 {
+    float sr;
     hw.Init();
+    sr = hw.AudioSampleRate();
     // Initialize controls.
     octaves = 2;
     for(int i = 0; i < NUM_VOICES; i++)
     {
-        v[i].Init();
+        v[i].Init(sr);
         v[i].set_note((12.0f * octaves) + 24.0f + scale[i]);
     }
 
-    verb.Init(hw.SampleRate());
+    verb.Init(sr);
     verb.SetFeedback(0.94f);
     verb.SetLpFreq(8000.0f);
 

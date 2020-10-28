@@ -210,7 +210,7 @@ int main(void)
     // Init
     float samplerate;
     hw.Init();
-    samplerate = hw.SampleRate();
+    samplerate = hw.AudioSampleRate();
     midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
     voice_handler.Init(samplerate);
 
