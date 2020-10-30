@@ -10,14 +10,8 @@ Generate random melodies.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MusicBox/resources/MusicBox.png" alt="Button_schem.png" style="width: 100%;"/>
 
-# Code Snippet  
-```cpp  
-//Generates next note
-if(hw.button1.RisingEdge())
-{
-    freq = mtof(48.0f + get_new_note());
-    osc.SetFreq(freq);
-    env.SetTime(ADENV_SEG_DECAY, dec);
-    env.Trigger();
-}
-```
+# Author
+
+Shensley
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/MusicBox)

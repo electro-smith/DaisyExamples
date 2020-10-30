@@ -12,16 +12,8 @@ Example showing a basic SimpleOscillator with controls.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleOscillator/resources/SimpleOscillator.png" alt="Button_schem.png" style="width: 100%;"/>
 
-# Code Snippet  
-```cpp  
-//Process controls
-if(hw.button2.RisingEdge())
-    octave++;
-if(hw.button1.RisingEdge())
-    octave--;
-octave = DSY_CLAMP(octave, 0, 4);
+# Author
 
-// convert MIDI to frequency and multiply by octave size
-freq = mtof(p_freq.Process() + (octave * 12));
-osc.SetFreq(freq);
-```
+Shensley
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SimpleOscillator)

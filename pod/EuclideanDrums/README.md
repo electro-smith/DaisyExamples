@@ -12,23 +12,8 @@ Since the two sequencers run independently, they can have different lengths lead
 | Buttons | Global Tempo | Hold button one to increase tempo, and hold button two to decrease. |
 | Led 1 | Tempo indicator | Red led. Brighter is faster |
 
-# Code Snippet
-```cpp
-for (size_t i = 0; i < size; i+= 2)
-{
-    snr_env_out = snareEnv.Process();
-	kck_env_out = kickVolEnv.Process();
+# Author
 
-	osc.SetFreq(kickPitchEnv.Process());
-	osc.SetAmp(kck_env_out);
-	osc_out = osc.Process();
+Ben Sergentanis
 
-	noise_out = noise.Process();
-	noise_out *= snr_env_out;
-
-	sig = .5 * noise_out + .5 + osc_out;
-
-    out[i] = sig;
-	out[i+1] = sig;
-}
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/EuclideanDrums)

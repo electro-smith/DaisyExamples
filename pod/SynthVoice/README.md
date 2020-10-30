@@ -22,16 +22,8 @@ Simple Synth voice with resonant filter, self cycling envelope, and vibrato cont
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/resources/SynthVoice.png" alt="Button_schem.png" style="width: 100%;"/>
 
-# Code Snippet  
-```cpp  
-//Process Samples
-float ad_out = ad.Process();
-vibrato = lfo.Process();
+# Author
 
-osc.SetFreq(oscFreq + vibrato);
+Shensley
 
-sig = osc.Process();
-sig = flt.Process(sig);
-sig *= ad_out;
-```
-    
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SynthVoice)

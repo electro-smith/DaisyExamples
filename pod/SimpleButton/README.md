@@ -10,19 +10,8 @@ Example showing basic usage of pushbutton switches for momentary and latching be
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleButton/resources/SimpleButton.png" alt="Button_schem.png" style="width: 100%;"/>
 
-# Code Snippet  
-```cpp
-hw.DebounceControls();
+# Author
 
-// using button1 as momentary switch for turning on/off led1
-brightness1 = hw.button1.Pressed();
+Shensley
 
-// using button2 as latching switch for toggling led2
-if(hw.button2.RisingEdge())
-    brightness2 = !brightness2;
-
-// assign brightness levels to each led (R, G, B)
-hw.led1.Set(brightness1, brightness1, brightness1);
-hw.led2.Set(brightness2, brightness2, brightness2);
-hw.UpdateLeds();
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SimpleButton)

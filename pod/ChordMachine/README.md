@@ -21,14 +21,8 @@ A simple sine wave chord machine. Cycle through different chord types and invers
   9. Diminished seven, Pink
   10. Half diminished seven, Light green
 
-# Code Snippet
-    void UpdateKnobs()
-    {
-        int freq = (int) p_freq.Process(); 
-        int inversion = (int) p_inversion.Process();
-        
-        notes[0] = freq + (12 * (inversion >= 1));
-        notes[1] = freq + chord[chordNum][0] + (12 * (inversion >= 2));
-        notes[2] = freq + chord[chordNum][1] + (12 * (inversion >= 3));
-        notes[3] = freq + chord[chordNum][2] + (12 * (inversion >= 4));
-    }
+# Author
+
+Ben Sergentanis
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/ChordMachine)

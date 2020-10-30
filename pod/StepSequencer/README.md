@@ -38,31 +38,8 @@ When a step is activated, its envelope will cycle. Listen for pitch and envelope
 | Knob 2 | Filter cutoff |  |
 
 
-# Code Snippet
-    void NextSamples(float& sig)
-    {
-        env_out = env.Process();
-        osc.SetAmp(env_out);
-        sig = osc.Process();
-        sig = flt.Process(sig);
+# Author
 
-        if (tick.Process() && !edit)
-        {
-	    step++;
-    	    step %= 8;
-    	    if (active[step])
-    	    {
-    	        env.Trigger();
-    	    }
-        }
+Ben Sergentanis
 
-        if (active[step])
-        {
-    	    env.SetTime(ADENV_SEG_DECAY, dec[step]);
-    	    osc.SetFreq(pitch[step]);
-    	    if (edit && ! env.IsRunning())
-    	    {
-    	        env.Trigger();
-    	    }
-        }
-    }
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/StepSequencer)

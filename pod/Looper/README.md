@@ -14,29 +14,8 @@ Loops can be very long, or very short.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/Looper/resources/Looper.png" alt="Button_schem.png" style="width: 100%;"/>
 
-# Code Snippet  
-```cpp    
-void NextSamples(float &output, float* in, size_t i)  
-{  
-    if (rec)  
-    {  
-        WriteBuffer(in, i);  
-    }  
-    
-    output = buf[pos];
-    
-    ......
+# Author
 
-    if(play)
-    {
-        pos++;
-        pos %= mod;
-    }
+Ben Sergentanis
 
-    if (!rec)
-    {
-        output = output * drywet + in[i] * (1 -drywet);
-    }
-}  
-
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/Looper)
