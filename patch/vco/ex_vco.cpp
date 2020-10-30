@@ -16,7 +16,7 @@ static void AudioCallback(float **in, float **out, size_t size)
 
     patch.UpdateAnalogControls();
 
-    for (size_t i = 0; i < size; i += 2)
+    for (size_t i = 0; i < size; i ++)
     {
         // Read Knobs
         freq = mtof(freqctrl.Process() + finectrl.Process());
