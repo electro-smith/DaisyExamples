@@ -14,6 +14,6 @@ Using a knob to control the brightness of an led.
 
 # Author
 
-Ben Sergentanis
+Shensley
 
 [Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/seed/Knob)

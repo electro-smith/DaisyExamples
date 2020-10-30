@@ -14,6 +14,6 @@ Turns on the seed's onboard LED as long as a button is held.
 
 # Author
 
-Ben Sergentanis
+Shensley
 
 [Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/seed/Button)

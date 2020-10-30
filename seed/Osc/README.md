@@ -14,6 +14,6 @@ Simple oscillator for daisy seed. Has button triggered envelope and knob control
 
 # Author
 
-Ben Sergentanis
+Shensley
 
 [Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/seed/Osc)
