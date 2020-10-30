@@ -16,24 +16,8 @@ Track and Hold will continue tracking, or updating, as long as the gate is held 
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SampleAndHold/resources/SampleAndHold.png" alt="SampleAndHold.png" style="width: 100%;"/>
 
 
-# Code Snippet
-```cpp
-struct sampHoldStruct {
-    SampleHold sampHold;
-    SampleHold::Mode mode;
-    float output;
+# Author
 
-    void Process(bool trigger, float input)
-    {
-        output = sampHold.Process(trigger, input, mode);
-    }
-};
+Ben Sergentanis
 
-....
-
-void UpdateOutputs()
-{
-    dsy_dac_write(DSY_DAC_CHN1, sampHolds[0].output * 4095);
-    dsy_dac_write(DSY_DAC_CHN2, sampHolds[1].output * 4095);
-}
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/SampleAndhold)

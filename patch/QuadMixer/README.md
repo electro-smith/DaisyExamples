@@ -13,25 +13,8 @@ Simple Four Channel Audio Mixer.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadMixer/resources/QuadMixer.png" alt="QuadMixer.png" style="width: 100%;"/>
 
-# Code Snippet
+# Author
 
-```cpp
-for (size_t i = 0; i < size; i++)
-{
-    float output = 0.f;
-    //sum all four inputs, attenuated by the control levels
-    for (size_t chn = 0; chn < 4; chn++)
-    {
-        output += ctrlVal[chn] * in[chn][i];
-    }
-    
-    //attenuate by 1/4
-    output *= .25f;
-    
-    //send the same thing to all 4 outputs
-    for (size_t chn = 0; chn < 4; chn++)
-    {
-        out[chn][i] = output;
-    }
-}
-```
+Ben Sergentanis
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadMixer)

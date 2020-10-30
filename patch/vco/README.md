@@ -16,18 +16,8 @@ Both standard and bandlimited waveforms are accessible.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/vco/resources/vco.png" alt="vco.png" style="width: 100%;"/>
 
-# Code Snippet
-```cpp
-// Read Knobs
-freq = mtof(freqctrl.Process());
-wave = wavectrl.Process();
-amp = ampctrl.Process();
+# Author
 
-// Set osc params
-osc.SetFreq(freq);
-osc.SetWaveform(wave);
-osc.SetAmp(amp);
+Ben Sergentanis
 
-//Process
-sig = osc.Process();
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/vco)

@@ -21,30 +21,9 @@ The envelope curves and attack/decay times ae controllable as well.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadEnvelope/resources/QuadEnvelope.png" alt="QuadEnvelope.png" style="width: 100%;"/>
 
-# Code Snippet
 
-```cpp
-for (int i = 0 ; i < 2; i ++)
-{
-    if (hw.gate_input[i].Trig())
-    {
-        envelopes[i].env.Trigger();
-    }
-}
+# Author
 
-    .....
+Ben Sergentanis
 
-for(size_t i = 0; i < size; i++)
-{
-    //Get the next envelope samples
-    envelopes[0].envSig = envelopes[0].env.Process();
-    envelopes[1].envSig = envelopes[1].env.Process();
-    
-    for (size_t chn = 0; chn < 2; chn++)
-    {
-        //The envelopes effect the outputs in pairs
-        out[chn * 2][i] = in[chn * 2][i] * envelopes[chn].envSig;
-        out[chn * 2 + 1][i] = in[chn * 2 + 1][i] * envelopes[chn].envSig;	    
-    }
-}
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadEnvelope)

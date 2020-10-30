@@ -16,21 +16,8 @@ Of course, you can also use the knobs to set the inputs high or low without CV.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/logic/resources/logic.png" alt="logic.png" style="width: 100%;"/>
 
-# Code Snippet
-```cpp
-switch(gateType)
-{
-    case 0:
-        return a && b;  //AND
-    case 1:
-        return a || b;  //OR
-    case 2:
-        return (a && !b) || (!a && b);  //XOR
-    case 3:
-        return !(a && b);  //NAND
-    case 4:
-        return !(a || b);  //NOR
-    case 5:
-        return (a && b) || (!a && !b);  //XNOR
-}
-```
+# Author
+
+Ben Sergentanis
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/logic)

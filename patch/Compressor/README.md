@@ -17,24 +17,9 @@ Compressor with optional sidechain input.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Compressor/resources/Compressor.png" alt="Compressor.png" style="width: 100%;"/>
 
-# Code Snippet
-```cpp
-//encoder click
-isSideChained = patch.encoder.RisingEdge() ? !isSideChained : isSideChained;
+# Author
 
-//controls
-comp.SetThreshold(threshParam.Process());
-comp.SetRatio(ratioParam.Process());
-comp.SetAttack(attackParam.Process());
-comp.SetRelease(releaseParam.Process());
+Ben Sergentanis
 
-........
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Compressor)
 
-for (size_t i = 0; i < size; i ++)
-{	    
-    float sig = isSideChained ? comp.Process(in[0][i], in[1][i]) : comp.Process(in[0][i]);
-	
-    out[0][i] = out[1][i] = sig;
-    out[2][i] = out[3][i] = sig;
-}
-```

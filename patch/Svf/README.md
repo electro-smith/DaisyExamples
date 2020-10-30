@@ -16,17 +16,8 @@ State variable filter with simultaneous low pass, high pass, band pass, and notc
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Svf/resources/Svf.png" alt="Svf.png" style="width: 100%;"/>
 
-# Code Snippet
-```cpp
-for (size_t i = 0; i < size; i ++)
-{
-    //send the next sample to the filter
-    svf.Process(in[0][i]);
-    
-    //send the different filter types to the different outputs
-    out[0][i] = svf.Low();
-    out[1][i] = svf.High();
-    out[2][i] = svf.Band();
-    out[3][i] = svf.Notch();
-}
-```
+# Author
+
+Ben Sergentanis
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Svf)

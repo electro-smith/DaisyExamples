@@ -18,14 +18,8 @@ Selectable one to many, or many to one modes.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SequentialSwitch/resources/SequentialSwitch.png" alt="SequentialSwitch.png" style="width: 100%;"/>
 
-# Code Snippet
-```cpp
-for (size_t i = 0; i < size; i ++)
-{
-    out[0][i] = out[1][i] = out[2][i] = out[3][i] = 0.f; //reset non active outs
-    if (isMultiIn)
-        out[0][i] = in[step][i];
-    else
-        out[step][i] = in[0][i];
-}
-```
+# Author
+
+Ben Sergentanis
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/SequentialSwitch)
