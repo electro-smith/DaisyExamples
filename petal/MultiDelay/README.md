@@ -17,26 +17,8 @@ Set the dry/wet amount of this final mix with the encoder.
 # Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/MultiDelay/resources/MultiDelay.png" alt="MultiDelay.png" style="width: 100%;"/>
 
-# Code Snippet
+# Author
 
-```cpp
-float UpdateDelay(delay &delay, float in)
-{
-    float read = delay.del->Read();
-    delay.del->Write((feedback * read) + (1 - feedback) * in);
-    return read;
-}
+Ben Sergentanis
 
-    ....
-
-//update delayline with feedback
-for (int d = 0; d < 3; d++)
-{
-    mix += UpdateDelay(delays[d], in[0][i]);
-}
-
-//apply drywet and attenuate
-float fdrywet = (float)drywet / 100.f;
-mix = ((fdrywet * mix * .3f) + ((1.0f - fdrywet) * in[0][i]));
-
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/MultiDelay)
