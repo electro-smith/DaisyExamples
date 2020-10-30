@@ -132,6 +132,10 @@ int main(void)
 	
 	effectOn[0] = effectOn[1] = effectOn[2] = effectOn[3] = false;
 	
+	for (int i = 0; i < LAST; i++){
+		dryWet[i] = 0.6f;
+	}
+	
 	dryWetMode = CRUSH;
 	
     // start callback
@@ -179,10 +183,10 @@ void UpdateLeds()
 	petal.ClearLeds();
 	
 	//footswitch leds
-	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, effectOn[2]);
-	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, effectOn[3]);
-	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)2, effectOn[0]);
-	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)3, effectOn[1]);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, effectOn[REV]);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, effectOn[DEL]);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)2, effectOn[CRUSH]);
+	petal.SetFootswitchLed((DaisyPetal::FootswitchLed)3, effectOn[WAH]);
 	
 
 	
@@ -218,8 +222,8 @@ void UpdateSwitches()
 {
 	//turn the effect on or off if a footswitch is pressed
 	
-	effectOn[DEL] = petal.switches[0].RisingEdge() ? !effectOn[DEL] : effectOn[DEL];
-	effectOn[REV] = petal.switches[1].RisingEdge() ? !effectOn[REV] : effectOn[REV];
+	effectOn[REV] = petal.switches[0].RisingEdge() ? !effectOn[REV] : effectOn[REV];
+	effectOn[DEL] = petal.switches[1].RisingEdge() ? !effectOn[DEL] : effectOn[DEL];
 	effectOn[CRUSH] = petal.switches[2].RisingEdge() ? !effectOn[CRUSH] : effectOn[CRUSH];
 	effectOn[WAH] = petal.switches[3].RisingEdge() ? !effectOn[WAH] : effectOn[WAH];
 }
