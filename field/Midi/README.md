@@ -18,36 +18,9 @@ Polyphonic MIDI Synth
 
 TODO: Add Diagram
 
-## Code Snippet
+# Author
 
-Basic MIDI Note Message Handling
+Shensley
 
-```cpp
-void HandleMidiMessage(MidiEvent m)
-{
-    switch(m.type)
-    {
-        case NoteOn:
-        {
-            NoteOnEvent p = m.AsNoteOn();
-            // Note Off can come in as Note On w/ 0 Velocity
-            if(p.velocity == 0.f)
-            {
-                voice_handler.OnNoteOff(p.note, p.velocity);
-            }
-            else
-            {
-                voice_handler.OnNoteOn(p.note, p.velocity);
-            }
-        }
-        break;
-        case NoteOff:
-        {
-            NoteOnEvent p = m.AsNoteOn();
-            voice_handler.OnNoteOff(p.note, p.velocity);
-        }
-        break;
-        default: break;
-    }
-}
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/Midi)
+

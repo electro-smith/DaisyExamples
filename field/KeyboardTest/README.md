@@ -14,3 +14,8 @@ Currently for some reason this only works when built with VisualStudio/VisualGDB
 
 It builds correctly with Make, but doesn't run. Likely just something not being correctly included with Make or something.
 
+# Author
+
+Shensley
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/KeyboardTest)
