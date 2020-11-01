@@ -72,8 +72,8 @@ int main(void)
     while(1) 
     {
 		//LED stuff
-		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, bypassSoft);
-		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, bypassHard);
+		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, !bypassSoft);
+		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, !bypassHard);
 		
 		for (int i = 0; i < 8; i++)
 		{
