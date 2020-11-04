@@ -40,7 +40,7 @@ int main(void)
 
     lfoFreqParam.Init(petal.knob[0], 0, 2, Parameter::LINEAR);
     lfoAmpParam.Init(petal.knob[1], 0, 100, Parameter::LINEAR);
-    combFreqParam.Init(petal.knob[2], 25, 300, Parameter::LINEAR);
+    combFreqParam.Init(petal.knob[2], 25, 300, Parameter::LOGARITHMIC);
     combRevParam.Init(petal.knob[3], 0, 1, Parameter::LINEAR);
     faderPosParam.Init(petal.knob[4], 0, 1, Parameter::LINEAR);
     
