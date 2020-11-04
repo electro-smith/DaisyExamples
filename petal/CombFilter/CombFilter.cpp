@@ -38,9 +38,9 @@ int main(void)
     petal.Init();
     samplerate = petal.AudioSampleRate();
 
-    lfoFreqParam.Init(petal.knob[0], 10, 20000, Parameter::LOGARITHMIC);
-    lfoAmpParam.Init(petal.knob[1], 0, 10, Parameter::LINEAR);
-    combFreqParam.Init(petal.knob[2], .01, 20, Parameter::LINEAR);
+    lfoFreqParam.Init(petal.knob[0], 0, 2, Parameter::LINEAR);
+    lfoAmpParam.Init(petal.knob[1], 0, 100, Parameter::LINEAR);
+    combFreqParam.Init(petal.knob[2], 25, 300, Parameter::LINEAR);
     combRevParam.Init(petal.knob[3], 0, 1, Parameter::LINEAR);
     faderPosParam.Init(petal.knob[4], 0, 1, Parameter::LINEAR);
     
