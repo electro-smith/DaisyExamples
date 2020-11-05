@@ -13,7 +13,7 @@ Signal path is: (pregain) -> (soft clip) -> (gain) -> (hard clip) -> (output)
 | Leds | If the LED is on, that distortion stage is on | |
 | In 1 -2  | Stereo Distortion In | |
 | Out 1 - 2 | Stereo Distortion Out | |
-|
+
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Distortion/resources/stereo_distortion_diagram_slim.png" alt="stereo_distortion_diagram.png" style="width: 100%;"/>>
 # Code Snippet  
 ```cpp    
