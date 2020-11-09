@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPetal petal;
-PitchShifter ps;
+PitchShifter psl ,psr;
 Oscillator lfo;
 CrossFade fader;
 
@@ -19,16 +19,22 @@ void UpdateControls();
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-	UpdateControls();
-	
-    for (size_t i = 0; i < size; i++)
-    {
-		ps.SetTransposition(shiftTransParam.Value() + (lfo.Process()) * 12);
+  UpdateControls();
+  
+  for (size_t i = 0; i < size; i++)
+  {
+    psl.SetTransposition(shiftTransParam.Value() + lfo.Process());
+    psr.SetTransposition(shiftTransParam.Value() + lfo.Process());
+    
+    float inl  = in[0][i];
+    float processl = psl.Process(inl);
 
-		float inf  = in[0][i];
-		float process = ps.Process(in[0][i]);
-		out[0][i] = out[1][i] = fader.Process(inf, process); 
-	}
+    float inr  = in[1][i];
+    float processr = psr.Process(inr);
+    
+    out[0][i] = fader.Process(inl, processl); 
+    out[1][i] = fader.Process(inr, processr); 
+  }
 }
 
 int main(void)
@@ -37,50 +43,65 @@ int main(void)
     petal.Init();
     samplerate = petal.AudioSampleRate();
 
-	lfoFreqParam.Init(petal.knob[0], .1, 20, Parameter::EXPONENTIAL);
-	lfoAmpParam.Init(petal.knob[1], 0, 10, Parameter::LINEAR);	
-	shiftTransParam.Init(petal.knob[2], -12, 12, Parameter::LINEAR);
-	shiftDelParam.Init(petal.knob[3], 100, 16000, Parameter::LOGARITHMIC);
-	faderPosParam.Init(petal.knob[4], 0, 1, Parameter::LINEAR);
-
-	lfo.Init(samplerate);
-	lfo.SetAmp(1);
-	lfo.SetWaveform(Oscillator::WAVE_SIN);
-
-	ps.Init(samplerate);
-
-	fader.Init();
-
+    lfoFreqParam.Init(petal.knob[0], .1, 20, Parameter::EXPONENTIAL);
+    lfoAmpParam.Init(petal.knob[1], 0, 12, Parameter::EXPONENTIAL);	
+    shiftTransParam.Init(petal.knob[2], -12, 12, Parameter::LINEAR);
+    shiftDelParam.Init(petal.knob[3], 0, (SHIFT_BUFFER_SIZE - 256), Parameter::LINEAR);
+    faderPosParam.Init(petal.knob[4], 0, 1, Parameter::LINEAR);
+    
+    lfo.Init(samplerate);
+    lfo.SetWaveform(Oscillator::WAVE_SIN);
+    
+    psl.Init(samplerate);
+    psr.Init(samplerate);
+    
+    fader.Init();
+    
     petal.StartAdc();
     petal.StartAudio(AudioCallback);
+
+    int i = 0;
     while(1) 
     {
-		petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, bypassOn);
-		petal.UpdateLeds();
-		dsy_system_delay(6);
-	}
+      petal.ClearLeds();
+      
+      petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, !bypassOn);
+
+      petal.SetRingLed((DaisyPetal::RingLed)i , 0, 1, 0);
+      i++;
+      i %= 8;
+      
+      petal.UpdateLeds();
+      dsy_system_delay(60);
+    }
 }
+
+float delsize;
 
 void UpdateControls()
 {
-	petal.UpdateAnalogControls();
-	petal.DebounceControls();
+  petal.UpdateAnalogControls();
+  petal.DebounceControls();
 
-	//knobs
-	lfo.SetFreq(lfoFreqParam.Process());
-	lfo.SetAmp(lfoAmpParam.Process());
-	ps.SetDelSize(shiftDelParam);
-	shiftTransParam.Process()
+  //knobs
+  lfo.SetFreq(lfoFreqParam.Process());
+  lfo.SetAmp(lfoAmpParam.Process());
 
-	fader.SetPos(faderPosParam.Process());
-	if (bypassOn)
-	{
-		fader.SetPos(0);
-	}
+  fonepole(delsize, 256 + shiftDelParam.Process(), .001f);
+  psl.SetDelSize(delsize);
+  psr.SetDelSize(delsize);
+  
+  shiftTransParam.Process();
+    
+  fader.SetPos(faderPosParam.Process());
+  if (bypassOn)
+  {
+    fader.SetPos(0);
+  }
 	
-	//bypass switch
-	if (petal.switches[0].RisingEdge())
-	{
-		bypassOn = !bypassOn;
-	}
+  //bypass switch
+  if (petal.switches[0].RisingEdge())
+  {
+    bypassOn = !bypassOn;
+  }
 }
