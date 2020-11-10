@@ -16,6 +16,8 @@ Parameter lfoFreqParam, lfoAmpParam;
 Parameter combFreqParam, combRevParam;
 Parameter faderPosParam;
 
+float combFreq;
+
 void UpdateControls();
 
 void AudioCallback(float **in, float **out, size_t size)
@@ -24,7 +26,8 @@ void AudioCallback(float **in, float **out, size_t size)
   
   for (size_t i = 0; i < size; i++)
   {
-    comb.SetFreq(combFreqParam.Value() + lfo.Process());
+    float f = combFreq + lfo.Process() + 50.f;
+    comb.SetFreq(f);
     
     float inf  = in[0][i];
     float process = comb.Process(in[0][i]);
@@ -39,7 +42,7 @@ int main(void)
     samplerate = petal.AudioSampleRate();
 
     lfoFreqParam.Init(petal.knob[0], 0, 2, Parameter::LINEAR);
-    lfoAmpParam.Init(petal.knob[1], 0, 100, Parameter::LINEAR);
+    lfoAmpParam.Init(petal.knob[1], 0, 50, Parameter::LINEAR);
     combFreqParam.Init(petal.knob[2], 25, 300, Parameter::LOGARITHMIC);
     combRevParam.Init(petal.knob[3], 0, 1, Parameter::LINEAR);
     faderPosParam.Init(petal.knob[4], 0, 1, Parameter::LINEAR);
@@ -77,6 +80,7 @@ int main(void)
     }
 }
 
+
 void UpdateControls()
 {
   petal.DebounceControls();
@@ -84,7 +88,8 @@ void UpdateControls()
   //knobs
   lfo.SetFreq(lfoFreqParam.Process());
   lfo.SetAmp(lfoAmpParam.Process());
-  combFreqParam.Process();
+
+  fonepole(combFreq, combFreqParam.Process(), .01f);
   
   comb.SetRevTime(combRevParam.Process());
   
