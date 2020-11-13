@@ -16,7 +16,7 @@ Parameter lfoFreqParam, lfoAmpParam;
 Parameter combFreqParam, combRevParam;
 Parameter faderPosParam;
 
-float combFreq;
+float targetCombFreq, combFreq;
 
 void UpdateControls();
 
@@ -26,6 +26,7 @@ void AudioCallback(float **in, float **out, size_t size)
   
   for (size_t i = 0; i < size; i++)
   {
+    fonepole(combFreq, targetCombFreq, .0001f);
     float f = combFreq + lfo.Process() + 50.f;
     comb.SetFreq(f);
     
@@ -89,7 +90,7 @@ void UpdateControls()
   lfo.SetFreq(lfoFreqParam.Process());
   lfo.SetAmp(lfoAmpParam.Process());
 
-  fonepole(combFreq, combFreqParam.Process(), .01f);
+  targetCombFreq = combFreqParam.Process();
   
   comb.SetRevTime(combRevParam.Process());
   
