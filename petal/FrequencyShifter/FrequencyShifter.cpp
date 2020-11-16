@@ -15,6 +15,9 @@ Parameter lfoFreqParam, lfoAmpParam;
 Parameter shiftTransParam, shiftDelParam;
 Parameter faderPosParam;
 
+float trans, transTarget;
+float delsize, delsizeTarget;
+
 void UpdateControls();
 
 void AudioCallback(float **in, float **out, size_t size)
@@ -23,8 +26,14 @@ void AudioCallback(float **in, float **out, size_t size)
   
   for (size_t i = 0; i < size; i++)
   {
-    psl.SetTransposition(shiftTransParam.Value() + lfo.Process());
-    psr.SetTransposition(shiftTransParam.Value() + lfo.Process());
+    fonepole(trans, transTarget, .0005f);
+    psl.SetTransposition(trans + lfo.Process());
+    psr.SetTransposition(trans + lfo.Process());
+
+    fonepole(delsize, delsizeTarget, .001f);
+    psl.SetDelSize(delsize);
+    psr.SetDelSize(delsize);
+
     
     float inl  = in[0][i];
     float processl = psl.Process(inl);
@@ -76,7 +85,6 @@ int main(void)
     }
 }
 
-float delsize;
 
 void UpdateControls()
 {
@@ -87,11 +95,9 @@ void UpdateControls()
   lfo.SetFreq(lfoFreqParam.Process());
   lfo.SetAmp(lfoAmpParam.Process());
 
-  fonepole(delsize, 256 + shiftDelParam.Process(), .001f);
-  psl.SetDelSize(delsize);
-  psr.SetDelSize(delsize);
+  delsizeTarget = 256 + shiftDelParam.Process();
   
-  shiftTransParam.Process();
+  transTarget = shiftTransParam.Process();
     
   fader.SetPos(faderPosParam.Process());
   if (bypassOn)
