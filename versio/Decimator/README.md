@@ -4,7 +4,7 @@
 
 Decimator example for the Versio
 
-[Source Code](https://raw.githubusercontent.com/electro-smith/DaisyExamples/a6d446ce1fc8cb4559ed3036c40a3bb0c06fd7a3/patch/Compressor/README.md)
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/versio/Decimator)
 
 # Controls
 
