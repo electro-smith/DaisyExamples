@@ -81,7 +81,7 @@ class Example(object):
 
 
 def run():
-    directories = [ 'DaisySP/examples', 'seed', 'pod', 'patch', 'field', 'petal' ]
+    directories = [ 'DaisySP/examples', 'seed', 'pod', 'patch', 'field', 'petal', 'versio' ]
     examples = {}
 
     # Scan directories for example projects
