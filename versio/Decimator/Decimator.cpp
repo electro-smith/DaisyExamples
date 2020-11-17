@@ -31,7 +31,6 @@ int main(void)
 {
     // Initialize Versio hardware and start audio, ADC
     hw.Init();
-    float sample_rate = hw.AudioSampleRate();
 
     decimator_l.Init();
     decimator_r.Init();
