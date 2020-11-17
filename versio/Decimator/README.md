@@ -1,53 +1,23 @@
-# Field - MIDI
+# Description
 
-## Description
+**Author**: Ankoor Apte, Noise Engineering
 
-Polyphonic MIDI Synth
+Decimator example for the Versio
 
-24 voices of polyphony. Each voice is a band-limited saw waveform running through a state variable filter.
+[Source Code](https://raw.githubusercontent.com/electro-smith/DaisyExamples/a6d446ce1fc8cb4559ed3036c40a3bb0c06fd7a3/patch/Compressor/README.md)
 
-## Controls
+# Controls
+
+All controls have some effect on the LEDs
 
 | Control | Description |
 | --- | --- |
-| Button 1 | Choke all voices |
-| Knob 1 | Filter Cutoff |
-| MIDI Input | Note In/Note Off messages with Simple Polyphony (no voice stealing) |
+| Knob 0 | Bitcrush factor (left) |
+| Knob 1 | Downsample factor (left) |
+| Knob 2 | Bitcrush factor (right) |
+| Knob 3 | Downsample factor (right) |
 
 ## Diagram
 
 TODO: Add Diagram
 
-## Code Snippet
-
-Basic MIDI Note Message Handling
-
-```cpp
-void HandleDecimatorMessage(DecimatorEvent m)
-{
-    switch(m.type)
-    {
-        case NoteOn:
-        {
-            NoteOnEvent p = m.AsNoteOn();
-            // Note Off can come in as Note On w/ 0 Velocity
-            if(p.velocity == 0.f)
-            {
-                voice_handler.OnNoteOff(p.note, p.velocity);
-            }
-            else
-            {
-                voice_handler.OnNoteOn(p.note, p.velocity);
-            }
-        }
-        break;
-        case NoteOff:
-        {
-            NoteOnEvent p = m.AsNoteOn();
-            voice_handler.OnNoteOff(p.note, p.velocity);
-        }
-        break;
-        default: break;
-    }
-}
-```
