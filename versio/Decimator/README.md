@@ -1,16 +1,16 @@
 # Decimator
 
-# Author
+## Author
 
 Ankoor Apte, Noise Engineering
 
-# Description
+## Description
 
 Decimator example for the Versio
 
 [Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/versio/Decimator)
 
-# Controls
+## Controls
 
 All controls have some effect on the LEDs
 
@@ -25,3 +25,4 @@ All controls have some effect on the LEDs
 
 TODO: Add Diagram
 
+## Demo 
