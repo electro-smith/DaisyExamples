@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/../../libdaisy/**",
+                "${workspaceFolder}/../../DaisySP/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.17763.0",
+            "compilerPath": "C:/Program Files (x86)/GNU Tools Arm Embedded/8 2019-q3-update/bin/arm-none-eabi-g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
