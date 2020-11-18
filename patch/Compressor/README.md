@@ -1,7 +1,15 @@
-# Description
-Compressor with optional sidechain input.
+# Compressor
 
-# Controls
+## Author
+
+Ben Sergentanis
+
+## Description
+
+Compressor with optional sidechain input.
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Compressor)
+
+## Controls
 
 | Control | Description | Comment |
 | --- | --- | --- |
@@ -14,12 +22,5 @@ Compressor with optional sidechain input.
 | Encoder Press | Sidechain On/Off | |
 | Outs 1-4 | Compressor Out | |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Compressor/resources/Compressor.png" alt="Compressor.png" style="width: 100%;"/>
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Compressor)
-

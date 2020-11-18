@@ -1,8 +1,16 @@
-# Description
+# Quad Mixer
+
+## Author
+
+Ben Sergentanis
+
+## Description
 
 Simple Four Channel Audio Mixer.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadMixer)
+
+## Controls
 
 | Control | Description | Comment |
 | --- | --- | --- |
@@ -10,11 +18,5 @@ Simple Four Channel Audio Mixer.
 | Ins | Audio Inputs | Audio inputs are normalled In1 > In2 > In3 > In4 |
 | Outs | Audio Outputs | The mixed signal is available on all 4 outputs |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadMixer/resources/QuadMixer.png" alt="QuadMixer.png" style="width: 100%;"/>
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadMixer)

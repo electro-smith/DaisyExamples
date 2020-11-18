@@ -1,9 +1,19 @@
-# Description
+# LFO
+
+## Author
+
+Ben Sergentanis
+
+## Description
+
 Simple dual LFO module. Amplitude, frequency, and waveform per lfo.  
 Turn the encoder to select which LFO to edit. Click the encoder to edit that waveform.  
 @ Denotes the selection has been made, and o indicates it has not.  
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/lfo)
+
+## Controls
+
 | Control | Description | Comment |
 | --- | --- | --- |
 | Ctrl 1 and Ctrl 3 | LFO Frequency |  |
@@ -11,11 +21,5 @@ Turn the encoder to select which LFO to edit. Click the encoder to edit that wav
 | Encoder | Waveform | Turn to select wave or lfo, click to change selection. |
 | CV Outputs | LFO outs. | | 
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/lfo/resources/lfo.png" alt="lfo.png" style="width: 100%;"/>
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/lfo)

@@ -1,9 +1,18 @@
-# Description
+# Sequential Switch
+
+## Author
+
+Ben Sergentanis
+
+
+## Description
 Switches mutliple inputs to one output, or one output to multiple inputs.
 Clock input to trigger switch and reset in.
 Selectable one to many, or many to one modes.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/SequentialSwitch)
+
+## Controls
 
 | Control | Description | Comment |
 | --- | --- | --- |
@@ -15,11 +24,5 @@ Selectable one to many, or many to one modes.
 | Audio Ins | Multi / Single In | |
 | Audio Outs | Multi / Single Out | |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SequentialSwitch/resources/SequentialSwitch.png" alt="SequentialSwitch.png" style="width: 100%;"/>
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/SequentialSwitch)

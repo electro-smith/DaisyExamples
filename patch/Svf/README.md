@@ -1,7 +1,15 @@
-# Description
+# State Variable Filter
+
+## Author
+
+Ben Sergentanis
+
+## Description
 State variable filter with simultaneous low pass, high pass, band pass, and notch outputs.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Svf)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Ctrl 1 | Cutoff Frequency | 20Hz to 20,000kHz |
@@ -13,11 +21,9 @@ State variable filter with simultaneous low pass, high pass, band pass, and notc
 | Audio Out 3 | Band Pass Out | Passes frequencies in a band, centered around cutoff |
 | Audio Out 4 | Notch Out | Rejects a band of frequencies, centered around cutoff |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Svf/resources/Svf.png" alt="Svf.png" style="width: 100%;"/>
 
-# Author
 
-Ben Sergentanis
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Svf)
+

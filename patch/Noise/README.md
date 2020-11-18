@@ -1,7 +1,16 @@
-# Description
+# Noise
+
+## Author
+
+Ben Sergentanis
+
+
+## Description
 White noise with two resonant filters.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/MultiDelay)
+
+## Controls
 
 | Control | Description |
 | --- | --- |
@@ -11,11 +20,5 @@ White noise with two resonant filters.
 | Ctrl 4 | Highpass Resonance|
 | Audio Outs | Filtered Noise Out |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Noise/resources/Noise.png" alt="Noise.png" style="width: 100%;"/>
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/MultiDelay)

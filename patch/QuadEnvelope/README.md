@@ -1,10 +1,18 @@
-# Description
+# Quad Envelope
+
+## Author
+
+Ben Sergentanis
+
+## Description
 
 VCA with internal triggerable envelopes. Ins 1 and 2 are tied to env1, and Ins 3 and 4 are tied to env 2.
 Each input has its own output. The raw envelope signals are also available on the CV outs.
 The envelope curves and attack/decay times ae controllable as well.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadEnvelope)
+
+## Controls
 
 | Control | Description | Comment |
 | --- | --- | --- |
@@ -18,12 +26,6 @@ The envelope curves and attack/decay times ae controllable as well.
 | Audio Outs | Audio post VCA | Each output goes with its respective input |
 | CV Outs | Envelope CV | Goes with envelopes one and two respectively |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadEnvelope/resources/QuadEnvelope.png" alt="QuadEnvelope.png" style="width: 100%;"/>
 
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadEnvelope)
