@@ -1,6 +1,10 @@
-# Description
+# Decimator
 
-**Author**: Ankoor Apte, Noise Engineering
+# Author
+
+Ankoor Apte, Noise Engineering
+
+# Description
 
 Decimator example for the Versio
 
