@@ -1,7 +1,15 @@
-# Description
+# Multi Effect
+
+## Author
+
+Ben Sergentanis
+
+## Description
 Simple effects for incoming audio. Includes reverb, delay, downsampling, and autowah.  
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/MultiEffect)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Knob 1 | Reverb LP Freq | 20Hz - 10kHz |
@@ -17,17 +25,11 @@ Simple effects for incoming audio. Includes reverb, delay, downsampling, and aut
 | Audio In | Effects In | |
 | Audio Out | Effects Out | |
 
-# Diagram
+## Diagram
 
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/MultiEffect/resources/Petal_MultiEffect_Diagram.png" alt="MultiDelay.png" style="width: 100%;"/>
 
 
-# Sound Demo
+## Sound Demo
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/MzivmxIsOcY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/MultiEffect)
