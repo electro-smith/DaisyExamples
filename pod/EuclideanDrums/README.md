@@ -1,8 +1,16 @@
-# Description 
+# Euclidean Drums
+
+## Author
+
+Ben Sergentanis
+
+## Description 
 Euclidean drum sequencer. Snare and kick drum, controls per drum for density, pattern length. Global tempo control.  
 Since the two sequencers run independently, they can have different lengths leading to complex interlocking patterns.  
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/EuclideanDrums)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Encoder turn | Select sequencer (snare or kick) | |
@@ -12,8 +20,3 @@ Since the two sequencers run independently, they can have different lengths lead
 | Buttons | Global Tempo | Hold button one to increase tempo, and hold button two to decrease. |
 | Led 1 | Tempo indicator | Red led. Brighter is faster |
 
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/EuclideanDrums)

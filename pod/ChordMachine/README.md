@@ -1,7 +1,17 @@
-# Description
+# Chord Machine
+
+## Author
+
+Ben Sergentanis
+
+
+
+## Description
 A simple sine wave chord machine. Cycle through different chord types and inversions.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/ChordMachine)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Knob 1 | Root pitch | Shifts the whole chord |
@@ -9,7 +19,7 @@ A simple sine wave chord machine. Cycle through different chord types and invers
 | Encoder | Rotate: Cycle through different chord types<br>Press: Reset to the first chord | |
 | LED | Chord indicator | |
 
-### Chord types
+## Chord types
   1. Major triad, Red
   2. Minor triad, Green
   3. Augmented triad, Blue
@@ -20,9 +30,3 @@ A simple sine wave chord machine. Cycle through different chord types and invers
   8. Minor/Major seven, Yellow
   9. Diminished seven, Pink
   10. Half diminished seven, Light green
-
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/ChordMachine)

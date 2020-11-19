@@ -1,10 +1,19 @@
-# Description
+# Step Sequencer
+
+## Author
+
+Ben Sergentanis
+
+
+## Description
 Simple 8 step sequencer. Has controls per step for envelope decay, pitch, and step activation.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/StepSequencer)
+
+## Controls
 Edit and play mode, press encoder to switch modes. Edit is multicolored, play is green.
 
-## Edit mode
+#### Edit mode
 | Control | Description | Comment |
 | --- | --- | --- |
 | Encoder | Rotate: run through steps | |
@@ -17,7 +26,7 @@ Edit and play mode, press encoder to switch modes. Edit is multicolored, play is
 
 When a step is activated, its envelope will cycle. Listen for pitch and envelope shape.
 
-### Step Colors
+###### Step Colors
 | Step | Color |
 | --- | --- |
 | 1 | Red |
@@ -30,7 +39,7 @@ When a step is activated, its envelope will cycle. Listen for pitch and envelope
 | 8 | Yellow |
 
 
-## Play mode
+#### Play mode
 | Control | Description | Comment |
 | --- | --- | --- |
 | Encoder | Rotate: Waveform | Ramp, Square |
@@ -38,8 +47,3 @@ When a step is activated, its envelope will cycle. Listen for pitch and envelope
 | Knob 2 | Filter cutoff |  |
 
 
-# Author
-
-Ben Sergentanis
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/StepSequencer)

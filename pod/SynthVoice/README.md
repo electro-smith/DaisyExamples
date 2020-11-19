@@ -1,7 +1,16 @@
-# Description
+# Synth Voice
+
+## Author
+
+Shensley
+
+
+## Description
 Simple Synth voice with resonant filter, self cycling envelope, and vibrato control.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SynthVoice)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Led | Mode Indicate | 1. Blue, 2. Green, 3. Red |
@@ -19,11 +28,6 @@ Simple Synth voice with resonant filter, self cycling envelope, and vibrato cont
 
 
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/resources/SynthVoice.png" alt="Button_schem.png" style="width: 100%;"/>
 
-# Author
-
-Shensley
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SynthVoice)
