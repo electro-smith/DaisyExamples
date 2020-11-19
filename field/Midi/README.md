@@ -1,10 +1,15 @@
-# Field - MIDI
+# Midi
+
+## Author
+
+Shensley
 
 ## Description
 
 Polyphonic MIDI Synth
-
 24 voices of polyphony. Each voice is a band-limited saw waveform running through a state variable filter.
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/Midi)
 
 ## Controls
 
@@ -17,10 +22,4 @@ Polyphonic MIDI Synth
 ## Diagram
 
 TODO: Add Diagram
-
-# Author
-
-Shensley
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/Midi)
 
