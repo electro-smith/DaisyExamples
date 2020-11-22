@@ -1,6 +1,6 @@
+// Daisy Patch Template
 #include "daisy_patch.h"
 #include "daisysp.h"
-#include <string>
 
 using namespace daisy;
 using namespace daisysp;
@@ -27,7 +27,5 @@ int main(void)
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
 
-    while(1)
-    {
-    }
+    while(1) {}
 }
