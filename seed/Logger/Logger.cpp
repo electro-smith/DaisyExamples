@@ -44,7 +44,7 @@ int main(void)
 
     hw.Configure();
     hw.Init();
-    hw.StartLog(false);  // true == wait for PC: will block until a terminal is connected
+    hw.StartLog(true);  // true == wait for PC: will block until a terminal is connected
 
     hw.PrintLine("Verifying newline character handling:");
     hw.PrintLine("1. This should be a single line\r");
