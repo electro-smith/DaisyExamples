@@ -46,6 +46,12 @@ int main(void)
     hw.Init();
     hw.StartLog(true);  // true == wait for PC: will block until a terminal is connected
 
+    // use static method directly
+    Logger<LOGGER_INTERNAL>::PrintLine("This may be used anywhere too");
+
+    // use a different output destination. Note that this would require the linker to include the whole object with own buffers!
+    Logger<LOGGER_EXTERNAL>::Print("This would not be visible, but would not stop the program");
+
     hw.PrintLine("Verifying newline character handling:");
     hw.PrintLine("1. This should be a single line\r");
     hw.PrintLine("2. This should be a single line\n");
@@ -92,6 +98,7 @@ int main(void)
 
 This should too appear in the log
 Daisy is online
+This may be used anywhere too
 Verifying newline character handling:
 1. This should be a single line
 2. This should be a single line
@@ -134,5 +141,3 @@ Starting timer printout. Verify fractional values
 
 
 */
-
-
