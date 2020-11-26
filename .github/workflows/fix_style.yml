@@ -1,0 +1,26 @@
+name: Fix Style
+
+on: 
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.11
+      with:
+        source: '.'
+        exclude: './DaisySP ./libDaisy'
+        extensions: 'h,cpp'
+        clangFormatVersion: 10
+        inplace: True
+    - uses: EndBug/add-and-commit@v4
+      with:
+        message: 'Automated: committing clang-format changes'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
