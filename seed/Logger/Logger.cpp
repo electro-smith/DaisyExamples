@@ -1,20 +1,23 @@
 #include <string.h>
+#include <math.h>
 #include "daisy_seed.h"
 
 using namespace daisy;
 
 static DaisySeed hw;
 
-// grab the internal logger configuration value LOGGER_BUFFER for verification
-// note that the last character is the null terminator
-// so [1 + LOGGER_BUFFER] buffer would contain LOGGER_BUFFER meaningful characters
+/** grab the internal logger configuration value LOGGER_BUFFER for verification
+ * note that the last character is the null terminator
+ * so [1 + LOGGER_BUFFER] buffer would contain LOGGER_BUFFER meaningful characters
+ */ 
 char test_msg1[1 + LOGGER_BUFFER + 1] = "This should really overflow";
 char test_msg2[1 + LOGGER_BUFFER    ] = "This should be treated as overflow";
 char test_msg3[1 + LOGGER_BUFFER - 1] = "This should be safe for Print()";
 char test_msg4[1 + LOGGER_BUFFER - 2] = "This should be safe for Print()";
 char test_msg5[1 + LOGGER_BUFFER - 3] = "This should be safe for Print() and PrintLine()";
 
-// append dots (.) till the end of the buffer as a visual cue
+/** append dots (.) till the end of the buffer as a visual cue
+ */ 
 template<size_t N>
 void fillup_msg(char (&buf)[N])
 {
@@ -25,6 +28,8 @@ void fillup_msg(char (&buf)[N])
     buf[N-1] = '\0';
 }
 
+/** fill up message for buffer overflow testing
+ */ 
 void prepare_messages()
 {
     fillup_msg(test_msg1);
@@ -36,6 +41,8 @@ void prepare_messages()
 
 typedef void (PrintFunc)(const char*, ...);
 
+/** profile a single printout function
+ */ 
 template<PrintFunc function, typename... Va>
 float ProfileFunction(const char* format, Va... va)
 {
@@ -49,7 +56,10 @@ float ProfileFunction(const char* format, Va... va)
     const float perf = (float)dt / (200 * count); // using secret knowledge about timer frequency...
     return perf;
 }
-template<LoggerDestination dest, PrintFunc function>
+
+/** Run all profiling tests for a function 
+ */
+template<PrintFunc function>
 void ProfilePrint(const char* class_caption, const char* func_caption)
 {
     const float print_0  = ProfileFunction<function>("");
@@ -63,7 +73,7 @@ void ProfilePrint(const char* class_caption, const char* func_caption)
     const float print_F3 = ProfileFunction<function>(FLT_FMT3,   FLT_VAR3(123.0f));
     const float print_F4 = ProfileFunction<function>(FLT_FMT(4), FLT_VAR(4, 123.0f));
 
-    // linear fit
+    /* linear fit */
     const float slope     = (print_36 - print_1) / (36 - 1);
     const float intercept = print_1 - slope;
 
@@ -76,40 +86,73 @@ void ProfilePrint(const char* class_caption, const char* func_caption)
     hw.PrintLine("%s - %s (FLT_VAR2 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_F2));
     hw.PrintLine("%s - %s (FLT_VAR3 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_F3));
     hw.PrintLine("%s - %s (FLT_VAR4 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_F4));
-    
 }
 
+/** Profile the whole destination
+ */ 
 template<LoggerDestination dest>
 void ProfileDest(const char* class_caption)
 {
     Logger<dest>::StartLog(false);
-    ProfilePrint<dest, Logger<dest>::Print>    (class_caption, "Print    ");
-    ProfilePrint<dest, Logger<dest>::PrintLine>(class_caption, "PrintLine");
+    ProfilePrint<Logger<dest>::Print>    (class_caption, "Print     ");
+    ProfilePrint<Logger<dest>::PrintLine>(class_caption, "PrintLine ");
+}
+/** Verify FLT_FMT/FLT_VAR accuracy
+ */ 
+void VerifyFloats()
+{
+    char ref[32];
+    char tst[32];
+    bool result = true;
+    for (float f = -100.0; f < 100.0; f += 0.001)
+    {
+        sprintf(tst, FLT_FMT(3), FLT_VAR(3, f));
+
+        const double f_tst = strtod(tst, nullptr);
+
+        /* verify down to the least significant digit, which is off because of truncation */
+        if (abs((double)f - f_tst) > 1.0e-3)
+        {
+            sprintf(ref, "%.3f", f);
+            hw.PrintLine("mismatch: ref = %s, dsy = %s, float = %.6f", ref, tst, f);
+            result = false;
+        }
+    }
+    hw.PrintLine("FLT_FMT(3)/FLT_VAR(3) verification: %s", result ? "PASS" : "FAIL");
 }
 
 int main(void)
 {
-    // prepare test messages for corner cases
+    /* prepare test messages for corner cases */
     prepare_messages();
 
-    // try printing out something before the hardware init
+    /* try printing out something before the hardware init */
     hw.PrintLine("This should too appear in the log");
 
     hw.Configure();
     hw.Init();
-    hw.StartLog(true);  // true == wait for PC: will block until a terminal is connected
+    hw.StartLog(true);  /* true == wait for PC: will block until a terminal is connected */
+    
+    /** check that floating point printf is supported 
+     * linker flags modified in the Makefile to enable this
+     */ 
+    hw.PrintLine("Verify CRT floating point format: %.3f", 123.0f); 
 
-    // Profile different destinations
-    // Don't use LOGGER_INTERNAL, since it will be throttled by the connected UART speed
-    hw.PrintLine("Verify CRT floating point format: %.3f", 123.0f); // linker flags modified in the Makefile to enable this
+    VerifyFloats();
+
+    /** Profile different destinations 
+     * Don't use LOGGER_INTERNAL, since it will flood the connected terminal
+     */
     ProfileDest<LOGGER_EXTERNAL>("LOGGER_EXTERNAL");
     ProfileDest<LOGGER_SEMIHOST>("LOGGER_SEMIHOST");
     ProfileDest<LOGGER_NONE>    ("LOGGER_NONE    ");
 
-    // use static method directly
+    /* use static method directly */
     Logger<LOGGER_INTERNAL>::PrintLine("This may be used anywhere too");
 
-    // use a different output destination. Note that this would require the linker to include the whole object with own buffers!
+    /** use a different output destination. 
+     * Note that this would require the linker to include the whole object with own buffers!
+     */ 
     Logger<LOGGER_EXTERNAL>::Print("This would not be visible, but would not stop the program");
 
     hw.PrintLine("Verifying newline character handling:");
@@ -118,7 +161,7 @@ int main(void)
     hw.PrintLine("3. This should be a single line\r\n");
     hw.PrintLine("4. This should be a single line\n\r");
     hw.PrintLine("5. This should be a single line\r\r\r\n\n\n\r\n\r");
-    hw.PrintLine("");   // this should be an empty line
+    hw.PrintLine("");   /* this should be an empty line */
 
     hw.PrintLine("Printing 5 test messages using the Print() service");
     hw.PrintLine("Verify overflow indicators ($$) below");
@@ -143,10 +186,15 @@ int main(void)
     {
         dsy_system_delay(500);
                 
-        const float time_s = dsy_tim_get_ms() * 1.0e-3f;    // showcase floating point output
-        hw.PrintLine("%6u: Elapsed time: " FLT_FMT3 " seconds", counter, FLT_VAR3(time_s)); // note that FLT_FMT is part of the format string
+        const float time_s = dsy_tim_get_ms() * 1.0e-3f;    
 
-        hw.SetLed(counter & 0x01); // LSB triggers the LED
+        /** showcase floating point output 
+         * note that FLT_FMT is part of the format string
+         */ 
+        hw.PrintLine("%6u: Elapsed time: " FLT_FMT3 " seconds", counter, FLT_VAR3(time_s)); 
+
+        /* LSB triggers the LED */
+        hw.SetLed(counter & 0x01);
         counter++;
     }
 
@@ -159,6 +207,7 @@ int main(void)
 This should too appear in the log
 Daisy is online
 Verify CRT floating point format: 123.000
+FLT_FMT(3)/FLT_VAR(3) verification: PASS
 LOGGER_EXTERNAL - Print     (  empty string): 0.404 us/call
 LOGGER_EXTERNAL - Print     (   text string): 0.516 us/call + 0.010 us/char
 LOGGER_EXTERNAL - Print     ( integer value): 1.921 us/call
