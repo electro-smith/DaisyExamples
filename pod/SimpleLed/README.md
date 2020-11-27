@@ -17,4 +17,4 @@ Example showing basic usage of RGB LED by mapping R/G values of LED 1 to knob.
 | Knob 2 | Led 2 Brightness | Sets the G brightness value for LED 1. |
 
 ## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleLed/resources/SimpleLed.png" alt="Button_schem.png" style="width: 100%;"/>
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleLed/resources/SimpleLed.png" alt="SimpleLed.png" style="width: 100%;"/>

@@ -16,7 +16,7 @@ Example showing basic usage of pushbutton switches for momentary and latching be
 | Button 2 | Activate Led 2 |
 
 ## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleButton/resources/SimpleButton.png" alt="Button_schem.png" style="width: 100%;"/>
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleButton/resources/SimpleButton.png" alt="SimpleButton.png" style="width: 100%;"/>
 
 
 

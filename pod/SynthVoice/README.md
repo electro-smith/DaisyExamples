@@ -29,5 +29,5 @@ Simple Synth voice with resonant filter, self cycling envelope, and vibrato cont
 
 
 ## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/resources/SynthVoice.png" alt="Button_schem.png" style="width: 100%;"/>
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/resources/SynthVoice.png" alt="SynthVoice.png" style="width: 100%;"/>
 

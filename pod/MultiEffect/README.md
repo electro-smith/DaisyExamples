@@ -24,7 +24,7 @@ Simple effects for incoming audio. Includes reverb, delay, and downsampling.
 | Knob 2 | Reverb time | Feedback | Downsample |
 
 ## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/resources/MultiEffect.png" alt="Button_schem.png" style="width: 100%;"/>
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/resources/MultiEffect.png" alt="MultiEffect.png" style="width: 100%;"/>
 
 
 
