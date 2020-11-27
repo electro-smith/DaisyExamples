@@ -16,7 +16,6 @@ Oscillators are each Bandlimited Saw waves.
 | Control | Description |
 | --- | --- |
 | SW 1 2 |  Octave up/down |
-| SW 3 | Enables/disables the reverb |
 | Keyboard buttons | Chromatic keyboard |
 
 ## building
