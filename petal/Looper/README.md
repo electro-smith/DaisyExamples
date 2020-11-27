@@ -16,9 +16,9 @@ Loops can be very long, or very short.
 | --- | --- | --- |
 | Switch 1 | Record | Press to record/SOS. Hold to reset |
 | Switch 2 | Play / Pause| |
-| Leds | Modes | Footswitch Led 1: Play, Footswitch Led 2: Record |
+| Leds | Modes | Footswitch Led 1: Record, Footswitch Led 2: Play |
 | Knob 1 | Live In / Loop | Left is in, right is loop |
 
 ## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/Looper/resources/Looper.png" alt="Button_schem.png" style="width: 100%;"/>
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Looper/resources/Looper.png" alt="Button_schem.png" style="width: 100%;"/>
 
