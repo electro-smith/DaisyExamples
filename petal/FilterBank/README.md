@@ -17,7 +17,7 @@ There are two banks of four filters to control.
 | Encoder Turn | Control Mode | Selects which filters ctrls map to |
 | Ctrl 1-4 | Filter Amplitude | Volume per filter |
 | Audio In 1 | Filter bank Input | |
-| Audio Out 1-4 | Filter Bank Output | |
+| Audio Out 1-2 | Filter Bank Output | |
 | Leds | Brightness 1-8 shows amplitude per filter | Whichever side is purple is the side being controlled |
 
 ## Diagram
