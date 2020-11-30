@@ -1,7 +1,7 @@
 #!/bin/bash
 
-./rebuild_libs.sh
-./rebuild_examples.sh
+./ci/build_libs.sh
+./ci/build_examples.sh
 
 echo "finished"
 
