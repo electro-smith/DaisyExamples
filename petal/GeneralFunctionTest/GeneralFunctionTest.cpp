@@ -9,7 +9,8 @@
 #define ENC_ID "ENCODER_"
 
 #define TEST_FILE_NAME "DaisyTestFile.txt"
-#define TEST_FILE_CONTENTS "This file is used for testing the Daisy breakout boards. Happy Hacking!"
+#define TEST_FILE_CONTENTS \
+    "This file is used for testing the Daisy breakout boards. Happy Hacking!"
 
 using namespace daisy;
 using namespace daisysp;
@@ -55,14 +56,14 @@ void callback(float *in, float *out, size_t size)
 
 int main(void)
 {
-    int sdfail;
+    int      sdfail;
     uint32_t led_period, usb_period, now;
     uint32_t last_led_update, last_usb_update;
 
     // LED Freq = 60Hz
     // USB Freq= 10Hz
-    led_period      = 5;
-    usb_period      = 100;
+    led_period = 5;
+    usb_period = 100;
 
     hw.Init();
 
@@ -152,11 +153,12 @@ void UpdateUsb(int sd_sta)
     // Knobs
     for(size_t i = 0; i < hw.KNOB_LAST; i++)
     {
-        sprintf(buff,
-                "{%s%d, %d},",
-                KNOB_ID,
-                i + 1,
-                (int)(hw.GetKnobValue(static_cast<DaisyPetal::Knob>(i))*1000.f));
+        sprintf(
+            buff,
+            "{%s%d, %d},",
+            KNOB_ID,
+            i + 1,
+            (int)(hw.GetKnobValue(static_cast<DaisyPetal::Knob>(i)) * 1000.f));
         strcat(catbuff, buff);
     }
     // Expression

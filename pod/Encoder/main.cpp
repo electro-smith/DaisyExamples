@@ -3,8 +3,8 @@
 using namespace daisy;
 
 static DaisyPod hw;
-static uint8_t led_sel;
-static int32_t inc;
+static uint8_t  led_sel;
+static int32_t  inc;
 
 #define NUM_COLORS 5
 
@@ -16,19 +16,19 @@ static void callback(float *in, float *out, size_t size)
     hw.encoder.Debounce();
     inc = hw.encoder.Increment();
     // Change the selected LED based on the increment.
-    if (inc > 0)
+    if(inc > 0)
     {
         led_sel += 1;
         // Wrap around
-        if (led_sel > NUM_COLORS - 1)
+        if(led_sel > NUM_COLORS - 1)
         {
             led_sel = 0;
         }
     }
-    else if (inc < 0)
+    else if(inc < 0)
     {
         // Wrap around
-        if (led_sel == 0)
+        if(led_sel == 0)
         {
             led_sel = NUM_COLORS - 1;
         }
@@ -37,7 +37,7 @@ static void callback(float *in, float *out, size_t size)
             led_sel -= 1;
         }
     }
-    if (hw.encoder.RisingEdge())
+    if(hw.encoder.RisingEdge())
     {
         led_sel = 4;
     }
@@ -51,7 +51,7 @@ int main(void)
 {
     hw.Init();
     led_sel = 0;
-    inc = 0;
+    inc     = 0;
     my_colors[0].Init(Color::PresetColor::RED);
     my_colors[1].Init(Color::PresetColor::GREEN);
     my_colors[2].Init(Color::PresetColor::BLUE);
@@ -59,8 +59,8 @@ int main(void)
     my_colors[4].Init(Color::PresetColor::OFF);
     // until we have fixed timer callbacks we'll use the audio callback
     hw.StartAudio(callback);
-    while(1) 
-    { 
+    while(1)
+    {
         //hw.ClearLeds();
         //hw.SetLed(static_cast<DaisyPod::Led>(led_sel), 1);
     }

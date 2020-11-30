@@ -9,12 +9,12 @@ OledDisplay display;
 
 int main(void)
 {
-    uint8_t message_idx;
+    uint8_t      message_idx;
     dsy_gpio_pin oled_pins[OledDisplay::NUM_PINS];
     hw.Configure();
     hw.Init();
     oled_pins[OledDisplay::DATA_COMMAND] = hw.GetPin(10);
-    oled_pins[OledDisplay::RESET] = hw.GetPin(31);
+    oled_pins[OledDisplay::RESET]        = hw.GetPin(31);
     display.Init(oled_pins);
     message_idx = 0;
     char strbuff[128];
