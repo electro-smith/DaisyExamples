@@ -14,7 +14,7 @@ jobs:
     - uses: DoozyX/clang-format-lint-action@v0.11
       with:
         source: '.'
-        exclude: './DaisySP ./libDaisy'
+        exclude: './DaisySP ./libDaisy ./cube ./utils ./resources ./**/experimental'
         extensions: 'h,cpp'
         clangFormatVersion: 10
         inplace: True
