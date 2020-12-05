@@ -1,5 +1,6 @@
-#include <string.h>
-#include <math.h>
+#include <cstring>
+#include <cstdio>
+#include <cmath>
 #include "daisy_seed.h"
 
 using namespace daisy;
@@ -9,7 +10,7 @@ static DaisySeed hw;
 /** grab the internal logger configuration value LOGGER_BUFFER for verification
  * note that the last character is the null terminator
  * so [1 + LOGGER_BUFFER] buffer would contain LOGGER_BUFFER meaningful characters
- */ 
+ */
 char test_msg1[1 + LOGGER_BUFFER + 1] = "This should really overflow";
 char test_msg2[1 + LOGGER_BUFFER    ] = "This should be treated as overflow";
 char test_msg3[1 + LOGGER_BUFFER - 1] = "This should be safe for Print()";
@@ -17,7 +18,7 @@ char test_msg4[1 + LOGGER_BUFFER - 2] = "This should be safe for Print()";
 char test_msg5[1 + LOGGER_BUFFER - 3] = "This should be safe for Print() and PrintLine()";
 
 /** append dots (.) till the end of the buffer as a visual cue
- */ 
+ */
 template<size_t N>
 void fillup_msg(char (&buf)[N])
 {
@@ -29,7 +30,7 @@ void fillup_msg(char (&buf)[N])
 }
 
 /** fill up message for buffer overflow testing
- */ 
+ */
 void prepare_messages()
 {
     fillup_msg(test_msg1);
@@ -42,7 +43,7 @@ void prepare_messages()
 typedef void (PrintFunc)(const char*, ...);
 
 /** profile a single printout function
- */ 
+ */
 template<PrintFunc function, typename... Va>
 float ProfileFunction(const char* format, Va... va)
 {
@@ -89,7 +90,7 @@ void ProfilePrint(const char* class_caption, const char* func_caption)
 }
 
 /** Profile the whole destination
- */ 
+ */
 template<LoggerDestination dest>
 void ProfileDest(const char* class_caption)
 {
@@ -98,7 +99,7 @@ void ProfileDest(const char* class_caption)
     ProfilePrint<Logger<dest>::PrintLine>(class_caption, "PrintLine ");
 }
 /** Verify FLT_FMT/FLT_VAR accuracy
- */ 
+ */
 void VerifyFloats()
 {
     char ref[32];
@@ -132,10 +133,10 @@ int main(void)
     hw.Configure();
     hw.Init();
     hw.StartLog(true);  /* true == wait for PC: will block until a terminal is connected */
-    
+
     /** check that floating point printf is supported 
      * linker flags modified in the Makefile to enable this
-     */ 
+     */
     hw.PrintLine("Verify CRT floating point format: %.3f", 123.0f); 
 
     VerifyFloats();
@@ -150,9 +151,9 @@ int main(void)
     /* use static method directly */
     Logger<LOGGER_INTERNAL>::PrintLine("This may be used anywhere too");
 
-    /** use a different output destination. 
+    /** use a different output destination.
      * Note that this would require the linker to include the whole object with own buffers!
-     */ 
+     */
     Logger<LOGGER_EXTERNAL>::Print("This would not be visible, but would not stop the program");
 
     hw.PrintLine("Verifying newline character handling:");
@@ -185,12 +186,12 @@ int main(void)
     while(1)
     {
         dsy_system_delay(500);
-                
+
         const float time_s = dsy_tim_get_ms() * 1.0e-3f;    
 
         /** showcase floating point output 
          * note that FLT_FMT is part of the format string
-         */ 
+         */
         hw.PrintLine("%6u: Elapsed time: " FLT_FMT3 " seconds", counter, FLT_VAR3(time_s)); 
 
         /* LSB triggers the LED */
@@ -206,6 +207,7 @@ int main(void)
 
 This should too appear in the log
 Daisy is online
+===============
 Verify CRT floating point format: 123.000
 FLT_FMT(3)/FLT_VAR(3) verification: PASS
 LOGGER_EXTERNAL - Print     (  empty string): 0.404 us/call
