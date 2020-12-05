@@ -7,10 +7,11 @@ using namespace daisysp;
 
 DaisyPatch patch;
 
-struct sampHoldStruct {
-    SampleHold sampHold;
+struct sampHoldStruct
+{
+    SampleHold       sampHold;
     SampleHold::Mode mode;
-    float output;
+    float            output;
 
     void Process(bool trigger, float input)
     {
@@ -29,9 +30,9 @@ void UpdateOled();
 int main(void)
 {
     patch.Init();
- 
+
     patch.StartAdc();
-    while(1) 
+    while(1)
     {
         UpdateControls();
         UpdateOutputs();
@@ -45,8 +46,10 @@ void UpdateControls()
     patch.DebounceControls();
 
     //read ctrls and gates, then update sampleholds
-    sampHolds[0].Process(patch.gate_input[0].State(), patch.controls[0].Process());
-    sampHolds[1].Process(patch.gate_input[1].State(), patch.controls[1].Process());
+    sampHolds[0].Process(patch.gate_input[0].State(),
+                         patch.controls[0].Process());
+    sampHolds[1].Process(patch.gate_input[1].State(),
+                         patch.controls[1].Process());
 
     //encoder
     menuPos += patch.encoder.Increment();
@@ -55,7 +58,8 @@ void UpdateControls()
     //switch modes
     if(patch.encoder.RisingEdge())
     {
-        sampHolds[menuPos].mode = (SampleHold::Mode)((sampHolds[menuPos].mode + 1) % 2);
+        sampHolds[menuPos].mode
+            = (SampleHold::Mode)((sampHolds[menuPos].mode + 1) % 2);
     }
 }
 
@@ -69,9 +73,9 @@ void UpdateOled()
 {
     patch.display.Fill(false);
 
-    std::string str = "Sample/Track and Hold";
-    char * cstr = &str[0];
-    patch.display.SetCursor(0,0);
+    std::string str  = "Sample/Track and Hold";
+    char*       cstr = &str[0];
+    patch.display.SetCursor(0, 0);
     patch.display.WriteString(cstr, Font_6x8, true);
 
     //Cursor
@@ -83,7 +87,7 @@ void UpdateOled()
     patch.display.SetCursor(0, 35);
     str = sampHolds[0].mode == 0 ? "S&H" : "T&H";
     patch.display.WriteString(cstr, Font_7x10, true);
-    
+
     patch.display.SetCursor(60, 35);
     str = sampHolds[1].mode == 0 ? "S&H" : "T&H";
     patch.display.WriteString(cstr, Font_7x10, true);

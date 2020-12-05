@@ -1,6 +1,6 @@
 #include "daisy_seed.h"
 
-// Use the daisy namespace to prevent having to type 
+// Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
 using namespace daisy;
 

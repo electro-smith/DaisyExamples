@@ -10,10 +10,10 @@ DaisyField hw;
 void callback(float *in, float *out, size_t size)
 {
     // Audio is interleaved stereo by default
-    for (size_t i = 0; i < size; i+=2)
+    for(size_t i = 0; i < size; i += 2)
     {
-        out[i] = in[i]; // left
-        out[i+1] = in[i+1]; // right
+        out[i]     = in[i];     // left
+        out[i + 1] = in[i + 1]; // right
     }
 }
 
@@ -22,7 +22,7 @@ int main(void)
     hw.Init();
     hw.StartAudio(callback);
     hw.StartAdc();
-    while(1) 
+    while(1)
     {
         // Do Stuff InfInitely Here
     }

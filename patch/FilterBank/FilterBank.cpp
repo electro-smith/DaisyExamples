@@ -6,7 +6,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPatch patch;
-int freqs[16];
+int        freqs[16];
 
 int bank;
 
@@ -16,35 +16,36 @@ struct ConditionalUpdate
 
     bool Process(float newVal)
     {
-        if (abs(newVal - oldVal) > .04)
-	{
-	    oldVal = newVal;
-	    return true;
-	}
-	
-	return false;
+        if(abs(newVal - oldVal) > .04)
+        {
+            oldVal = newVal;
+            return true;
+        }
+
+        return false;
     }
 };
 
 ConditionalUpdate condUpdates[4];
 
-struct Filter{
-    Svf filt;
+struct Filter
+{
+    Svf   filt;
     float amp;
-    
+
     void Init(float samplerate, float freq)
     {
-	filt.Init(samplerate);
-	filt.SetRes(1);
-	filt.SetDrive(.002);
-	filt.SetFreq(freq);
-	amp = .5f;
+        filt.Init(samplerate);
+        filt.SetRes(1);
+        filt.SetDrive(.002);
+        filt.SetFreq(freq);
+        amp = .5f;
     }
-    
+
     float Process(float in)
     {
-	filt.Process(in);
-	return filt.Peak() * amp;
+        filt.Process(in);
+        return filt.Peak() * amp;
     }
 };
 
@@ -52,31 +53,31 @@ Filter filters[16];
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
-    for (size_t i = 0; i < size; i++)
+    for(size_t i = 0; i < size; i++)
     {
-	float sig = 0.f;
-	for (int j = 0; j < 16; j++)
-	{
-	    sig += filters[j].Process(in[0][i]);
-	}
-	sig *= .06;
-	
-	out[0][i] = out[1][i] = out[2][i] = out[3][i] = sig;
+        float sig = 0.f;
+        for(int j = 0; j < 16; j++)
+        {
+            sig += filters[j].Process(in[0][i]);
+        }
+        sig *= .06;
+
+        out[0][i] = out[1][i] = out[2][i] = out[3][i] = sig;
     }
 }
 
 void InitFreqs()
 {
-    freqs[0] = 50;
-    freqs[1] = 75;
-    freqs[2] = 110;
-    freqs[3] = 150;
-    freqs[4] = 220;
-    freqs[5] = 350;
-    freqs[6] = 500;
-    freqs[7] = 750;
-    freqs[8] = 1100;
-    freqs[9] = 1600;
+    freqs[0]  = 50;
+    freqs[1]  = 75;
+    freqs[2]  = 110;
+    freqs[3]  = 150;
+    freqs[4]  = 220;
+    freqs[5]  = 350;
+    freqs[6]  = 500;
+    freqs[7]  = 750;
+    freqs[8]  = 1100;
+    freqs[9]  = 1600;
     freqs[10] = 2200;
     freqs[11] = 3600;
     freqs[12] = 5200;
@@ -87,9 +88,9 @@ void InitFreqs()
 
 void InitFilters(float samplerate)
 {
-    for (int i = 0; i < 16; i++)
+    for(int i = 0; i < 16; i++)
     {
-	filters[i].Init(samplerate, freqs[i]);
+        filters[i].Init(samplerate, freqs[i]);
     }
 }
 
@@ -105,13 +106,13 @@ int main(void)
     InitFreqs();
     InitFilters(samplerate);
     bank = 0;
-    
+
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
-    while(1) 
+    while(1)
     {
-	UpdateOled();
-	UpdateControls();
+        UpdateOled();
+        UpdateControls();
     }
 }
 
@@ -119,32 +120,32 @@ void UpdateOled()
 {
     patch.display.Fill(false);
 
-    std::string str = "Filter Bank";
-    char* cstr = &str[0];
-    patch.display.SetCursor(0,0);
+    std::string str  = "Filter Bank";
+    char *      cstr = &str[0];
+    patch.display.SetCursor(0, 0);
     patch.display.WriteString(cstr, Font_7x10, true);
 
     str = "";
-    for (int i = 0; i < 2; i++)
+    for(int i = 0; i < 2; i++)
     {
-	str += std::to_string(freqs[i + 4 * bank]);
-	str += "  ";
+        str += std::to_string(freqs[i + 4 * bank]);
+        str += "  ";
     }
 
-    patch.display.SetCursor(0,25);
+    patch.display.SetCursor(0, 25);
     patch.display.WriteString(cstr, Font_7x10, true);
 
     str = "";
-    for (int i = 2; i < 4; i++)
+    for(int i = 2; i < 4; i++)
     {
-	str += std::to_string(freqs[i + 4 * bank]);
-	str += "  ";
+        str += std::to_string(freqs[i + 4 * bank]);
+        str += "  ";
     }
 
-    patch.display.SetCursor(0,35);
+    patch.display.SetCursor(0, 35);
     patch.display.WriteString(cstr, Font_7x10, true);
 
-    
+
     patch.display.Update();
 }
 
@@ -152,7 +153,7 @@ void UpdateControls()
 {
     patch.UpdateAnalogControls();
     patch.DebounceControls();
-    
+
     //encoder
     bank += patch.encoder.Increment();
     bank = (bank % 4 + 4) % 4;
@@ -160,12 +161,12 @@ void UpdateControls()
     bank = patch.encoder.RisingEdge() ? 0 : bank;
 
     //controls
-    for (int i = 0 ; i < 4; i++)
+    for(int i = 0; i < 4; i++)
     {
-	float val = patch.controls[i].Process();
-	if (condUpdates[i].Process(val))
-	{
-	    filters[i + bank * 4].amp = val;
-	}
+        float val = patch.controls[i].Process();
+        if(condUpdates[i].Process(val))
+        {
+            filters[i + bank * 4].amp = val;
+        }
     }
 }

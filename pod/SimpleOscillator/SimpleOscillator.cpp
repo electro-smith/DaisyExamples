@@ -17,9 +17,9 @@ uint8_t waveforms[NUM_WAVEFORMS] = {
     Oscillator::WAVE_POLYBLEP_SQUARE,
 };
 
-static float   freq;
-float          sig;
-static int     waveform, octave;
+static float freq;
+float        sig;
+static int   waveform, octave;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {

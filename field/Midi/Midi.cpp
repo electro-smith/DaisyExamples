@@ -54,10 +54,7 @@ class Voice
         env_gate_ = true;
     }
 
-    void OnNoteOff()
-    {
-        env_gate_ = false;
-    }
+    void OnNoteOff() { env_gate_ = false; }
 
     void SetCutoff(float val) { filt_.SetFreq(val); }
 
@@ -168,7 +165,7 @@ void AudioCallback(float *in, float *out, size_t size)
 
     for(size_t i = 0; i < size; i += 2)
     {
-        sum = 0.f;
+        sum        = 0.f;
         sum        = voice_handler.Process() * 0.5f;
         out[i]     = sum;
         out[i + 1] = sum;
@@ -183,7 +180,7 @@ void HandleMidiMessage(MidiEvent m)
         case NoteOn:
         {
             NoteOnEvent p = m.AsNoteOn();
-			// Note Off can come in as Note On w/ 0 Velocity
+            // Note Off can come in as Note On w/ 0 Velocity
             if(p.velocity == 0.f)
             {
                 voice_handler.OnNoteOff(p.note, p.velocity);
@@ -215,8 +212,8 @@ int main(void)
     voice_handler.Init(samplerate);
 
     //display
-    const char  str[] = "Midi";
-    char *      cstr = (char*)str;
+    const char str[] = "Midi";
+    char *     cstr  = (char *)str;
     hw.display.WriteString(cstr, Font_7x10, true);
     hw.display.Update();
 
