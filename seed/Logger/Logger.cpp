@@ -12,21 +12,22 @@ static DaisySeed hw;
  * so [1 + LOGGER_BUFFER] buffer would contain LOGGER_BUFFER meaningful characters
  */
 char test_msg1[1 + LOGGER_BUFFER + 1] = "This should really overflow";
-char test_msg2[1 + LOGGER_BUFFER    ] = "This should be treated as overflow";
+char test_msg2[1 + LOGGER_BUFFER]     = "This should be treated as overflow";
 char test_msg3[1 + LOGGER_BUFFER - 1] = "This should be safe for Print()";
 char test_msg4[1 + LOGGER_BUFFER - 2] = "This should be safe for Print()";
-char test_msg5[1 + LOGGER_BUFFER - 3] = "This should be safe for Print() and PrintLine()";
+char test_msg5[1 + LOGGER_BUFFER - 3]
+    = "This should be safe for Print() and PrintLine()";
 
 /** append dots (.) till the end of the buffer as a visual cue
  */
-template<size_t N>
+template <size_t N>
 void fillup_msg(char (&buf)[N])
 {
-    for (size_t i = strlen(buf); i < N - 1; i++)
+    for(size_t i = strlen(buf); i < N - 1; i++)
     {
         buf[i] = '.';
     }
-    buf[N-1] = '\0';
+    buf[N - 1] = '\0';
 }
 
 /** fill up message for buffer overflow testing
@@ -40,62 +41,98 @@ void prepare_messages()
     fillup_msg(test_msg5);
 }
 
-typedef void (PrintFunc)(const char*, ...);
+typedef void(PrintFunc)(const char*, ...);
 
 /** profile a single printout function
  */
-template<PrintFunc function, typename... Va>
+template <PrintFunc function, typename... Va>
 float ProfileFunction(const char* format, Va... va)
 {
-    constexpr int32_t count = 100000; 
-    uint32_t t0 = dsy_tim_get_tick();
-    for (int i = 0; i < count; i++)
+    constexpr int32_t count = 100000;
+    uint32_t          t0    = dsy_tim_get_tick();
+    for(int i = 0; i < count; i++)
     {
         function(format, va...);
     }
-    uint32_t dt = dsy_tim_get_tick() - t0;
-    const float perf = (float)dt / (200 * count); // using secret knowledge about timer frequency...
+    uint32_t    dt = dsy_tim_get_tick() - t0;
+    const float perf
+        = (float)dt
+          / (200 * count); // using secret knowledge about timer frequency...
     return perf;
 }
 
 /** Run all profiling tests for a function 
  */
-template<PrintFunc function>
+template <PrintFunc function>
 void ProfilePrint(const char* class_caption, const char* func_caption)
 {
-    const float print_0  = ProfileFunction<function>("");
-    const float print_1  = ProfileFunction<function>("a");
-    const float print_36 = ProfileFunction<function>("abcdefghijklmnopqrstuvwxyz0123456789");
-    const float print_d  = ProfileFunction<function>("%d", 123);
-    const float print_u  = ProfileFunction<function>("%u", 123);
-    const float print_f  = ProfileFunction<function>("%.3f", 123.0f);
-    const float print_F1 = ProfileFunction<function>(FLT_FMT(1), FLT_VAR(1, 123.0f));
-    const float print_F2 = ProfileFunction<function>(FLT_FMT(2), FLT_VAR(2, 123.0f));
-    const float print_F3 = ProfileFunction<function>(FLT_FMT3,   FLT_VAR3(123.0f));
-    const float print_F4 = ProfileFunction<function>(FLT_FMT(4), FLT_VAR(4, 123.0f));
+    const float print_0 = ProfileFunction<function>("");
+    const float print_1 = ProfileFunction<function>("a");
+    const float print_36
+        = ProfileFunction<function>("abcdefghijklmnopqrstuvwxyz0123456789");
+    const float print_d = ProfileFunction<function>("%d", 123);
+    const float print_u = ProfileFunction<function>("%u", 123);
+    const float print_f = ProfileFunction<function>("%.3f", 123.0f);
+    const float print_F1
+        = ProfileFunction<function>(FLT_FMT(1), FLT_VAR(1, 123.0f));
+    const float print_F2
+        = ProfileFunction<function>(FLT_FMT(2), FLT_VAR(2, 123.0f));
+    const float print_F3
+        = ProfileFunction<function>(FLT_FMT3, FLT_VAR3(123.0f));
+    const float print_F4
+        = ProfileFunction<function>(FLT_FMT(4), FLT_VAR(4, 123.0f));
 
     /* linear fit */
     const float slope     = (print_36 - print_1) / (36 - 1);
     const float intercept = print_1 - slope;
 
-    hw.PrintLine("%s - %s (  empty string):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_0));
-    hw.PrintLine("%s - %s (   text string):" FLT_FMT3 " us/call +" FLT_FMT3 " us/char", class_caption, func_caption, FLT_VAR3(intercept), FLT_VAR3(slope));
-    hw.PrintLine("%s - %s ( integer value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_d));
-    hw.PrintLine("%s - %s (unsigned value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_u));
-    hw.PrintLine("%s - %s ( float.3 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_f));
-    hw.PrintLine("%s - %s (FLT_VAR1 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_F1));
-    hw.PrintLine("%s - %s (FLT_VAR2 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_F2));
-    hw.PrintLine("%s - %s (FLT_VAR3 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_F3));
-    hw.PrintLine("%s - %s (FLT_VAR4 value):" FLT_FMT3 " us/call", class_caption, func_caption, FLT_VAR3(print_F4));
+    hw.PrintLine("%s - %s (  empty string):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_0));
+    hw.PrintLine("%s - %s (   text string):" FLT_FMT3 " us/call +" FLT_FMT3
+                 " us/char",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(intercept),
+                 FLT_VAR3(slope));
+    hw.PrintLine("%s - %s ( integer value):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_d));
+    hw.PrintLine("%s - %s (unsigned value):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_u));
+    hw.PrintLine("%s - %s ( float.3 value):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_f));
+    hw.PrintLine("%s - %s (FLT_VAR1 value):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_F1));
+    hw.PrintLine("%s - %s (FLT_VAR2 value):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_F2));
+    hw.PrintLine("%s - %s (FLT_VAR3 value):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_F3));
+    hw.PrintLine("%s - %s (FLT_VAR4 value):" FLT_FMT3 " us/call",
+                 class_caption,
+                 func_caption,
+                 FLT_VAR3(print_F4));
 }
 
 /** Profile the whole destination
  */
-template<LoggerDestination dest>
+template <LoggerDestination dest>
 void ProfileDest(const char* class_caption)
 {
     Logger<dest>::StartLog(false);
-    ProfilePrint<Logger<dest>::Print>    (class_caption, "Print     ");
+    ProfilePrint<Logger<dest>::Print>(class_caption, "Print     ");
     ProfilePrint<Logger<dest>::PrintLine>(class_caption, "PrintLine ");
 }
 /** Verify FLT_FMT/FLT_VAR accuracy
@@ -105,21 +142,23 @@ void VerifyFloats()
     char ref[32];
     char tst[32];
     bool result = true;
-    for (float f = -100.0; f < 100.0; f += 0.001)
+    for(float f = -100.0; f < 100.0; f += 0.001)
     {
         sprintf(tst, FLT_FMT(3), FLT_VAR(3, f));
 
         const double f_tst = strtod(tst, nullptr);
 
         /* verify down to the least significant digit, which is off because of truncation */
-        if (abs((double)f - f_tst) > 1.0e-3)
+        if(abs((double)f - f_tst) > 1.0e-3)
         {
             sprintf(ref, "%.3f", f);
-            hw.PrintLine("mismatch: ref = %s, dsy = %s, float = %.6f", ref, tst, f);
+            hw.PrintLine(
+                "mismatch: ref = %s, dsy = %s, float = %.6f", ref, tst, f);
             result = false;
         }
     }
-    hw.PrintLine("FLT_FMT(3)/FLT_VAR(3) verification: %s", result ? "PASS" : "FAIL");
+    hw.PrintLine("FLT_FMT(3)/FLT_VAR(3) verification: %s",
+                 result ? "PASS" : "FAIL");
 }
 
 int main(void)
@@ -132,12 +171,13 @@ int main(void)
 
     hw.Configure();
     hw.Init();
-    hw.StartLog(true);  /* true == wait for PC: will block until a terminal is connected */
+    hw.StartLog(
+        true); /* true == wait for PC: will block until a terminal is connected */
 
     /** check that floating point printf is supported 
      * linker flags modified in the Makefile to enable this
      */
-    hw.PrintLine("Verify CRT floating point format: %.3f", 123.0f); 
+    hw.PrintLine("Verify CRT floating point format: %.3f", 123.0f);
 
     VerifyFloats();
 
@@ -146,7 +186,7 @@ int main(void)
      */
     ProfileDest<LOGGER_EXTERNAL>("LOGGER_EXTERNAL");
     ProfileDest<LOGGER_SEMIHOST>("LOGGER_SEMIHOST");
-    ProfileDest<LOGGER_NONE>    ("LOGGER_NONE    ");
+    ProfileDest<LOGGER_NONE>("LOGGER_NONE    ");
 
     /* use static method directly */
     Logger<LOGGER_INTERNAL>::PrintLine("This may be used anywhere too");
@@ -154,7 +194,8 @@ int main(void)
     /** use a different output destination.
      * Note that this would require the linker to include the whole object with own buffers!
      */
-    Logger<LOGGER_EXTERNAL>::Print("This would not be visible, but would not stop the program");
+    Logger<LOGGER_EXTERNAL>::Print(
+        "This would not be visible, but would not stop the program");
 
     hw.PrintLine("Verifying newline character handling:");
     hw.PrintLine("1. This should be a single line\r");
@@ -162,23 +203,43 @@ int main(void)
     hw.PrintLine("3. This should be a single line\r\n");
     hw.PrintLine("4. This should be a single line\n\r");
     hw.PrintLine("5. This should be a single line\r\r\r\n\n\n\r\n\r");
-    hw.PrintLine("");   /* this should be an empty line */
+    hw.PrintLine(""); /* this should be an empty line */
 
     hw.PrintLine("Printing 5 test messages using the Print() service");
     hw.PrintLine("Verify overflow indicators ($$) below");
-    hw.Print("1. ");  hw.Print(test_msg1);      hw.PrintLine("");
-    hw.Print("2. ");  hw.Print(test_msg2);      hw.PrintLine("");
-    hw.Print("3. ");  hw.Print(test_msg3);      hw.PrintLine("");
-    hw.Print("4. ");  hw.Print(test_msg4);      hw.PrintLine("");
-    hw.Print("5. ");  hw.Print(test_msg5);      hw.PrintLine("");
+    hw.Print("1. ");
+    hw.Print(test_msg1);
+    hw.PrintLine("");
+    hw.Print("2. ");
+    hw.Print(test_msg2);
+    hw.PrintLine("");
+    hw.Print("3. ");
+    hw.Print(test_msg3);
+    hw.PrintLine("");
+    hw.Print("4. ");
+    hw.Print(test_msg4);
+    hw.PrintLine("");
+    hw.Print("5. ");
+    hw.Print(test_msg5);
+    hw.PrintLine("");
 
     hw.PrintLine("Printing 5 test messages using the PrintLine() service");
     hw.PrintLine("Verify overflow indicators ($$) below");
-    hw.Print("1. ");  hw.PrintLine(test_msg1);  hw.PrintLine("");
-    hw.Print("2. ");  hw.PrintLine(test_msg2);  hw.PrintLine("");
-    hw.Print("3. ");  hw.PrintLine(test_msg3);  hw.PrintLine("");
-    hw.Print("4. ");  hw.PrintLine(test_msg4);  hw.PrintLine("");
-    hw.Print("5. ");  hw.PrintLine(test_msg5);  hw.PrintLine("");
+    hw.Print("1. ");
+    hw.PrintLine(test_msg1);
+    hw.PrintLine("");
+    hw.Print("2. ");
+    hw.PrintLine(test_msg2);
+    hw.PrintLine("");
+    hw.Print("3. ");
+    hw.PrintLine(test_msg3);
+    hw.PrintLine("");
+    hw.Print("4. ");
+    hw.PrintLine(test_msg4);
+    hw.PrintLine("");
+    hw.Print("5. ");
+    hw.PrintLine(test_msg5);
+    hw.PrintLine("");
 
     hw.PrintLine("Starting timer printout. Verify fractional values");
 
@@ -187,12 +248,14 @@ int main(void)
     {
         dsy_system_delay(500);
 
-        const float time_s = dsy_tim_get_ms() * 1.0e-3f;    
+        const float time_s = dsy_tim_get_ms() * 1.0e-3f;
 
         /** showcase floating point output 
          * note that FLT_FMT is part of the format string
          */
-        hw.PrintLine("%6u: Elapsed time: " FLT_FMT3 " seconds", counter, FLT_VAR3(time_s)); 
+        hw.PrintLine("%6u: Elapsed time: " FLT_FMT3 " seconds",
+                     counter,
+                     FLT_VAR3(time_s));
 
         /* LSB triggers the LED */
         hw.SetLed(counter & 0x01);
@@ -298,4 +361,3 @@ Starting timer printout. Verify fractional values
      7: Elapsed time:  0.259 seconds
      8: Elapsed time:  0.760 seconds
 */
-
