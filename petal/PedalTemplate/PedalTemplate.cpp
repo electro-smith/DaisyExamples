@@ -7,8 +7,8 @@ DaisyPetal hw;
 
 void AudioCallback(float *in, float *out, size_t size)
 {
-    hw.DebounceControls();
-    hw.UpdateAnalogControls();
+    hw.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
     for(size_t i = 0; i < size; i += 2)
     {
         out[i]     = in[i];

@@ -78,8 +78,8 @@ int main(void)
 
 void UpdateControls()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //encoder click
     isSideChained = patch.encoder.RisingEdge() ? !isSideChained : isSideChained;

@@ -28,7 +28,7 @@ float        sig, rawsig, filtsig, sendsig, wetvl, wetvr;
 float        xf, vamt, dec, time;
 static void  audio(float *in, float *out, size_t size)
 {
-    hw.DebounceControls();
+    hw.ProcessDigitalControls();
     if(hw.button1.RisingEdge())
     {
         freq = mtof(48.0f + get_new_note());

@@ -23,7 +23,7 @@ static int   waveform, octave;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
-    hw.DebounceControls();
+    hw.ProcessDigitalControls();
 
     waveform += hw.encoder.Increment();
     waveform = DSY_CLAMP(waveform, 0, NUM_WAVEFORMS);

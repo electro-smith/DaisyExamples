@@ -193,8 +193,8 @@ void UpdateButtons()
 
 void Controls()
 {
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
+    pod.ProcessAnalogControls();
+    pod.ProcessDigitalControls();
 
     UpdateEncoder();
 

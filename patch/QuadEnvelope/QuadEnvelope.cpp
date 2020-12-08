@@ -163,8 +163,8 @@ void ProcessGates()
 
 void ProcessControls()
 {
-    hw.UpdateAnalogControls();
-    hw.DebounceControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     ProcessEncoder();
     ProcessKnobs();

@@ -13,7 +13,7 @@ int main(void)
 
     while(1)
     {
-        hw.DebounceControls();
+        hw.ProcessDigitalControls();
 
         // using button1 as momentary switch for turning on/off led1
         brightness1 = hw.button1.Pressed();

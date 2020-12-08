@@ -122,8 +122,8 @@ void UpdateOled()
 
 void ProcessControls()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //knobs
     for(int i = 0; i < 3; i++)

@@ -110,8 +110,8 @@ void UpdateButtons()
 //Deals with analog controls
 void Controls()
 {
-    petal.UpdateAnalogControls();
-    petal.DebounceControls();
+    petal.ProcessAnalogControls();
+    petal.ProcessDigitalControls();
 
     drywet = petal.knob[0].Process();
 

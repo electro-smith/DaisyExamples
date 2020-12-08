@@ -219,8 +219,8 @@ void UpdateLeds()
 
 void Controls()
 {
-    pod.DebounceControls();
-    pod.UpdateAnalogControls();
+    pod.ProcessDigitalControls();
+    pod.ProcessAnalogControls();
 
     UpdateEncoderPressed();
 

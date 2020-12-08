@@ -124,8 +124,8 @@ int main(void)
 
 void UpdateControls()
 {
-    petal.UpdateAnalogControls();
-    petal.DebounceControls();
+    petal.ProcessAnalogControls();
+    petal.ProcessDigitalControls();
 
     //encoder
     bank += petal.encoder.Increment();

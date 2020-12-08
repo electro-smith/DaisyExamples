@@ -149,8 +149,8 @@ void UpdateLeds()
 
 void UpdateControls()
 {
-    hw.UpdateAnalogControls();
-    hw.DebounceControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     UpdateEncoder();
     UpdateKnobs();

@@ -103,8 +103,8 @@ void UpdateButtons()
 //Deals with analog controls
 void Controls()
 {
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
+    pod.ProcessAnalogControls();
+    pod.ProcessDigitalControls();
 
     drywet = pod.knob1.Process();
 

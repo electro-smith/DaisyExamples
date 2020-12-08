@@ -23,8 +23,8 @@ float softClip(float in)
 bool        bypassHard, bypassSoft;
 static void AudioCallback(float **in, float **out, size_t size)
 {
-    petal.UpdateAnalogControls();
-    petal.DebounceControls();
+    petal.ProcessAnalogControls();
+    petal.ProcessDigitalControls();
 
     float Pregain = petal.knob[2].Process() * 10 + 1.2;
     float Gain    = petal.knob[3].Process() * 100 + 1.2;

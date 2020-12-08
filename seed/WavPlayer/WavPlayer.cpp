@@ -22,7 +22,7 @@ void AudioCallback(float *in, float *out, size_t size)
     int32_t inc;
 
     // Debounce digital controls
-    hw.DebounceControls();
+    hw.ProcessDigitalControls();
 
     // Change file with encoder.
     inc = hw.encoder.Increment();

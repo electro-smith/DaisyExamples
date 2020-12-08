@@ -101,14 +101,14 @@ void UpdateOled()
 
 void UpdateControls()
 {
-    patch.DebounceControls();
-    patch.UpdateAnalogControls();
+    patch.ProcessDigitalControls();
+    patch.ProcessAnalogControls();
 
     //knobs
     float ctrl[4];
     for(int i = 0; i < 4; i++)
     {
-        ctrl[i] = patch.GetCtrlValue((DaisyPatch::Ctrl)i);
+        ctrl[i] = patch.GetKnobValue((DaisyPatch::Ctrl)i);
     }
 
     for(int i = 0; i < 3; i++)
@@ -118,7 +118,7 @@ void UpdateControls()
         ctrl[i] = powf(2.f, ctrl[i]) * 55; //Hz
     }
 
-    testval = patch.GetCtrlValue((DaisyPatch::Ctrl)2) * 5.f;
+    testval = patch.GetKnobValue((DaisyPatch::Ctrl)2) * 5.f;
 
     //encoder
     waveform += patch.encoder.Increment();

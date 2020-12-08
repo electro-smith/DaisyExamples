@@ -64,7 +64,7 @@ filter lowpass, highpass;
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
-    patch.UpdateAnalogControls();
+    patch.ProcessAnalogControls();
 
     lowpass.UpdateControls();
     highpass.UpdateControls();

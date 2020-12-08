@@ -66,7 +66,7 @@ void AudioCallback(float *in, float *out, size_t size)
     bool trig, use_verb;
     trig = false;
     hw.ProcessAnalogControls();
-    hw.UpdateDigitalControls();
+    hw.ProcessDigitalControls();
     if(hw.GetSwitch(DaisyField::SW_1)->RisingEdge())
     {
         octaves -= 1;
@@ -154,13 +154,13 @@ void UpdateLeds(float *knob_vals)
     };
     for(size_t i = 0; i < 8; i++)
     {
-        hw.led_driver_.SetLed(knob_leds[i], knob_vals[i]);
+        hw.led_driver.SetLed(knob_leds[i], knob_vals[i]);
     }
     for(size_t i = 0; i < 13; i++)
     {
-        hw.led_driver_.SetLed(keyboard_leds[i], 1.f);
+        hw.led_driver.SetLed(keyboard_leds[i], 1.f);
     }
-    hw.led_driver_.SwapBuffersAndTransmit();
+    hw.led_driver.SwapBuffersAndTransmit();
 }
 
 int main(void)
