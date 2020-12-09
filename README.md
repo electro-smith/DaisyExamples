@@ -80,12 +80,3 @@ To check style before the automated style fixing happens, run:
 `./ci/local_style_check.sh` 
 
 **Note: this requires clang-format to be installed, and accessible from `$PATH`. Automated style checking and fixing is done with clang-format-10**
-
-# Things coming
-
-Along with several more exciting examples, we'll add examples of other integrations and more here.
-
-- gen~ examples with exported code and how to use that.
-- pd export via hvcc examples.
-
-
