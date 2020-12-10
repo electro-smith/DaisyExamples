@@ -13,13 +13,13 @@ static float      drylevel, send;
 static void VerbCallback(float **in, float **out, size_t size)
 {
     float dryL, dryR, wetL, wetR, sendL, sendR;
-    patch.UpdateAnalogControls();
+    patch.ProcessAnalogControls();
     for(size_t i = 0; i < size; i++)
     {
         // read some controls
-        drylevel = patch.GetCtrlValue(patch.CTRL_1);
-        send     = patch.GetCtrlValue(patch.CTRL_2);
-        verb.SetFeedback(patch.GetCtrlValue(patch.CTRL_3) * .94f);
+        drylevel = patch.GetKnobValue(patch.CTRL_1);
+        send     = patch.GetKnobValue(patch.CTRL_2);
+        verb.SetFeedback(patch.GetKnobValue(patch.CTRL_3) * .94f);
         verb.SetLpFreq(lpParam.Process());
 
         // Read Inputs (only stereo in are used)

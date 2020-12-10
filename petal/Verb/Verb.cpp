@@ -15,7 +15,7 @@ ReverbSc  verb;
 void callback(float *in, float *out, size_t size)
 {
     float dryl, dryr, wetl, wetr, sendl, sendr;
-    hw.DebounceControls();
+    hw.ProcessDigitalControls();
     verb.SetFeedback(vtime.Process());
     verb.SetLpFreq(vfreq.Process());
     vsend.Process(); // Process Send to use later

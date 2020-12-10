@@ -233,8 +233,8 @@ void UpdateSwitches()
 
 void Controls()
 {
-    petal.UpdateAnalogControls();
-    petal.DebounceControls();
+    petal.ProcessAnalogControls();
+    petal.ProcessDigitalControls();
 
     UpdateKnobs();
 

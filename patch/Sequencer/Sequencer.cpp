@@ -46,8 +46,8 @@ int main(void)
 
 void UpdateControls()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //encoder
     //can we simplify the menu logic?

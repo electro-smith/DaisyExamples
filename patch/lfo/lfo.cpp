@@ -118,8 +118,8 @@ void UpdateOled()
 
 void UpdateEncoder()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //annoying menu stuff
     if(patch.encoder.RisingEdge())

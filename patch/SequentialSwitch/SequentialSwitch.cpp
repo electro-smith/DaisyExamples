@@ -59,7 +59,7 @@ int main(void)
 
 void UpdateControls()
 {
-    patch.DebounceControls();
+    patch.ProcessDigitalControls();
     if(patch.gate_input[0].Trig())
     {
         step++;

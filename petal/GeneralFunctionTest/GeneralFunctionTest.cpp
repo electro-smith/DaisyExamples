@@ -31,8 +31,8 @@ int32_t enc_tracker;
 void callback(float *in, float *out, size_t size)
 {
     int32_t inc;
-    hw.DebounceControls();
-    hw.UpdateAnalogControls();
+    hw.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
 
     // Handle Enc
     inc = hw.encoder.Increment();

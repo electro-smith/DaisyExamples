@@ -277,8 +277,8 @@ void UpdateVars()
 
 void ProcessControls()
 {
-    hardware.DebounceControls();
-    hardware.UpdateAnalogControls();
+    hardware.ProcessDigitalControls();
+    hardware.ProcessAnalogControls();
 
     UpdateEncoder();
 

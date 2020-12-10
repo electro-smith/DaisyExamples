@@ -42,8 +42,8 @@ int main(void)
 
 void UpdateControls()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //read ctrls and gates, then update sampleholds
     sampHolds[0].Process(patch.gate_input[0].State(),

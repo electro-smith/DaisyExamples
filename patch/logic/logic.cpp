@@ -145,8 +145,8 @@ void ProcessEncoder()
 
 void ProcessControls()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //inputs
     for(int i = 0; i < 4; i++)

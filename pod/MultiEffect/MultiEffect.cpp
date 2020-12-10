@@ -141,8 +141,8 @@ void Controls()
     float k1, k2;
     delayTarget = feedback = drywet = 0;
 
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
+    pod.ProcessAnalogControls();
+    pod.ProcessDigitalControls();
 
     UpdateKnobs(k1, k2);
 

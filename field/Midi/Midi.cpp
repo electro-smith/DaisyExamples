@@ -155,7 +155,7 @@ static VoiceManager<24> voice_handler;
 void AudioCallback(float *in, float *out, size_t size)
 {
     float sum = 0.f;
-    hw.UpdateDigitalControls();
+    hw.ProcessDigitalControls();
     hw.ProcessAnalogControls();
     if(hw.GetSwitch(hw.SW_1)->FallingEdge())
     {

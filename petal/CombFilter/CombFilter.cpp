@@ -84,7 +84,7 @@ int main(void)
 
 void UpdateControls()
 {
-    petal.DebounceControls();
+    petal.ProcessDigitalControls();
 
     //knobs
     lfo.SetFreq(lfoFreqParam.Process());
