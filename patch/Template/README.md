@@ -1,39 +1,11 @@
-# Description
-Plucked string synthesizer into lush delay and reverb algorithms.
-Really easy to create unique sonic spaces!
+# Patch Template
 
-# Controls
-| Control | Description | Comment |
-| --- | --- | --- |
-| Ctrl 1 | String Pitch | |
-| Ctrl 2 | String decay time | |
-| Ctrl 3 | Delay Time | |
-| Ctrl 4 | Delay Feedback | |
-| Gate In 1 | Trigger In | Plucks the string |
-| Outs 1-2 | Stereo Outputs | Out 1:L, Out 2: R |
+## Author
 
-# Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Template/resources/Template.png" alt="Template.png" style="width: 100%;"/>
+Andrew Ikenberry
 
-# Code Snippet
-```cpp
-// Smooth delaytime, and set.
-fonepole(smooth_time, deltime, 0.0005f);
-delay.SetDelay(smooth_time);
+## Patch Template
 
-// Synthesize Plucks
-sig        = synth.Process(trig, nn);
+C++ Template file for Daisy Patch Eurorack Module
 
-// Handle Delay
-delsig     = delay.Read();
-delay.Write(sig + (delsig * delfb));
-
-// Create Reverb Send
-dry        = sig + delsig;
-send       = dry * 0.6f;
-verb.Process(send,send, &wetl, &wetr);
-
-// Output 
-out_left[i] = dry + wetl;
-out_right[i]     = dry + wetr;
-```
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/template)
