@@ -794,7 +794,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <LinkerScript Include="STM32H750IB_flash.lds">
+    <LinkerScript Include="../../libdaisy/core/STM32H750IB_flash.lds">
       <Filter>Source files</Filter>
     </LinkerScript>
   </ItemGroup>

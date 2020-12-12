@@ -48,7 +48,7 @@
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <LinkerScript>STM32H750IB_flash.lds</LinkerScript>
+      <LinkerScript>../../libdaisy/core/STM32H750IB_flash.lds</LinkerScript>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -317,6 +317,6 @@
     <None Include="stm32.xml" />
   </ItemGroup>
   <ItemGroup>
-    <LinkerScript Include="STM32H750IB_flash.lds" />
+    <LinkerScript Include="../../libdaisy/core/STM32H750IB_flash.lds" />
   </ItemGroup>
 </Project>
