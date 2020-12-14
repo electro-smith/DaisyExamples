@@ -1,8 +1,16 @@
-# Description
+# Distortion
+
+## Author
+
+Ben Sergentanis
+
+## Description
 Distorts incoming signal. There are two stages, a soft clip and a hard clip. Turn on one or both.  
 Signal path is: (pregain) -> (soft clip) -> (gain) -> (hard clip) -> (output)  
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/Distortion)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Knob 3 | Pregain| Give the signal a small boost |
@@ -14,21 +22,7 @@ Signal path is: (pregain) -> (soft clip) -> (gain) -> (hard clip) -> (output)
 | In 1 -2  | Stereo Distortion In | |
 | Out 1 - 2 | Stereo Distortion Out | |
 
+
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Distortion/resources/stereo_distortion_diagram_slim.png" alt="stereo_distortion_diagram.png" style="width: 100%;"/>>
-# Code Snippet  
-```cpp    
-for(size_t i = 0; i < size; i ++)
-{	
-	float wet = in[0][i];
-		
-	wet *= gain;
-	wet = clip(wet);
-	
-	if (wet > 0)
-		out[0][i] = out[1][i] = 1 - expf(-wet);
-	else
-		out[0][i] = out[1][i] = -1 + expf(wet);
-	
-	out[0][i] = wet * drywet + in[0][i] * (1 - drywet);
-}
-```
+
