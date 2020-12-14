@@ -44,7 +44,7 @@ float scale[16]   = {0.f,
                    9.f,
                    11.f,
                    12.f,
-				   0.f,
+                   0.f,
                    1.f,
                    3.f,
                    0.f,
@@ -66,7 +66,7 @@ void AudioCallback(float *in, float *out, size_t size)
     bool trig, use_verb;
     trig = false;
     hw.ProcessAnalogControls();
-    hw.UpdateDigitalControls();
+    hw.ProcessDigitalControls();
     if(hw.GetSwitch(DaisyField::SW_1)->RisingEdge())
     {
         octaves -= 1;
@@ -124,9 +124,9 @@ void AudioCallback(float *in, float *out, size_t size)
     }
 }
 
-void UpdateLeds(float *knob_vals) 
+void UpdateLeds(float *knob_vals)
 {
-	// knob_vals is exactly 8 members
+    // knob_vals is exactly 8 members
     size_t knob_leds[] = {
         DaisyField::LED_KNOB_1,
         DaisyField::LED_KNOB_2,
@@ -152,13 +152,15 @@ void UpdateLeds(float *knob_vals)
         DaisyField::LED_KEY_B6,
         DaisyField::LED_KEY_B7,
     };
-    for(size_t i = 0; i < 8; i++) {
-        hw.led_driver_.SetLed(knob_leds[i], knob_vals[i]);
-	}
-    for(size_t i = 0; i < 13; i++) {
-        hw.led_driver_.SetLed(keyboard_leds[i], 1.f);
-	}
-    hw.led_driver_.SwapBuffersAndTransmit();
+    for(size_t i = 0; i < 8; i++)
+    {
+        hw.led_driver.SetLed(knob_leds[i], knob_vals[i]);
+    }
+    for(size_t i = 0; i < 13; i++)
+    {
+        hw.led_driver.SetLed(keyboard_leds[i], 1.f);
+    }
+    hw.led_driver.SwapBuffersAndTransmit();
 }
 
 int main(void)

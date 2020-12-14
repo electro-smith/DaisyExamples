@@ -121,8 +121,8 @@ int main(void)
 
 void ProcessControls()
 {
-    petal.UpdateAnalogControls();
-    petal.DebounceControls();
+    petal.ProcessAnalogControls();
+    petal.ProcessDigitalControls();
 
     //knobs
     for(int i = 0; i < 3; i++)

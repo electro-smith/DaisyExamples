@@ -1,5 +1,9 @@
 # Daisy_Examples
 
+![Build Workflow](https://github.com/electro-smith/DaisyExamples/workflows/Build%20All/badge.svg)
+![Style Workflow](https://github.com/electro-smith/DaisyExamples/workflows/Fix%20Style/badge.svg)
+
+
 If you are just getting started with Daisy, check out our [Getting Started Wiki page!](https://github.com/electro-smith/DaisyWiki/wiki)
 
 This repo is home to a functional pipeline utilizing libDaisy and DaisySP libraries.
@@ -59,18 +63,20 @@ Our test environment for the Make builds using MINGW64 (via Git Bash).
 
 For the variables to work correctly in that environment you would have to set these paths to absolute paths using Windows syntax (i.e. `C:\Users\name\path\to\libdaisy`). Make internally converts this to a linux style path.
 
+## Testing build and style checks locally
 
+To test building both libraries, and all non-experimental examples run:
 
+`./rebuild_all.sh` 
 
+To test generating the dist folder (containing distributable binaries of all non-experimental examples):
 
+**Note: this does require python 3 to run**
 
+`./ci/build_dist.py`
 
+To check style before the automated style fixing happens, run:
 
-# Things coming
+`./ci/local_style_check.sh` 
 
-Along with several more exciting examples, we'll add examples of other integrations and more here.
-
-- gen~ examples with exported code and how to use that.
-- pd export via hvcc examples.
-
-
+**Note: this requires clang-format to be installed, and accessible from `$PATH`. Automated style checking and fixing is done with clang-format-10**

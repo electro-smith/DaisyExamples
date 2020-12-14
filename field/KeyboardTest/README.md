@@ -10,7 +10,6 @@ Oscillators are each Bandlimited Saw waves.
 
 [Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/KeyboardTest)
 
-
 ## Controls
 
 | Control | Description |
@@ -18,8 +17,7 @@ Oscillators are each Bandlimited Saw waves.
 | SW 1 2 |  Octave up/down |
 | Keyboard buttons | Chromatic keyboard |
 
-## building
+## Diagram
 
-Currently for some reason this only works when built with VisualStudio/VisualGDB..
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/KeyboardTest/resources/KeyboardTest.png" alt="KeyboardTest.png" style="width: 100%;"/>
 
-It builds correctly with Make, but doesn't run. Likely just something not being correctly included with Make or something.

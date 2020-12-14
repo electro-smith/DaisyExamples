@@ -5,19 +5,19 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch          hw;
-MidiHandler         midi;
-Oscillator osc;
-Svf        filt;
+DaisyPatch  hw;
+MidiHandler midi;
+Oscillator  osc;
+Svf         filt;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
     float sig;
-    for(size_t i = 0; i < size; i ++)
+    for(size_t i = 0; i < size; i++)
     {
         sig = osc.Process();
         filt.Process(sig);
-        for (size_t chn = 0; chn < 4; chn++)
+        for(size_t chn = 0; chn < 4; chn++)
         {
             out[chn][i] = filt.Low();
         }
@@ -78,11 +78,11 @@ int main(void)
     filt.Init(samplerate);
 
     //display
-    std::string str = "Midi";
-    char* cstr = &str[0];
+    std::string str  = "Midi";
+    char *      cstr = &str[0];
     hw.display.WriteString(cstr, Font_7x10, true);
     hw.display.Update();
-    
+
     // Start stuff.
     midi.StartReceive();
     hw.StartAdc();
@@ -91,7 +91,7 @@ int main(void)
     {
         midi.Listen();
         // Handle MIDI Events
-        while (midi.HasEvents())
+        while(midi.HasEvents())
         {
             HandleMidiMessage(midi.PopEvent());
         }

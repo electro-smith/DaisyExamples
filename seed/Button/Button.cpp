@@ -1,6 +1,6 @@
 #include "daisy_seed.h"
 
-// Use the daisy namespace to prevent having to type 
+// Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
 using namespace daisy;
 
@@ -14,20 +14,20 @@ int main(void)
     // components before initialization.
     hw.Configure();
     hw.Init();
-    
+
     //Configure and initialize button
     Switch button1;
     //Set button to pin 28, to be updated at a 1kHz  samplerate
-    button1.Init(hw.GetPin(28),1000);
-    
+    button1.Init(hw.GetPin(28), 1000);
+
     // Loop forever
     for(;;)
     {
         //Debounce the button
         button1.Debounce();
-	//If the button is pressed, turn the LED on
-	hw.SetLed(button1.Pressed());
-	//wait 1 ms
-	dsy_system_delay(1);
+        //If the button is pressed, turn the LED on
+        hw.SetLed(button1.Pressed());
+        //wait 1 ms
+        dsy_system_delay(1);
     }
 }

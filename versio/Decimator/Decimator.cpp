@@ -23,7 +23,7 @@ void callback(float *in, float *out, size_t size)
         out[i] = decimator_l.Process(in[i]);
 
         // right out
-        out[i + 1] = decimator_r.Process(in[i+1]);
+        out[i + 1] = decimator_r.Process(in[i + 1]);
     }
 }
 

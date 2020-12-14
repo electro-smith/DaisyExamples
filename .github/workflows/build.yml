@@ -1,0 +1,35 @@
+name: Build All
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: arm-none-eabi-gcc
+      uses: fiam/arm-none-eabi-gcc@v1
+      with:
+        release: '9-2019-q4'
+    - name: Build Libraries
+      run: ./ci/build_libs.sh
+    - name: Build Examples
+      run: ./ci/build_examples.sh
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Create Distributable Binaries
+      run: python ./ci/build_dist.py -ru DaisySP/examples seed pod petal patch field versio
+    - name: Deploy Dist
+      uses: EndBug/add-and-commit@v4
+      with:
+        message: 'Automated: Committing Dist folder' 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

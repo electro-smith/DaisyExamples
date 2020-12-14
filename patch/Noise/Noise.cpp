@@ -9,15 +9,27 @@ DaisyPatch patch;
 
 WhiteNoise noise;
 
-struct filter{
+struct filter
+{
     Svf filt;
-    
-    enum mode { LOW, HIGH, BAND, NOTCH, PEAK, LAST, };
+
+    enum mode
+    {
+        LOW,
+        HIGH,
+        BAND,
+        NOTCH,
+        PEAK,
+        LAST,
+    };
     mode filterMode;
 
     Parameter resParam, cutoffParam;
 
-    void Init(float samplerate, mode setMode, AnalogControl cutKnob, AnalogControl resKnob)
+    void Init(float         samplerate,
+              mode          setMode,
+              AnalogControl cutKnob,
+              AnalogControl resKnob)
     {
         filt.Init(samplerate);
         filterMode = setMode;
@@ -35,20 +47,14 @@ struct filter{
     float Process(float in)
     {
         filt.Process(in);
-        switch (filterMode)
+        switch(filterMode)
         {
-            case mode::LOW:
-                return filt.Low();
-            case mode::HIGH:
-                return filt.High();
-            case mode::BAND:
-                return filt.Band();
-            case mode::NOTCH:
-                return filt.Notch();
-            case mode::PEAK:
-                return filt.Peak();
-            default:
-                break;
+            case mode::LOW: return filt.Low();
+            case mode::HIGH: return filt.High();
+            case mode::BAND: return filt.Band();
+            case mode::NOTCH: return filt.Notch();
+            case mode::PEAK: return filt.Peak();
+            default: break;
         }
         return 0.f;
     }
@@ -58,18 +64,18 @@ filter lowpass, highpass;
 
 static void AudioCallback(float **in, float **out, size_t size)
 {
-    patch.UpdateAnalogControls();
+    patch.ProcessAnalogControls();
 
     lowpass.UpdateControls();
     highpass.UpdateControls();
 
-    for (size_t i = 0; i < size; i += 2)
+    for(size_t i = 0; i < size; i += 2)
     {
         float sig = noise.Process();
-        sig = lowpass.Process(sig);
-        sig = highpass.Process(sig);
+        sig       = lowpass.Process(sig);
+        sig       = highpass.Process(sig);
 
-        for (size_t chn = 0; chn < 4; chn++)
+        for(size_t chn = 0; chn < 4; chn++)
         {
             out[chn][i] = sig;
         }
@@ -86,20 +92,21 @@ int main(void)
     samplerate = patch.AudioSampleRate();
 
     noise.Init();
-    lowpass.Init(samplerate, filter::mode::LOW, patch.controls[0], patch.controls[1]);
-    highpass.Init(samplerate, filter::mode::HIGH, patch.controls[2], patch.controls[3]);
+    lowpass.Init(
+        samplerate, filter::mode::LOW, patch.controls[0], patch.controls[1]);
+    highpass.Init(
+        samplerate, filter::mode::HIGH, patch.controls[2], patch.controls[3]);
 
-    std::string str = "Noise";
-    char *cstr = &str[0];
+    std::string str  = "Noise";
+    char *      cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
     patch.display.Update();
     patch.DelayMs(1000);
 
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
-    while(1) 
+    while(1)
     {
         patch.DisplayControls(false);
     }
 }
-
