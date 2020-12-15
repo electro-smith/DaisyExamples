@@ -7,7 +7,7 @@
         {
             "name": "Cortex Debug",
             "cwd": "${workspaceRoot}",
-            "executable": "./build/PluckEcho.elf",
+            "executable": "./build/Template.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",

@@ -9,7 +9,7 @@ DaisyPatch hw;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-    hw.UpdateAllControls();
+    hw.ProcessAllControls();
 
     for(size_t i = 0; i < size; i++)
     {

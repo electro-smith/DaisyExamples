@@ -27,7 +27,7 @@
 		<ToolchainSettingsContainer>
 			<ARMCPU  Condition="'%(ToolchainSettingsContainer.ARMCPU)' == ''">cortex-m7</ARMCPU>
 			<InstructionSet  Condition="'%(ToolchainSettingsContainer.InstructionSet)' == ''">THUMB</InstructionSet>
-			<ARMFPU  Condition="'%(ToolchainSettingsContainer.ARMFPU)' == ''">fpv4-sp-d16</ARMFPU>
+			<ARMFPU  Condition="'%(ToolchainSettingsContainer.ARMFPU)' == ''">fpv5-d16</ARMFPU>
 			<FloatABI  Condition="'%(ToolchainSettingsContainer.FloatABI)' == ''">hard</FloatABI>
 		</ToolchainSettingsContainer>
 	</ItemDefinitionGroup>

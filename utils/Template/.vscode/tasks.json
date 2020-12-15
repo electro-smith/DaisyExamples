@@ -25,7 +25,7 @@
             "type": "shell",
             "command": "make clean; make",
             "options": {
-                "cwd": "${workspaceFolder}/../../libdaisy/"
+                "cwd": "${workspaceFolder}/../../../libdaisy/"
             },
             "problemMatcher": [
                 "$gcc"
@@ -36,7 +36,7 @@
             "type": "shell",
             "command": "make clean; make",
             "options": {
-                "cwd": "${workspaceFolder}/../../daisysp/"
+                "cwd": "${workspaceFolder}/../../../daisysp/"
             },
             "problemMatcher": [
                 "$gcc"
