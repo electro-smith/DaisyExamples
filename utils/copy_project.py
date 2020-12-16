@@ -26,7 +26,6 @@ def rewrite_replace(filepath, a, b):
 # returns true if the file name ends with that extension
 def has_extension(fname, ext_list):
     f, ext = os.path.splitext(fname)
-    print("f: {}\tExtension:{}".format(f, ext))
     if ext in ext_list:
         return True
     else:
