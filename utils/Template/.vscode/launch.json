@@ -16,6 +16,7 @@
                 "target/stm32h7x.cfg",
             ],
             "openOCDLaunchCommands": ["init", "reset init"],
+            "preLaunchTask": "build_all",
             "runToMain": true,
             "svdFile": "./.vscode/STM32H750x.svd"
         }

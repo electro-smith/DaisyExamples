@@ -15,6 +15,14 @@
             ]
         },
         {
+            "label": "build_all",
+            "type": "shell",
+            "command": "make clean; make",
+            "options": { "cwd": "${workspaceFolder}" },
+            "dependsOn": ["build_libdaisy", "build_daisysp"],
+            "problemMatcher": [ "$gcc" ]
+        },
+        {
             "label": "program-dfu",
             "type": "shell",
             "command": "make program-dfu",
@@ -23,9 +31,9 @@
         {
             "label": "build_libdaisy",
             "type": "shell",
-            "command": "make clean; make",
+            "command": "make",
             "options": {
-                "cwd": "${workspaceFolder}/../../../libdaisy/"
+                "cwd": "${workspaceFolder}/../../libdaisy/"
             },
             "problemMatcher": [
                 "$gcc"
@@ -34,9 +42,9 @@
         {
             "label": "build_daisysp",
             "type": "shell",
-            "command": "make clean; make",
+            "command": "make",
             "options": {
-                "cwd": "${workspaceFolder}/../../../daisysp/"
+                "cwd": "${workspaceFolder}/../../daisysp/"
             },
             "problemMatcher": [
                 "$gcc"
