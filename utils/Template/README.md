@@ -1,11 +1,9 @@
-# Patch Template
+# Template
 
 ## Author
 
-Andrew Ikenberry
+<!-- Insert Your Name Here -->
 
 ## Description
 
-C++ Template file for Daisy Patch Eurorack Module
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/template)
+<!-- Describe your example here -->
