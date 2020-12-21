@@ -56,7 +56,7 @@ int main(void)
         petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, play);
         petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, rec);
         petal.UpdateLeds();
-        dsy_system_delay(16); // 60Hz
+        System::Delay(16); // 60Hz
     }
 }
 

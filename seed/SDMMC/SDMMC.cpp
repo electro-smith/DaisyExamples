@@ -90,7 +90,7 @@ int main(void)
     // Otherwise the onboard LED will begin to blink.
     for(;;)
     {
-        dsy_system_delay(250);
+        System::Delay(250);
         hw.SetLed(ledstate);
         ledstate = !ledstate;
     }

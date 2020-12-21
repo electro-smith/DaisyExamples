@@ -140,7 +140,7 @@ int main(void)
     while(1)
     {
         UpdateLeds();
-        dsy_system_delay(6);
+        System::Delay(6);
     }
 }
 
