@@ -37,7 +37,6 @@ int main(void)
     //			asm("bkpt 255");
     //		}
     //	}
-    dsy_tim_start();
     uint32_t res;
     //uint32_t val = 0;
     //uint32_t small_buff[1024];
@@ -52,35 +51,35 @@ int main(void)
     {
         inbuff[i] = i;
     }
-    start = dsy_tim_get_tick();
+    start = System::GetTick();
     dsy_qspi_erase(base, base + (TEST_BUFF_SIZE * sizeof(test_buff[0])));
-    end       = dsy_tim_get_tick();
+    end       = System::GetTick();
     dur_erase = (end - start) / 200;
-    start     = dsy_tim_get_tick();
+    start     = System::GetTick();
     res       = dsy_qspi_write(
         base, TEST_BUFF_SIZE * sizeof(test_buff[0]), (uint8_t*)inbuff);
-    end          = dsy_tim_get_tick();
+    end          = System::GetTick();
     dur_write_4k = (end - start) / 200;
 
     hw.qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
     dsy_qspi_init(&hw.qspi_handle);
 
-    start = dsy_tim_get_tick();
+    start = System::GetTick();
     memcpy(outbuff, test_buff, sizeof(test_buff[0]) * TEST_BUFF_SIZE);
-    end           = dsy_tim_get_tick();
+    end           = System::GetTick();
     dur_read_qspi = (end - start) / 200;
 
-    start = dsy_tim_get_tick();
+    start = System::GetTick();
     memcpy(
         outbuff, test_flash_buff, sizeof(test_flash_buff[0]) * TEST_BUFF_SIZE);
-    end            = dsy_tim_get_tick();
+    end            = System::GetTick();
     dur_read_flash = (end - start) / 200;
 
-    start = dsy_tim_get_tick();
+    start = System::GetTick();
     memcpy(axi_outbuff,
            test_flash_buff,
            sizeof(test_flash_buff[0]) * TEST_BUFF_SIZE);
-    end          = dsy_tim_get_tick();
+    end          = System::GetTick();
     dur_read_axi = (end - start) / 200;
 
     if(res)
@@ -95,9 +94,9 @@ int main(void)
     //			small_buff[j] = val;
     //			val++;
     //		}
-    //		start = dsy_tim_get_tick();
+    //		start = System::GetTick();
     //		res = dsy_qspi_write(base + (i * writesize), writesize, (uint8_t*)small_buff);
-    //		end = dsy_tim_get_tick();
+    //		end = System::GetTick();
     //		dur_write_4k = (end - start) / 200;
     //		dur_write_4m += dur_write_4k;
     //	}
@@ -105,7 +104,7 @@ int main(void)
     ledstate = true;
     while(1)
     {
-        dsy_tim_delay_ms(250);
+        System::Delay(250);
         hw.SetLed(ledstate);
         ledstate = !ledstate;
     }

@@ -49,12 +49,12 @@ template <PrintFunc function, typename... Va>
 float ProfileFunction(const char* format, Va... va)
 {
     constexpr int32_t count = 100000;
-    uint32_t          t0    = dsy_tim_get_tick();
+    uint32_t          t0    = System::GetTick();
     for(int i = 0; i < count; i++)
     {
         function(format, va...);
     }
-    uint32_t    dt = dsy_tim_get_tick() - t0;
+    uint32_t    dt = System::GetTick() - t0;
     const float perf
         = (float)dt
           / (200 * count); // using secret knowledge about timer frequency...
@@ -246,9 +246,9 @@ int main(void)
     uint32_t counter = 0;
     while(1)
     {
-        dsy_system_delay(500);
+        System::Delay(500);
 
-        const float time_s = dsy_tim_get_ms() * 1.0e-3f;
+        const float time_s = System::GetNow() * 1.0e-3f;
 
         /** showcase floating point output 
          * note that FLT_FMT is part of the format string

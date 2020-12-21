@@ -28,6 +28,6 @@ int main(void)
         //If the button is pressed, turn the LED on
         hw.SetLed(button1.Pressed());
         //wait 1 ms
-        dsy_system_delay(1);
+        System::Delay(1);
     }
 }
