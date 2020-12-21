@@ -13,14 +13,30 @@ static AdEnv      env, aenv;
 static uint32_t   delta_ms;
 static bool       synth_trigger;
 
+static int32_t note_table[15] = {
+        0,  2,  4,  5,  7,  9,  11, 
+        12, 14, 16, 17, 19, 21, 23, 
+        24 
+    };
+static int32_t melody_note;
+
 // And Reverb in the ext. SRAM
 static ReverbSc DSY_SDRAM_BSS verb;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
     hw.ProcessAllControls();
+    // Synth triggers when center of circle collides
+    // with edge of display.
+    if(synth_trigger)
+    {
+        synth_trigger = false;
+        melody_note = note_table[rand() % 15];
+        env.Trigger();
+        aenv.Trigger();
+    }
     // Bunch of parameters in a row.
-    float freq  = mtof(12.f + hw.GetKnobValue(hw.KNOB_1) * 72.f);
+    float freq  = mtof((12.f + hw.GetKnobValue(hw.KNOB_1) * 72.f) + melody_note);
     float index = hw.GetKnobValue(hw.KNOB_2);
     float curve = (hw.GetKnobValue(hw.KNOB_3) * 2.f) - 1.f;
     float atime = 0.001f + (hw.GetKnobValue(hw.KNOB_4) * 0.5f);
@@ -39,14 +55,6 @@ void AudioCallback(float **in, float **out, size_t size)
     verb.SetLpFreq(vfreq);
     for(size_t i = 0; i < size; i++)
     {
-        // Synth triggers when center of circle collides
-        // with edge of display.
-        if(synth_trigger)
-        {
-            synth_trigger = false;
-            env.Trigger();
-            aenv.Trigger();
-        }
         env.SetMax(index);
         osc.SetIndex(env.Process());
         float dryl, dryr, sendl, sendr, wetl, wetr;
@@ -67,6 +75,7 @@ int main(void)
     hw.seed.StartLog(false);
     hw.StartAdc();
     // Init DSP
+    melody_note = 0;
     osc.Init(hw.AudioSampleRate());
     env.Init(hw.AudioSampleRate());
     aenv.Init(hw.AudioSampleRate());
