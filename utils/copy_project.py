@@ -11,16 +11,20 @@ import codecs
 # are replaced with "b", and then 
 # removes the original file, and renames the temp file.
 def rewrite_replace(filepath, a, b):
-    in_name = os.path.abspath(filepath)
-    in_base = os.path.basename(in_name)
-    t_name = in_name.replace(in_base, 'tmp_{}'.format(in_base))
-    with codecs.open(in_name, 'r', encoding='utf-8') as fi, \
-        codecs.open(t_name, 'w', encoding='utf-8') as fo:
-        for line in fi:
-            newline = line.replace(a, b)
-            fo.write(newline)
-    os.remove(in_name)
-    os.rename(t_name, in_name)
+    try:
+        in_name = os.path.abspath(filepath)
+        in_base = os.path.basename(in_name)
+        t_name = in_name.replace(in_base, 'tmp_{}'.format(in_base))
+        with codecs.open(in_name, 'r', encoding='utf-8') as fi, \
+            codecs.open(t_name, 'w', encoding='utf-8') as fo:
+            for line in fi:
+                newline = line.replace(a, b)
+                fo.write(newline)
+        os.remove(in_name)
+        os.rename(t_name, in_name)
+    except Exception as e:
+        print("Cannot process file: {} \t {} into {}".format(filepath, a, b))
+        print(e)
 
 # Takes a filename and a list of extensions
 # returns true if the file name ends with that extension
