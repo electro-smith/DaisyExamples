@@ -40,6 +40,6 @@ int main(void)
         led1.Update();
 
         //wait 1 ms
-        dsy_system_delay(1);
+        System::Delay(1);
     }
 }

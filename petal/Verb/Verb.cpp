@@ -59,7 +59,7 @@ int main(void)
     while(1)
     {
         // Do Stuff InfInitely Here
-        dsy_system_delay(10);
+        System::Delay(10);
         hw.ClearLeds();
         hw.SetFootswitchLed(hw.FOOTSWITCH_LED_1, bypass ? 0.0f : 1.0f);
         hw.UpdateLeds();

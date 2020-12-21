@@ -67,7 +67,7 @@ int main(void)
 
     hw.Init();
 
-    last_led_update = last_usb_update = now = dsy_system_getnow();
+    last_led_update = last_usb_update = now = System::GetNow();
 
     // Init USB as VCOM for sending Serial Data
     hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
@@ -81,7 +81,7 @@ int main(void)
     while(1)
     {
         // Do Stuff InfInitely Here
-        now = dsy_system_getnow();
+        now = System::GetNow();
 
         // Update LEDs (Vegas Mode)
         if(now - last_led_update > led_period)
@@ -187,7 +187,7 @@ void UpdateUsb(int sd_sta)
 void UpdateLeds()
 {
     uint32_t now;
-    now = dsy_system_getnow();
+    now = System::GetNow();
     hw.ClearLeds();
     // Use now as a source for time so we don't have to use any global vars
     // First gradually pulse all 4 Footswitch LEDs

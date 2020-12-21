@@ -29,6 +29,6 @@ int main(void)
         led_state = !led_state;
 
         // Wait 500ms
-        dsy_system_delay(500);
+        System::Delay(500);
     }
 }

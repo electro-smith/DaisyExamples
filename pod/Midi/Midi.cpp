@@ -75,7 +75,7 @@ int main(void)
     float samplerate;
     hw.Init();
     hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
-    dsy_system_delay(250);
+    System::Delay(250);
     midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
 
     // Synthesis

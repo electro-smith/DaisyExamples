@@ -20,7 +20,7 @@ int main(void)
     char strbuff[128];
     while(1)
     {
-        dsy_system_delay(500);
+        System::Delay(500);
         switch(message_idx)
         {
             case 0: sprintf(strbuff, "Testing. . ."); break;

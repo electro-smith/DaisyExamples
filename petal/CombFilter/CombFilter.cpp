@@ -77,7 +77,7 @@ int main(void)
         i %= 8;
 
         petal.UpdateLeds();
-        dsy_system_delay(60);
+        System::Delay(60);
     }
 }
 

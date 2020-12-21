@@ -186,7 +186,7 @@ int main(void)
     for(;;)
     {
         UpdateLeds(kvals);
-        dsy_system_delay(1);
+        System::Delay(1);
         dsy_dac_write(DSY_DAC_CHN1, hw.GetKnobValue(0) * 4095);
         dsy_dac_write(DSY_DAC_CHN2, hw.GetKnobValue(1) * 4095);
     }

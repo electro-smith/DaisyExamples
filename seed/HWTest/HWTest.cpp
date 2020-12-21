@@ -16,7 +16,7 @@ static uint32_t  start, end, dur;
 
 void bad_callback(float *in, float *out, size_t size)
 {
-    start = dsy_tim_get_tick();
+    start = System::GetTick();
     //	int32_t* ram = (int32_t*)0x20000000; // DTCM
     //	int32_t* ram = (int32_t*)0x38000000; // D3 RAM
     int32_t *ram = (int32_t *)0xC0000000; // SDRAM
@@ -25,7 +25,7 @@ void bad_callback(float *in, float *out, size_t size)
     {
         memcpy((i + 1) * size + ram, ram, sizeof(int32_t) * size);
     }
-    end = dsy_tim_get_tick();
+    end = System::GetTick();
     dur = (end - start) / 200; // us
     memcpy(out, in, sizeof(float) * size);
 }
@@ -50,7 +50,6 @@ int main(void)
             asm("bkpt 255");
         }
     }
-    dsy_tim_start();
     hw.StartAudio(bad_callback);
     while(1) {}
 }
