@@ -67,7 +67,7 @@ def  update_project(destination):
     print('updating {}...'.format(proj_name))
     # Removalsd
     # Maybe make this optional..
-    rm_patts = ['*.sln', '*.vcxproj', '*.vgdbsettings', '.vscode/*', 'vs/*']
+    rm_patts = ['*.sln', '*.vcxproj', '*.vcxproj*', '*.vgdbsettings*', '.vscode/*', 'vs/*', 'stm32.props', 'stm32.xml']
     rmlists = list(glob.glob(basedir+os.path.sep+pat) for pat in rm_patts)
     f_to_rm = list(item for sublist in rmlists for item in sublist)
     if len(f_to_rm) > 0:
