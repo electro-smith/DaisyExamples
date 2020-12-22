@@ -235,7 +235,11 @@ def run():
             dest = args.destination
             update_project(dest)
         else:
-            print('Update all support coming soon...')
+            for brd_dir in supported_boards:
+                brd_ex = list(os.path.sep.join((brd_dir, d)) for d in os.listdir(brd_dir) if 'experimental' not in d.casefold())
+                brd_ex = list(d for d in brd_ex if os.path.isdir(d))
+                for ex in brd_ex:
+                    update_project(ex)
     elif op == 'rebuild':
         rebuild(args.destination)
     else:
