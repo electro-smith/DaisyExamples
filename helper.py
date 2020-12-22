@@ -60,7 +60,8 @@ def has_extension(fname, ext_list):
 ################################################################
 
 # Called via the 'update' operation
-# Removes old, copies new, processes for string replacement
+# Removes old, copies new from template, processes for string replacement
+# only affects .vscode/, vs/ and .sln files.
 def  update_project(destination):
     basedir = os.path.abspath(destination)
     root = os.path.dirname(os.path.realpath(__file__))
@@ -77,7 +78,7 @@ def  update_project(destination):
     f_to_rm = list(item for sublist in rmlists for item in sublist)
     if len(f_to_rm) > 0:
         for f in f_to_rm:
-            print('deleting: {}'.format(os.path.basename(f)))
+            print('deleting: {}'.format(os.path.relpath(f)))
             os.remove(f)
     # Copying
     cp_patts = ['*.sln', '*.vgdbsettings', '.vscode/*', 'vs/*']
@@ -85,16 +86,18 @@ def  update_project(destination):
     f_to_cp = list(item for sublist in cplists for item in sublist)
     for f in f_to_cp:
         sname = os.path.abspath(f)
-        dname = os.path.abspath(f.replace(tdir, basedir))
-        print('copying: {} '.format(os.path.basename(f)))
-        #os.rename(sname, dname)
+        dname = os.path.abspath(sname.replace(tdir, basedir)).replace('Template', proj_name)
+        dir_path = os.path.dirname(dname)
+        if not os.path.isdir(dir_path):
+            os.mkdir(dir_path)
+        print('copying: {} to {}'.format(os.path.relpath(sname), os.path.relpath(dname)))
         shutil.copyfile(sname, dname)
-        # process file within this loop
         rewrite_replace(dname, 'Template', proj_name) 
-        # Process again for libdaisy dir if/when available
     print("done")
 
 # Called via the 'copy' operation
+# copies _all_ files from source directory, 
+# deletes old build directories. 
 def copy_project(destination, source):
     print('copying {} to new project: {}'.format(source, destination))
     srcAbs = os.path.abspath(source)
@@ -105,6 +108,13 @@ def copy_project(destination, source):
     if os.path.isdir(srcAbs):
         # Then make a copy of the folder renaming it to be the same
         shutil.copytree(srcAbs, destAbs)
+        # remove build/ and VisualGDB/ if necessary.
+        exclude_dirs = ['build', 'vs/VisualGDB', 'VisualGDB']
+        bdirs =  list(os.path.sep.join((destAbs, exclusion)) for exclusion in exclude_dirs)
+        for d in bdirs:
+            if os.path.isdir(d):
+                print('deleting build files: {}', d)
+                shutil.rmtree(d)
         # Go through and rename all the files first.
         found = glob.glob(destAbs+ os.path.sep + '*' + os.path.sep + srcBase + '*', recursive=True)
         found += glob.glob(destAbs+ os.path.sep + '*' + srcBase + '*', recursive=True)
@@ -114,12 +124,10 @@ def copy_project(destination, source):
             os.rename(s, d)
         allFiles = glob.glob(destAbs + os.path.sep + '*', recursive=True)
         allFiles += glob.glob(destAbs + os.path.sep + '**' + os.path.sep + '*')
+        allFiles += glob.glob(os.path.sep.join((destAbs, '.vscode', '*')))
         # remove unacceptable extensions
         avoid_exts = ['.ai', '.png']
-        procFiles = list()
-        for f in allFiles:
-            if not has_extension(f, avoid_exts):
-                procFiles.append(f)
+        procFiles = list(f for f in allFiles if not has_extension(f, avoid_exts))
         # process files with internal text replacement
         for f in procFiles:
             if not os.path.isdir(f) and os.path.exists(f):
@@ -133,7 +141,6 @@ def create_from_template(destination, board):
     print("creating new project: {} for platform: {}".format(destination, board))
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
-    #template_dir = os.path.abspath(['utils','Template'].join(os.path.sep))
     template_dir = os.path.abspath(os.path.sep.join(('utils', 'Template')))
     copy_project(destination, template_dir)
     src_file = os.path.abspath(destination + os.path.sep + os.path.basename(destination) + '.cpp')
@@ -183,16 +190,22 @@ def rebuild(destination):
         print("rebuild coming soon")
     else:
         print("rebuild all coming soon")
-    # proc = subprocess.Popen(['./ci/build_libs.sh'],
-    #                 stdout=subprocess.PIPE,
-    #                 stderr=subprocess.PIPE)
-    # stdout, stderr = process.communicate()
-    # print(stdout, stderr)
-    # proc = subprocess.Popen(['./ci/build_examples.sh'],
-    #                 stdout=subprocess.PIPE,
-    #                 stderr=subprocess.PIPE)
-    # stdout, stderr = process.communicate()
-    # print(stdout, stderr)
+        # The below does not work as expected on windows.
+        # Seems to use wsl's bash, and the default arm-none-eabi in that location
+        # I'll look into solutions for Windows, though the below may work on other 
+        # platforms already.
+        # -----------------
+        # proc = subprocess.Popen(['bash', '-c', './ci/build_libs.sh'],
+        #                 stdout=subprocess.PIPE,
+        #                 stderr=subprocess.PIPE,
+        #                 shell=False)
+        # stdout, stderr = proc.communicate()
+        # print(stdout.decode('utf-8'), stderr.decode('utf-8'))
+        # proc = subprocess.Popen(['./ci/build_examples.sh'],
+        #                 stdout=subprocess.PIPE,
+        #                 stderr=subprocess.PIPE)
+        # stdout, stderr = process.communicate()
+        # print(stdout, stderr)
 
 
 ################################################################

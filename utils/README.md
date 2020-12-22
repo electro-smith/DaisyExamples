@@ -4,24 +4,36 @@ Various scripts, etc. for helpful stuff within the Daisy ecosystem.
 
 ## copy_project.py
 
-Copies an entire project folder to that of a new name.
+Duplicates existing project and replaces text/paths as necessary.
 
-requires: python >= 3.x
+`copy_project.py` has been removed, and `helper.py copy` file in the root directory should be used instead.
 
-ex:
-`python copy_project.py SourceProjectName DestinationProjectName`
+See root level readme for usage.
 
-### Known Issues
+## gen_json_details.py
 
-Using a common word when copying the project causes issues, when trying to do this rename as something else as an intermediary. 
+Generates json metadata for examples.
 
-i.e. changing MidiCCTest to MidiNoteTest you would:
+This script has been removed and was replaced with `ci/build_dist.py` for use in automation.
 
+## fix_style_examples.sh
+
+This runs clang-format with the `-i` flag on the files checked by the CI style checks.
+
+To run:
+
+```sh
+./util/fix_style_examples.sh
 ```
-copy_project.py MidiCCTest FooProj
-copy_project.py FooProj MidiNoteTest
-rm -r FooProj
+
+To run local check:
+
+```sh
+./ci/local_style_check.sh
 ```
 
-this will be resolved soon.
+The local check should return 1 empty line if all is successful.
 
+## run-clang-format.py
+
+common clang-format python interface. Used by CI and for running local checks.
