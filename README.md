@@ -38,6 +38,10 @@ git submodule update --init
 
 Once you have the repository and the submodules (libDaisy/DaisySP) properly cloned, and the toolchain installed (for details see the [Daisy Wiki](github.com/electro-smith/DaisyWiki/wiki) for platform specific instructions) it's time to build the libraries, and some examples.
 
+To build everything at once, run: `./rebuild_all.sh`
+
+This is a little time  consuming, and more often than not, only one example, or the libraries need to get built frequently.
+
 To build both libraries at once simply run:
 
 `./ci/build_libs.sh`
