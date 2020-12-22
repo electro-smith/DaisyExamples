@@ -114,6 +114,11 @@ Alternatively, you can simply run git commands from within the submodule and the
 
 The script does expect that python3 is installed.
 
+One thing that must be kept in mind is that the script does not know where libDaisy/DaisySP
+are located. So all copied/created projects are expected to be two directories up from whereever the libraries are  (e.g. `seed/new_project/`).
+
+Adding an argument to specify this is planned, but not yet available.
+
 ### Create new example project
 
 Creates a brand new example project containing a Makefile, compilable source file,
@@ -139,7 +144,7 @@ This does copy resource files like `.ai` and `.png` files, but does not try to p
 
 Updates an existing project with functional debugging resources for VisualStudio and the VisualGDB extension and for VS Code and the Cortex Debug extension.
 
-This also removes any existing files in their place. For trivial projects this will make little difference, but useful modifications to existing files will be lost. So back up previous project, or don't update.
+<b>This also removes any existing files in their place. For trivial projects this will make little difference, but useful modifications to existing files will be lost. So back up previous project, or don't update. </b>
 
 `./helper.py update pod/MyNewProject`
 
