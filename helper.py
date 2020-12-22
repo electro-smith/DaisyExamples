@@ -2,12 +2,6 @@
 import argparse, glob, os, shutil, codecs
 import subprocess
 
-# Known Issues/bugs:
-# Copy:
-# - attempts to copy and process build/ and VisualGDB/. This fails on processing non text files.
-#    - Temp solution: delete those folders, and re run.
-# - launch.json is not processed. Presumably the .vscode folder doesn't show up in glob or something.
-
 ################################################################
 # String Data for clarity
 ################################################################
