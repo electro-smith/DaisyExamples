@@ -4,9 +4,9 @@
 using namespace daisy;
 
 static DaisySeed hw;
-static uint8_t sumbuff[1024];
-static uint32_t rx_size;
-static bool update;
+static uint8_t   sumbuff[1024];
+static uint32_t  rx_size;
+static bool      update;
 
 void UsbCallback(uint8_t* buf, uint32_t* len)
 {
@@ -22,12 +22,12 @@ int main(void)
     update  = false;
     rx_size = 0;
     hw.usb_handle.Init(UsbHandle::FS_INTERNAL);
-	// Todo: replace delay with while(!usb_handle.IsInitialized()) {} or similar
+    // Todo: replace delay with while(!usb_handle.IsInitialized()) {} or similar
     System::Delay(500);
     hw.usb_handle.SetReceiveCallback(UsbCallback, UsbHandle::FS_INTERNAL);
-	for(;;)
+    for(;;)
     {
-        if (update && rx_size > 0)
+        if(update && rx_size > 0)
         {
             hw.usb_handle.TransmitInternal(sumbuff, rx_size);
             update = false;
