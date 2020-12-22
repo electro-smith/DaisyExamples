@@ -15,9 +15,10 @@ description = 'Helper script for managing Daisy examples, and creating new proje
 usage = {
     'operation': 'Keyword argument for the desired helper action. Can be any of the following: create, copy, update.',
     'destination': 'Second positional argument to set where the action should be applied. This is the final destination of the project.',
-    'source': 'Third positional argument for selecting the project to copy from. Only useful for the copy operation.',
+    'source': 'optional argument for selecting the project to copy from. required for the copy operation.',
     'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio'
 }
+supported_boards= ['seed', 'pod', 'patch', 'field', 'petal', 'versio']
 
 ################################################################
 # Helper functions
@@ -103,17 +104,16 @@ def copy_project(destination, source):
 
 # Called via the 'create' operation
 def create_from_template(destination, board):
-    # Platform specific differences summarized:
-    # - seed: needs hw.Configure() before init. No hw.UpdateAllControls()
-    # - patch: four channels instead of two in audio callback.
     print("creating new project: {} for platform: {}".format(destination, board))
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
-    template_dir = os.path.abspath(('utils','Template').join(os.path.sep))
+    #template_dir = os.path.abspath(['utils','Template'].join(os.path.sep))
+    template_dir = os.path.abspath(os.path.sep.join(('utils', 'Template')))
     copy_project(destination, template_dir)
-    src_file = destination.basename + '.cpp'
-    # Now rewrite src_file
-    # meta-info
+    src_file = os.path.abspath(destination + os.path.sep + os.path.basename(destination) + '.cpp')
+    # Platform specific differences summarized:
+    # - seed: needs hw.Configure() before init. No hw.UpdateAllControls()
+    # - patch: four channels instead of two in audio callback.
     if board == 'seed':
         need_configure = True
         controls = False
@@ -124,33 +124,32 @@ def create_from_template(destination, board):
         audio_channels = 4
     else:
         audio_channels  = 2
+    # Rewrite  Source file
     with open(src_file, 'w') as f:
-        f.write('#include "daisy_{}.h"'.format(board))
-        f.write('#include "daisysp.h"')
-        f.write('using namespace daisy;')
-        f.write('using namespace daisysp;')
-        f.write('Daisy{} hw;'.format(board.capitalize())
-        f.write('void AudioCallback(float **in, float **out, size_t size)')
-        f.write('{')
+        f.write('#include "daisy_{}.h"\n'.format(board))
+        f.write('#include "daisysp.h"\n\n') # extra line below
+        f.write('using namespace daisy;\n')
+        f.write('using namespace daisysp;\n\n') # extra line below
+        f.write('Daisy{} hw;\n'.format(board.capitalize()))
+        f.write('void AudioCallback(float **in, float **out, size_t size)\n')
+        f.write('{\n')
         if controls:
-            f.write('\thw.ProcessAllControls();')
-        f.write('\tfor (size_t i = 0; i < size; i++)')
-        f.write('\t{')
-        for i in range(0, channels):
-            f.write('\t\tout[{}][i] = in[{}][i];'.format(i))
-        f.write('\t}')
-        f.write('}')
-        f.write('')
-        f.write('int main(void)')
-        f.write('{')
+            f.write('\thw.ProcessAllControls();\n')
+        f.write('\tfor (size_t i = 0; i < size; i++)\n')
+        f.write('\t{\n')
+        for i in range(0, audio_channels):
+            f.write('\t\tout[{}][i] = in[{}][i];\n'.format(i, i))
+        f.write('\t}\n')
+        f.write('}\n\n') # extra line  before main
+        f.write('int main(void)\n')
+        f.write('{\n')
         if need_configure:
-            f.write('\thw.Configure();')
-        f.write('\thw.Init();')
-        f.write('\thw.StartAdc();')
-        f.write('\thw.StartAdc();')
-        f.write('\twhile(1) \{\}')
-        f.write('}')
-        f.write('')
+            f.write('\thw.Configure();\n')
+        f.write('\thw.Init();\n')
+        f.write('\thw.StartAdc();\n')
+        f.write('\thw.StartAudio(AudioCallback);\n')
+        f.write('\twhile(1) {}\n')
+        f.write('}\n')
     print("done")
 
 
@@ -164,8 +163,8 @@ def run():
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('operation', help=usage.get('operation'))
     parser.add_argument('destination', help =usage.get('destination'), nargs='?')
-    parser.add_argument('--source', help=usage.get('source'))
-    parser.add_argument('--board', help=usage.get('board'), default='seed')
+    parser.add_argument('-s', '--source', help=usage.get('source'))
+    parser.add_argument('-b', '--board', help=usage.get('board'), default='seed', choices=supported_boards)
     args = parser.parse_args()
 
     op = args.operation.casefold()
