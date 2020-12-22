@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse, glob, os, shutil, codecs
+import subprocess
 
 # Known Issues/bugs:
 # Copy:
@@ -13,7 +14,7 @@ import argparse, glob, os, shutil, codecs
 
 description = 'Helper script for managing Daisy examples, and creating new projects.'
 usage = {
-    'operation': 'Keyword argument for the desired helper action. Can be any of the following: create, copy, update.',
+    'operation': 'Keyword argument for the desired helper action. Can be any of the following: create, copy, update, rebuild_all.',
     'destination': 'Second positional argument to set where the action should be applied. This is the final destination of the project.',
     'source': 'optional argument for selecting the project to copy from. required for the copy operation.',
     'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio'
@@ -59,14 +60,39 @@ def has_extension(fname, ext_list):
 ################################################################
 
 # Called via the 'update' operation
+# Removes old, copies new, processes for string replacement
 def  update_project(destination):
-    print('updating {}...'.format(destination))
-    print('implementation coming soon...')
-    print('done')
-    # takes template debug code and puts it in destination
-    # updates paths.
-    # This should just be taken from the copy_project, and 
-    # then copy_project should call this.
+    basedir = os.path.abspath(destination)
+    root = os.path.dirname(os.path.realpath(__file__))
+    tdir = os.path.sep.join((root,'utils','Template'))
+    if not os.path.isdir(basedir):
+        print('destination should be a directory')
+        return
+    proj_name = os.path.basename(basedir)
+    print('updating {}...'.format(proj_name))
+    # Removalsd
+    # Maybe make this optional..
+    rm_patts = ['*.sln', '*.vcxproj', '*.vgdbsettings', '.vscode/*', 'vs/*']
+    rmlists = list(glob.glob(basedir+os.path.sep+pat) for pat in rm_patts)
+    f_to_rm = list(item for sublist in rmlists for item in sublist)
+    if len(f_to_rm) > 0:
+        for f in f_to_rm:
+            print('deleting: {}'.format(os.path.basename(f)))
+            os.remove(f)
+    # Copying
+    cp_patts = ['*.sln', '*.vgdbsettings', '.vscode/*', 'vs/*']
+    cplists = list(glob.glob(tdir+os.path.sep+pat) for pat in cp_patts)
+    f_to_cp = list(item for sublist in cplists for item in sublist)
+    for f in f_to_cp:
+        sname = os.path.abspath(f)
+        dname = os.path.abspath(f.replace(tdir, basedir))
+        print('copying: {} '.format(os.path.basename(f)))
+        #os.rename(sname, dname)
+        shutil.copyfile(sname, dname)
+        # process file within this loop
+        rewrite_replace(dname, 'Template', proj_name) 
+        # Process again for libdaisy dir if/when available
+    print("done")
 
 # Called via the 'copy' operation
 def copy_project(destination, source):
@@ -152,12 +178,26 @@ def create_from_template(destination, board):
         f.write('}\n')
     print("done")
 
+def rebuild(destination):
+    if destination:
+        print("rebuild coming soon")
+    else:
+        print("rebuild all coming soon")
+    # proc = subprocess.Popen(['./ci/build_libs.sh'],
+    #                 stdout=subprocess.PIPE,
+    #                 stderr=subprocess.PIPE)
+    # stdout, stderr = process.communicate()
+    # print(stdout, stderr)
+    # proc = subprocess.Popen(['./ci/build_examples.sh'],
+    #                 stdout=subprocess.PIPE,
+    #                 stderr=subprocess.PIPE)
+    # stdout, stderr = process.communicate()
+    # print(stdout, stderr)
+
 
 ################################################################
 # BEGIN SCRIPT
 ################################################################
-
-# Arg Parser
 
 def run():
     parser = argparse.ArgumentParser(description=description)
@@ -166,10 +206,7 @@ def run():
     parser.add_argument('-s', '--source', help=usage.get('source'))
     parser.add_argument('-b', '--board', help=usage.get('board'), default='seed', choices=supported_boards)
     args = parser.parse_args()
-
     op = args.operation.casefold()
-
-    # fix this to be more maintainable
     if op == 'create':
         # create new project
         brd = args.board
@@ -186,11 +223,14 @@ def run():
             update_project(dest)
         else:
             print('Update all support coming soon...')
+    elif op == 'rebuild':
+        rebuild(args.destination)
     else:
         print('invalid operation. please use one of the following:')
-        print('create: creates a new project with the name \'destination\' for the specified board (or seed if not specified).')
-        print('copy: duplicates an existing project to the specified \'destination\', replacing names and paths as necessary')
-        print('update:', 'updates debugging files and directories to latest in template. Won\'t change source files.')
+        print('create - creates a new project with the name \'destination\' for the specified board (or seed if not specified).')
+        print('copy - duplicates an existing project to the specified \'destination\', replacing names and paths as necessary')
+        print('update - updates debugging files and directories to latest in template. Won\'t change source files.')
+        print('rebuild - rebuilds the libraries, and all examples, or a single example if destination is passed in.')
 
 if __name__ == '__main__':
     run()
