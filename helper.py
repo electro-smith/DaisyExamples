@@ -87,7 +87,6 @@ def  update_project(destination):
         print('copying: {} to {}'.format(os.path.relpath(sname), os.path.relpath(dname)))
         shutil.copyfile(sname, dname)
         rewrite_replace(dname, 'Template', proj_name) 
-    print("done")
 
 # Called via the 'copy' operation
 # copies _all_ files from source directory, 
@@ -126,7 +125,6 @@ def copy_project(destination, source):
         for f in procFiles:
             if not os.path.isdir(f) and os.path.exists(f):
                 rewrite_replace(f, srcBase, destBase)
-        print("done")
     else:
         print("source directory is not valid.")
 
@@ -138,6 +136,20 @@ def create_from_template(destination, board):
     template_dir = os.path.abspath(os.path.sep.join(('utils', 'Template')))
     copy_project(destination, template_dir)
     src_file = os.path.abspath(destination + os.path.sep + os.path.basename(destination) + '.cpp')
+    # Copy resources/diagram files (if available)
+    dfiles = glob.glob(os.path.sep.join(('resources', '*')))
+    dfiles += glob.glob(os.path.sep.join(('resources', '**', '*')))
+    dfiles = list(f for f in dfiles if board in f)
+    if len(dfiles) > 0:
+        dsrc = list(os.path.abspath(f) for f in dfiles)
+        ddest = list(os.path.abspath(os.path.sep.join((destination,f))) for f in dfiles)
+        # Make resources/ and resources/png/
+        os.mkdir(os.path.sep.join((destination,'resources')))
+        os.mkdir(os.path.sep.join((destination,'resources', 'png')))
+        for s, d in zip(dsrc, ddest):
+            shutil.copy(s, d)
+
+
     # Platform specific differences summarized:
     # - seed: needs hw.Configure() before init. No hw.UpdateAllControls()
     # - patch: four channels instead of two in audio callback.
@@ -177,7 +189,6 @@ def create_from_template(destination, board):
         f.write('\thw.StartAudio(AudioCallback);\n')
         f.write('\twhile(1) {}\n')
         f.write('}\n')
-    print("done")
 
 def rebuild(destination):
     if destination:
@@ -233,7 +244,11 @@ def run():
                 brd_ex = list(os.path.sep.join((brd_dir, d)) for d in os.listdir(brd_dir) if 'experimental' not in d.casefold())
                 brd_ex = list(d for d in brd_ex if os.path.isdir(d))
                 for ex in brd_ex:
-                    update_project(ex)
+                    try:
+                        update_project(ex)
+                    except Exception as e:
+                        print('Unable to update example: {}'.format(ex))
+                        print(e)
     elif op == 'rebuild':
         rebuild(args.destination)
     else:
@@ -242,6 +257,7 @@ def run():
         print('copy - duplicates an existing project to the specified \'destination\', replacing names and paths as necessary')
         print('update - updates debugging files and directories to latest in template. Won\'t change source files.')
         print('rebuild - rebuilds the libraries, and all examples, or a single example if destination is passed in.')
+    print('done')
 
 if __name__ == '__main__':
     run()
