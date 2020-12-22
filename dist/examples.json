@@ -287,6 +287,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/SDMMC/README.md"
     },
     {
+        "name": "ReceiveTest",
+        "platform": "seed",
+        "filepath": "./dist/seed/ReceiveTest.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/ReceiveTest/README.md"
+    },
+    {
         "name": "HWTest",
         "platform": "seed",
         "filepath": "./dist/seed/HWTest.bin",
@@ -448,13 +455,6 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/GeneralFunctionTest/README.md"
     },
     {
-        "name": "PedalTemplate",
-        "platform": "petal",
-        "filepath": "./dist/petal/PedalTemplate.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/PedalTemplate/README.md"
-    },
-    {
         "name": "MultiDelay",
         "platform": "petal",
         "filepath": "./dist/petal/MultiDelay.bin",
@@ -600,13 +600,6 @@
         "filepath": "./dist/patch/FilterBank.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/FilterBank/README.md"
-    },
-    {
-        "name": "template",
-        "platform": "field",
-        "filepath": "./dist/field/template.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/template/README.md"
     },
     {
         "name": "Midi",
