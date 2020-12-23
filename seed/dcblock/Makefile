@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_dcblock
+TARGET = dcblock
 
 # Sources
-CPP_SOURCES = ex_dcblock.cpp
+CPP_SOURCES = dcblock.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

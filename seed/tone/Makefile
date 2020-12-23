@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_tone
+TARGET = tone
 
 # Sources
-CPP_SOURCES = ex_tone.cpp
+CPP_SOURCES = tone.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

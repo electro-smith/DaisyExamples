@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_ReceiveTest
+TARGET = ReceiveTest
 
 # Sources
 CPP_SOURCES = ReceiveTest.cpp

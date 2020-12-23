@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_samplehold
+TARGET = samplehold
 
 # Sources
-CPP_SOURCES = ex_samplehold.cpp
+CPP_SOURCES = samplehold.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

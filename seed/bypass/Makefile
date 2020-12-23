@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_bypass
+TARGET = bypass
 
 # Sources
-CPP_SOURCES = ex_bypass.cpp
+CPP_SOURCES = bypass.cpp
 
 # Library Locations
-DAISYSP_DIR ?= ../../../DaisySP
-LIBDAISY_DIR ?= ../../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

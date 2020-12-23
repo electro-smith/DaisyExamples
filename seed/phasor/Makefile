@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_phasor
+TARGET = phasor
 
 # Sources
-CPP_SOURCES = ex_phasor.cpp
+CPP_SOURCES = phasor.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

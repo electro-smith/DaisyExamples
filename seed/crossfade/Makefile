@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_crossfade
+TARGET = crossfade
 
 # Sources
-CPP_SOURCES = ex_crossfade.cpp
+CPP_SOURCES = crossfade.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

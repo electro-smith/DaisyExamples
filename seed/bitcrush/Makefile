@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_bitcrush
+TARGET = bitcrush
 
 # Sources
-CPP_SOURCES = ex_bitcrush.cpp
+CPP_SOURCES = bitcrush.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

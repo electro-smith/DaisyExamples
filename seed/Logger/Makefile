@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_Logger
+TARGET = Logger
 
 # Sources
 CPP_SOURCES = Logger.cpp

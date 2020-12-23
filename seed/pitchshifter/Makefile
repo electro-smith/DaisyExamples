@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_pitchshifter
+TARGET = pitchshifter
 
 # Sources
-CPP_SOURCES = ex_pitchshifter.cpp
+CPP_SOURCES = pitchshifter.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

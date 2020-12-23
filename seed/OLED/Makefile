@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_OLED
+TARGET = OLED
 
 # Sources
 CPP_SOURCES = OLED.cpp

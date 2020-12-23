@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_formantosc
+TARGET = formantosc
 
 # Sources
-CPP_SOURCES = ex_formantosc.cpp
+CPP_SOURCES = formantosc.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

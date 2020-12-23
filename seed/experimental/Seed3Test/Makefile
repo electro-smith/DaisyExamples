@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_Seed3Test
+TARGET = Seed3Test
 
 # Sources
 CPP_SOURCES = Seed3Test.cpp

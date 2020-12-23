@@ -1,12 +1,12 @@
 # Project Name
-TARGET = ex_faustnoise
+TARGET = faustnoise
 
 # Sources
-CPP_SOURCES = ex_faust.cpp
+CPP_SOURCES = faust.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
-DAISYSP_DIR ?= ../../../DaisySP
+LIBDAISY_DIR ?= ../../libdaisy
+DAISYSP_DIR ?= ../../DaisySP
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
