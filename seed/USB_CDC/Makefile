@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_USB_CDC
+TARGET = USB_CDC
 
 # Sources
 CPP_SOURCES = USB_CDC.cpp

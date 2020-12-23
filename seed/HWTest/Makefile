@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_HWTest
+TARGET = HWTest
 
 # Sources
 CPP_SOURCES = HWTest.cpp
