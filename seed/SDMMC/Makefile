@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_SDMMC
+TARGET = SDMMC
 
 # Sources
 CPP_SOURCES = SDMMC.cpp

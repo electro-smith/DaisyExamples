@@ -24,13 +24,8 @@ class Example(object):
         self.name = name
         self.description = "no desc available yet"
         self.url = 'https://raw.githubusercontent.com/electro-smith/'
-        # Special case for DaisySP examples
-        if 'DaisySP' in ogdir:
-            self.platform = 'seed'
-            self.url += 'DaisySP/master/examples/' + self.name + '/README.md'
-        else:
-            self.platform = ogdir
-            self.url += 'DaisyExamples/master/' + self.platform + '/' + self.name + '/README.md'
+        self.platform = ogdir
+        self.url += 'DaisyExamples/master/' + self.platform + '/' + self.name + '/README.md'
         self.apath = os.path.abspath('/'.join((ogdir,name)))
         flist = glob.glob('{}/build/*.bin'.format(self.apath))
         if len(flist) > 0:
@@ -78,7 +73,7 @@ def run():
     args = parser.parse_args()
 
     if not args.directory_list:
-        directories = [ 'DaisySP/examples', 'seed', 'pod', 'patch', 'field', 'petal', 'versio' ]
+        directories = [ 'seed', 'pod', 'patch', 'field', 'petal', 'versio' ]
     else:
         directories = list(args.directory_list) 
 

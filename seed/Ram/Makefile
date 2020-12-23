@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_Ram
+TARGET = Ram
 
 # Sources
 CPP_SOURCES = Ram.cpp
