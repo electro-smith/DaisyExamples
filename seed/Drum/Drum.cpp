@@ -57,7 +57,7 @@ void AudioCallback(float* in, float* out, size_t size)
         noise_out *= snr_env_out;
 
         //Mix the two signals at half volume
-        sig = .5 * noise_out + .5 + osc_out;
+        sig = .5 * noise_out + .5 * osc_out;
 
         //Set the left and right outputs to the mixed signals
         out[i]     = sig;

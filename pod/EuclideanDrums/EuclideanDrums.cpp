@@ -45,7 +45,7 @@ void AudioCallback(float* in, float* out, size_t size)
         noise_out = noise.Process();
         noise_out *= snr_env_out;
 
-        sig = .5 * noise_out + .5 + osc_out;
+        sig = .5 * noise_out + .5 * osc_out;
 
         out[i]     = sig;
         out[i + 1] = sig;
