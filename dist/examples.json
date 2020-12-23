@@ -112,6 +112,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisySP/master/examples/delayline/README.md"
     },
     {
+        "name": "formantosc",
+        "platform": "seed",
+        "filepath": "./dist/seed/formantosc.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisySP/master/examples/formantosc/README.md"
+    },
+    {
         "name": "adenv",
         "platform": "seed",
         "filepath": "./dist/seed/adenv.bin",
@@ -194,6 +201,13 @@
         "filepath": "./dist/seed/metro.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisySP/master/examples/metro/README.md"
+    },
+    {
+        "name": "fm2",
+        "platform": "seed",
+        "filepath": "./dist/seed/fm2.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisySP/master/examples/fm2/README.md"
     },
     {
         "name": "decimator",
