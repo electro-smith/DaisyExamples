@@ -1,0 +1,1 @@
+Sets frequency of oscillator with periodically generated line segment
