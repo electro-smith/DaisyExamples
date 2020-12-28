@@ -6,20 +6,14 @@ using namespace daisy;
 
 static DaisySeed          seed;
 static HarmonicOscillator harm;
-float                     f;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
-    float amplitudes[16];
-    for(int i = 0; i < 16; i++)
-    {
-        amplitudes[i] = 0.f;
-    }
-    amplitudes[15] = 1.f;
+
 
     for(size_t i = 0; i < size; i += 2)
     {
-        out[i] = out[i + 1] = harm.Process(8, f, amplitudes);
+        out[i] = out[i + 1] = harm.Process();
     }
 }
 
@@ -30,9 +24,18 @@ int main(void)
     seed.Configure();
     seed.Init();
     sample_rate = seed.AudioSampleRate();
-    f           = 10.f / sample_rate;
 
-    harm.Init(16);
+    harm.Init(sample_rate, 16);
+	harm.SetFreq(10.f);
+	harm.SetFirstHarmIdx(8);
+
+    float amplitudes[16];
+    for(int i = 0; i < 16; i++)
+    {
+        amplitudes[i] = 0.f;
+    }
+    amplitudes[15] = 1.f;
+	harm.SetAmplitudes(amplitudes);
 
     // start callback
     seed.StartAudio(AudioCallback);
