@@ -7,12 +7,25 @@ using namespace daisy;
 static DaisySeed          seed;
 static HarmonicOscillator harm;
 static Oscillator         lfo;
+static AdEnv              env;
+
+float scale[] = {55.f, 65.41f, 73.42f, 82.41f, 98.f, 110.f};
+int   note    = 0;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {
-        float center = fabsf(lfo.Process()) * 15.f;
+        //retrig env on EOC and go to next note
+        if(!env.GetCurrentSegment())
+        {
+            env.Trigger();
+            harm.SetFreq(scale[note]);
+            note = (note + 1) % 6;
+        }
+
+        //calculate the new amplitudes based on env value
+        float center = env.Process();
         float amplitudes[16];
         for(int i = 0; i < 16; i++)
         {
@@ -33,13 +46,17 @@ int main(void)
     seed.Init();
     sample_rate = seed.AudioSampleRate();
 
+    //init harmonic oscillator
     harm.Init(sample_rate, 16);
-    harm.SetFreq(55.f);
     harm.SetFirstHarmIdx(1);
 
-    lfo.Init(sample_rate);
-    lfo.SetFreq(.05f);
-    lfo.SetAmp(1.f);
+    //init envelope
+    env.Init(sample_rate);
+    env.SetTime(ADENV_SEG_ATTACK, 0.05f);
+    env.SetTime(ADENV_SEG_DECAY, 0.35f);
+    env.SetMin(0.0);
+    env.SetMax(15.f);
+    env.SetCurve(0); // linear
 
     // start callback
     seed.StartAudio(AudioCallback);
