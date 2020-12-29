@@ -13,8 +13,8 @@ static void AudioCallback(float *in, float *out, size_t size)
     for(size_t i = 0; i < size; i += 2)
     {
         float sig = fabsf(lfo.Process());
-		grainlet.SetShape(sig);
-		
+        grainlet.SetShape(sig);
+
         out[i] = out[i + 1] = grainlet.Process();
     }
 }
@@ -26,9 +26,9 @@ int main(void)
     float sample_rate = hw.AudioSampleRate();
 
     grainlet.Init(sample_rate);
-	grainlet.SetCarrierFreq(80.f);
-	grainlet.SetFormantFreq(2000.f);
-	grainlet.SetBleed(1.f);
+    grainlet.SetCarrierFreq(80.f);
+    grainlet.SetFormantFreq(2000.f);
+    grainlet.SetBleed(1.f);
 
     lfo.Init(sample_rate);
     lfo.SetAmp(1.f);
