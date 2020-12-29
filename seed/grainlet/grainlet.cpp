@@ -5,17 +5,33 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisySeed          hw;
-GrainletOscillator grainlet;
+GrainletOscillator grainlet, subgrainlet;
 Oscillator         lfo;
+Metro              tick;
+
+float notes[]
+    = {329.63f, 392.f, 440.f, 392.f, 587.33f, 523.25f, 587.33f, 659.25};
+int idx = 0;
 
 static void AudioCallback(float *in, float *out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {
-        float sig = fabsf(lfo.Process());
-        grainlet.SetShape(sig);
+        if(tick.Process())
+        {
+            grainlet.SetCarrierFreq(notes[idx] * .5f);
+            subgrainlet.SetCarrierFreq(notes[idx] * .25f);
+            idx = (idx + 1) % 8;
+        }
 
-        out[i] = out[i + 1] = grainlet.Process();
+        float sig = fabsf(lfo.Process());
+        grainlet.SetShape(sig * .5f);
+        grainlet.SetFormantFreq(2000.f - 2000.f * sig);
+        subgrainlet.SetShape(.5f - sig * .5f);
+        subgrainlet.SetFormantFreq(2000.f * sig);
+
+        out[i]     = grainlet.Process();
+        out[i + 1] = subgrainlet.Process();
     }
 }
 
@@ -26,13 +42,16 @@ int main(void)
     float sample_rate = hw.AudioSampleRate();
 
     grainlet.Init(sample_rate);
-    grainlet.SetCarrierFreq(80.f);
-    grainlet.SetFormantFreq(2000.f);
+    grainlet.SetBleed(.5f);
+
+    subgrainlet.Init(sample_rate);
     grainlet.SetBleed(1.f);
 
     lfo.Init(sample_rate);
     lfo.SetAmp(1.f);
     lfo.SetFreq(.125f);
+
+    tick.Init(11.f, sample_rate);
 
     hw.StartAudio(AudioCallback);
     while(1) {}
