@@ -4,37 +4,36 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
+DaisySeed       hw;
 VOSIMOscillator vosim;
-Oscillator lfo;
-
-float f0,f1,f2;
+Oscillator      lfo;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
-	{	
-		float mod = lfo.Process();
-		vosim.SetForm2Freq(817.2f * (mod + 1.f));
-		vosim.SetShape(mod);
-		out[0][i] = out[1][i] = vosim.Process();
-	}
+    for(size_t i = 0; i < size; i++)
+    {
+        float mod = lfo.Process();
+        vosim.SetForm2Freq(817.2f * (mod + 1.f));
+        vosim.SetShape(mod);
+
+        out[0][i] = out[1][i] = vosim.Process();
+    }
 }
 
 int main(void)
 {
-	hw.Configure();
-	hw.Init();
-	float sample_rate = hw.AudioSampleRate();
-	
-	vosim.Init(sample_rate);
-	vosim.SetCarrierFreq(105.f);
-	vosim.SetForm1Freq(1390.7);
-	
-	lfo.Init(sample_rate);
-	lfo.SetAmp(1.f);
-	lfo.SetFreq(.5f);
+    hw.Configure();
+    hw.Init();
+    float sample_rate = hw.AudioSampleRate();
 
-	hw.StartAudio(AudioCallback);
-	while(1) {}
+    vosim.Init(sample_rate);
+    vosim.SetCarrierFreq(105.f);
+    vosim.SetForm1Freq(1390.7);
+
+    lfo.Init(sample_rate);
+    lfo.SetAmp(1.f);
+    lfo.SetFreq(.5f);
+
+    hw.StartAudio(AudioCallback);
+    while(1) {}
 }
