@@ -13,10 +13,11 @@ float f0,f1,f2;
 void AudioCallback(float **in, float **out, size_t size)
 {
 	for (size_t i = 0; i < size; i++)
-	{
-			
+	{	
 		float mod = lfo.Process();
-		out[0][i] = out[1][i] = vosim.Process(f0, f1 * (1.f + mod), f2, mod);
+		vosim.SetForm2Freq(817.2f * (mod + 1.f));
+		vosim.SetShape(mod);
+		out[0][i] = out[1][i] = vosim.Process();
 	}
 }
 
@@ -27,12 +28,9 @@ int main(void)
 	float sample_rate = hw.AudioSampleRate();
 	
 	vosim.Init(sample_rate);
-
-	f0 = 105.0f / sample_rate;
-	f1 = 1390.7f / sample_rate;
-	f2 = 817.2f / sample_rate;
-
-
+	vosim.SetCarrierFreq(105.f);
+	vosim.SetForm1Freq(1390.7);
+	
 	lfo.Init(sample_rate);
 	lfo.SetAmp(1.f);
 	lfo.SetFreq(.5f);
