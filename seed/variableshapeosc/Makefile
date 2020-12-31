@@ -1,8 +1,8 @@
 # Project Name
-TARGET = variableosc
+TARGET = variableshapeosc
 
 # Sources
-CPP_SOURCES = variableosc.cpp
+CPP_SOURCES = variableshapeosc.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy

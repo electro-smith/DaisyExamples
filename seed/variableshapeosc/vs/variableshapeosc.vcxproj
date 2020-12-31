@@ -76,10 +76,10 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\libdaisy\core\startup_stm32h750xx.c" />
-    <ClCompile Include="..\variableosc.cpp" />
+    <ClCompile Include="..\variableshapeosc.cpp" />
     <None Include="stm32.props" />
-    <None Include="variableosc-Debug.vgdbsettings" />
-    <None Include="variableosc-Release.vgdbsettings" />
+    <None Include="variableshapeosc-Debug.vgdbsettings" />
+    <None Include="variableshapeosc-Release.vgdbsettings" />
     <None Include="stm32.xml" />
   </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@
         <Revision>2</Revision>
       </Version>
     </ToolchainID>
-    <ProjectFile>variableosc.vcxproj</ProjectFile>
+    <ProjectFile>variableshapeosc.vcxproj</ProjectFile>
     <RemoteBuildEnvironment>
       <Records />
       <EnvironmentSetupFiles />

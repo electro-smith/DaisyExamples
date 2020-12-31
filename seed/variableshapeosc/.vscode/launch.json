@@ -7,7 +7,7 @@
         {
             "name": "Cortex Debug",
             "cwd": "${workspaceRoot}",
-            "executable": "./build/variableosc.elf",
+            "executable": "./build/variableshapeosc.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
