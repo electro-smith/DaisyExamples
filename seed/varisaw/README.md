@@ -1,9 +1,6 @@
-# varisaw
+# Variable Saw Oscillator Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
-
-## Description
-
-<!-- Describe your example here -->
+By Emillie Gillet
+Ported by Ben Sergentanis
