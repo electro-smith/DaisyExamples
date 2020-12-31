@@ -1,9 +1,6 @@
-# zoscillator
+# ZOscillator Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
-
-## Description
-
-<!-- Describe your example here -->
+By Emilie Gillet
+Ported by Ben Sergentanis
