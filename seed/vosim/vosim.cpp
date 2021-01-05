@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisySeed       hw;
-VOSIMOscillator vosim;
+VosimOscillator vosim;
 Oscillator      lfo;
 
 void AudioCallback(float **in, float **out, size_t size)
