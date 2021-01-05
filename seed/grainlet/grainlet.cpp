@@ -19,8 +19,8 @@ static void AudioCallback(float *in, float *out, size_t size)
     {
         if(tick.Process())
         {
-            grainlet.SetCarrierFreq(notes[idx] * .5f);
-            subgrainlet.SetCarrierFreq(notes[idx] * .25f);
+            grainlet.SetFreq(notes[idx] * .5f);
+            subgrainlet.SetFreq(notes[idx] * .25f);
             idx = (idx + 1) % 8;
         }
 
