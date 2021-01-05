@@ -29,7 +29,7 @@ int main(void)
     float sample_rate = hw.AudioSampleRate();
 
     zosc.Init(sample_rate);
-    zosc.SetCarrierFreq(80.f);
+    zosc.SetFreq(80.f);
     zosc.SetShape(1.f);
 
     lfo1.Init(sample_rate);
