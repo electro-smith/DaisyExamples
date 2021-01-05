@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisySeed             hw;
-StringSynthOscillator string[3];
+OscillatorBank osc[3];
 AdEnv                 env;
 Metro                 tick;
 
@@ -22,15 +22,15 @@ void AudioCallback(float **in, float **out, size_t size)
         }
 
         float env_sig    = env.Process();
-        float string_sig = 0.f;
+        float osc_sig = 0.f;
 
         for(int i = 0; i < 3; i++)
         {
-            string[i].SetGain(env_sig);
-            string_sig += string[i].Process();
+            osc[i].SetGain(env_sig);
+            osc_sig += osc[i].Process();
         }
 
-        out[0][i] = out[1][i] = string_sig;
+        out[0][i] = out[1][i] = osc_sig;
     }
 }
 
@@ -43,9 +43,9 @@ int main(void)
     float amp[7] = {.15f, 0.15f, 0.0f, 0.33f, 0.0f, 0.15f, 0.15f};
     for(int i = 0; i < 3; i++)
     {
-        string[i].Init(sample_rate);
-        string[i].SetFreq(freqs[i] * .5f);
-        string[i].SetAmplitudes(amp);
+        osc[i].Init(sample_rate);
+        osc[i].SetFreq(freqs[i] * .5f);
+        osc[i].SetAmplitudes(amp);
     }
 
     tick.Init(5.f, sample_rate);

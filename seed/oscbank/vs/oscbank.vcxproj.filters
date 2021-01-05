@@ -21,16 +21,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\stringsynth.cpp">
+    <ClCompile Include="..\oscbank.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
     </None>
-    <None Include="stringsynth-Debug.vgdbsettings">
+    <None Include="oscbank-Debug.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
-    <None Include="stringsynth-Release.vgdbsettings">
+    <None Include="oscbank-Release.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="stm32.xml">

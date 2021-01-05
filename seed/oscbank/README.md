@@ -1,4 +1,4 @@
-# String Synth Oscillator Example
+# Oscillator Bank Example
 
 ## Author
 

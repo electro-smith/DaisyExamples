@@ -1,8 +1,8 @@
 # Project Name
-TARGET = stringsynth
+TARGET = oscbank
 
 # Sources
-CPP_SOURCES = stringsynth.cpp
+CPP_SOURCES = oscbank.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy

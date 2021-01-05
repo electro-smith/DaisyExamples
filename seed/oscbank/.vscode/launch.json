@@ -7,7 +7,7 @@
         {
             "name": "Cortex Debug",
             "cwd": "${workspaceRoot}",
-            "executable": "./build/stringsynth.elf",
+            "executable": "./build/oscbank.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
