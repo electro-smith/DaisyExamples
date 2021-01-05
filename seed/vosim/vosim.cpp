@@ -27,7 +27,7 @@ int main(void)
     float sample_rate = hw.AudioSampleRate();
 
     vosim.Init(sample_rate);
-    vosim.SetCarrierFreq(105.f);
+    vosim.SetFreq(105.f);
     vosim.SetForm1Freq(1390.7);
 
     lfo.Init(sample_rate);
