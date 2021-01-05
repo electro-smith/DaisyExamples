@@ -4,10 +4,10 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed          seed;
-static HarmonicOscillator harm;
-static Oscillator         lfo;
-static AdEnv              env;
+static DaisySeed              seed;
+static HarmonicOscillator<16> harm;
+static Oscillator             lfo;
+static AdEnv                  env;
 
 float scale[] = {55.f, 65.41f, 73.42f, 82.41f, 98.f, 110.f};
 int   note    = 0;
@@ -26,13 +26,11 @@ static void AudioCallback(float *in, float *out, size_t size)
 
         //calculate the new amplitudes based on env value
         float center = env.Process();
-        float amplitudes[16];
         for(int i = 0; i < 16; i++)
         {
-            float dist    = fabsf(center - (float)i) + 1.f;
-            amplitudes[i] = 1.f / ((float)dist * 10.f);
+            float dist = fabsf(center - (float)i) + 1.f;
+            harm.SetSingleAmp(1.f / ((float)dist * 10.f), i);
         }
-        harm.SetAmplitudes(amplitudes);
 
         out[i] = out[i + 1] = harm.Process();
     }
@@ -47,7 +45,7 @@ int main(void)
     sample_rate = seed.AudioSampleRate();
 
     //init harmonic oscillator
-    harm.Init(sample_rate, 16);
+    harm.Init(sample_rate);
     harm.SetFirstHarmIdx(1);
 
     //init envelope
