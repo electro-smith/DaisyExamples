@@ -15,8 +15,7 @@ void AudioCallback(float **in, float **out, size_t size)
         float mod1 = lfo1.Process();
         float mod2 = lfo2.Process();
 
-        //zosc.SetFormantFreq(250.f * (1.f + mod1 * .8f));
-        zosc.SetFormantFreq(0.f);
+        zosc.SetFormantFreq(250.f * (1.f + mod1 * .8f));
         zosc.SetMode(mod2);
 
         out[0][i] = out[1][i] = zosc.Process();
