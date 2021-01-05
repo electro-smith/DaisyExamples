@@ -45,7 +45,10 @@ int main(void)
     grainlet.SetBleed(.5f);
 
     subgrainlet.Init(sample_rate);
-    grainlet.SetBleed(1.f);
+    subgrainlet.SetBleed(1.f);
+
+    grainlet.SetFreq(notes[idx] * .5f);
+    subgrainlet.SetFreq(notes[idx] * .25f);
 
     lfo.Init(sample_rate);
     lfo.SetAmp(1.f);
