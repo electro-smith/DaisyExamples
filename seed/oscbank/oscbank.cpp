@@ -4,10 +4,10 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed             hw;
+DaisySeed      hw;
 OscillatorBank osc[3];
-AdEnv                 env;
-Metro                 tick;
+AdEnv          env;
+Metro          tick;
 
 
 float freqs[] = {523.25f, 659.25f, 783.99f};
@@ -21,7 +21,7 @@ void AudioCallback(float **in, float **out, size_t size)
             env.Trigger();
         }
 
-        float env_sig    = env.Process();
+        float env_sig = env.Process();
         float osc_sig = 0.f;
 
         for(int i = 0; i < 3; i++)
