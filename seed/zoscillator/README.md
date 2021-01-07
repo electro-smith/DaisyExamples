@@ -1,6 +1,7 @@
 # ZOscillator Example
 
+Demonstrates ZOscillator by sweeping formant and mode.
+
 ## Author
 
-By Emilie Gillet
-Ported by Ben Sergentanis
+Ben Sergentanis
