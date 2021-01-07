@@ -1,6 +1,7 @@
 # Vosim Oscillator Example
 
+Demonstrates Vosim (Voice Simulation) Oscillator by sweeping formant.
+
 ## Author
 
-By Emilie Gillet
-Ported by Ben Sergentanis
+Ben Sergentanis
