@@ -1,6 +1,7 @@
 # Oscillator Bank Example
 
+Demonstrates Oscillator Bank module by generating chord stabs.
+
 ## Author
 
-By Emilie Gillet
-Ported by Ben Sergentanis
+Ben Sergentanis
