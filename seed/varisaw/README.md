@@ -1,6 +1,7 @@
 # Variable Saw Oscillator Example
 
+Demonstrates Variable Saw Oscillator by sweeping waveshape parameter.
+
 ## Author
 
-By Emillie Gillet
-Ported by Ben Sergentanis
+Ben Sergentanis
