@@ -1,6 +1,7 @@
 # Grainlet Oscillator Example
 
+Plays a sequence while sweeping the grainlet osc's shape and formant freq parameters.
+
 ## Author
 
-Written by Emilie Gillet
-Ported by Ben Sergentanis
+Ben Sergentanis
