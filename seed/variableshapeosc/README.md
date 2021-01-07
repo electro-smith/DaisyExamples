@@ -1,9 +1,7 @@
-# variableosc
+# Variable Shape Oscillator Example
 
-## Author
+Demonstrates Variable Shape Oscillator by sweeping pulse width, sync frequency, and waveshape.
 
-<!-- Insert Your Name Here -->
+## Author 
 
-## Description
-
-<!-- Describe your example here -->
+Ben Sergentanis
