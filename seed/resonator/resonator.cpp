@@ -12,7 +12,7 @@ void AudioCallback(float **in, float **out, size_t size)
 {
 	for (size_t i = 0; i < size; i++)
 	{		
-		float sig = res.Process(440.f, .5f, .5f, .5f, tick.Process());
+		float sig = res.Process(tick.Process());
 		out[0][i] = out[1][i] = sig;
 	}
 }
