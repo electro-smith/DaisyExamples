@@ -1,9 +1,9 @@
-# resonator
+# Resonator Module Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates the resonator module by 
