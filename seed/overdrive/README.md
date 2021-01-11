@@ -1,9 +1,9 @@
-# overdrive
+# Overdrive Module Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates DaisySP Overdrive module by clipping a sine wave by different amounts.
