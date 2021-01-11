@@ -1,9 +1,9 @@
-# smooth_random
+# SmoothRandomGenerator Module Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates SmoothRandomGenerator module by modulating an oscillator's pitch.
