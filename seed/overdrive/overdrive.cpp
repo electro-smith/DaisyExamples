@@ -4,21 +4,32 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
+DaisySeed  hw;
+Overdrive  drive;
+Oscillator osc, lfo;
+
 void AudioCallback(float **in, float **out, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		out[0][i] = in[0][i];
-		out[1][i] = in[1][i];
-	}
+    for(size_t i = 0; i < size; i++)
+    {
+        drive.SetDrive(fabsf(lfo.Process()));
+        float sig = drive.Process(osc.Process());
+        out[0][i] = out[1][i] = sig;
+    }
 }
 
 int main(void)
 {
-	hw.Configure();
-	hw.Init();
-	hw.StartAdc();
-	hw.StartAudio(AudioCallback);
-	while(1) {}
+    hw.Configure();
+    hw.Init();
+    float sample_rate = hw.AudioSampleRate();
+
+    osc.Init(sample_rate);
+    lfo.Init(sample_rate);
+    lfo.SetAmp(.8f);
+    lfo.SetWaveform(Oscillator::WAVE_TRI);
+    lfo.SetFreq(.25f);
+
+    hw.StartAudio(AudioCallback);
+    while(1) {}
 }
