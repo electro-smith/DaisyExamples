@@ -1,9 +1,9 @@
-# clockednoise
+# Clocked Noise Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates ClockedNoise module by generating different frequencies of clocked noise.
