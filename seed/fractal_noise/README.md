@@ -1,9 +1,9 @@
-# fractal_noise
+# FractalNoiseGenerator Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates FractalNoiseGenerator by modulating Color and Freq.
