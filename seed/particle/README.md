@@ -1,9 +1,9 @@
-# particle
+# Particle Module Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates Particle module, modulates parameters.
