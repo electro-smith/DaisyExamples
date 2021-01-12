@@ -4,38 +4,32 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
-Particle particle;
+DaisySeed  hw;
+Particle   particle;
+Oscillator lfo;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		particle.Sync();
-		out[0][i] = out[1][i] = particle.Process();
-	}	
+    for(size_t i = 0; i < size; i++)
+    {
+        particle.SetDensity(fabsf(lfo.Process()));
+        out[0][i] = out[1][i] = particle.Process();
+    }
 }
 
 int main(void)
 {
-	hw.Configure();
-	hw.Init();
-	float sample_rate = hw.AudioSampleRate();
-	
-	particle.Init(sample_rate);
+    hw.Configure();
+    hw.Init();
+    float sample_rate = hw.AudioSampleRate();
 
-	particle.SetFreq(1000.f);
+    lfo.Init(sample_rate);
+    lfo.SetAmp(.5f);
+    lfo.SetFreq(.1f);
 
-    particle.SetResonance(1.f);
+    particle.Init(sample_rate);
+    particle.SetSpread(2.f);
 
-    particle.SetRandomFreq(1000.f);
-
-    particle.SetDensity(1.f);
-
-    particle.SetGain(1.f);
-
-    particle.SetSpread(1.f);
-	
-	hw.StartAudio(AudioCallback);
-	while(1) {}
+    hw.StartAudio(AudioCallback);
+    while(1) {}
 }

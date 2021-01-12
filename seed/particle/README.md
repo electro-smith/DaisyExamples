@@ -6,4 +6,4 @@ Ben Sergentanis
 
 ## Description
 
-Demonstrates Particle module, modulates parameters.
+Demonstrates Particle module, lfo over density parameter.
