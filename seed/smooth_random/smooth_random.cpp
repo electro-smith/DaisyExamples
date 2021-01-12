@@ -13,7 +13,7 @@ void AudioCallback(float **in, float **out, size_t size)
 {
 	for (size_t i = 0; i < size; i++)
 	{
-		osc.SetFreq(smooth.Process() * 440.f);
+		osc.SetFreq((fabsf(smooth.Process()) * 330.f) + 110.f);
 		out[0][i] = out[1][i] = osc.Process();
 	}
 }
@@ -25,6 +25,7 @@ int main(void)
 	float sample_rate = hw.AudioSampleRate();
 	
 	smooth.Init(sample_rate);
+	smooth.SetFreq(.75f);
 	
 	osc.Init(sample_rate);
 	osc.SetFreq(440.f);
