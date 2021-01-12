@@ -4,34 +4,34 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
-Oscillator osc, lfo;
+DaisySeed         hw;
+Oscillator        osc, lfo;
 SampleRateReducer sr;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		sr.SetFreq(fabsf(lfo.Process()));
-	    out[0][i] = out[1][i] = sr.Process(osc.Process());
-	}
+    for(size_t i = 0; i < size; i++)
+    {
+        sr.SetFreq(fabsf(lfo.Process()));
+        out[0][i] = out[1][i] = sr.Process(osc.Process());
+    }
 }
 
 int main(void)
 {
-	hw.Configure();
-	hw.Init();
-	float sample_rate = hw.AudioSampleRate();
-	
-	osc.Init(sample_rate);
-	osc.SetFreq(440.f);
-	
-	lfo.Init(sample_rate);
-	lfo.SetFreq(.1f);
-	lfo.SetAmp(.25f);
-	
-	sr.Init();
+    hw.Configure();
+    hw.Init();
+    float sample_rate = hw.AudioSampleRate();
 
-	hw.StartAudio(AudioCallback);
-	while(1) {}
+    osc.Init(sample_rate);
+    osc.SetFreq(440.f);
+
+    lfo.Init(sample_rate);
+    lfo.SetFreq(.1f);
+    lfo.SetAmp(.25f);
+
+    sr.Init();
+
+    hw.StartAudio(AudioCallback);
+    while(1) {}
 }
