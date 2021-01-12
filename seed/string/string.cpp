@@ -49,8 +49,6 @@ static void AudioCallback(float *in, float *out, size_t size)
 
 int main(void)
 {
-    float init_buff[256]; // buffer for Pluck impulse
-
     // initialize seed hardware and daisysp modules
     float sample_rate;
     seed.Configure();
@@ -64,7 +62,6 @@ int main(void)
     str.SetDamping(0.9f);
 
     arp_idx = 0;
-
 
     // start callback
     seed.StartAudio(AudioCallback);
