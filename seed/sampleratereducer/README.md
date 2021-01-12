@@ -1,9 +1,9 @@
-# sampleratereducer
+# SampleRateReducer Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates the SampleRateReducer on a sine wave sweeping through the rates.
