@@ -4,28 +4,35 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
+DaisySeed          hw;
 SyntheticSnareDrum sd;
-Metro tick;
+Metro              tick;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		out[0][i] = out[1][i] = sd.Process(false, tick.Process(), .2f , .01f, .6f, .6f, .4f);
-	}
+    for(size_t i = 0; i < size; i++)
+    {
+        bool t = tick.Process();
+        if(t)
+        {
+            sd.SetAccent(random() / (float)RAND_MAX);
+            sd.SetDecay(random() / (float)RAND_MAX);
+            sd.SetSnappy(random() / (float)RAND_MAX);
+        }
+        out[0][i] = out[1][i] = sd.Process(t);
+    }
 }
 
 int main(void)
 {
-	hw.Configure();
-	hw.Init();
-	float sample_rate = hw.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    float sample_rate = hw.AudioSampleRate();
 
-	tick.Init(2.f, sample_rate);
-	
-	sd.Init(sample_rate);
+    tick.Init(2.f, sample_rate);
 
-	hw.StartAudio(AudioCallback);
-	while(1) {}
+    sd.Init(sample_rate);
+
+    hw.StartAudio(AudioCallback);
+    while(1) {}
 }
