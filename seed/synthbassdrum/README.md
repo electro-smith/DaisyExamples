@@ -1,9 +1,9 @@
-# synthbassdrum
+# SyntheticBassDrum Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates SyntheticBassDrum module by modulating parameters.
