@@ -1,9 +1,9 @@
-# hihat
+# HiHat Module Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates HiHat Module with randomized parameters.
