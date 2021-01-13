@@ -1,9 +1,9 @@
-# synthsnaredrum
+# SyntheticSnareDrum Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates the SyntheticSnareDrum by randomly modulating parameters.
