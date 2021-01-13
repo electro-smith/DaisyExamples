@@ -57,9 +57,12 @@ int main(void)
 
     // Set up Metro to pulse every second
     tick.Init(1.0f, sample_rate);
-    // Set up Pluck algo
+	
+    // Set up String algo
     str.Init(sample_rate);
-    str.SetDamping(0.9f);
+    str.SetDamping(.8f);
+	str.SetNonLinearity(.1f);
+	str.SetBrightness(.5f);
 
     arp_idx = 0;
 
