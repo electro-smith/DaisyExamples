@@ -20,9 +20,8 @@ void AudioCallback(float **in, float **out, size_t size)
 			r *= 100.f;
 			r -= 50.f;
 		}
-										//sus   trig  acc  f    ton  dec atfm  self_fm
-		out[0][i] = out[1][i] = bd.Process(false, t, .1f, .001f, 1.f, 1.f, 1.f, 20.f);
-		//decay -3 - 0
+
+		out[0][i] = out[1][i] = bd.Process(t);
 	}
 }
 
@@ -33,6 +32,13 @@ int main(void)
 	float sample_rate = hw.AudioSampleRate();
 	
 	bd.Init(sample_rate);
+	bd.SetAccent(.1f);
+	bd.SetFreq(50.f);
+	bd.SetTone(.1f);
+	bd.SetDecay(-0.1f);
+	bd.SetAttackFmAmount(10.f);
+	bd.SetSelfFmAmount(10.f);
+	
 	tick.Init(1.f, sample_rate);
 	
 	hw.StartAudio(AudioCallback);
