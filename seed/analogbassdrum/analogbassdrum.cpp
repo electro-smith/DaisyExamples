@@ -4,37 +4,38 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
+DaisySeed      hw;
 AnalogBassDrum bd;
-Metro tick;
+Metro          tick;
 
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		bool t = tick.Process();
-		if(t){
-			bd.SetTone(.7f * random() / (float)RAND_MAX);
-			bd.SetDecay(random() / (float)RAND_MAX);
-			bd.SetSelfFmAmount(random() / (float)RAND_MAX);
-		}
+    for(size_t i = 0; i < size; i++)
+    {
+        bool t = tick.Process();
+        if(t)
+        {
+            bd.SetTone(.7f * random() / (float)RAND_MAX);
+            bd.SetDecay(random() / (float)RAND_MAX);
+            bd.SetSelfFmAmount(random() / (float)RAND_MAX);
+        }
 
-		out[0][i] = out[1][i] = bd.Process(t);
-	}
+        out[0][i] = out[1][i] = bd.Process(t);
+    }
 }
 
 int main(void)
 {
-	hw.Configure();
-	hw.Init();
-	float sample_rate = hw.AudioSampleRate();
-	
-	bd.Init(sample_rate);
-	bd.SetFreq(50.f);
-	
-	tick.Init(2.f, sample_rate);
-	
-	hw.StartAudio(AudioCallback);
-	while(1) {}
+    hw.Configure();
+    hw.Init();
+    float sample_rate = hw.AudioSampleRate();
+
+    bd.Init(sample_rate);
+    bd.SetFreq(50.f);
+
+    tick.Init(2.f, sample_rate);
+
+    hw.StartAudio(AudioCallback);
+    while(1) {}
 }
