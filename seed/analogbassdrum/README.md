@@ -1,9 +1,9 @@
-# analogbassdrum
+# AnalogBassDrum Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates AnalogBassDrum with randomized parameters.
