@@ -1,9 +1,9 @@
-# analogsnaredrum
+# AnalogSnareDrum Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates AnalogSnareDrum with randomized parameters.
