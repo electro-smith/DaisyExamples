@@ -2,48 +2,46 @@
 #include "daisy_seed.h"
 #include <algorithm>
 
-// Shortening long macro for sample rate
-#ifndef sample_rate
-
-#endif
-
-// Interleaved audio definitions
-#define LEFT (i)
-#define RIGHT (i + 1)
-
 using namespace daisysp;
 using namespace daisy;
 
 static DaisySeed seed;
 
 // Helper Modules
-static Metro tick;
-static String str;
+static Metro      tick;
+static String     str;
+static Oscillator lfo;
 
 // MIDI note numbers for a major triad
 const float kArpeggio[3] = {48.0f, 52.0f, 55.0f};
 uint8_t     arp_idx;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(float **in, float **out, size_t size)
 {
-    float sig_out, freq, trig;
-    for(size_t i = 0; i < size; i += 2)
+    for(size_t i = 0; i < size; i++)
     {
         // When the Metro ticks:
-        // advance the kArpeggio, and trigger the Pluck.
-        trig = 0.0f;
-        if(tick.Process())
+        // advance the kArpeggio, and trigger the String.
+        bool trig = tick.Process();
+        if(trig)
         {
-            freq    = mtof(kArpeggio[arp_idx]); // convert midi nn to frequency.
-            arp_idx = (arp_idx + 1)
-                      % 3; // advance the kArpeggio, wrapping at the end.
+            // convert midi nn to frequency.
+            float freq = mtof(kArpeggio[arp_idx]);
+
+            // advance the kArpeggio, wrapping at the end.
+            arp_idx = (arp_idx + 1) % 3;
             str.SetFreq(freq);
-            trig = 1.0f;
         }
-        sig_out = str.Process(trig);
-        // Output
-        out[LEFT]  = sig_out;
-        out[RIGHT] = sig_out;
+
+        //modulate the string parameters using the lfo
+        float sig = lfo.Process();
+
+        str.SetBrightness(fabsf(sig));
+        str.SetDamping(fabsf(sig) + .2f);
+        str.SetNonLinearity(sig);
+
+        //output the sample
+        out[0][i] = out[1][i] = str.Process(trig);
     }
 }
 
@@ -56,13 +54,18 @@ int main(void)
     sample_rate = seed.AudioSampleRate();
 
     // Set up Metro to pulse every second
-    tick.Init(1.0f, sample_rate);
-	
+    tick.Init(2.0f, sample_rate);
+
     // Set up String algo
     str.Init(sample_rate);
     str.SetDamping(.8f);
-	str.SetNonLinearity(.1f);
-	str.SetBrightness(.5f);
+    str.SetNonLinearity(.1f);
+    str.SetBrightness(.5f);
+
+    //setup lfo at .25Hz
+    lfo.Init(sample_rate);
+    lfo.SetAmp(1.f);
+    lfo.SetFreq(.1f);
 
     arp_idx = 0;
 
