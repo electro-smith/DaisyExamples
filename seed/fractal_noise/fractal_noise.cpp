@@ -7,7 +7,7 @@ using namespace daisysp;
 DaisySeed hw;
 
 FractalRandomGenerator<ClockedNoise, 5> fract;
-Oscillator                           lfo[2];
+Oscillator                              lfo[2];
 
 void AudioCallback(float **in, float **out, size_t size)
 {
