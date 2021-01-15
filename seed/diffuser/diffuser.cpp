@@ -6,16 +6,21 @@ using namespace daisysp;
 
 DaisySeed hw;
 Diffuser  diff;
-uint16_t  buffer[8192];
 
-Oscillator osc, lfo;
+Oscillator osc, lfo0, lfo1;
+Metro      tick;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
     for(size_t i = 0; i < size; i++)
     {
-        osc.SetFreq((lfo.Process() + 1.f) * 300.f);
-        out[0][i] = out[1][i] = diff.Process(.5f, .5f, osc.Process());
+        float sig0 = fabsf(lfo0.Process());
+        float sig1 = fabsf(lfo1.Process());
+
+        diff.SetTime(sig0);
+        diff.SetAmount(sig1);
+
+        out[0][i] = out[1][i] = diff.Process(tick.Process());
     }
 }
 
@@ -25,13 +30,21 @@ int main(void)
     hw.Init();
     float sample_rate = hw.AudioSampleRate();
 
-    diff.Init(buffer);
+    diff.Init();
 
-    lfo.Init(sample_rate);
-    lfo.SetFreq(1.f);
-    lfo.SetAmp(1.f);
+    lfo0.Init(sample_rate);
+    lfo0.SetFreq(.5f);
+    lfo0.SetAmp(1.f);
+
+    lfo1.Init(sample_rate);
+    lfo1.SetFreq(.2f);
+    lfo1.SetAmp(1.f);
 
     osc.Init(sample_rate);
+    osc.SetWaveform(Oscillator::WAVE_SIN);
+    osc.SetAmp(1.f);
+
+    tick.Init(1.f, sample_rate);
 
     hw.StartAudio(AudioCallback);
     while(1) {}
