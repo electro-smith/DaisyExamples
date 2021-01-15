@@ -6,35 +6,7 @@ using namespace daisysp;
 
 DaisySeed hw;
 
-class TestNoise
-{
-  public:
-    TestNoise() {}
-    ~TestNoise() {}
-
-    void Init(float sample_rate)
-    {
-        noise.Init();
-        tick.Init(440.f, sample_rate);
-    }
-
-    float Process()
-    {
-        if(tick.Process())
-        {
-            current_ = noise.Process();
-        }
-        return current_;
-    }
-
-    void SetFreq(float freq) { tick.SetFreq(freq); }
-
-    float      current_;
-    WhiteNoise noise;
-    Metro      tick;
-};
-
-FractalRandomGenerator<TestNoise, 5> fract;
+FractalRandomGenerator<ClockedNoise, 5> fract;
 Oscillator                           lfo[2];
 
 void AudioCallback(float **in, float **out, size_t size)
