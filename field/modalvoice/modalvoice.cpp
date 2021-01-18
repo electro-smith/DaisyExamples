@@ -127,6 +127,6 @@ int main(void)
     for(;;)
     {
         UpdateLeds(kvals);
-        System::Delay(1);
+        System::Delay(6);
     }
 }
