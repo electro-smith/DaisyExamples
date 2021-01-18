@@ -100,7 +100,7 @@ void UpdateLeds(float *knob_vals)
     };
     for(size_t i = 0; i < 8; i++)
     {
-		float val = i < NUM_CONTROLS ? knob_vals[i] : 0.f;
+        float val = i < NUM_CONTROLS ? knob_vals[i] : 0.f;
         hw.led_driver.SetLed(knob_leds[i], val);
     }
     for(size_t i = 0; i < 13; i++)
