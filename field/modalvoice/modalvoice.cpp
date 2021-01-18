@@ -56,7 +56,7 @@ void AudioCallback(float **in, float **out, size_t size)
 
     for(size_t i = 0; i < 16; i++)
     {
-        if(hw.KeyboardRisingEdge(i))
+        if(hw.KeyboardRisingEdge(i) && i != 8 && i != 11 && i != 15)
         {
             modal.Trig();
             float m = (12.0f * octaves) + 24.0f + scale[i];
@@ -100,7 +100,8 @@ void UpdateLeds(float *knob_vals)
     };
     for(size_t i = 0; i < 8; i++)
     {
-        hw.led_driver.SetLed(knob_leds[i], knob_vals[i]);
+		float val = i < NUM_CONTROLS ? knob_vals[i] : 0.f;
+        hw.led_driver.SetLed(knob_leds[i], val);
     }
     for(size_t i = 0; i < 13; i++)
     {
@@ -127,7 +128,5 @@ int main(void)
     {
         UpdateLeds(kvals);
         System::Delay(1);
-        dsy_dac_write(DSY_DAC_CHN1, hw.GetKnobValue(0) * 4095);
-        dsy_dac_write(DSY_DAC_CHN2, hw.GetKnobValue(1) * 4095);
     }
 }
