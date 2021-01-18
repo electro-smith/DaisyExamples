@@ -1,9 +1,21 @@
-# modalvoice
+# ModalVoice Field Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates Modal Voice with 12 tone keyboard and controls over parameters. 
+Based on KeyboardTest.
+
+## Controls
+
+| Control | Description |
+| --- | --- |
+| SW 1 2 |  Octave up/down |
+| Keyboard buttons | Chromatic keyboard |
+| Knob 1 | Brightness |
+| Knob 2 | Structure |
+| Knob 3 | Damping |
+| Knob 4 | Accent |
