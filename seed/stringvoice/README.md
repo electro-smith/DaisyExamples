@@ -1,9 +1,9 @@
-# stringvoice
+# StringVoice Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates StringVoice with modulated parameters.
