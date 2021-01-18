@@ -1,9 +1,9 @@
-# modalvoice
+# ModalVoice Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates ModalVoice with parameter modulation.
