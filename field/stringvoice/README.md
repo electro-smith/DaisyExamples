@@ -1,9 +1,9 @@
-# stringvoice
+# StringVoice Keyboard
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Monophonic string keyboard with controls over string parameters.
