@@ -1,6 +1,9 @@
 # Project Name
 TARGET = chorus
 
+DEBUG = 1
+OPT = -Og
+
 # Sources
 CPP_SOURCES = chorus.cpp
 

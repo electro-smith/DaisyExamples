@@ -11,9 +11,9 @@ void AudioCallback(float **in, float **out, size_t size)
 {
 	hw.ProcessAllControls();
 	
-	ch.SetLfoFreq(hw.knob[2].Process());
-	ch.SetLfoDepth(hw.knob[3].Process() * 60.f);
-	ch.SetDelay(hw.knob[4].Process() * 60.f);
+	ch.SetLfoFreq(1.f);
+	ch.SetLfoDepth(25.f);
+	ch.SetDelay(25.f);
 	
 	for (size_t i = 0; i < size; i++)
 	{
