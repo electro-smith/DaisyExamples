@@ -7,17 +7,22 @@ using namespace daisysp;
 DaisyPetal hw;
 Chorus ch;
 
+bool effectOn;
+
 void AudioCallback(float **in, float **out, size_t size)
 {
 	hw.ProcessAllControls();
 	
-	ch.SetLfoFreq(1.f);
-	ch.SetLfoDepth(25.f);
-	ch.SetDelay(25.f);
+	ch.SetLfoFreq(hw.knob[2].Process() * 10.f + .03f);
+	ch.SetLfoDepth(hw.knob[3].Process() * 6.5f);
+	ch.SetDelay(hw.knob[4].Process() * 20.f);
+	
+	effectOn ^= hw.switches[0].RisingEdge();
 	
 	for (size_t i = 0; i < size; i++)
 	{
-		out[0][i] = out[1][i] = ch.Process(in[0][i]);
+		float sig = effectOn ? ch.Process(in[0][i]) : in[0][i];
+		out[0][i] = out[1][i] = sig;
 	}
 }
 
@@ -28,6 +33,8 @@ int main(void)
 
 	ch.Init(sample_rate);
     
+	effectOn = true;
+	
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
 	while(1) {}
