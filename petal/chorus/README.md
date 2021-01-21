@@ -18,3 +18,6 @@ Chorus effect for Daisy Petal.
 | Knob 4 | Lfo Freq | Lfo 1 and 2 frequencies. |
 | Knob 5 | Lfo Depth | Lfo 1 and 2 depth. |
 | Knob 6 | Delay Time | Delay line 1 and 2 base time. |
+| Encoder Turn | Dry / Wet | |
+| Encoder Press | Dry / Wet Reset | |
+| Switch 1 | Effect On | Led On = Effect On |
