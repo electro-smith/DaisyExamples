@@ -32,9 +32,9 @@ void Controls()
     ch.SetDelay(hw.knob[3].Process() * 9.f, 0, 1);
     ch.SetDelay(hw.knob[3].Value() * 9.f + 6.f * spread, 1, 1);
 
-	wet = hw.knob[4].Process();
+    wet = hw.knob[4].Process();
 
-	//activate / deactivate effect
+    //activate / deactivate effect
     effectOn ^= hw.sw[0].RisingEdge();
 }
 
