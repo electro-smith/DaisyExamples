@@ -60,14 +60,15 @@ int main(void)
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
-    while(1) {
-		hw.display.Fill(false);
-		
-		char cstr[15];
-		sprintf(cstr, "Effect: %s", effectOn ? "On" : "Off");
-		hw.display.SetCursor(0,0);
-		hw.display.WriteString(cstr, Font_7x10, true);
-		
-		hw.display.Update();
-	}
+    while(1)
+    {
+        hw.display.Fill(false);
+
+        char cstr[15];
+        sprintf(cstr, "Effect: %s", effectOn ? "On" : "Off");
+        hw.display.SetCursor(0, 0);
+        hw.display.WriteString(cstr, Font_7x10, true);
+
+        hw.display.Update();
+    }
 }
