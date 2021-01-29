@@ -5,36 +5,31 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyField hw;
-Chorus<>   ch; //2 channels with 2 delay lines each
+Chorus<4>  ch; //2 delay lines
 
-bool  effectOn;
-float wet;
+bool effectOn;
 
 void Controls()
 {
     hw.ProcessAllControls();
 
     //knobs
-    float spread = hw.knob[0].Process() * 1.f;
+    float spread = hw.knob[0].Process();
 
-    ch.SetLfoFreq(hw.knob[1].Process() * 2.5f, 0, 0);
-    ch.SetLfoFreq(hw.knob[1].Value() * 2.5f + spread, 1, 1);
-    ch.SetLfoFreq(hw.knob[1].Process() * 2.f, 0, 1);
-    ch.SetLfoFreq(hw.knob[1].Value() * 3.f + spread, 1, 1);
+    ch.SetPan(.5f - .25f * spread, 0);
+    ch.SetPan(.4f - .4f * spread, 1);
+    ch.SetPan(.5f + .25f * spread, 2);
+    ch.SetPan(.6f + .4f * spread, 3);
 
-    ch.SetLfoDepth(hw.knob[2].Process() * 6.5f, 0);
-    ch.SetLfoDepth(hw.knob[2].Process() * 6.5f + 2.f * spread, 1);
-    ch.SetLfoDepth(hw.knob[2].Process() * 6.f, 0, 1);
-    ch.SetLfoDepth(hw.knob[2].Process() * 6.f + 1.5f * spread, 1, 1);
+    ch.SetLfoFreqAll(hw.knob[1].Process());
+    ch.SetLfoDepthAll(hw.knob[2].Process());
 
-    ch.SetDelay(hw.knob[3].Process() * 10.f, 0);
-    ch.SetDelay(hw.knob[3].Value() * 10.f + 5.f * spread, 1);
-    ch.SetDelay(hw.knob[3].Process() * 9.f, 0, 1);
-    ch.SetDelay(hw.knob[3].Value() * 9.f + 6.f * spread, 1, 1);
+    for(int i = 0; i < 4; i++)
+    {
+        ch.SetDelay(hw.knob[3 + i].Process(), i);
+    }
 
-	wet = hw.knob[4].Process();
-
-	//activate / deactivate effect
+    //activate / deactivate effect
     effectOn ^= hw.sw[0].RisingEdge();
 }
 
@@ -44,11 +39,13 @@ void AudioCallback(float **in, float **out, size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
-        float sigl = effectOn ? ch.Process(in[0][i], 0) : in[0][i];
-        float sigr = effectOn ? ch.Process(in[0][i], 1) : in[0][i];
+        out[0][i] = in[0][i];
+        out[1][i] = in[1][i];
 
-        out[0][i] = sigl * wet + in[0][i] * (1.f - wet);
-        out[1][i] = sigr * wet + in[0][i] * (1.f - wet);
+        if(effectOn)
+        {
+            ch.Process(in[0][i], out[0][i], out[1][i]);
+        }
     }
 }
 
@@ -60,7 +57,6 @@ int main(void)
     ch.Init(sample_rate);
 
     effectOn = true;
-    wet      = .5f;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
