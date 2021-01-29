@@ -9,7 +9,7 @@ DaisyPetal hw;
 
 bool effectOn = true;
 
-void  AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(float **in, float **out, size_t size)
 {
     hw.ProcessAllControls();
 
