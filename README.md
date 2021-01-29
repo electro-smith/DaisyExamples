@@ -36,7 +36,7 @@ git submodule update --init
 
 ### Compiling the Source
 
-Once you have the repository and the submodules (libDaisy/DaisySP) properly cloned, and the toolchain installed (for details see the [Daisy Wiki](github.com/electro-smith/DaisyWiki/wiki) for platform specific instructions) it's time to build the libraries, and some examples.
+Once you have the repository and the submodules (libDaisy/DaisySP) properly cloned, and the toolchain installed (for details see the [Daisy Wiki](https://github.com/electro-smith/DaisyWiki/wiki) for platform specific instructions) it's time to build the libraries, and some examples.
 
 To build everything at once, run: `./rebuild_all.sh`
 
@@ -107,6 +107,8 @@ git submodule update --remote
 ```
 
 Alternatively, you can simply run git commands from within the submodule and they will be treated as if you were in that repository instead of Daisy_Examples
+
+Whenenever there are changes to the libraries (whether from pulling from git or manually editing the libraries) they will need to be rebuilt. This can be done by either running `./ci/build_libs.sh` or entering the directory of the library with changes and running `make`.
 
 ## Adding New Examples and Updating Old Ones
 
