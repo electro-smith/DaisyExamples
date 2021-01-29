@@ -1,9 +1,9 @@
-# chorus
+# Chorus Example
 
 ## Author
 
-<!-- Insert Your Name Here -->
+Ben Sergentanis
 
 ## Description
 
-<!-- Describe your example here -->
+Demonstrates chorus effect on drum pattern.
