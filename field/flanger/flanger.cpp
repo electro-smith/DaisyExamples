@@ -9,14 +9,19 @@ DaisyField hw;
 
 bool effectOn = true;
 
+float knob_vals[4];
 void AudioCallback(float **in, float **out, size_t size)
 {
 	hw.ProcessAllControls();
 
-	flanger.SetDelay(hw.knob[0].Process());
-	flanger.SetFeedback(hw.knob[1].Process());
-	flanger.SetLfoFreq(hw.knob[2].Process() * .5);
-	flanger.SetLfoDepth(hw.knob[3].Process());
+	for(int i = 0; i < 4; i++){
+		knob_vals[i] = hw.knob[i].Process();
+	}
+
+	flanger.SetDelay(knob_vals[0]);
+	flanger.SetFeedback(knob_vals[1]);
+	flanger.SetLfoFreq(knob_vals[2] * .5);
+	flanger.SetLfoDepth(knob_vals[3]);
 
 	effectOn ^= hw.sw[0].RisingEdge();
 
@@ -44,5 +49,18 @@ int main(void)
 		hw.display.WriteString(cstr, Font_7x10, true);
 		
 		hw.display.Update();
+	
+		size_t knob_leds[] = {
+			DaisyField::LED_KNOB_1,
+			DaisyField::LED_KNOB_2,
+			DaisyField::LED_KNOB_3,
+			DaisyField::LED_KNOB_4, };
+		
+		for(size_t i = 0; i < 4; i++)
+		{
+			hw.led_driver.SetLed(knob_leds[i], knob_vals[i]);
+		}
+		
+		hw.led_driver.SwapBuffersAndTransmit();
 	}
 }
