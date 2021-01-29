@@ -8,6 +8,8 @@ Ben Sergentanis
 
 Chorus module demonstration for Daisy field
 
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/chorus)
+
 ## Controls
 
 | Control | Description | Comment |
