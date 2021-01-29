@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPetal hw;
-Chorus<>   ch; //defaults to 2 delay lines
+Chorus<4>  ch; //defaults to 2 delay lines
 
 bool  effectOn;
 float wet;
@@ -15,16 +15,22 @@ void Controls()
     hw.ProcessAllControls();
 
     //knobs
-    float spread = hw.knob[2].Process() * 1.f;
+    float spread = hw.knob[2].Process();
 
-    ch.SetLfoFreq(hw.knob[3].Process() * 2.5f, 0);
-    ch.SetLfoFreq(hw.knob[3].Value() * 2.5f + spread, 1);
+    ch.SetPan(.5f - .25f * spread, 0);
+    ch.SetPan(.4f - .4f * spread, 1);
+    ch.SetPan(.5f + .25f * spread, 2);
+    ch.SetPan(.6f + .4f * spread, 3);
 
-    ch.SetLfoDepth(hw.knob[4].Process() * 6.5f, 0);
-    ch.SetLfoDepth(hw.knob[4].Process() * 6.5f + 2.f * spread, 1);
+    ch.SetLfoFreqAll(hw.knob[3].Process());
+    ch.SetLfoDepthAll(hw.knob[4].Process());
 
-    ch.SetDelay(hw.knob[5].Process() * 10.f, 0);
-    ch.SetDelay(hw.knob[5].Value() * 10.f + 5.f * spread, 1);
+    float delay = hw.knob[5].Process();
+
+    ch.SetDelay(delay, 0);
+    ch.SetDelay(delay * .5f, 1);
+    ch.SetDelay(delay, 2);
+    ch.SetDelay(delay * .5f, 3);
 
     //footswitch
     effectOn ^= hw.switches[0].RisingEdge();
@@ -33,7 +39,7 @@ void Controls()
     wet += hw.encoder.Increment() * .05f;
     wet = fclamp(wet, 0.f, 1.f);
 
-    wet = hw.encoder.RisingEdge() ? .5f : wet;
+    wet = hw.encoder.RisingEdge() ? .9f : wet;
 }
 
 void AudioCallback(float **in, float **out, size_t size)
@@ -42,8 +48,15 @@ void AudioCallback(float **in, float **out, size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
-        float sig = effectOn ? ch.Process(in[0][i]) : in[0][i];
-        out[0][i] = out[1][i] = sig * wet + in[0][i] * (1.f - wet);
+        out[0][i] = in[0][i];
+        out[1][i] = in[1][i];
+
+        if(effectOn)
+        {
+            ch.Process(in[0][i], out[0][i], out[1][i]);
+            out[0][i] = out[0][i] * wet + in[0][i] * (1.f - wet);
+            out[1][i] = out[1][i] * wet + in[1][i] * (1.f - wet);
+        }
     }
 }
 
@@ -55,7 +68,7 @@ int main(void)
     ch.Init(sample_rate);
 
     effectOn = true;
-    wet      = .5f;
+    wet      = .9f;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
