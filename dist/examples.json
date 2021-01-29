@@ -413,6 +413,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/blosc/README.md"
     },
     {
+        "name": "stringvoice",
+        "platform": "seed",
+        "filepath": "./dist/seed/stringvoice.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/stringvoice/README.md"
+    },
+    {
         "name": "bypass",
         "platform": "seed",
         "filepath": "./dist/seed/bypass.bin",
@@ -775,6 +782,13 @@
         "filepath": "./dist/field/modalvoice.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/modalvoice/README.md"
+    },
+    {
+        "name": "stringvoice",
+        "platform": "field",
+        "filepath": "./dist/field/stringvoice.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/stringvoice/README.md"
     },
     {
         "name": "Midi",
