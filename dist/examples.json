@@ -259,6 +259,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/whitenoise/README.md"
     },
     {
+        "name": "tremolo",
+        "platform": "seed",
+        "filepath": "./dist/seed/tremolo.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/tremolo/README.md"
+    },
+    {
         "name": "pluck",
         "platform": "seed",
         "filepath": "./dist/seed/pluck.bin",
@@ -600,6 +607,13 @@
         "filepath": "./dist/petal/CombFilter.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/CombFilter/README.md"
+    },
+    {
+        "name": "tremolo",
+        "platform": "petal",
+        "filepath": "./dist/petal/tremolo.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/tremolo/README.md"
     },
     {
         "name": "GeneralFunctionTest",
