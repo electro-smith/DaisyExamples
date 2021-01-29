@@ -8,6 +8,8 @@ Ben Sergentanis
 
 Flanger efffect for Daisy Field.
 
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/flanger)
+
 ## Controls
 
 | Control | Description |
