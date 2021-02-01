@@ -15,17 +15,10 @@ void Controls()
     hw.ProcessAllControls();
 
     //knobs
-    float k = hw.knob[2].Process();
-    ch.SetPan(.5f - .5f * k, .5f + .5f * k);
-
-    k = hw.knob[3].Process();
-    ch.SetLfoFreq(k);
-
-    k = hw.knob[4].Process();
-    ch.SetLfoDepth(k);
-
-    k = hw.knob[5].Process();
-    ch.SetDelay(k, k * .8f);
+    ch.SetLfoFreq(hw.knob[2].Process());
+    ch.SetLfoDepth(hw.knob[3].Process());
+    ch.SetDelay(hw.knob[4].Process());
+    ch.SetFeedback(hw.knob[5].Process());
 
     //footswitch
     effectOn ^= hw.switches[0].RisingEdge();
