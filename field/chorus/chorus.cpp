@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyField hw;
-Chorus<4>  ch; //2 delay lines
+Chorus  ch;
 
 bool effectOn;
 
@@ -14,21 +14,13 @@ void Controls()
     hw.ProcessAllControls();
 
     //knobs
-    float spread = hw.knob[0].Process();
+    float k = hw.knob[0].Process() * .5f;
+    ch.SetPan(.5f - k, .5f + k);
 
-    ch.SetPan(.5f - .25f * spread, 0);
-    ch.SetPan(.4f - .4f * spread, 1);
-    ch.SetPan(.5f + .25f * spread, 2);
-    ch.SetPan(.6f + .4f * spread, 3);
-
-    ch.SetLfoFreqAll(hw.knob[1].Process());
-    ch.SetLfoDepthAll(hw.knob[2].Process());
-
-    for(int i = 0; i < 4; i++)
-    {
-        ch.SetDelay(hw.knob[3 + i].Process(), i);
-    }
-
+    ch.SetLfoFreq(hw.knob[1].Process());
+    ch.SetLfoDepth(hw.knob[2].Process());
+    ch.SetDelay(hw.knob[3].Process(), hw.knob[4].Process());
+    
     //activate / deactivate effect
     effectOn ^= hw.sw[0].RisingEdge();
 }
@@ -39,13 +31,9 @@ void AudioCallback(float **in, float **out, size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
-        out[0][i] = in[0][i];
-        out[1][i] = in[1][i];
-
-        if(effectOn)
-        {
-            ch.Process(in[0][i], out[0][i], out[1][i]);
-        }
+        ch.Process(in[0][i]);
+		out[0][i] = effectOn ? ch.GetLeft() : in[0][i];
+		out[1][i] = effectOn ? ch.GetRight() : in[0][i];
     }
 }
 
