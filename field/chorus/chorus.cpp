@@ -20,6 +20,7 @@ void Controls()
     ch.SetLfoFreq(hw.knob[1].Process());
     ch.SetLfoDepth(hw.knob[2].Process());
     ch.SetDelay(hw.knob[3].Process(), hw.knob[4].Process());
+    ch.SetFeedback(hw.knob[5].Process());
 
     //activate / deactivate effect
     effectOn ^= hw.sw[0].RisingEdge();
