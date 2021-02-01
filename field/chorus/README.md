@@ -17,5 +17,6 @@ Chorus module demonstration for Daisy field
 | Knob 1 | Spread | The amount of stereo spread. |
 | Knob 2 | Lfo Freq | |
 | Knob 3 | Lfo Depth | |
-| Knob 4 - 7 | Delay Time | Change delay 1 - 4 times. |
+| Knob 4 - 5 | Delay Time | Change left and right delay times. |
+| Knob 6 | Feedback amount | |
 | Switch 1 | Effect On | Oled indicates effect on |
