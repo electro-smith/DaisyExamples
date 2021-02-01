@@ -17,7 +17,7 @@ void Controls()
     float k = hw.knob[0].Process() * .5f;
     ch.SetPan(.5f - k, .5f + k);
 
-    ch.SetLfoFreq(hw.knob[1].Process());
+    ch.SetLfoFreq(hw.knob[1].Process() * 6.f);
     ch.SetLfoDepth(hw.knob[2].Process());
     ch.SetDelay(hw.knob[3].Process(), hw.knob[4].Process());
     ch.SetFeedback(hw.knob[5].Process());
