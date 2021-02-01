@@ -4,17 +4,21 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
-Chorus<2> chorus;
+DaisySeed             hw;
 
-HiHat<>        hat;
-AnalogBassDrum kick;
+Chorus<2>             chorus;
+VariableSawOscillator osc;
+HiHat<>               hat;
+AnalogBassDrum        kick;
+
 
 Metro tick;
 
 uint8_t h_patt = 0B11111111;
 uint8_t k_patt = 0B10001000;
 uint8_t pos    = 0B10000000;
+
+bool bass_note; // Toggles between root/fifth 
 
 float ProcessDrums()
 {
@@ -24,12 +28,15 @@ float ProcessDrums()
     if(pos == 0 && t)
     {
         pos = 0B10000000;
+        bass_note = !bass_note;
+        osc.SetFreq(mtof(bass_note ? 31.f : 24.f));
     }
 
-    float sig = hat.Process(t && pos & (h_patt)) * .1f;
-    sig += kick.Process(t && pos & (k_patt)) * 1.4f;
+    float sig = (hat.Process(t && pos & (h_patt)) * .5f);
+    sig += (kick.Process(t && pos & (k_patt)) * 12.4f);
+    sig += (osc.Process() * 0.05f);
 
-    return sig;
+    return sig * 8.f;
 }
 
 void AudioCallback(float **in, float **out, size_t size)
@@ -62,6 +69,12 @@ int main(void)
     hat.SetDecay(.6f);
 
     kick.Init(sample_rate);
+
+    bass_note = false;
+    osc.Init(sample_rate);
+    osc.SetPW(0.25f);
+    osc.SetWaveshape(0.11f);
+    osc.SetFreq(mtof(bass_note ? 31.f : 24.f));
 
     hw.StartAudio(AudioCallback);
     while(1) {}
