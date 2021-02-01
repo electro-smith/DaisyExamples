@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyField hw;
-Chorus  ch;
+Chorus     ch;
 
 bool effectOn;
 
@@ -20,7 +20,7 @@ void Controls()
     ch.SetLfoFreq(hw.knob[1].Process());
     ch.SetLfoDepth(hw.knob[2].Process());
     ch.SetDelay(hw.knob[3].Process(), hw.knob[4].Process());
-    
+
     //activate / deactivate effect
     effectOn ^= hw.sw[0].RisingEdge();
 }
@@ -32,8 +32,8 @@ void AudioCallback(float **in, float **out, size_t size)
     for(size_t i = 0; i < size; i++)
     {
         ch.Process(in[0][i]);
-		out[0][i] = effectOn ? ch.GetLeft() : in[0][i];
-		out[1][i] = effectOn ? ch.GetRight() : in[0][i];
+        out[0][i] = effectOn ? ch.GetLeft() : in[0][i];
+        out[1][i] = effectOn ? ch.GetRight() : in[0][i];
     }
 }
 
