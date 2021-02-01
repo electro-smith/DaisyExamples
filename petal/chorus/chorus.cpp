@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPetal hw;
-Chorus<4>  ch; //defaults to 2 delay lines
+Chorus     ch;
 
 bool  effectOn;
 float wet;
@@ -15,22 +15,17 @@ void Controls()
     hw.ProcessAllControls();
 
     //knobs
-    float spread = hw.knob[2].Process();
+    float k = hw.knob[2].Process();
+    ch.SetPan(.5f - .5f * k, .5f + .5f * k);
 
-    ch.SetPan(.5f - .25f * spread, 0);
-    ch.SetPan(.4f - .4f * spread, 1);
-    ch.SetPan(.5f + .25f * spread, 2);
-    ch.SetPan(.6f + .4f * spread, 3);
+    k = hw.knob[3].Process();
+    ch.SetLfoFreq(k);
 
-    ch.SetLfoFreqAll(hw.knob[3].Process());
-    ch.SetLfoDepthAll(hw.knob[4].Process());
+    k = hw.knob[4].Process();
+    ch.SetLfoDepth(k);
 
-    float delay = hw.knob[5].Process();
-
-    ch.SetDelay(delay, 0);
-    ch.SetDelay(delay * .5f, 1);
-    ch.SetDelay(delay, 2);
-    ch.SetDelay(delay * .5f, 3);
+    k = hw.knob[5].Process();
+    ch.SetDelay(k, k * .8f);
 
     //footswitch
     effectOn ^= hw.switches[0].RisingEdge();
@@ -53,9 +48,10 @@ void AudioCallback(float **in, float **out, size_t size)
 
         if(effectOn)
         {
-            ch.Process(in[0][i], out[0][i], out[1][i]);
-            out[0][i] = out[0][i] * wet + in[0][i] * (1.f - wet);
-            out[1][i] = out[1][i] * wet + in[1][i] * (1.f - wet);
+            ch.Process(in[0][i]);
+
+            out[0][i] = ch.GetLeft() * wet + in[0][i] * (1.f - wet);
+            out[1][i] = ch.GetRight() * wet + in[1][i] * (1.f - wet);
         }
     }
 }
