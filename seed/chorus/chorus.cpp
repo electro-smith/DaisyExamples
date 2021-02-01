@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisySeed hw;
-Chorus<2> chorus;
+Chorus    chorus;
 
 HiHat<>        hat;
 AnalogBassDrum kick;
@@ -36,7 +36,9 @@ void AudioCallback(float **in, float **out, size_t size)
 {
     for(size_t i = 0; i < size; i++)
     {
-        chorus.Process(ProcessDrums(), out[0][i], out[1][i]);
+        chorus.Process(ProcessDrums());
+        out[0][i] = chorus.GetLeft();
+        out[1][i] = chorus.GetRight();
     }
 }
 
@@ -48,13 +50,9 @@ int main(void)
 
     chorus.Init(sample_rate);
 
-    chorus.SetLfoFreq(.33f, 0);
-    chorus.SetLfoFreq(.2f, 1);
-
-    chorus.SetLfoDepthAll(1.f);
-
-    chorus.SetDelay(.75f, 0);
-    chorus.SetDelay(.9f, 1);
+    chorus.SetLfoFreq(.33f, .2f);
+    chorus.SetLfoDepth(1.f, 1.f);
+    chorus.SetDelay(.75f, .9f);
 
     tick.Init(8.f, sample_rate);
 
