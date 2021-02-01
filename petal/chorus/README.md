@@ -14,10 +14,10 @@ Chorus effect for Daisy Petal.
 
 | Control | Description | Comment |
 | --- | --- | --- |
-| Knob 3 | Spread | The of stereo effect. Only works when using both outputs. |
-| Knob 4 | Lfo Freq | |
-| Knob 5 | Lfo Depth | |
-| Knob 6 | Delay Time | Changes all delay times. |
+| Knob 3 | Lfo Freq | |
+| Knob 4 | Lfo Depth | |
+| Knob 5 | Delay Time | |
+| Knob 6 | Feedback Amount | |
 | Encoder Turn | Dry / Wet | |
 | Encoder Press | Dry / Wet Reset | |
 | Switch 1 | Effect On | Led On = Effect On |

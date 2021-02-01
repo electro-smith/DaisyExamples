@@ -15,7 +15,7 @@ void Controls()
     hw.ProcessAllControls();
 
     //knobs
-    ch.SetLfoFreq(hw.knob[2].Process() * 3.f);
+    ch.SetLfoFreq(hw.knob[2].Process() * 7.f);
     ch.SetLfoDepth(hw.knob[3].Process());
     ch.SetDelay(hw.knob[4].Process());
     ch.SetFeedback(hw.knob[5].Process());
