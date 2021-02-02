@@ -9,6 +9,9 @@ DaisyField hw;
 
 bool effectOn = true;
 
+float del, deltarget;
+float lfo, lfotarget;
+
 float knob_vals[4];
 void  AudioCallback(float **in, float **out, size_t size)
 {
@@ -19,15 +22,22 @@ void  AudioCallback(float **in, float **out, size_t size)
         knob_vals[i] = hw.knob[i].Process();
     }
 
-    flanger.SetDelay(knob_vals[0]);
-    flanger.SetFeedback(knob_vals[1]);
-    flanger.SetLfoFreq(knob_vals[2] * .5);
-    flanger.SetLfoDepth(knob_vals[3]);
+    deltarget = hw.knob[0].Process();
+    flanger.SetFeedback(hw.knob[1].Process());
+    float val = hw.knob[2].Process();
+    flanger.SetLfoFreq(val * val * 10.f);
+    lfotarget = hw.knob[3].Process();
 
     effectOn ^= hw.sw[0].RisingEdge();
 
     for(size_t i = 0; i < size; i++)
     {
+        fonepole(del, deltarget, .0001f); //smooth at audio rate
+        flanger.SetDelay(del);
+
+        fonepole(lfo, lfotarget, .0001f); //smooth at audio rate
+        flanger.SetLfoDepth(lfo);
+
         out[0][i] = out[1][i] = effectOn ? flanger.Process(in[0][i]) : in[0][i];
     }
 }
@@ -38,6 +48,9 @@ int main(void)
     float sample_rate = hw.AudioSampleRate();
 
     flanger.Init(sample_rate);
+
+    del = deltarget = 0.f;
+    lfo = lfotarget = 0.f;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
