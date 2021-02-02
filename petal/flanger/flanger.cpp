@@ -9,15 +9,18 @@ DaisyPetal hw;
 
 bool  effectOn = true;
 float wet;
+float deltarget, del;
+float lfotarget, lfo;
 
 void AudioCallback(float **in, float **out, size_t size)
 {
     hw.ProcessAllControls();
 
-    flanger.SetDelay(hw.knob[2].Process());
+    deltarget = hw.knob[2].Process();
     flanger.SetFeedback(hw.knob[3].Process());
-    flanger.SetLfoFreq(hw.knob[4].Process());
-    flanger.SetLfoDepth(hw.knob[5].Process());
+    float val = hw.knob[4].Process();
+    flanger.SetLfoFreq(val * val * 10.f);
+    lfotarget = hw.knob[5].Process();
 
     effectOn ^= hw.switches[0].RisingEdge();
 
@@ -29,6 +32,12 @@ void AudioCallback(float **in, float **out, size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
+        fonepole(del, deltarget, .0001f); //smooth at audio rate
+        flanger.SetDelay(del);
+
+        fonepole(lfo, lfotarget, .0001f); //smooth at audio rate
+        flanger.SetLfoDepth(lfo);
+
         out[0][i] = out[1][i] = in[0][i];
 
         if(effectOn)
@@ -44,6 +53,8 @@ int main(void)
     hw.Init();
     float sample_rate = hw.AudioSampleRate();
 
+    deltarget = del = 0.f;
+    lfotarget = lfo = 0.f;
     flanger.Init(sample_rate);
 
     wet = .9f;
