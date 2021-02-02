@@ -10,14 +10,18 @@ Chorus     ch;
 bool  effectOn;
 float wet;
 
+float deltarget, del;
+float lfotarget, lfo;
+
 void Controls()
 {
     hw.ProcessAllControls();
 
     //knobs
-    ch.SetLfoFreq(hw.knob[2].Process() * 7.f);
-    ch.SetLfoDepth(hw.knob[3].Process());
-    ch.SetDelay(hw.knob[4].Process());
+    float k = hw.knob[2].Process();
+    ch.SetLfoFreq(k * k * 20.f);
+    lfo = hw.knob[3].Process();
+    del = hw.knob[4].Process();
     ch.SetFeedback(hw.knob[5].Process());
 
     //footswitch
@@ -36,6 +40,13 @@ void AudioCallback(float **in, float **out, size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
+        fonepole(del, deltarget, .0001f); //smooth at audio rate
+        ch.SetDelay(del);
+
+        fonepole(lfo, lfotarget, .0001f); //smooth at audio rate
+        ch.SetLfoDepth(lfo);
+
+
         out[0][i] = in[0][i];
         out[1][i] = in[1][i];
 
@@ -56,8 +67,10 @@ int main(void)
 
     ch.Init(sample_rate);
 
-    effectOn = true;
-    wet      = .9f;
+    effectOn  = true;
+    wet       = .9f;
+    deltarget = del = 0.f;
+    lfotarget = lfo = 0.f;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
