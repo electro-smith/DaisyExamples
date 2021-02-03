@@ -40,8 +40,8 @@ float amp, targetamp;
 
 void AudioTest(float *in, float *out, size_t size)
 {
-    hw.UpdateAnalogControls();
-    hw.DebounceControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
     float sig, note;
     // One way to get Value
     note = hw.GetKnobValue(DEV_NAMESPACE::KNOB_1) * 127.0f;
@@ -167,8 +167,8 @@ uint8_t waveform;
 void    r2d2(float *in, float *out, size_t size)
 {
     float sig, freq;
-    hw.DebounceControls();
-    hw.UpdateAnalogControls();
+    hw.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
 
     freq = daisysp::mtof(hw.GetKnobValue(DaisyPod::KNOB_1) * 127.0f);
     amp  = (hw.button2.Pressed()) ? 1.0f : 0.0f;

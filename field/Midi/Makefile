@@ -1,5 +1,5 @@
 # Project Name
-TARGET = Midi
+TARGET = FieldMidi
 
 # Sources
 CPP_SOURCES = Midi.cpp

@@ -7,41 +7,42 @@ using namespace daisysp;
 
 DaisyPatch patch;
 
-struct gate{
-    int gateType;
+struct gate
+{
+    int  gateType;
     bool Process(bool a, bool b)
     {
         switch(gateType)
         {
-            case 0:
-                return a && b;  //AND
-            case 1:
-                return a || b;  //OR
-            case 2:
-                return (a && !b) || (!a && b);  //XOR
-            case 3:
-                return !(a && b);  //NAND
-            case 4:
-                return !(a || b);  //NOR
-            case 5:
-                return (a && b) || (!a && !b);  //XNOR
+            case 0: return a && b;                 //AND
+            case 1: return a || b;                 //OR
+            case 2: return (a && !b) || (!a && b); //XOR
+            case 3: return !(a && b);              //NAND
+            case 4: return !(a || b);              //NOR
+            case 5: return (a && b) || (!a && !b); //XNOR
         }
         return false;
     }
 };
 
-bool inputs[4];
-gate gates[2];
+bool        inputs[4];
+gate        gates[2];
 std::string gateNames[6];
-bool isInverted[4];
+bool        isInverted[4];
 
 //menu logic
-int menuPos; //6 positions
-bool inSubMenu; //only on gate types
-int cursorPos[6]; //x positions for the OLED cursor
+int  menuPos;      //6 positions
+bool inSubMenu;    //only on gate types
+int  cursorPos[6]; //x positions for the OLED cursor
 
-bool CvToBool(float in) { return in > .8f; }
-int mod(int x, int m) { return (x % m + m) % m; }
+bool CvToBool(float in)
+{
+    return in > .8f;
+}
+int mod(int x, int m)
+{
+    return (x % m + m) % m;
+}
 
 void ProcessControls();
 void ProcessOled();
@@ -75,8 +76,8 @@ int main(void)
     InitCursorPos();
 
     //both init to AND
-    gates[0].gateType = gates[1].gateType = 0; 
-    
+    gates[0].gateType = gates[1].gateType = 0;
+
     //no inputs are inverted
     isInverted[0] = isInverted[1] = false;
     isInverted[2] = isInverted[3] = false;
@@ -93,9 +94,10 @@ int main(void)
 void ProcessIncrement(int increment)
 {
     //change gate type
-    if (inSubMenu)
+    if(inSubMenu)
     {
-        if (menuPos == 1){
+        if(menuPos == 1)
+        {
             gates[0].gateType += increment;
             gates[0].gateType = mod(gates[0].gateType, 6);
         }
@@ -108,7 +110,7 @@ void ProcessIncrement(int increment)
     }
 
     //move through the menu
-    else 
+    else
     {
         menuPos += increment;
         menuPos = mod(menuPos, 6);
@@ -116,52 +118,43 @@ void ProcessIncrement(int increment)
 }
 
 void ProcessRisingEdge()
-{   
-    switch (menuPos) 
+{
+    switch(menuPos)
     {
         //flip inversions
-        case 0:
-            isInverted[0] = ! isInverted[0];
-            break;
-        case 2:
-            isInverted[1] = ! isInverted[1];
-            break;
-        case 3:
-            isInverted[2] = ! isInverted[2];
-            break;
-        case 5:
-            isInverted[3] = ! isInverted[3];
-            break;
-        
+        case 0: isInverted[0] = !isInverted[0]; break;
+        case 2: isInverted[1] = !isInverted[1]; break;
+        case 3: isInverted[2] = !isInverted[2]; break;
+        case 5: isInverted[3] = !isInverted[3]; break;
+
         //enter/exit submenu
         case 1:
-        case 4:
-            inSubMenu = ! inSubMenu;
+        case 4: inSubMenu = !inSubMenu;
     }
 }
 
 void ProcessEncoder()
 {
     ProcessIncrement(patch.encoder.Increment());
-    
-    if (patch.encoder.RisingEdge())
-    { 
+
+    if(patch.encoder.RisingEdge())
+    {
         ProcessRisingEdge();
     }
 }
 
 void ProcessControls()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //inputs
-    for (int i = 0; i < 4; i++)
+    for(int i = 0; i < 4; i++)
     {
         inputs[i] = CvToBool(patch.controls[i].Process());
-        
+
         //invert the input if isInverted says so
-        inputs[i] = isInverted[i] ? ! inputs[i] : inputs[i];
+        inputs[i] = isInverted[i] ? !inputs[i] : inputs[i];
     }
 
     ProcessEncoder();
@@ -178,25 +171,25 @@ void ProcessOled()
     patch.display.Fill(false);
 
     std::string str;
-    char* cstr = &str[0];
+    char*       cstr = &str[0];
 
-    patch.display.SetCursor(0,0);
+    patch.display.SetCursor(0, 0);
     str = "Logic";
     patch.display.WriteString(cstr, Font_7x10, true);
 
     //dashes or spaces, depending on negation
     std::string negStr[4];
-    for (int i = 0; i < 4; i++)
+    for(int i = 0; i < 4; i++)
     {
         negStr[i] = isInverted[i] ? "-" : " ";
     }
 
     //gates and inputs, with negations
-    patch.display.SetCursor(0,35);
+    patch.display.SetCursor(0, 35);
     str = negStr[0] + "1" + gateNames[gates[0].gateType] + negStr[1] + "2";
     patch.display.WriteString(cstr, Font_6x8, true);
 
-    patch.display.SetCursor(70,35);
+    patch.display.SetCursor(70, 35);
     str = negStr[2] + "3" + gateNames[gates[1].gateType] + negStr[3] + "4";
     patch.display.WriteString(cstr, Font_6x8, true);
 

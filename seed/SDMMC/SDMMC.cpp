@@ -80,18 +80,18 @@ int main(void)
         }
     }
     // If what was read does not match
-	// what was written execution will stop.
+    // what was written execution will stop.
     if(failcnt)
     {
         asm("bkpt 255");
     }
     bool ledstate;
-    ledstate = true; 
+    ledstate = true;
     // Otherwise the onboard LED will begin to blink.
     for(;;)
     {
-        dsy_system_delay(250);
+        System::Delay(250);
         hw.SetLed(ledstate);
-        ledstate = !ledstate; 
+        ledstate = !ledstate;
     }
 }

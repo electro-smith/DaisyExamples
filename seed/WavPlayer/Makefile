@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_WavPlayer
+TARGET = WavPlayer
 
 # Sources
 CPP_SOURCES = WavPlayer.cpp

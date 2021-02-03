@@ -20,8 +20,8 @@ uint8_t waveidx = 0;
 void AudioCallback(float **in, float **out, size_t size)
 {
     float sig;
-    hw.UpdateAnalogControls();
-    hw.DebounceControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
     int32_t inc = hw.encoder.Increment();
     if(inc > 0)
     {
@@ -55,15 +55,15 @@ void AudioCallback(float **in, float **out, size_t size)
     }
     dsy_gpio_toggle(&hw.gate_output);
     dsy_dac_write(DSY_DAC_CHN1,
-                  (hw.GetCtrlValue(DaisyPatch::Ctrl::CTRL_1) + 1.f) * 4095.0f);
+                  (hw.GetKnobValue(DaisyPatch::Ctrl::CTRL_1) + 1.f) * 4095.0f);
     dsy_dac_write(DSY_DAC_CHN2,
-                  (hw.GetCtrlValue(DaisyPatch::Ctrl::CTRL_2) + 1.f) * 4095.0f);
+                  (hw.GetKnobValue(DaisyPatch::Ctrl::CTRL_2) + 1.f) * 4095.0f);
 }
 
 void BypassTest(float **in, float **out, size_t size)
 {
-    hw.UpdateAnalogControls();
-    hw.DebounceControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
     for (size_t chn = 0; chn < 4; chn++)
     {
         for(size_t i = 0; i < size; i += 2)

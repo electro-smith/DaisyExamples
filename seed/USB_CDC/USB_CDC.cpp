@@ -27,11 +27,11 @@ int main(void)
     char buff[512];
     sprintf(buff, "Tick:\t%d\r\n", tick_cnt);
     hw.usb_handle.TransmitInternal((uint8_t*)buff, strlen(buff));
-	dsy_system_delay(500);
+    System::Delay(500);
     hw.usb_handle.SetReceiveCallback(UsbCallback, UsbHandle::FS_INTERNAL);
     while(1)
     {
-        dsy_system_delay(500);
+        System::Delay(500);
         sprintf(buff, "Tick:\t%d\r\n", tick_cnt);
         hw.usb_handle.TransmitInternal((uint8_t*)buff, strlen(buff));
         tick_cnt = (tick_cnt + 1) % 100;

@@ -1,7 +1,16 @@
-# Description
+# Synth Voice
+
+## Author
+
+Shensley
+
+
+## Description
 Simple Synth voice with resonant filter, self cycling envelope, and vibrato control.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SynthVoice)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Led | Mode Indicate | 1. Blue, 2. Green, 3. Red |
@@ -19,19 +28,6 @@ Simple Synth voice with resonant filter, self cycling envelope, and vibrato cont
 
 
 
-# Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/resources/SynthVoice.png" alt="Button_schem.png" style="width: 100%;"/>
+## Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/resources/SynthVoice.png" alt="SynthVoice.png" style="width: 100%;"/>
 
-# Code Snippet  
-```cpp  
-//Process Samples
-float ad_out = ad.Process();
-vibrato = lfo.Process();
-
-osc.SetFreq(oscFreq + vibrato);
-
-sig = osc.Process();
-sig = flt.Process(sig);
-sig *= ad_out;
-```
-    

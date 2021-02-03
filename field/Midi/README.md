@@ -1,28 +1,25 @@
-# Description
-Control a synth voice over Midi.
+# Midi
 
-# Controls  
-| Control | Description |  
-| --- | --- |  
-| Midi CC 1 | Filter Cutoff |  
-| Midi CC 2 | Filter Resonance |  
-| Audio Outs | Oscillator Output|  
+## Author
 
-# Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Midi/resources/Midi.png" alt="Midi.png" style="width: 100%;"/>
+Shensley
 
-# Code Snippet
-```cpp
-switch(p.control_number)
-{
-    case 1:
-        // CC 1 for cutoff.
-        filt.SetFreq(daisysp::mtof((float)p.value));
-        break;
-    case 2:
-        // CC 2 for res.
-        filt.SetRes(((float)p.value / 127.0f));
-        break;
-	
-        ......  
-```
+## Description
+
+Polyphonic MIDI Synth
+24 voices of polyphony. Each voice is a band-limited saw waveform running through a state variable filter.
+
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/Midi)
+
+## Controls
+
+| Control | Description |
+| --- | --- |
+| Button 1 | Choke all voices |
+| Knob 1 | Filter Cutoff |
+| MIDI Input | Note In/Note Off messages with Simple Polyphony (no voice stealing) |
+
+## Diagram
+
+TODO: Add Diagram
+

@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_QSPI
+TARGET = QSPI
 
 # Sources
 CPP_SOURCES = QSPI.cpp

@@ -10,7 +10,7 @@ Oscillator osc;
 Svf        filt;
 ReverbSc   verb;
 AdEnv      env;
-Parameter p_xf, p_vamt, p_dec, p_vtime;
+Parameter  p_xf, p_vamt, p_dec, p_vtime;
 
 const static float scale[7] = {0, 2, 4, 5, 7, 9, 11};
 
@@ -28,7 +28,7 @@ float        sig, rawsig, filtsig, sendsig, wetvl, wetvr;
 float        xf, vamt, dec, time;
 static void  audio(float *in, float *out, size_t size)
 {
-    hw.DebounceControls();
+    hw.ProcessDigitalControls();
     if(hw.button1.RisingEdge())
     {
         freq = mtof(48.0f + get_new_note());
@@ -87,15 +87,13 @@ void InitSynth(float samplerate)
 
 int main(void)
 {
-	float samplerate;
-	// Init
+    float samplerate;
+    // Init
     hw.Init();
-	samplerate = hw.AudioSampleRate();
+    samplerate = hw.AudioSampleRate();
     InitSynth(samplerate);
     // Start Callbacks
-	hw.StartAdc();
-	hw.StartAudio(audio);
-    while(1)
-    {
-    }
+    hw.StartAdc();
+    hw.StartAudio(audio);
+    while(1) {}
 }

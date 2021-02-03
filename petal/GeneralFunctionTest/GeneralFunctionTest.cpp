@@ -9,7 +9,8 @@
 #define ENC_ID "ENCODER_"
 
 #define TEST_FILE_NAME "DaisyTestFile.txt"
-#define TEST_FILE_CONTENTS "This file is used for testing the Daisy breakout boards. Happy Hacking!"
+#define TEST_FILE_CONTENTS \
+    "This file is used for testing the Daisy breakout boards. Happy Hacking!"
 
 using namespace daisy;
 using namespace daisysp;
@@ -30,8 +31,8 @@ int32_t enc_tracker;
 void callback(float *in, float *out, size_t size)
 {
     int32_t inc;
-    hw.DebounceControls();
-    hw.UpdateAnalogControls();
+    hw.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
 
     // Handle Enc
     inc = hw.encoder.Increment();
@@ -55,18 +56,18 @@ void callback(float *in, float *out, size_t size)
 
 int main(void)
 {
-    int sdfail;
+    int      sdfail;
     uint32_t led_period, usb_period, now;
     uint32_t last_led_update, last_usb_update;
 
     // LED Freq = 60Hz
     // USB Freq= 10Hz
-    led_period      = 5;
-    usb_period      = 100;
+    led_period = 5;
+    usb_period = 100;
 
     hw.Init();
 
-    last_led_update = last_usb_update = now = dsy_system_getnow();
+    last_led_update = last_usb_update = now = System::GetNow();
 
     // Init USB as VCOM for sending Serial Data
     hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
@@ -80,7 +81,7 @@ int main(void)
     while(1)
     {
         // Do Stuff InfInitely Here
-        now = dsy_system_getnow();
+        now = System::GetNow();
 
         // Update LEDs (Vegas Mode)
         if(now - last_led_update > led_period)
@@ -152,11 +153,12 @@ void UpdateUsb(int sd_sta)
     // Knobs
     for(size_t i = 0; i < hw.KNOB_LAST; i++)
     {
-        sprintf(buff,
-                "{%s%d, %d},",
-                KNOB_ID,
-                i + 1,
-                (int)(hw.GetKnobValue(static_cast<DaisyPetal::Knob>(i))*1000.f));
+        sprintf(
+            buff,
+            "{%s%d, %d},",
+            KNOB_ID,
+            i + 1,
+            (int)(hw.GetKnobValue(static_cast<DaisyPetal::Knob>(i)) * 1000.f));
         strcat(catbuff, buff);
     }
     // Expression
@@ -185,7 +187,7 @@ void UpdateUsb(int sd_sta)
 void UpdateLeds()
 {
     uint32_t now;
-    now = dsy_system_getnow();
+    now = System::GetNow();
     hw.ClearLeds();
     // Use now as a source for time so we don't have to use any global vars
     // First gradually pulse all 4 Footswitch LEDs

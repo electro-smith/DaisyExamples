@@ -7,7 +7,7 @@
         {
             "name": "Cortex Debug",
             "cwd": "${workspaceRoot}",
-            "executable": "${workspaceRoot}/build/GeneralFunctionTest.elf",
+            "executable": "./build/GeneralFunctionTest.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
@@ -16,8 +16,9 @@
                 "target/stm32h7x.cfg",
             ],
             "openOCDLaunchCommands": ["init", "reset init"],
+            "preLaunchTask": "build_all",
             "runToMain": true,
-            "svdFile": "${workspaceRoot}/.vscode/STM32H750x.svd"
+            "svdFile": "./.vscode/STM32H750x.svd"
         }
     ]
 }
