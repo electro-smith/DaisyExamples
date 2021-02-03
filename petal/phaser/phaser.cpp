@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPetal hw;
-Phaser phaser;
+Phaser     phaser;
 
 bool  effectOn;
 float wet;
@@ -20,8 +20,8 @@ void Controls()
     //knobs
     float k = hw.knob[2].Process();
     phaser.SetLfoFreq(k * k * 20.f);
-    lfo = hw.knob[3].Process();
-	k = hw.knob[4].Process();
+    lfo  = hw.knob[3].Process();
+    k    = hw.knob[4].Process();
     freq = k * k * 10000; //0 - 10 kHz, square curve
     phaser.SetFeedback(hw.knob[5].Process());
 
@@ -64,8 +64,8 @@ int main(void)
 
     phaser.Init(sample_rate);
 
-    effectOn  = true;
-    wet       = .9f;
+    effectOn   = true;
+    wet        = .9f;
     freqtarget = freq = 0.f;
     lfotarget = lfo = 0.f;
 
