@@ -41,10 +41,12 @@ int main(void)
 
     flanger0.Init(sample_rate);
     flanger0.SetLfoDepth(.5f);
+    flanger0.SetFeedback(.83f);
 
     flanger1.Init(sample_rate);
-    flanger1.SetLfoDepth(.5f);
+    flanger1.SetLfoDepth(0.8f);
     flanger1.SetLfoFreq(.33f);
+    flanger1.SetFeedback(.83f);
 
     osc.Init(sample_rate);
     osc.SetWaveform(Oscillator::WAVE_SAW);
