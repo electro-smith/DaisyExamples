@@ -18,8 +18,7 @@ bool bypass;
 
 void ProcessControls(float& depth, float& feedback)
 {
-	hw.DebounceControls();
-	hw.UpdateAnalogControls();
+	hw.ProcessAllControls();
 	
 	//knobs
 	depth = hw.knob[2].Process();
@@ -80,7 +79,7 @@ void InitFilters(float samplerate)
 			filt[chn][i].Init(samplerate, buff[chn][i], BUFF_SIZE);
 			filt[chn][i].SetFreq(.001);
 			filt[chn][i].SetRevTime(.05);  //.05
-		
+	
 			for (int bufPos = 0; bufPos < (int)BUFF_SIZE; bufPos++){
 				buff[chn][i][bufPos] = 0;
 			}
@@ -111,7 +110,7 @@ int main(void)
 	int i = 0;
 	while(1) 
     {
-        dsy_system_delay(200);
+        hw.DelayMs(6);
 		hw.ClearLeds();
 		hw.SetRingLed((DaisyPetal::RingLed)i, 1.f, 0.f, 0.f);
 		i++;
