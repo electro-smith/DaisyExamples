@@ -4,7 +4,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed             hw;
+DaisySeed hw;
 
 Chorus                chorus;
 VariableSawOscillator osc;
@@ -18,7 +18,7 @@ uint8_t h_patt = 0B11111111;
 uint8_t k_patt = 0B10001000;
 uint8_t pos    = 0B10000000;
 
-bool bass_note; // Toggles between root/fifth 
+bool bass_note; // Toggles between root/fifth
 
 float ProcessDrums()
 {
@@ -27,7 +27,7 @@ float ProcessDrums()
 
     if(pos == 0 && t)
     {
-        pos = 0B10000000;
+        pos       = 0B10000000;
         bass_note = !bass_note;
         osc.SetFreq(mtof(bass_note ? 31.f : 24.f));
     }
