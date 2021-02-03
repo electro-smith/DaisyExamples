@@ -259,6 +259,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/whitenoise/README.md"
     },
     {
+        "name": "tremolo",
+        "platform": "seed",
+        "filepath": "./dist/seed/tremolo.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/tremolo/README.md"
+    },
+    {
         "name": "pluck",
         "platform": "seed",
         "filepath": "./dist/seed/pluck.bin",
@@ -411,6 +418,13 @@
         "filepath": "./dist/seed/blosc.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/blosc/README.md"
+    },
+    {
+        "name": "stringvoice",
+        "platform": "seed",
+        "filepath": "./dist/seed/stringvoice.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/stringvoice/README.md"
     },
     {
         "name": "bypass",
@@ -602,6 +616,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/CombFilter/README.md"
     },
     {
+        "name": "tremolo",
+        "platform": "petal",
+        "filepath": "./dist/petal/tremolo.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/tremolo/README.md"
+    },
+    {
         "name": "GeneralFunctionTest",
         "platform": "petal",
         "filepath": "./dist/petal/GeneralFunctionTest.bin",
@@ -775,6 +796,13 @@
         "filepath": "./dist/field/modalvoice.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/modalvoice/README.md"
+    },
+    {
+        "name": "stringvoice",
+        "platform": "field",
+        "filepath": "./dist/field/stringvoice.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/stringvoice/README.md"
     },
     {
         "name": "Midi",
