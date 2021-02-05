@@ -185,7 +185,8 @@ def create_from_template(destination, board):
         if need_configure:
             f.write('\thw.Configure();\n')
         f.write('\thw.Init();\n')
-        f.write('\thw.StartAdc();\n')
+        if board != "seed":
+            f.write('\thw.StartAdc();\n')
         f.write('\thw.StartAudio(AudioCallback);\n')
         f.write('\twhile(1) {}\n')
         f.write('}\n')

@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../../daisysp;../../../libdaisy/src;../../../libdaisy/src/sys;../../../libdaisy/src/usbd;../../../libdaisy/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+        <AdditionalIncludeDirectories>../../../daisysp/Source;../../../libdaisy/src;../../../libdaisy/src/sys;../../../libdaisy/src/usbd;../../../libdaisy/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -53,7 +53,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../../daisysp;../../../libdaisy/src;../../../libdaisy/src/sys;../../../libdaisy/src/usbd;../../../libdaisy/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+        <AdditionalIncludeDirectories>../../../daisysp/Source;../../../libdaisy/src;../../../libdaisy/src/sys;../../../libdaisy/src/usbd;../../../libdaisy/Drivers/CMSIS/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -64,7 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\daisysp\daisysp.vcxproj">
+      <ProjectReference Include="..\..\..\daisysp\vs\daisysp.vcxproj">
       <Project>{44f4aea3-a6b2-4f03-9c28-34b2336bdf57}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\libdaisy\libdaisy.vcxproj">
