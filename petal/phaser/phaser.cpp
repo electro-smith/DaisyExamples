@@ -22,7 +22,7 @@ void Controls()
     phaser.SetLfoFreq(k * k * 20.f);
     lfo  = hw.knob[3].Process();
     k    = hw.knob[4].Process();
-    freq = k * k * 10000; //0 - 10 kHz, square curve
+    freq = k * k * 7000; //0 - 10 kHz, square curve
     phaser.SetFeedback(hw.knob[5].Process());
 
     //footswitch
