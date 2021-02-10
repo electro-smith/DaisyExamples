@@ -12,10 +12,13 @@ float wet;
 
 float freqtarget, freq;
 float lfotarget, lfo;
+int numstages;
 
 void Controls()
 {
     hw.ProcessAllControls();
+
+	wet = hw.knob[0].Process();
 
     //knobs
     float k = hw.knob[2].Process();
@@ -29,10 +32,10 @@ void Controls()
     effectOn ^= hw.switches[0].RisingEdge();
 
     //encoder
-    wet += hw.encoder.Increment() * .05f;
-    wet = fclamp(wet, 0.f, 1.f);
-
-    wet = hw.encoder.RisingEdge() ? .9f : wet;
+    numstages += hw.encoder.Increment();
+    numstages = DSY_CLAMP(numstages, 1, 8);
+    numstages = hw.encoder.RisingEdge() ? 4 : numstages;
+	phaser.SetPoles(numstages);
 }
 
 void AudioCallback(float **in, float **out, size_t size)
@@ -52,7 +55,7 @@ void AudioCallback(float **in, float **out, size_t size)
 
         if(effectOn)
         {
-            out[0][i] = out[1][i] = phaser.Process(in[0][i]);
+            out[0][i] = out[1][i] = phaser.Process(in[0][i]) * wet + in[0][i] * (1.f - wet);
         }
     }
 }
@@ -68,6 +71,7 @@ int main(void)
     wet        = .9f;
     freqtarget = freq = 0.f;
     lfotarget = lfo = 0.f;
+	numstages = 4;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
@@ -78,16 +82,9 @@ int main(void)
         hw.ClearLeds();
         hw.SetFootswitchLed((DaisyPetal::FootswitchLed)0, (float)effectOn);
 
-        int   wet_int  = (int)(wet * 8.f);
-        float wet_frac = wet - wet_int;
-        for(int i = 0; i < wet_int; i++)
+        for(int i = 0; i < numstages; i++)
         {
             hw.SetRingLed((DaisyPetal::RingLed)i, 1.f, 0.f, 0.f);
-        }
-
-        if(wet_int < 8)
-        {
-            hw.SetRingLed((DaisyPetal::RingLed)wet_int, wet_frac, 0.f, 0.f);
         }
 
         hw.UpdateLeds();
