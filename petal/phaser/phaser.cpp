@@ -12,13 +12,13 @@ float wet;
 
 float freqtarget, freq;
 float lfotarget, lfo;
-int numstages;
+int   numstages;
 
 void Controls()
 {
     hw.ProcessAllControls();
 
-	wet = hw.knob[0].Process();
+    wet = hw.knob[0].Process();
 
     //knobs
     float k = hw.knob[2].Process();
@@ -35,7 +35,7 @@ void Controls()
     numstages += hw.encoder.Increment();
     numstages = DSY_CLAMP(numstages, 1, 8);
     numstages = hw.encoder.RisingEdge() ? 4 : numstages;
-	phaser.SetPoles(numstages);
+    phaser.SetPoles(numstages);
 }
 
 void AudioCallback(float **in, float **out, size_t size)
@@ -55,7 +55,8 @@ void AudioCallback(float **in, float **out, size_t size)
 
         if(effectOn)
         {
-            out[0][i] = out[1][i] = phaser.Process(in[0][i]) * wet + in[0][i] * (1.f - wet);
+            out[0][i] = out[1][i]
+                = phaser.Process(in[0][i]) * wet + in[0][i] * (1.f - wet);
         }
     }
 }
@@ -71,7 +72,7 @@ int main(void)
     wet        = .9f;
     freqtarget = freq = 0.f;
     lfotarget = lfo = 0.f;
-	numstages = 4;
+    numstages       = 4;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
