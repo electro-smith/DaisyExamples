@@ -6,7 +6,7 @@ using namespace daisysp;
 
 DaisySeed hw;
 
-Phaser phaser;
+Phaser     phaser;
 Oscillator osc;
 
 Metro tick;
@@ -17,11 +17,11 @@ void AudioCallback(float **in, float **out, size_t size)
 {
     for(size_t i = 0; i < size; i++)
     {
-		if(tick.Process())
-		{
-			bass_note = !bass_note;
-			osc.SetFreq(mtof(bass_note ? 31.f : 24.f));
-		}
+        if(tick.Process())
+        {
+            bass_note = !bass_note;
+            osc.SetFreq(mtof(bass_note ? 31.f : 24.f));
+        }
 
         out[0][i] = out[1][i] = phaser.Process(osc.Process() * .6f);
     }
@@ -34,15 +34,15 @@ int main(void)
     float sample_rate = hw.AudioSampleRate();
 
     phaser.Init(sample_rate);
-	phaser.SetFreq(500.f);
-	phaser.SetLfoDepth(1.f);
+    phaser.SetFreq(500.f);
+    phaser.SetLfoDepth(1.f);
 
     tick.Init(1.f, sample_rate);
 
     bass_note = false;
     osc.Init(sample_rate);
     osc.SetFreq(mtof(bass_note ? 31.f : 24.f));
-	osc.SetWaveform(Oscillator::WAVE_SAW);
+    osc.SetWaveform(Oscillator::WAVE_SAW);
 
     hw.StartAudio(AudioCallback);
     while(1) {}
