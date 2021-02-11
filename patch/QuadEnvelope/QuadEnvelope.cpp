@@ -86,8 +86,10 @@ int main(void)
     for(;;)
     {
         //Send the latest envelope values to the CV outs
-        dsy_dac_write(DSY_DAC_CHN1, envelopes[0].envSig * 4095);
-        dsy_dac_write(DSY_DAC_CHN2, envelopes[1].envSig * 4095);
+        hw.seed.dac.WriteValue(DacHandle::Channel::ONE,
+                               envelopes[0].envSig * 4095);
+        hw.seed.dac.WriteValue(DacHandle::Channel::TWO,
+                               envelopes[1].envSig * 4095);
         hw.DelayMs(1);
     }
 }
