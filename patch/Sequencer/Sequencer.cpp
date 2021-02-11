@@ -116,8 +116,10 @@ void UpdateOled()
 
 void UpdateOutputs()
 {
-    dsy_dac_write(DSY_DAC_CHN1, round((values[stepNumber] / 12.f) * 819.2f));
-    dsy_dac_write(DSY_DAC_CHN2, round((values[stepNumber] / 12.f) * 819.2f));
+    patch.seed.dac.WriteValue(DacHandle::Channel::ONE,
+                              round((values[stepNumber] / 12.f) * 819.2f));
+    patch.seed.dac.WriteValue(DacHandle::Channel::TWO,
+                              round((values[stepNumber] / 12.f) * 819.2f));
 
     dsy_gpio_write(&patch.gate_output, trigOut);
     trigOut = false;
