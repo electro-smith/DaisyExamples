@@ -28,15 +28,16 @@ struct lfoStruct
         ampCtrl.Init(ampKnob, 0, 1, Parameter::LINEAR);
     }
 
-    void Process(dsy_dac_channel chn)
+    void Process(DacHandle::Channel chn)
     {
         //read the knobs and set params
         osc.SetFreq(freqCtrl.Process());
         osc.SetWaveform(waveform);
 
         //write to the DAC
-        dsy_dac_write(chn,
-                      (osc.Process() + 1.f) * .5f * ampCtrl.Process() * 4095.f);
+        patch.seed.dac.WriteValue(
+            chn,
+            uint16_t((osc.Process() + 1.f) * .5f * ampCtrl.Process() * 4095.f));
     }
 };
 
@@ -53,8 +54,8 @@ static void AudioCallback(float **in, float **out, size_t size)
 {
     for(size_t i = 0; i < size; i++)
     {
-        lfos[0].Process(DSY_DAC_CHN1);
-        lfos[1].Process(DSY_DAC_CHN2);
+        lfos[0].Process(DacHandle::Channel::ONE);
+        lfos[1].Process(DacHandle::Channel::TWO);
     }
 }
 

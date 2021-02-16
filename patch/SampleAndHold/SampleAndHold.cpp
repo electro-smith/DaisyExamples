@@ -65,8 +65,10 @@ void UpdateControls()
 
 void UpdateOutputs()
 {
-    dsy_dac_write(DSY_DAC_CHN1, sampHolds[0].output * 4095);
-    dsy_dac_write(DSY_DAC_CHN2, sampHolds[1].output * 4095);
+    patch.seed.dac.WriteValue(DacHandle::Channel::ONE,
+                              sampHolds[0].output * 4095);
+    patch.seed.dac.WriteValue(DacHandle::Channel::TWO,
+                              sampHolds[1].output * 4095);
 }
 
 void UpdateOled()

@@ -162,8 +162,10 @@ void ProcessControls()
 
 void ProcessOutputs()
 {
-    dsy_dac_write(DSY_DAC_CHN1, gates[0].Process(inputs[0], inputs[1]) * 4095);
-    dsy_dac_write(DSY_DAC_CHN2, gates[1].Process(inputs[2], inputs[3]) * 4095);
+    patch.seed.dac.WriteValue(DacHandle::Channel::ONE,
+                              gates[0].Process(inputs[0], inputs[1]) * 4095);
+    patch.seed.dac.WriteValue(DacHandle::Channel::TWO,
+                              gates[1].Process(inputs[2], inputs[3]) * 4095);
 }
 
 void ProcessOled()
