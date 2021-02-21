@@ -10,6 +10,7 @@ using namespace daisy;
 static DaisyPetal petal;
 
 static ReverbSc                                  rev;
+float  DSY_SDRAM_BSS                             rev_buffer[DSY_REVERBSC_MAX_SIZE];
 static DelayLine<float, MAX_DELAY> DSY_SDRAM_BSS dell;
 static DelayLine<float, MAX_DELAY> DSY_SDRAM_BSS delr;
 static Autowah                                   wah[2];
@@ -100,7 +101,7 @@ int main(void)
     //Inits and sample rate
     petal.Init();
     sample_rate = petal.AudioSampleRate();
-    rev.Init(sample_rate);
+    rev.Init(sample_rate, rev_buffer, DSY_REVERBSC_MAX_SIZE);
     dell.Init();
     delr.Init();
 

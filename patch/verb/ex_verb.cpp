@@ -4,11 +4,12 @@
 
 using namespace daisy;
 using namespace daisysp;
-static DaisyPatch patch;
-static ReverbSc   verb;
-static DcBlock    blk[2];
-Parameter         lpParam;
-static float      drylevel, send;
+static DaisyPatch   patch;
+static ReverbSc     verb;
+float DSY_SDRAM_BSS verb_buffer[DSY_REVERBSC_MAX_SIZE];
+static DcBlock      blk[2];
+Parameter           lpParam;
+static float        drylevel, send;
 
 static void VerbCallback(float **in, float **out, size_t size)
 {
@@ -53,7 +54,7 @@ int main(void)
     patch.Init();
     samplerate = patch.AudioSampleRate();
 
-    verb.Init(samplerate);
+    verb.Init(samplerate, verb_buffer, DSY_REVERBSC_MAX_SIZE);
     verb.SetFeedback(0.85f);
     verb.SetLpFreq(18000.0f);
 

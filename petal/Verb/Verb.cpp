@@ -7,9 +7,10 @@ using namespace daisysp;
 // Declare a local daisy_petal for hardware access
 DaisyPetal hw;
 
-Parameter vtime, vfreq, vsend;
-bool      bypass;
-ReverbSc  verb;
+Parameter           vtime, vfreq, vsend;
+bool                bypass;
+ReverbSc            verb;
+float DSY_SDRAM_BSS verb_buffer[DSY_REVERBSC_MAX_SIZE];
 
 // This runs at a fixed rate, to prepare audio samples
 void callback(float *in, float *out, size_t size)
@@ -52,7 +53,7 @@ int main(void)
     vtime.Init(hw.knob[hw.KNOB_1], 0.6f, 0.999f, Parameter::LOGARITHMIC);
     vfreq.Init(hw.knob[hw.KNOB_2], 500.0f, 20000.0f, Parameter::LOGARITHMIC);
     vsend.Init(hw.knob[hw.KNOB_3], 0.0f, 1.0f, Parameter::LINEAR);
-    verb.Init(samplerate);
+    verb.Init(samplerate, verb_buffer, DSY_REVERBSC_MAX_SIZE);
 
     hw.StartAdc();
     hw.StartAudio(callback);

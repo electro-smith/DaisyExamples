@@ -57,6 +57,7 @@ float active_note = scale[0];
 int8_t octaves = 0;
 
 static daisysp::ReverbSc verb;
+float DSY_SDRAM_BSS      verb_buffer[DSY_REVERBSC_MAX_SIZE];
 // Use two side buttons to change octaves.
 float kvals[8];
 float cvvals[4];
@@ -176,7 +177,7 @@ int main(void)
         v[i].set_note((12.0f * octaves) + 24.0f + scale[i]);
     }
 
-    verb.Init(sr);
+    verb.Init(sr, verb_buffer, DSY_REVERBSC_MAX_SIZE);
     verb.SetFeedback(0.94f);
     verb.SetLpFreq(8000.0f);
 
