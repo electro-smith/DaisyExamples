@@ -1,1 +1,1 @@
-FIR filter frequency is swept with saw wave oscillator as input
+FIR filter frequency is swept with noise generator as input
