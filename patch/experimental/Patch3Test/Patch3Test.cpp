@@ -39,7 +39,7 @@ void AudioCallback(float **in, float **out, size_t size)
         waveidx = 0;
         osc.SetWaveform(waveforms[waveidx]);
     }
-    if(hw.gate_input[DaisyPatch::GateInput::GATE_IN_2].Trig()) 
+    if(hw.gate_input[DaisyPatch::GateInput::GATE_IN_2].Trig())
     {
         waveidx = 3;
         osc.SetWaveform(waveforms[waveidx]);
@@ -54,21 +54,23 @@ void AudioCallback(float **in, float **out, size_t size)
         out[3][i] = filt.Notch();
     }
     dsy_gpio_toggle(&hw.gate_output);
-    dsy_dac_write(DSY_DAC_CHN1,
-                  (hw.GetKnobValue(DaisyPatch::Ctrl::CTRL_1) + 1.f) * 4095.0f);
-    dsy_dac_write(DSY_DAC_CHN2,
-                  (hw.GetKnobValue(DaisyPatch::Ctrl::CTRL_2) + 1.f) * 4095.0f);
+    hw.seed.dac.WriteValue(DacHandle::Channel::ONE,
+                           (hw.GetKnobValue(DaisyPatch::Ctrl::CTRL_1) + 1.f)
+                               * 4095.0f);
+    hw.seed.dac.WriteValue(DacHandle::Channel::TWO,
+                           (hw.GetKnobValue(DaisyPatch::Ctrl::CTRL_2) + 1.f)
+                               * 4095.0f);
 }
 
 void BypassTest(float **in, float **out, size_t size)
 {
     hw.ProcessAnalogControls();
     hw.ProcessDigitalControls();
-    for (size_t chn = 0; chn < 4; chn++)
+    for(size_t chn = 0; chn < 4; chn++)
     {
         for(size_t i = 0; i < size; i += 2)
         {
-            out[chn][i]     = in[chn][i];
+            out[chn][i] = in[chn][i];
         }
     }
 }
@@ -115,10 +117,10 @@ void HandleMidiMessage(MidiEvent m)
 // Main -- Init, and Midi Handling
 int main(void)
 {
-    float    samplerate;
+    float samplerate;
     // Init
     hw.Init();
-    samplerate           = hw.AudioSampleRate();
+    samplerate = hw.AudioSampleRate();
 
     // Synthesis
     osc.Init(samplerate);
