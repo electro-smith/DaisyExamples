@@ -74,7 +74,7 @@ namespace QuadraphonicMixer
             0.f,
             TWO_PI * 0.25f,
             TWO_PI * 0.5f,
-            TWO_PI };
+            TWO_PI * 0.75f };
         float _amp[QUAD_MIXER_NUM_CHANNEL][QUAD_MIXER_NUM_CHANNEL]{};
     };
 }
