@@ -21,7 +21,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\fir.cpp">
+    <ClCompile Include="..\ex_fir.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
     <None Include="stm32.props">

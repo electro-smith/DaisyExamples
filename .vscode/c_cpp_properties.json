@@ -1,0 +1,61 @@
+{
+    "configurations": [
+        {
+            "name": "Daisy",
+            "includePath": [
+                "${workspaceFolder}/libdaisy/src",
+                "${workspaceFolder}/libdaisy/src/sys",
+                "${workspaceFolder}/libdaisy/src/usbd",
+                "${workspaceFolder}/libdaisy/Drivers/CMSIS/Include",
+                "${workspaceFolder}/libdaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include",
+                "${workspaceFolder}/libdaisy/Drivers/STM32H7xx_HAL_Driver/Inc",
+                "${workspaceFolder}/libdaisy/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy",
+                "${workspaceFolder}/libdaisy/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+                "${workspaceFolder}/libdaisy/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+                "${workspaceFolder}/libdaisy/Middlewares/Third_Party/FatFs/src",
+                "${workspaceFolder}/libdaisy",
+                "d:/work/programming/dsp/Eigen/eigen-3.3.8",
+                "${workspaceFolder}/libdaisy/Drivers/CMSIS/DSP/Include",
+                "${workspaceFolder}/DaisySP",
+                "${workspaceFolder}/DaisySP/examples/fastconv",
+                "${workspaceFolder}/libdaisy/src/hid",
+                "D:/WORK/PROGRAMMING/DSP/_DAISY/DAISYEXAMPLES/DAISYSP/EXAMPLES/FASTCONV",
+                "${workspaceFolder}/DaisySP/tests/fastconv",
+                "${workspaceFolder}/DaisySP/tests/util",
+                "${workspaceFolder}/DaisySP/modules",
+                "${workspaceFolder}/DaisySP/Source",
+                "${workspaceFolder}/DaisySP/tests/util"
+            ],
+            "defines": [
+                "CORE_CM7",
+                "STM32H750xx",
+                "STM32H750IB",
+                "ARM_MATH_CM7",
+                "flash_layout",
+                "HSE_VALUE=16000000",
+                "USE_HAL_DRIVER",
+                "USE_FULL_LL_DRIVER"
+            ],
+            "windowsSdkVersion": "",
+            "compilerPath": "C:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\9 2020-q2-update\\bin\\arm-none-eabi-g++.exe",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm",
+            "compilerArgs": [
+                "-fno-exceptions",
+                "-fno-rtti",
+                "-std=gnu++14",
+                "-std=gnu11",
+                "-Wall",
+                "-Wno-attributes",
+                "-Wno-strict-aliasing",
+                "-Wno-maybe-uninitialized",
+                "-mcpu=cortex-m7",
+                "-mfpu=fpv5-d16",
+                "-mfloat-abi=hard",
+                "-mthumb"
+            ]
+        }
+    ],
+    "version": 4
+}

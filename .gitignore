@@ -124,4 +124,7 @@ cube/Daisy_Seed_Rev3/
 /**/VisualGDB
 /**/build
 bin/
+.visualgdb
+VisualGDBCache
+vs/*.log
 

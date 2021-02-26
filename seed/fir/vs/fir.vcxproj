@@ -76,7 +76,7 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\libdaisy\core\startup_stm32h750xx.c" />
-    <ClCompile Include="..\fir.cpp" />
+    <ClCompile Include="..\ex_fir.cpp" />
     <None Include="stm32.props" />
     <None Include="fir-Debug.vgdbsettings" />
     <None Include="fir-Release.vgdbsettings" />
