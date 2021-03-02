@@ -329,6 +329,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/stringvoice/README.md"
     },
     {
+        "name": "phaser",
+        "platform": "seed",
+        "filepath": "./dist/seed/phaser.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/phaser/README.md"
+    },
+    {
         "name": "particle",
         "platform": "seed",
         "filepath": "./dist/seed/particle.bin",
@@ -658,6 +665,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Verb/README.md"
     },
     {
+        "name": "phaser",
+        "platform": "petal",
+        "filepath": "./dist/petal/phaser.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/phaser/README.md"
+    },
+    {
         "name": "MultiDelay",
         "platform": "petal",
         "filepath": "./dist/petal/MultiDelay.bin",
@@ -705,6 +719,13 @@
         "filepath": "./dist/patch/SampleAndHold.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SampleAndHold/README.md"
+    },
+    {
+        "name": "QuadraphonicMixer",
+        "platform": "patch",
+        "filepath": "./dist/patch/QuadraphonicMixer.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadraphonicMixer/README.md"
     },
     {
         "name": "Compressor",
@@ -845,6 +866,13 @@
         "filepath": "./dist/field/stringvoice.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/stringvoice/README.md"
+    },
+    {
+        "name": "phaser",
+        "platform": "field",
+        "filepath": "./dist/field/phaser.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/phaser/README.md"
     },
     {
         "name": "KeyboardTest",
