@@ -10,54 +10,54 @@ using namespace daisy;
 using namespace daisysp;
 using namespace QuadraphonicMixer;
 
-DaisyPatch patch;
-float sampleRate;
+DaisyPatch        patch;
+float             sampleRate;
 constexpr uint8_t NUM_CTRL = 4;
-float ctrl[4];
+float             ctrl[4];
 constexpr uint8_t NUM_GATE = 2;
-bool gate[NUM_GATE];
-constexpr uint8_t NUM_CHANNEL = 4;
-constexpr float ONE_ONEHUNDREDTH = 0.01f;
+bool              gate[NUM_GATE];
+constexpr uint8_t NUM_CHANNEL      = 4;
+constexpr float   ONE_ONEHUNDREDTH = 0.01f;
 
 enum State : uint8_t
 {
-    ParamSelect = 0,
-    Stereo = 1,
-    ReverbWet = 2,
+    ParamSelect    = 0,
+    Stereo         = 1,
+    ReverbWet      = 2,
     ReverbFeedback = 3,
-    CH1Gain = 4,
-    CH2Gain = 5,
-    CH3Gain = 6,
-    CH4Gain = 7
+    CH1Gain        = 4,
+    CH2Gain        = 5,
+    CH3Gain        = 6,
+    CH4Gain        = 7
 };
 constexpr uint8_t NUM_STATES = 8;
-constexpr uint8_t NUM_PARAM = NUM_STATES - 1;
-State currState = State::ParamSelect;
-uint8_t currParam = 0;
+constexpr uint8_t NUM_PARAM  = NUM_STATES - 1;
+State             currState  = State::ParamSelect;
+uint8_t           currParam  = 0;
 
-bool stereo = true;
+bool        stereo = true;
 StereoMixer stereoMixer;
-QuadMixer quadMixer;
+QuadMixer   quadMixer;
 
-constexpr uint8_t NUM_VERB = 2;
+constexpr uint8_t      NUM_VERB = 2;
 ReverbSc DSY_SDRAM_BSS verb[NUM_VERB];
-float wet = 0.3f;
-float feedback = 0.3f;
-constexpr float REVERB_LP_FREQ = 18000.0f;
-constexpr float DRY_MINIMUM_AMP = 0.3f;
+float                  wet             = 0.3f;
+float                  feedback        = 0.3f;
+constexpr float        REVERB_LP_FREQ  = 18000.0f;
+constexpr float        DRY_MINIMUM_AMP = 0.3f;
 
-constexpr float MIN_GAIN = 0.f;
-constexpr float MAX_GAIN = 2.f;
-std::vector<float> gain{ 1.0f, 1.f, 1.f, 1.f };
+constexpr float    MIN_GAIN = 0.f;
+constexpr float    MAX_GAIN = 2.f;
+std::vector<float> gain{1.0f, 1.f, 1.f, 1.f};
 
 inline float Clamp(const float value, const float min, const float max)
 {
-    if (value < min)
+    if(value < min)
     {
         return min;
     }
 
-    if (value > max)
+    if(value > max)
     {
         return max;
     }
@@ -67,16 +67,14 @@ inline float Clamp(const float value, const float min, const float max)
 
 void UpdateParamState()
 {
-    if (patch.encoder.FallingEdge())
+    if(patch.encoder.FallingEdge())
     {
-        switch (currState)
+        switch(currState)
         {
             case State::ParamSelect:
-                currState = static_cast<State>(currParam +  1);
-            break;
-            default:
-                currState = State::ParamSelect;
-            break;
+                currState = static_cast<State>(currParam + 1);
+                break;
+            default: currState = State::ParamSelect; break;
         }
     }
 
@@ -94,7 +92,7 @@ void UpdateParamState()
             break;
             case State::Stereo:
             {
-                if (abs(currInc) > 0)
+                if(abs(currInc) > 0)
                 {
                     stereo = !stereo;
                 }
@@ -151,19 +149,19 @@ void UpdateControls()
 
     UpdateParamState();
 
-    for (uint8_t n = 0; n < NUM_CTRL; n++)
+    for(uint8_t n = 0; n < NUM_CTRL; n++)
     {
         ctrl[n] = patch.GetKnobValue(static_cast<DaisyPatch::Ctrl>(n));
         stereoMixer.SetPan(n, ctrl[n]);
         quadMixer.SetAngle(n, ctrl[n]);
     }
 
-    for (uint8_t n = 0; n < NUM_GATE; n++)
+    for(uint8_t n = 0; n < NUM_GATE; n++)
     {
         gate[n] = patch.gate_input[n].Trig();
     }
 
-    for (uint8_t n = 0; n < NUM_VERB; n++)
+    for(uint8_t n = 0; n < NUM_VERB; n++)
     {
         verb[n].SetFeedback(feedback);
     }
@@ -175,17 +173,14 @@ static void AudioCallback(float **in, float **out, size_t size)
 
     float mixedValues[4];
     float verbValues[4];
-    for (size_t n = 0; n < size; n++)
-    {        
-        if (stereo)
+    for(size_t n = 0; n < size; n++)
+    {
+        if(stereo)
         {
-            const StereoMixer::Input inStereo
-            {
-                gain[0] * in[0][n],
-                gain[1] * in[1][n],
-                gain[2] * in[2][n],
-                gain[3] * in[3][n]
-            };
+            const StereoMixer::Input inStereo{gain[0] * in[0][n],
+                                              gain[1] * in[1][n],
+                                              gain[2] * in[2][n],
+                                              gain[3] * in[3][n]};
 
             StereoMixer::Output outStereo{0, 0};
             stereoMixer.Process(inStereo, outStereo);
@@ -197,13 +192,10 @@ static void AudioCallback(float **in, float **out, size_t size)
         }
         else
         {
-            const QuadMixer::Data inQuad
-            {
-                gain[0] * in[0][n],
-                gain[1] * in[1][n],
-                gain[2] * in[2][n],
-                gain[3] * in[3][n]
-            };
+            const QuadMixer::Data inQuad{gain[0] * in[0][n],
+                                         gain[1] * in[1][n],
+                                         gain[2] * in[2][n],
+                                         gain[3] * in[3][n]};
 
             QuadMixer::Data outQuad{0, 0, 0, 0};
             quadMixer.Process(inQuad, outQuad);
@@ -211,24 +203,27 @@ static void AudioCallback(float **in, float **out, size_t size)
             mixedValues[0] = outQuad.Values[0];
             mixedValues[1] = outQuad.Values[1];
             mixedValues[2] = outQuad.Values[2];
-            mixedValues[3] = outQuad.Values[3];   
+            mixedValues[3] = outQuad.Values[3];
         }
 
-        verb[0].Process(mixedValues[0], mixedValues[1], &verbValues[0], &verbValues[1]);
-        verb[1].Process(mixedValues[2], mixedValues[3], &verbValues[2], &verbValues[3]);
+        verb[0].Process(
+            mixedValues[0], mixedValues[1], &verbValues[0], &verbValues[1]);
+        verb[1].Process(
+            mixedValues[2], mixedValues[3], &verbValues[2], &verbValues[3]);
 
         for(uint8_t m = 0; m < NUM_CHANNEL; m++)
         {
-            out[m][n] = wet * verbValues[m] + (DRY_MINIMUM_AMP + 1.f - wet) * mixedValues[m];
+            out[m][n] = wet * verbValues[m]
+                        + (DRY_MINIMUM_AMP + 1.f - wet) * mixedValues[m];
         }
     }
 }
 
 void UpdateDisplay()
 {
-    uint32_t minX = 0;
-    uint32_t minY = 0;
-    uint32_t xOffset = 9 * 7;
+    uint32_t minX       = 0;
+    uint32_t minY       = 0;
+    uint32_t xOffset    = 9 * 7;
     uint32_t lineOffset = 8;
 
     patch.display.Fill(false);
@@ -240,54 +235,65 @@ void UpdateDisplay()
         highlightState[1 + currParam] = true;
     }
 
-    std::string str = "QUADRAPHONIC MIXER";
-    char* cstr = &str[0];
+    std::string str  = "QUADRAPHONIC MIXER";
+    char *      cstr = &str[0];
     patch.display.SetCursor(minX, minY);
     patch.display.WriteString(cstr, Font_6x8, true);
 
     str = stereo ? "STEREO" : "QUAD";
     patch.display.SetCursor(minX, minY + lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::Stereo)]);
+    patch.display.WriteString(
+        cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::Stereo)]);
 
-    str = "VERB:" + std::to_string(static_cast<uint32_t>(100 * wet)); 
+    str = "VERB:" + std::to_string(static_cast<uint32_t>(100 * wet));
     patch.display.SetCursor(minX, minY + 2 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::ReverbWet)]);
+    patch.display.WriteString(
+        cstr,
+        Font_6x8,
+        !highlightState[static_cast<uint8_t>(State::ReverbWet)]);
 
     str = "FDBK:" + std::to_string(static_cast<uint32_t>(100 * feedback));
     patch.display.SetCursor(minX, minY + 3 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::ReverbFeedback)]);
+    patch.display.WriteString(
+        cstr,
+        Font_6x8,
+        !highlightState[static_cast<uint8_t>(State::ReverbFeedback)]);
 
     str = "CH1:" + std::to_string(static_cast<uint32_t>(100 * ctrl[0]));
     patch.display.SetCursor(minX, minY + 4 * lineOffset);
     patch.display.WriteString(cstr, Font_6x8, true);
 
-    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[0])); 
+    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[0]));
     patch.display.SetCursor(minX + xOffset, minY + 4 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH1Gain)]);
+    patch.display.WriteString(
+        cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH1Gain)]);
 
     str = "CH2:" + std::to_string(static_cast<uint32_t>(100 * ctrl[1]));
     patch.display.SetCursor(minX, minY + 5 * lineOffset);
     patch.display.WriteString(cstr, Font_6x8, true);
 
-    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[1])); 
+    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[1]));
     patch.display.SetCursor(minX + xOffset, minY + 5 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH2Gain)]);
+    patch.display.WriteString(
+        cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH2Gain)]);
 
     str = "CH3:" + std::to_string(static_cast<uint32_t>(100 * ctrl[2]));
     patch.display.SetCursor(minX, minY + 6 * lineOffset);
     patch.display.WriteString(cstr, Font_6x8, true);
 
-    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[2])); 
+    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[2]));
     patch.display.SetCursor(minX + xOffset, minY + 6 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH3Gain)]);
+    patch.display.WriteString(
+        cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH3Gain)]);
 
     str = "CH4:" + std::to_string(static_cast<uint32_t>(100 * ctrl[3]));
     patch.display.SetCursor(minX, minY + 7 * lineOffset);
     patch.display.WriteString(cstr, Font_6x8, true);
 
-    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[3])); 
+    str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[3]));
     patch.display.SetCursor(minX + xOffset, minY + 7 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH4Gain)]);
+    patch.display.WriteString(
+        cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH4Gain)]);
 
     patch.display.Update();
 }
@@ -297,7 +303,7 @@ int main(void)
     patch.Init();
     sampleRate = patch.AudioSampleRate();
 
-    for (uint8_t n = 0; n < 2; n++)
+    for(uint8_t n = 0; n < 2; n++)
     {
         verb[n].Init(sampleRate);
         verb[n].SetFeedback(feedback);
