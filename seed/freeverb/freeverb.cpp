@@ -26,7 +26,7 @@ void AudioCallback(float **in, float **out, size_t size)
         {
             if(maybe.Process(0.125f))
             {
-                osc.SetFreq(mtof(48.f + notes[rand() % kNumNotes])) ;
+                osc.SetFreq(mtof(48.f + notes[rand() % kNumNotes]));
                 env.Trigger();
             }
         }
