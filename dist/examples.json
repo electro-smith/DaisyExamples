@@ -91,6 +91,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/compressor/README.md"
     },
     {
+        "name": "LCD_HD44780",
+        "platform": "seed",
+        "filepath": "./dist/seed/LCD_HD44780.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/LCD_HD44780/README.md"
+    },
+    {
         "name": "pitchshifter",
         "platform": "seed",
         "filepath": "./dist/seed/pitchshifter.bin",
