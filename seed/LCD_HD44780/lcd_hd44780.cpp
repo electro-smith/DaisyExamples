@@ -1,4 +1,3 @@
-#include "lcd_hd44780.h"
 #include "daisy_seed.h"
 
 using namespace daisy;
