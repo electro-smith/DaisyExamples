@@ -71,7 +71,9 @@ int main(void)
     size_t blocksize = 48;
     hw.Init();
     //    hw.ClearLeds();
-    sdcard.Init();
+    SdmmcHandler::Config sd_cfg;
+    sd_cfg.Defaults();
+    sdcard.Init(sd_cfg);
     sampler.Init();
     sampler.SetLooping(true);
 
