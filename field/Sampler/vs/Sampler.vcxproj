@@ -84,8 +84,4 @@
     <None Include="Sampler-Release.vgdbsettings" />
     <None Include="stm32.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\WaveTableLoader.h" />
-    <ClInclude Include="..\WavWriter.h" />
-  </ItemGroup>
 </Project>

@@ -46,12 +46,4 @@
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\WavWriter.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WaveTableLoader.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

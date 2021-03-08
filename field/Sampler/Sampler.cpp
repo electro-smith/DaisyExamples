@@ -3,8 +3,6 @@
 #include "daisy_field.h"
 #include "daisysp.h"
 #include "fatfs.h"
-#include "WavWriter.h"
-#include "WaveTableLoader.h"
 
 //#define PLAYBACK_TEST
 #define RECORDING_TEST
