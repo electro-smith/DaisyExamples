@@ -115,7 +115,9 @@ int TestSdCard()
     memset(refbuff, 0, 2048);
 
     // Init SDMMC
-    sd.Init();
+    SdmmcHandler::Config sd_cfg;
+    sd_cfg.Defaults();
+    sd.Init(sd_cfg);
     dsy_fatfs_init();
     f_mount(&SDFatFS, SDPath, 1);
 

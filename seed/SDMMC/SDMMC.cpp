@@ -48,7 +48,9 @@ int main(void)
     hw.Init();
 
     // Init SD Card
-    sd.Init();
+    SdmmcHandler::Config sd_cfg;
+    sd_cfg.Defaults();
+    sd.Init(sd_cfg);
 
     // Links libdaisy i/o to fatfs driver.
     dsy_fatfs_init();
