@@ -1,6 +1,18 @@
 #include "daisy_patch.h"
 #include "daisysp.h"
 
+#include "cv_scaler.h"
+#include "codec.h"
+#include "debug_pin.h"
+#include "debug_port.h"
+#include "system.h"
+#include "version.h"
+#include "granular_processor.h"
+#include "meter.h"
+#include "resources.h"
+#include "settings.h"
+#include "ui.h"
+
 using namespace daisy;
 using namespace daisysp;
 
