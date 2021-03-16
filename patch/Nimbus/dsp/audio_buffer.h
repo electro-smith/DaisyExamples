@@ -33,8 +33,8 @@
 
 #include "stmlib.h"
 
-#include "dsp.h"
-#include "utils/dsp.h"
+#include "dsp_utils.h"
+#include "dsp_dsp.h"
 
 #include "mu_law.h"
 

@@ -28,7 +28,7 @@
 
 #include "settings.h"
 
-#include "system/storage.h"
+#include "storage.h"
 
 #include "granular_processor.h"
 

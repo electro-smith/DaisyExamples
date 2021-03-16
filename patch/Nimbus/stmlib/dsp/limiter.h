@@ -33,7 +33,7 @@
 
 #include <algorithm>
 
-#include "dsp.h"
+#include "dsp_dsp.h"
 #include "filter.h"
 
 namespace stmlib {

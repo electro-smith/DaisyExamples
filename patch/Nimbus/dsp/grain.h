@@ -31,7 +31,7 @@
 
 #include "stmlib.h"
 
-#include "dsp.h"
+#include "dsp_dsp.h"
 
 #include "audio_buffer.h"
 

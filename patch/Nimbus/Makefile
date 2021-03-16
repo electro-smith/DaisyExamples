@@ -2,8 +2,10 @@
 TARGET = Nimbus
 
 # Sources
-CPP_SOURCES = \
+CPP_SOURCES += \
 Nimbus.cpp \
+
+CXX_SOURCES += \
 bootloader.cc \
 clouds.cc \
 cv_scaler.cc \
@@ -33,7 +35,32 @@ ui.cc
 LIBDAISY_DIR = ../../libdaisy
 DAISYSP_DIR = ../../DaisySP
 
-C_INCLUDES += -Ifx -Idsp -Ipvoc -Ibootloader -Idrivers -Iresources -Istmlib
+C_DEFS += -DSTM32F40_41xxx \
+
+C_INCLUDES += \
+-I. \
+-Idsp \
+-Idsp/pvoc \
+-Idsp/fx \
+-Ibootloader \
+-Idrivers \
+-Iresources \
+-Istmlib \
+-Istmlib/algorithms \
+-Istmlib/dsp \
+-Istmlib/fft \
+-Istmlib/linker_scripts \
+-Istmlib/midi \
+-Istmlib/programming \
+-Istmlib/system \
+-Istmlib/test \
+-Istmlib/third_party/STM \
+-Istmlib/third_party/STM/CMSIS/CM3_f4xx \
+-Istmlib/third_party/STM/STM32F4xx_StdPeriph_Driver/inc \
+-Istmlib/tools \
+-Istmlib/ui \
+-Istmlib/utils \
+
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

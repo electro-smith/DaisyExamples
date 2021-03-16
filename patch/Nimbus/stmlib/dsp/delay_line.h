@@ -30,7 +30,7 @@
 #define STMLIB_DSP_DELAY_LINE_H_
 
 #include "stmlib.h"
-#include "dsp.h"
+#include "dsp_dsp.h"
 
 #include <algorithm>
 

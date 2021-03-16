@@ -33,7 +33,7 @@
 
 #include "stmlib.h"
 
-#include "dsp.h"
+#include "dsp_dsp.h"
 #include "cosine_oscillator.h"
 
 namespace clouds {

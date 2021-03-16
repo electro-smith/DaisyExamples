@@ -30,7 +30,7 @@
 #define STMLIB_DSP_UNITS_H_
 
 #include "stmlib.h"
-#include "dsp.h"
+#include "dsp_dsp.h"
 
 namespace stmlib {
 

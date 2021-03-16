@@ -31,7 +31,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "dsp.h"
+#include "dsp_dsp.h"
 
 #include "resources.h"
 

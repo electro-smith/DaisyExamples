@@ -26,13 +26,13 @@
 //
 // User interface.
 
-#include "clouds/ui.h"
+#include "ui.h"
 
-#include "stmlib/system/system_clock.h"
+#include "system_clock.h"
 
-#include "clouds/dsp/granular_processor.h"
-#include "clouds/cv_scaler.h"
-#include "clouds/meter.h"
+#include "granular_processor.h"
+#include "cv_scaler.h"
+#include "meter.h"
 
 namespace clouds {
 

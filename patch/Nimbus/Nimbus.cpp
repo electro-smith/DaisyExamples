@@ -1,5 +1,5 @@
-#include "daisy_patch.h"
-#include "daisysp.h"
+//include "daisy_patch.h"
+//#include "daisysp.h"
 
 #include "cv_scaler.h"
 #include "codec.h"
@@ -13,13 +13,13 @@
 #include "settings.h"
 #include "ui.h"
 
-using namespace daisy;
-using namespace daisysp;
+//using namespace daisy;
+//using namespace daisysp;
 
-DaisyPatch hw;
+//DaisyPatch hw;
 void AudioCallback(float **in, float **out, size_t size)
 {
-	hw.ProcessAllControls();
+	//hw.ProcessAllControls();
 	for (size_t i = 0; i < size; i++)
 	{
 		out[0][i] = in[0][i];
@@ -31,8 +31,8 @@ void AudioCallback(float **in, float **out, size_t size)
 
 int main(void)
 {
-	hw.Init();
-	hw.StartAdc();
-	hw.StartAudio(AudioCallback);
+	//hw.Init();
+	//hw.StartAdc();
+	//hw.StartAudio(AudioCallback);
 	while(1) {}
 }
