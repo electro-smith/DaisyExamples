@@ -9,12 +9,8 @@ using namespace daisysp;
 DaisyPatch patch;
 float sampleRate;
 
-constexpr uint8_t NUM_AUDIO_IN = 4;
-constexpr uint8_t NUM_AUDIO_OUT = 4;
 constexpr uint8_t NUM_CV_IN = 4;
-constexpr uint8_t NUM_CV_OUT = 2;
 constexpr uint8_t NUM_GATE_IN = 2;
-constexpr uint8_t NUM_GATE_OUT = 1;
 
 constexpr float C1_FREQ = 32.70f;
 
