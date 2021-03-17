@@ -27,6 +27,7 @@
 // STFT with overlap-add.
 
 #include "stft.h"
+#include "resources.h"
 #include "stmtemp.h"
 #include <algorithm>
 

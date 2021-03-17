@@ -33,7 +33,8 @@
 #ifndef CLOUDS_RESOURCES_H_
 #define CLOUDS_RESOURCES_H_
 
-namespace daisysp {
+#include "daisy.h"
+using namespace daisy;
 
 typedef uint8_t ResourceId;
 
@@ -43,19 +44,19 @@ extern const int16_t* lookup_table_int16_table[];
 
 extern const float* lookup_table_table[];
 
-extern const float src_filter_1x_2_31[];
-extern const float src_filter_1x_2_45[];
-extern const float src_filter_1x_2_63[];
-extern const float src_filter_1x_2_91[];
-extern const int16_t lut_db[];
-extern const float lut_sin[];
-extern const float lut_window[];
-extern const float lut_xfade_in[];
-extern const float lut_xfade_out[];
-extern const float lut_sine_window_4096[];
-extern const float lut_cutoff[];
-extern const float lut_grain_size[];
-extern const float lut_quantized_pitch[];
+extern const float DSY_SDRAM_BSS src_filter_1x_2_31[];
+extern const float DSY_SDRAM_BSS src_filter_1x_2_45[];
+extern const float DSY_SDRAM_BSS src_filter_1x_2_63[];
+extern const float DSY_SDRAM_BSS src_filter_1x_2_91[];
+extern const int16_t DSY_SDRAM_BSS lut_db[];
+extern const float DSY_SDRAM_BSS lut_sin[];
+extern const float DSY_SDRAM_BSS lut_window[];
+extern const float DSY_SDRAM_BSS lut_xfade_in[];
+extern const float DSY_SDRAM_BSS lut_xfade_out[];
+extern const float DSY_SDRAM_BSS lut_sine_window_4096[];
+extern const float DSY_SDRAM_BSS lut_cutoff[];
+extern const float DSY_SDRAM_BSS lut_grain_size[];
+extern const float DSY_SDRAM_BSS lut_quantized_pitch[];
 #define SRC_FILTER_1X_2_31 0
 #define SRC_FILTER_1X_2_31_SIZE 31
 #define SRC_FILTER_1X_2_45 1
@@ -83,6 +84,5 @@ extern const float lut_quantized_pitch[];
 #define LUT_QUANTIZED_PITCH 7
 #define LUT_QUANTIZED_PITCH_SIZE 1025
 
-}  // namespace daisysp
 
 #endif  // CLOUDS_RESOURCES_H_
