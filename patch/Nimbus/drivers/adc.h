@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DRIVERS_ADC_H_
 #define CLOUDS_DRIVERS_ADC_H_
 
-#include "stmlib.h"
+#include <stdint.h>
 
 namespace clouds {
 
@@ -64,7 +64,7 @@ class Adc {
  private:
   uint16_t values_[ADC_CHANNEL_LAST];
   
-  DISALLOW_COPY_AND_ASSIGN(Adc);
+
 };
 
 }  // namespace clouds

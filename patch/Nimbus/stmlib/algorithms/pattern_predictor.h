@@ -29,7 +29,7 @@
 #ifndef STMLIB_ALGORITHMS_PATTERN_PREDICTOR_H_
 #define STMLIB_ALGORITHMS_PATTERN_PREDICTOR_H_
 
-#include "stmlib.h"
+
 
 #include <algorithm>
 #include <cstdlib>

@@ -29,9 +29,9 @@
 #ifndef CLOUDS_DSP_PVOC_PHASE_VOCODER_H_
 #define CLOUDS_DSP_PVOC_PHASE_VOCODER_H_
 
-#include "stmlib.h"
 
-#include "fft/shy_fft.h"
+
+//#include "fft/shy_fft.h"
 
 #include "frame.h"
 #include "stft.h"
@@ -68,7 +68,7 @@ class PhaseVocoder {
 
   int32_t num_channels_;
   
-  DISALLOW_COPY_AND_ASSIGN(PhaseVocoder);
+
 };
 
 }  // namespace clouds

@@ -29,11 +29,9 @@
 #ifndef CLOUDS_CV_SCALER_H_
 #define CLOUDS_CV_SCALER_H_
 
-#include "stmlib.h"
-
 #include "settings.h"
-#include "adc.h"
-#include "gate_input.h"
+//#include "adc.h"
+//#include "gate_input.h"
 #include "parameters.h"
 
 namespace clouds {
@@ -148,7 +146,6 @@ class CvScaler {
   bool previous_trigger_[kAdcLatency];
   bool previous_gate_[kAdcLatency];
   
-  DISALLOW_COPY_AND_ASSIGN(CvScaler);
 };
 
 }  // namespace clouds

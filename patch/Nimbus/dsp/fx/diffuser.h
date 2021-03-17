@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_FX_DIFFUSER_H_
 #define CLOUDS_DSP_FX_DIFFUSER_H_
 
-#include "stmlib.h"
+
 
 #include "fx_engine.h"
 
@@ -104,7 +104,7 @@ class Diffuser {
   E engine_;
   
   float amount_;
-  DISALLOW_COPY_AND_ASSIGN(Diffuser);
+ 
 };
 
 }  // namespace clouds

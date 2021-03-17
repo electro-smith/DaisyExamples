@@ -29,10 +29,7 @@
 #ifndef CLOUDS_DRIVERS_CODEC_H_
 #define CLOUDS_DRIVERS_CODEC_H_
 
-#include <stm32f4xx_conf.h>
-
-#include "stmlib.h"
-#include "utils/ring_buffer.h"
+//#include "ring_buffer.h"
 
 namespace clouds {
 
@@ -94,7 +91,6 @@ class Codec {
   short tx_dma_buffer_[kMaxCodecBlockSize * 6 * 2];
   short rx_dma_buffer_[kMaxCodecBlockSize * 6 * 2];
 
-  DISALLOW_COPY_AND_ASSIGN(Codec);
 };
 
 }  // namespace clouds

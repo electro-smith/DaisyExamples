@@ -30,7 +30,7 @@
 #ifndef STMLIB_DSP_POLYBLEP_H_
 #define STMLIB_DSP_POLYBLEP_H_
 
-#include "stmlib.h"
+
 
 namespace stmlib {
 

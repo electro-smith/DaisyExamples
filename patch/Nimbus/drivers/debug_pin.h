@@ -29,8 +29,6 @@
 #ifndef CLOUDS_DRIVERS_DEBUG_PIN_H_
 #define CLOUDS_DRIVERS_DEBUG_PIN_H_
 
-#include "stmlib.h"
-
 #ifndef TEST
 #include <stm32f4xx_conf.h>
 #endif 
@@ -65,7 +63,7 @@ class DebugPin {
   }
 #endif
  private:
-  DISALLOW_COPY_AND_ASSIGN(DebugPin);
+
 };
 
 #define TIC DebugPin::High();

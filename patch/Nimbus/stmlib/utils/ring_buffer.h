@@ -29,7 +29,7 @@
 #ifndef STMLIB_UTILS_RING_BUFFER_H_
 #define STMLIB_UTILS_RING_BUFFER_H_
 
-#include "stmlib.h"
+
 #include <algorithm>
 
 namespace stmlib {

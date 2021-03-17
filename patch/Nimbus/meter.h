@@ -29,9 +29,7 @@
 #ifndef CLOUDS_METER_H_
 #define CLOUDS_METER_H_
 
-#include "stmlib.h"
-
-#include "codec.h"
+//#include "codec.h"
 
 namespace clouds {
 
@@ -76,7 +74,7 @@ class Meter {
   int32_t attack_;
   int32_t release_;
 
-  DISALLOW_COPY_AND_ASSIGN(Meter);
+
 };    
 
 }  // namespace clouds

@@ -31,10 +31,10 @@
 
 #include <algorithm>
 
-#include "stmlib.h"
 
-#include "dsp_utils.h"
-#include "dsp_dsp.h"
+
+//#include "dsp_utils.h"
+
 
 #include "mu_law.h"
 
@@ -294,7 +294,7 @@ class AudioBuffer {
   int16_t* tail_;
   int32_t crossfade_counter_;
   
-  DISALLOW_COPY_AND_ASSIGN(AudioBuffer);
+
 };
 
 }  // namespace clouds

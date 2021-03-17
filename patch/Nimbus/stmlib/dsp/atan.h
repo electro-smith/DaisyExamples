@@ -29,7 +29,7 @@
 #ifndef STMLIB_DSP_ATAN_H_
 #define STMLIB_DSP_ATAN_H_
 
-#include "stmlib.h"
+
 
 #include "rsqrt.h"
 

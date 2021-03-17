@@ -4,38 +4,26 @@ TARGET = Nimbus
 # Sources
 CPP_SOURCES += \
 Nimbus.cpp \
-
-CXX_SOURCES += \
-bootloader.cc \
-clouds.cc \
-cv_scaler.cc \
-adc.cc \
-codec.cc \
-debug_port.cc \
-gate_input.cc \
-leds.cc \
-switches.cc \
-system.cc \
-correlator.cc \
-granular_processor.cc \
-mu_law.cc \
-frame_transformation.cc \
-phase_vocoder.cc \
-stft.cc \
-resources.cc \
-settings.cc \
-atan.cc \
-units.cc \
-system/bootloader_utils.cc \
-system/system_clock.cc \
-utils/random.cc \
-ui.cc
+clouds.cpp \
+cv_scaler.cpp \
+dsp/correlator.cpp \
+dsp/granular_processor.cpp \
+dsp/mu_law.cpp \
+dsp/pvoc/frame_transformation.cpp \
+dsp/pvoc/phase_vocoder.cpp \
+dsp/pvoc/stft.cpp \
+resources.cpp \
+settings.cpp \
+atan.cpp \
+units.cpp \
+system/bootloader_utils.cpp \
+system/system_clock.cpp \
+utils/random.cpp \
+ui.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
 DAISYSP_DIR = ../../DaisySP
-
-C_DEFS += -DSTM32F40_41xxx \
 
 C_INCLUDES += \
 -I. \
@@ -43,24 +31,7 @@ C_INCLUDES += \
 -Idsp/pvoc \
 -Idsp/fx \
 -Ibootloader \
--Idrivers \
 -Iresources \
--Istmlib \
--Istmlib/algorithms \
--Istmlib/dsp \
--Istmlib/fft \
--Istmlib/linker_scripts \
--Istmlib/midi \
--Istmlib/programming \
--Istmlib/system \
--Istmlib/test \
--Istmlib/third_party/STM \
--Istmlib/third_party/STM/CMSIS/CM3_f4xx \
--Istmlib/third_party/STM/STM32F4xx_StdPeriph_Driver/inc \
--Istmlib/tools \
--Istmlib/ui \
--Istmlib/utils \
-
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

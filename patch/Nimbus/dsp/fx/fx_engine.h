@@ -31,10 +31,10 @@
 
 #include <algorithm>
 
-#include "stmlib.h"
 
-#include "dsp_dsp.h"
-#include "cosine_oscillator.h"
+
+//#include "dsp.h"
+//#include "cosine_oscillator.h"
 
 namespace clouds {
 
@@ -259,7 +259,6 @@ class FxEngine {
     T* buffer_;
     int32_t write_ptr_;
 
-    DISALLOW_COPY_AND_ASSIGN(Context);
   };
   
   inline void SetLFOFrequency(LFOIndex index, float frequency) {
@@ -294,7 +293,7 @@ class FxEngine {
   T* buffer_;
   stmlib::CosineOscillator lfo_[2];
   
-  DISALLOW_COPY_AND_ASSIGN(FxEngine);
+  
 };
 
 }  // namespace clouds

@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DRIVERS_SWITCHES_H_
 #define CLOUDS_DRIVERS_SWITCHES_H_
 
-#include "stmlib.h"
+
 
 #include <stm32f4xx_conf.h>
 
@@ -69,7 +69,7 @@ class Switches {
  private:
   uint8_t switch_state_[kNumSwitches];
   
-  DISALLOW_COPY_AND_ASSIGN(Switches);
+ 
 };
 
 }  // namespace clouds

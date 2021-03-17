@@ -29,7 +29,7 @@
 #ifndef STMLIB_DSP_LIMITER_H_
 #define STMLIB_DSP_LIMITER_H_
 
-#include "stmlib.h"
+
 
 #include <algorithm>
 

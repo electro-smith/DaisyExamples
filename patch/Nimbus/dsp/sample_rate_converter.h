@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_SAMPLE_RATE_CONVERTER_H_
 #define CLOUDS_DSP_SAMPLE_RATE_CONVERTER_H_
 
-#include "stmlib.h"
+
 
 #include "frame.h"
 
@@ -88,7 +88,7 @@ class SampleRateConverter {
   FloatFrame history_[filter_size * 2];
   int32_t history_ptr_;
 
-  DISALLOW_COPY_AND_ASSIGN(SampleRateConverter);
+
 };
 
 }  // namespace clouds

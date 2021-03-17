@@ -29,10 +29,6 @@
 #ifndef CLOUDS_DRIVERS_GATE_INPUT_H_
 #define CLOUDS_DRIVERS_GATE_INPUT_H_
 
-#include "stmlib.h"
-
-#include <stm32f4xx_conf.h>
-
 namespace clouds {
 
 class GateInput {
@@ -64,7 +60,7 @@ class GateInput {
   bool freeze_;
   bool trigger_;
   
-  DISALLOW_COPY_AND_ASSIGN(GateInput);
+
 };
 
 }  // namespace clouds

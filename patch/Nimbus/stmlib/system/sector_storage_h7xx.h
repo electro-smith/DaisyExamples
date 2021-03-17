@@ -34,7 +34,7 @@
 #include <algorithm>
 #include <cstring>
 
-#include "stmlib.h"
+
 
 namespace stmlib {
   

@@ -29,9 +29,9 @@
 #ifndef CLOUDS_DSP_WINDOW_H_
 #define CLOUDS_DSP_WINDOW_H_
 
-#include "stmlib.h"
 
-#include "dsp_dsp.h"
+
+//#include "dsp.h"
 
 #include "audio_buffer.h"
 
@@ -116,7 +116,6 @@ class Window {
   bool half_;
   bool regenerated_;
   
-  DISALLOW_COPY_AND_ASSIGN(Window);
 };
 
 }  // namespace clouds

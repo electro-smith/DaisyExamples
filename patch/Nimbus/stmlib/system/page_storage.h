@@ -59,7 +59,7 @@
 
 #include <cstring>
 
-#include "stmlib.h"
+
 #include "system/flash_programming.h"
 
 namespace stmlib {

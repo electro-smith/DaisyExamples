@@ -29,7 +29,7 @@
 #ifndef STMLIB_ALGORITHMS_VOICE_ALLOCATOR_H_
 #define STMLIB_ALGORITHMS_VOICE_ALLOCATOR_H_
 
-#include "stmlib.h"
+
 #include <cstring>
 
 namespace stmlib {

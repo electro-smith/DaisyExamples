@@ -30,7 +30,7 @@
 #ifndef STMLIB_DSP_COSINE_OSCILLATOR_H_
 #define STMLIB_DSP_COSINE_OSCILLATOR_H_
 
-#include "stmlib.h"
+
 
 #include <cmath>
 

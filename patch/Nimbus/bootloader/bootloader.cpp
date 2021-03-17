@@ -25,15 +25,15 @@
 #include "system/bootloader_utils.h"
 #include "system/system_clock.h"
 
-#include "codec.h"
-#include "leds.h"
-#include "switches.h"
-#include "system.h"
-#include "version.h"
+//include "codec.h"
+//#include "leds.h"
+//#include "switches.h"
+//#include "system.h"
+//#include "version.h"
 #include "meter.h"
 
-#include "stm_audio_qpsk/packet_decoder.h"
-#include "stm_audio_qpsk/demodulator.h"
+//#include "stm_audio_qpsk/packet_decoder.h"
+//#include "stm_audio_qpsk/demodulator.h"
 
 #include <cstring>
 

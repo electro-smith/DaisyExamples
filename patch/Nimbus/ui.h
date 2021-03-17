@@ -29,12 +29,12 @@
 #ifndef CLOUDS_UI_H_
 #define CLOUDS_UI_H_
 
-#include "stmlib.h"
 
-#include "event_queue.h"
 
-#include "leds.h"
-#include "switches.h"
+//#include "event_queue.h"
+
+//#include "leds.h"
+//#include "switches.h"
 
 namespace clouds {
 
@@ -111,10 +111,10 @@ class Ui {
   Settings* settings_;
   CvScaler* cv_scaler_;
   
-  Leds leds_;
-  Switches switches_;
-  uint32_t press_time_[kNumSwitches];
-  uint32_t long_press_time_[kNumSwitches];
+  //Leds leds_;
+  //Switches switches_;
+  //uint32_t press_time_[kNumSwitches];
+  //uint32_t long_press_time_[kNumSwitches];
   UiMode mode_;
   
   GranularProcessor* processor_;
@@ -122,7 +122,7 @@ class Ui {
   
   uint8_t load_save_location_;
   
-  DISALLOW_COPY_AND_ASSIGN(Ui);
+
 };
 
 }  // namespace clouds

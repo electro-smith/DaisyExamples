@@ -29,7 +29,7 @@
 #ifndef STMLIB_SYSTEM_BOOTLOADER_UTILS_H_
 #define STMLIB_SYSTEM_BOOTLOADER_UTILS_H_
 
-#include "stmlib.h"
+
 
 namespace stmlib {
 

@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_FX_REVERB_H_
 #define CLOUDS_DSP_FX_REVERB_H_
 
-#include "stmlib.h"
+
 
 #include "fx_engine.h"
 
@@ -172,7 +172,7 @@ class Reverb {
   float lp_decay_1_;
   float lp_decay_2_;
   
-  DISALLOW_COPY_AND_ASSIGN(Reverb);
+  
 };
 
 }  // namespace clouds

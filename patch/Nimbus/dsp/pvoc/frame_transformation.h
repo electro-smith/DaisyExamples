@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_PVOC_FRAME_TRANSFORMATION_H_
 #define CLOUDS_DSP_PVOC_FRAME_TRANSFORMATION_H_
 
-#include "stmlib.h"
+
 
 #include "stft.h"
 
@@ -92,7 +92,7 @@ class FrameTransformation {
 
   int8_t glitch_algorithm_;
   
-  DISALLOW_COPY_AND_ASSIGN(FrameTransformation);
+  
 };
 
 }  // namespace clouds

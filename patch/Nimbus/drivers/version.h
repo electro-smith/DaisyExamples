@@ -29,10 +29,6 @@
 #ifndef CLOUDS_DRIVERS_VERSION_H_
 #define CLOUDS_DRIVERS_VERSION_H_
 
-#include "stmlib.h"
-
-#include <stm32f4xx_conf.h>
-
 namespace clouds {
 
 class Version {
@@ -54,7 +50,6 @@ class Version {
     return !GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0);
   }
  private:
-  DISALLOW_COPY_AND_ASSIGN(Version);
 };
 
 }  // namespace clouds

@@ -36,6 +36,8 @@ void System::Init(bool application) {
   }
 }
 
+#define F_CPU 168000000
+
 void System::StartTimers() {
   SysTick_Config(F_CPU / 1000);
 }

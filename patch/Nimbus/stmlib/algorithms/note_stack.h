@@ -45,7 +45,7 @@
 #ifndef STMLIB_ALGORITHMS_NOTE_STACK_H_
 #define STMLIB_ALGORITHMS_NOTE_STACK_H_
 
-#include "stmlib.h"
+
 
 #include <cstring>
 

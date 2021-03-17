@@ -34,7 +34,7 @@
 #define CLOUDS_RESOURCES_H_
 
 
-#include "stmlib.h"
+
 
 
 

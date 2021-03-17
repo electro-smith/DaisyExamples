@@ -31,7 +31,7 @@
 #ifndef CLOUDS_DSP_CORRELATOR_H_
 #define CLOUDS_DSP_CORRELATOR_H_
 
-#include "stmlib.h"
+
 
 namespace clouds {
   
@@ -80,7 +80,7 @@ class Correlator {
   
   bool done_;
   
-  DISALLOW_COPY_AND_ASSIGN(Correlator);
+
 };
 
 }  // namespace clouds

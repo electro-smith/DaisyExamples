@@ -29,7 +29,7 @@
 #ifndef STMLIB_DSP_HYSTERESIS_FILTER_H_
 #define STMLIB_DSP_HYSTERESIS_FILTER_H_
 
-#include "stmlib.h"
+
 
 namespace stmlib {
 

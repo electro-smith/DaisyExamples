@@ -29,13 +29,13 @@
 #ifndef CLOUDS_DSP_GRANULAR_SAMPLE_PLAYER_H_
 #define CLOUDS_DSP_GRANULAR_SAMPLE_PLAYER_H_
 
-#include "stmlib.h"
+
 
 #include <algorithm>
 
-#include "atan.h"
-#include "units.h"
-#include "utils/random.h"
+//#include "atan.h"
+//#include "units.h"
+//#include "utils/random.h"
 
 #include "audio_buffer.h"
 #include "frame.h"
@@ -248,7 +248,6 @@ class GranularSamplePlayer {
   int32_t available_grains_[kMaxNumGrains];
   float envelope_buffer_[kMaxBlockSize];
   
-  DISALLOW_COPY_AND_ASSIGN(GranularSamplePlayer);
 };
 
 }  // namespace clouds

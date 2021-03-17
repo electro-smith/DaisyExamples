@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_FRAME_H_
 #define CLOUDS_DSP_FRAME_H_
 
-#include "stmlib.h"
+
 
 namespace clouds {
 

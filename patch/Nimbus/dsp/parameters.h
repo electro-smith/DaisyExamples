@@ -29,8 +29,6 @@
 #ifndef CLOUDS_DSP_PARAMETERS_H_
 #define CLOUDS_DSP_PARAMETERS_H_
 
-#include "stmlib.h"
-
 namespace clouds {
 
 struct Parameters {

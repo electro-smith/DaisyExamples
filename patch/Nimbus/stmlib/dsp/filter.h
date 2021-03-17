@@ -30,7 +30,7 @@
 #ifndef STMLIB_DSP_FILTER_H_
 #define STMLIB_DSP_FILTER_H_
 
-#include "stmlib.h"
+
 
 #include <cmath>
 #include <algorithm>

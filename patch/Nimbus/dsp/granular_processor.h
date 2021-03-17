@@ -29,8 +29,7 @@
 #ifndef CLOUDS_DSP_GRANULAR_PROCESSOR_H_
 #define CLOUDS_DSP_GRANULAR_PROCESSOR_H_
 
-#include "stmlib.h"
-#include "filter.h"
+//#include "filter.h"
 
 #include "correlator.h"
 #include "frame.h"
@@ -207,7 +206,7 @@ class GranularProcessor {
   
   PersistentState persistent_state_;
   
-  DISALLOW_COPY_AND_ASSIGN(GranularProcessor);
+
 };
 
 }  // namespace clouds

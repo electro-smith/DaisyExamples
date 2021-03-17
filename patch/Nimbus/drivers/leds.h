@@ -31,7 +31,7 @@
 
 #include <stm32f4xx_conf.h>
 
-#include "stmlib.h"
+
 
 namespace clouds {
 
@@ -101,7 +101,7 @@ class Leds {
   uint8_t red_[4];
   uint8_t green_[4];
    
-  DISALLOW_COPY_AND_ASSIGN(Leds);
+ 
 };
 
 }  // namespace clouds

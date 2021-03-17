@@ -28,7 +28,7 @@
 
 #include "ui.h"
 
-#include "system_clock.h"
+//#include "system_clock.h"
 
 #include "granular_processor.h"
 #include "cv_scaler.h"
@@ -40,7 +40,7 @@ const int32_t kLongPressDuration = 1000;
 const int32_t kVeryLongPressDuration = 4000;
 
 using namespace stmlib;
-
+/*
 void Ui::Init(
     Settings* settings,
     CvScaler* cv_scaler,
@@ -48,8 +48,8 @@ void Ui::Init(
     Meter* meter) {
   settings_ = settings;
   cv_scaler_ = cv_scaler;
-  leds_.Init();
-  switches_.Init();
+  //leds_.Init();
+  //switches_.Init();
   
   processor_ = processor;
   meter_ = meter;
@@ -388,5 +388,5 @@ uint8_t Ui::HandleFactoryTestingRequest(uint8_t command) {
   }
   return reply;
 }
-
+*/
 }  // namespace clouds

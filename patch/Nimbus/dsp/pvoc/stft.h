@@ -29,14 +29,14 @@
 #ifndef CLOUDS_DSP_PVOC_STFT_H_
 #define CLOUDS_DSP_PVOC_STFT_H_
 
-#include "stmlib.h"
+
 
 // #define USE_ARM_FFT
 
 #ifdef USE_ARM_FFT
   #include <arm_math.h>
 #else
-  #include "fft/shy_fft.h"
+  //#include "fft/shy_fft.h"
 #endif  // USE_ARM_FFT
 
 namespace clouds {
@@ -108,7 +108,7 @@ class STFT {
   
   Modifier* modifier_;
   
-  DISALLOW_COPY_AND_ASSIGN(STFT);
+
 };
 
 }  // namespace clouds

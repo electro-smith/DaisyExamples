@@ -29,11 +29,11 @@
 #ifndef CLOUDS_DSP_LOOPING_SAMPLE_PLAYER_H_
 #define CLOUDS_DSP_LOOPING_SAMPLE_PLAYER_H_
 
-#include "stmlib.h"
+
 
 #include <algorithm>
 
-#include "units.h"
+//#include "units.h"
 
 #include "audio_buffer.h"
 #include "frame.h"
@@ -198,7 +198,7 @@ class LoopingSamplePlayer {
   int32_t tap_delay_;
   int32_t tap_delay_counter_;
 
-  DISALLOW_COPY_AND_ASSIGN(LoopingSamplePlayer);
+
 };
 
 }  // namespace clouds

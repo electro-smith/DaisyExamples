@@ -29,9 +29,8 @@
 #ifndef CLOUDS_SETTINGS_H_
 #define CLOUDS_SETTINGS_H_
 
-#include "stmlib.h"
-
-#include "adc.h"
+//#include "adc.h"
+#include <stddef.h>
 
 namespace clouds {
 
@@ -105,7 +104,7 @@ class Settings {
   SettingsData data_;
   uint16_t version_token_;
   
-  DISALLOW_COPY_AND_ASSIGN(Settings);
+
 };
 
 }  // namespace clouds

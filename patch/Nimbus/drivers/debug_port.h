@@ -29,10 +29,6 @@
 #ifndef CLOUDS_DRIVERS_DEBUG_PORT_H_
 #define CLOUDS_DRIVERS_DEBUG_PORT_H_
 
-#include "stmlib.h"
-
-#include <stm32f4xx_conf.h>
-
 namespace clouds {
 
 class DebugPort {
@@ -60,7 +56,6 @@ class DebugPort {
   }
   
  private:
-  DISALLOW_COPY_AND_ASSIGN(DebugPort);
 };
 
 }  // namespace clouds

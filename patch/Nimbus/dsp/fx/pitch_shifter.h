@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_FX_PITCH_SHIFTER_H_
 #define CLOUDS_DSP_FX_PITCH_SHIFTER_H_
 
-#include "stmlib.h"
+
 
 #include "frame.h"
 #include "fx_engine.h"
@@ -108,7 +108,7 @@ class PitchShifter {
   float ratio_;
   float size_;
   
-  DISALLOW_COPY_AND_ASSIGN(PitchShifter);
+ 
 };
 
 }  // namespace clouds

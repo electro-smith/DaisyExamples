@@ -37,7 +37,7 @@
 #ifndef STMLIB_FFT_SHY_FFT_H_
 #define STMLIB_FFT_SHY_FFT_H_
 
-#include "stmlib.h"
+
 
 #include <algorithm>
 #include <cmath>

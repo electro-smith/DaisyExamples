@@ -30,7 +30,7 @@
 #ifndef STMLIB_ALGORITHMS_TINY_MAP_H_
 #define STMLIB_ALGORITHMS_TINY_MAP_H_
 
-#include "stmlib.h"
+
 
 #include <cstring>
 

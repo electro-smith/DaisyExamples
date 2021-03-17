@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_MU_LAW_H_
 #define CLOUDS_DSP_MU_LAW_H_
 
-#include "stmlib.h"
+
 
 namespace clouds {
 

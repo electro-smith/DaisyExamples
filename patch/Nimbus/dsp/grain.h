@@ -29,9 +29,9 @@
 #ifndef CLOUDS_DSP_GRAIN_H_
 #define CLOUDS_DSP_GRAIN_H_
 
-#include "stmlib.h"
 
-#include "dsp_dsp.h"
+
+
 
 #include "audio_buffer.h"
 
@@ -197,7 +197,6 @@ class Grain {
   
   GrainQuality recommended_quality_;
 
-  DISALLOW_COPY_AND_ASSIGN(Grain);
 };
 
 }  // namespace clouds

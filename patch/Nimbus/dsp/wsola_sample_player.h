@@ -35,8 +35,8 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "stmlib.h"
-#include "units.h"
+
+//#include "units.h"
 
 #include "audio_buffer.h"
 #include "correlator.h"
@@ -282,7 +282,7 @@ class WSOLASamplePlayer {
   float env_phase_increment_;
   int32_t elapsed_;
   
-  DISALLOW_COPY_AND_ASSIGN(WSOLASamplePlayer);
+
 };
 
 }  // namespace clouds
