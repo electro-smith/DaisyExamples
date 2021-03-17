@@ -32,7 +32,7 @@
 
 #include "dsp_dsp.h"
 
-namespace stmlib {
+namespace daisy {
 
 extern const float lut_pitch_ratio_high[257];
 extern const float lut_pitch_ratio_low[257];
@@ -45,6 +45,6 @@ inline float SemitonesToRatio(float semitones) {
       lut_pitch_ratio_low[static_cast<int32_t>(pitch_fractional * 256.0f)];
 }
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_UNITS_H_

@@ -27,16 +27,15 @@
 // STFT with overlap-add.
 
 #include "stft.h"
-
+#include "stmtemp.h"
 #include <algorithm>
 
 #include "frame_transformation.h"
-#include "dsp_dsp.h"
 
-namespace clouds {
+using namespace daisysp;
 
 using namespace std;
-using namespace stmlib;
+using namespace daisy;
 
 void STFT::Init(
     FFT* fft,
@@ -207,4 +206,3 @@ void STFT::Buffer() {
   }
 }
 
-}  // namespace clouds

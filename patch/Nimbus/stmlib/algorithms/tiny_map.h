@@ -34,7 +34,7 @@
 
 #include <cstring>
 
-namespace stmlib {
+namespace daisy {
 
 template<
     typename Key,
@@ -116,6 +116,6 @@ class TinyMap {
   DISALLOW_COPY_AND_ASSIGN(TinyMap);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_ALGORITHMS_TINY_MAP_H_

@@ -29,9 +29,9 @@
 #ifndef CLOUDS_DSP_MU_LAW_H_
 #define CLOUDS_DSP_MU_LAW_H_
 
+#include "daisysp.h"
 
-
-namespace clouds {
+using namespace daisysp;
 
 // inline short MuLaw2Lin(uint8_t u_val) {
 //   int16_t t;
@@ -78,6 +78,5 @@ inline unsigned char Lin2MuLaw(int16_t pcm_val) {
   }
 }
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_MU_LAW_H_

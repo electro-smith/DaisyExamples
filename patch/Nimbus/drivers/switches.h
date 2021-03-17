@@ -33,7 +33,7 @@
 
 #include <stm32f4xx_conf.h>
 
-namespace clouds {
+namespace daisysp {
 
 const uint8_t kNumSwitches = 3;
 
@@ -72,6 +72,6 @@ class Switches {
  
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_SWITCHES_H_

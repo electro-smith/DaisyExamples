@@ -37,8 +37,8 @@
 
 #include <cstring>
 
-using namespace clouds;
-using namespace stmlib;
+using namespace daisysp;
+using namespace daisy;
 using namespace stm_audio_bootloader;
 
 const double kSampleRate = 48000.0;

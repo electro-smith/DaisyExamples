@@ -33,7 +33,7 @@
 
 
 
-namespace clouds {
+namespace daisysp {
 
 class Leds {
  public:
@@ -104,6 +104,6 @@ class Leds {
  
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_LEDS_H_

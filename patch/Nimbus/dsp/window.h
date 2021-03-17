@@ -37,7 +37,7 @@
 
 #include "resources.h"
 
-namespace clouds {
+using namespace daisysp;
 
 enum WindowFlags {
   WINDOW_FLAGS_HALF_DONE = 1,
@@ -118,6 +118,5 @@ class Window {
   
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_WINDOW_H_

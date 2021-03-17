@@ -90,7 +90,7 @@ inline void StaticAssertImplementation() {
 	char static_assert_size_mismatch[b] = { 0 };
 }
  
-namespace stmlib {
+namespace daisy {
 
 typedef union {
   uint16_t value;
@@ -109,6 +109,6 @@ struct FourCC {
   static const uint32_t value = (((((d << 8) | c) << 8) | b) << 8) | a;
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif   // STMLIB_STMLIB_H_

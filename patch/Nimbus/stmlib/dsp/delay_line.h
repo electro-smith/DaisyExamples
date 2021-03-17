@@ -34,7 +34,7 @@
 
 #include <algorithm>
 
-namespace stmlib {
+namespace daisy {
 
 template<typename T, size_t max_delay>
 class DelayLine {
@@ -112,7 +112,7 @@ class DelayLine {
   DISALLOW_COPY_AND_ASSIGN(DelayLine);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_DELAY_LINE_H_
 

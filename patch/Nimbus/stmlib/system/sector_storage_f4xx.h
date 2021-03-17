@@ -49,7 +49,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
   
 template<uint32_t> struct Sector { };
 
@@ -348,6 +348,6 @@ class Storage {
   }
 };
 
-};  // namespace stmlib
+};  // namespace daisy
 
 #endif  // STMLIB_SYSTEM_SECTOR_STORAGE_F4XX_H_

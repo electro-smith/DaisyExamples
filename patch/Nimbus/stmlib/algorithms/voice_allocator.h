@@ -32,7 +32,7 @@
 
 #include <cstring>
 
-namespace stmlib {
+namespace daisy {
 
 enum VoiceAllocatorFlags {
   NOT_ALLOCATED = 0xff,
@@ -152,6 +152,6 @@ class VoiceAllocator {
   DISALLOW_COPY_AND_ASSIGN(VoiceAllocator);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_ALGORITHMS_VOICE_ALLOCATOR_H_

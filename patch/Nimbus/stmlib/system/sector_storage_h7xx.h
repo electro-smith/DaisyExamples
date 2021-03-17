@@ -36,7 +36,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
   
 template<uint32_t> struct Sector { };
 
@@ -234,6 +234,6 @@ class ChunkStorage {
   DISALLOW_COPY_AND_ASSIGN(ChunkStorage);
 };
 
-};  // namespace stmlib
+};  // namespace daisy
 
 #endif  // STMLIB_SYSTEM_SECTOR_STORAGE_H7XX_H_

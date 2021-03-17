@@ -36,7 +36,7 @@
 //#include "leds.h"
 //#include "switches.h"
 
-namespace clouds {
+namespace daisysp {
 
 enum UiMode {
   UI_MODE_VU_METER,
@@ -125,6 +125,6 @@ class Ui {
 
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_UI_H_

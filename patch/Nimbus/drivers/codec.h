@@ -31,7 +31,7 @@
 
 //#include "ring_buffer.h"
 
-namespace clouds {
+namespace daisysp {
 
 const size_t kMaxCodecBlockSize = 32;
 
@@ -93,6 +93,6 @@ class Codec {
 
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_CODEC_H_

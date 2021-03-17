@@ -32,7 +32,7 @@
 
 #include <algorithm>
 
-namespace stmlib {
+namespace daisy {
 
 template<typename T, size_t size>
 class RingBuffer {
@@ -146,6 +146,6 @@ class RingBuffer<T, 0> {
   DISALLOW_COPY_AND_ASSIGN(RingBuffer);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif   // STMLIB_UTILS_RING_BUFFER_H_

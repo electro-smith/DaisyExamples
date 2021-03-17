@@ -30,7 +30,7 @@
 
 #include <algorithm>
 
-namespace clouds {
+namespace daisysp {
 
 using namespace std;
 
@@ -66,4 +66,4 @@ void Switches::Debounce() {
       GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_8);
 }
 
-}  // namespace clouds
+}  // namespace daisysp

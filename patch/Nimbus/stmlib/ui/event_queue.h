@@ -24,7 +24,7 @@
 #include "stmlib/utils/ring_buffer.h"
 #include "stmlib/system/system_clock.h"
 
-namespace stmlib {
+namespace daisy {
 
 enum ControlType {
   CONTROL_POT = 0,
@@ -86,6 +86,6 @@ class EventQueue {
   RingBuffer<Event, size> events_;
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_UI_EVENT_QUEUE_H_

@@ -34,7 +34,7 @@
 
 #include <cmath>
 
-namespace stmlib {
+namespace daisy {
 
 enum CosineOscillatorMode {
   COSINE_OSCILLATOR_APPROXIMATE,
@@ -98,6 +98,6 @@ class CosineOscillator {
   DISALLOW_COPY_AND_ASSIGN(CosineOscillator);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_COSINE_OSCILLATOR_H_

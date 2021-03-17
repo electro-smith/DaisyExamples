@@ -34,7 +34,7 @@
 #include <cmath>
 #include <math.h>
 
-namespace stmlib {
+namespace daisy {
 
 #define MAKE_INTEGRAL_FRACTIONAL(x) \
   int32_t x ## _integral = static_cast<int32_t>(x); \
@@ -156,6 +156,6 @@ inline int16_t SoftConvert(float x) {
   return Clip16(static_cast<int32_t>(SoftLimit(x * 0.5f) * 32768.0f));
 }
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_UTILS_DSP_DSP_H_

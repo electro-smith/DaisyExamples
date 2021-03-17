@@ -34,7 +34,7 @@
 #include <algorithm>
 #include <cstdlib>
 
-namespace stmlib {
+namespace daisy {
   
 template<size_t history_size = 16, uint8_t max_candidate_period = 8>
 class PatternPredictor {
@@ -95,6 +95,6 @@ class PatternPredictor {
   DISALLOW_COPY_AND_ASSIGN(PatternPredictor);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_ALGORITHMS_PATTERN_PREDICTOR_H_

@@ -31,7 +31,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 class SystemClock {
  public:
@@ -54,6 +54,6 @@ class SystemClock {
 
 extern SystemClock system_clock;
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_SYSTEM_SYSTEM_CLOCK_H_

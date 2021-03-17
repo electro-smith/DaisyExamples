@@ -36,7 +36,7 @@
 #include "dsp_dsp.h"
 #include "filter.h"
 
-namespace stmlib {
+namespace daisy {
 
 class Limiter {
  public:
@@ -62,6 +62,6 @@ class Limiter {
   DISALLOW_COPY_AND_ASSIGN(Limiter);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_LIMITER_H_

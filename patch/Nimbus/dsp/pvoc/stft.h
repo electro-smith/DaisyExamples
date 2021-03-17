@@ -29,17 +29,18 @@
 #ifndef CLOUDS_DSP_PVOC_STFT_H_
 #define CLOUDS_DSP_PVOC_STFT_H_
 
+#include "daisy.h"
+#include "daisysp.h"
 
-
-// #define USE_ARM_FFT
+#define USE_ARM_FFT
 
 #ifdef USE_ARM_FFT
   #include <arm_math.h>
 #else
-  //#include "fft/shy_fft.h"
+  #include "fft/shy_fft.h"
 #endif  // USE_ARM_FFT
 
-namespace clouds {
+using namespace daisysp;
 
 struct Parameters;
 
@@ -111,6 +112,5 @@ class STFT {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_PVOC_STFT_H_

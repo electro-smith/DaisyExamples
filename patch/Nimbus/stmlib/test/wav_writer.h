@@ -32,7 +32,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-namespace stmlib {
+namespace daisy {
 
 class WavWriter {
  public:
@@ -144,6 +144,6 @@ class WavWriter {
   FILE* fp_;
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_TEST_WAV_WRITER_H_

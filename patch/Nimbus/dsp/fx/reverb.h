@@ -33,7 +33,7 @@
 
 #include "fx_engine.h"
 
-namespace clouds {
+using namespace daisysp;
 
 class Reverb {
  public:
@@ -175,6 +175,5 @@ class Reverb {
   
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_FX_REVERB_H_

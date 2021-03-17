@@ -62,7 +62,7 @@
 
 #include "system/flash_programming.h"
 
-namespace stmlib {
+namespace daisy {
 
 // Class for storing calibration and state data in a same sector of flash
 // without having to rewrite the calibration data every time the state is
@@ -359,6 +359,6 @@ class Storage {
   }
 };
 
-};  // namespace stmlib
+};  // namespace daisy
 
 #endif  // STMLIB_SYSTEM_PAGE_STORAGE_H_

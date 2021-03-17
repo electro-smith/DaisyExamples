@@ -106,7 +106,7 @@
   while (x) { if ((timeout--) == 0) return false; } \
 }
 
-namespace clouds {
+namespace daisysp {
 
 /* static */
 Codec* Codec::instance_;
@@ -543,7 +543,7 @@ void Codec::Fill(size_t offset) {
   }
 }
 
-}  // namespace clouds
+}  // namespace daisysp
 
 extern "C" {
 // Do not call into the firmware library to save on calls/jumps.

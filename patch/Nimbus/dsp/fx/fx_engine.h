@@ -30,13 +30,12 @@
 #define CLOUDS_DSP_FX_FX_ENGINE_H_
 
 #include <algorithm>
-
-
+#include "stmtemp.h"
 
 //#include "dsp.h"
 //#include "cosine_oscillator.h"
 
-namespace clouds {
+using namespace daisysp;
 
 #define TAIL , -1
 
@@ -64,7 +63,7 @@ struct DataType<FORMAT_12_BIT> {
   
   static inline T Compress(float value) {
     return static_cast<uint16_t>(
-        stmlib::Clip16(static_cast<int32_t>(value * 4096.0f)));
+        Clip16(static_cast<int32_t>(value * 4096.0f)));
   }
 };
 
@@ -78,7 +77,7 @@ struct DataType<FORMAT_16_BIT> {
   
   static inline T Compress(float value) {
     return static_cast<uint16_t>(
-        stmlib::Clip16(static_cast<int32_t>(value * 32768.0f)));
+        Clip16(static_cast<int32_t>(value * 32768.0f)));
   }
 };
 
@@ -262,8 +261,7 @@ class FxEngine {
   };
   
   inline void SetLFOFrequency(LFOIndex index, float frequency) {
-    lfo_[index].template Init<stmlib::COSINE_OSCILLATOR_APPROXIMATE>(
-        frequency * 32.0f);
+    lfo_[index].Init(frequency * 32.0f);
   }
   
   inline void Start(Context* c) {
@@ -291,11 +289,7 @@ class FxEngine {
   
   int32_t write_ptr_;
   T* buffer_;
-  stmlib::CosineOscillator lfo_[2];
-  
-  
+  CosineOscillator lfo_[2];
 };
-
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_FX_FX_ENGINE_H_

@@ -37,7 +37,7 @@
 #include "stft.h"
 #include "frame_transformation.h"
 
-namespace clouds {
+using namespace daisysp;
 
 struct Parameters;
 
@@ -71,6 +71,5 @@ class PhaseVocoder {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_PVOC_PHASE_VOCODER_H_

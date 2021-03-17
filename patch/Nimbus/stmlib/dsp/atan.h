@@ -35,7 +35,7 @@
 
 #include <cmath>
 
-namespace stmlib {
+namespace daisy {
 
 static inline uint16_t fast_atan2(float y, float x) {
   static const uint32_t sign_mask = 0x80000000;
@@ -79,6 +79,6 @@ static inline uint16_t fast_atan2r(float y, float x, float* r) {
   return angle + (quadrant << 14);
 }
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_ATAN_H_

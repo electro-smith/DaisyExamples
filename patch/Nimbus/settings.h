@@ -32,7 +32,9 @@
 //#include "adc.h"
 #include <stddef.h>
 
-namespace clouds {
+#define ADC_CHANNEL_LAST 10
+
+namespace daisysp {
 
 struct CalibrationData {
   float pitch_offset;
@@ -107,6 +109,6 @@ class Settings {
 
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_SETTINGS_H_

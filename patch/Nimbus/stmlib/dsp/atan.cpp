@@ -28,7 +28,7 @@
 
 #include "atan.h"
 
-namespace stmlib {
+namespace daisy {
 
 /* extern */
 const uint16_t atan_lut[513] = {
@@ -111,4 +111,4 @@ const uint16_t atan_lut[513] = {
 //   printf("\n");
 // }
 
-}  // namespace stmlib
+}  // namespace daisy

@@ -31,7 +31,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 class Random {
  public:
@@ -60,6 +60,6 @@ class Random {
   DISALLOW_COPY_AND_ASSIGN(Random);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_UTILS_RANDOM_H_

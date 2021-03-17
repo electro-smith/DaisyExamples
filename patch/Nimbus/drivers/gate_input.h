@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DRIVERS_GATE_INPUT_H_
 #define CLOUDS_DRIVERS_GATE_INPUT_H_
 
-namespace clouds {
+namespace daisysp {
 
 class GateInput {
  public:
@@ -63,6 +63,6 @@ class GateInput {
 
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_GATE_INPUT_H_

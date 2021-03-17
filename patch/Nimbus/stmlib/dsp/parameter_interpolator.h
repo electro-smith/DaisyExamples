@@ -31,7 +31,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 class ParameterInterpolator {
  public:
@@ -71,6 +71,6 @@ class ParameterInterpolator {
   float increment_;
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_PARAMETER_INTERPOLATOR_H_

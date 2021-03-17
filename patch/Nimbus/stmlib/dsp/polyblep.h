@@ -32,7 +32,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 inline float ThisBlepSample(float t) {
   return 0.5f * t * t;
@@ -54,6 +54,6 @@ inline float ThisIntegratedBlepSample(float t) {
   return NextIntegratedBlepSample(1.0f - t);
 }
   
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_POLYBLEP_H_

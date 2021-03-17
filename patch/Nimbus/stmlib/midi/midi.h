@@ -29,7 +29,7 @@
 #ifndef STMLIB_MIDI_H_
 #define STMLIB_MIDI_H_
 
-namespace stmlib_midi {
+namespace daisy_midi {
 
 const uint8_t kCCModulationWheelMsb = 0x01;
 const uint8_t kCCBreathController = 0x02;
@@ -217,6 +217,6 @@ class MidiStreamParser {
   DISALLOW_COPY_AND_ASSIGN(MidiStreamParser);
 };
 
-}  // namespace stmlib_midi
+}  // namespace daisy_midi
 
 #endif // STMLIB_MIDI_H_

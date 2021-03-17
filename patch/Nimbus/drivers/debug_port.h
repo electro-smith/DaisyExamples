@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DRIVERS_DEBUG_PORT_H_
 #define CLOUDS_DRIVERS_DEBUG_PORT_H_
 
-namespace clouds {
+namespace daisysp {
 
 class DebugPort {
  public:
@@ -58,6 +58,6 @@ class DebugPort {
  private:
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_DEBUG_PORT_H_

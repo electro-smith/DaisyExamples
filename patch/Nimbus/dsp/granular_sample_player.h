@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DSP_GRANULAR_SAMPLE_PLAYER_H_
 #define CLOUDS_DSP_GRANULAR_SAMPLE_PLAYER_H_
 
-
+#include "daisy.h"
 
 #include <algorithm>
 
@@ -44,11 +44,13 @@
 
 #include "resources.h"
 
-namespace clouds {
+#include <random>
+
+using namespace daisysp;
 
 const int32_t kMaxNumGrains = 64;
 
-using namespace stmlib;
+using namespace daisy;
 
 class GranularSamplePlayer {
  public:
@@ -90,7 +92,7 @@ class GranularSamplePlayer {
     bool seed_trigger = parameters.trigger;
     for (size_t t = 0; t < size; ++t) {
       grain_rate_phasor_ += 1.0f;
-      bool seed_probabilistic = Random::GetFloat() < p
+      bool seed_probabilistic = kRandFrac * rand() < p
           && target_num_grains > num_grains_;
       bool seed_deterministic = grain_rate_phasor_ >= space_between_grains;
       bool seed = seed_probabilistic || seed_deterministic || seed_trigger;
@@ -188,7 +190,7 @@ class GranularSamplePlayer {
     float grain_size = Interpolate(lut_grain_size, parameters.size, 256.0f);
     float pitch_ratio = SemitonesToRatio(pitch);
     float inv_pitch_ratio = SemitonesToRatio(-pitch);
-    float pan = 0.5f + parameters.stereo_spread * (Random::GetFloat() - 0.5f);
+    float pan = 0.5f + parameters.stereo_spread * (kRandFrac * rand() - 0.5f);
     float gain_l, gain_r;
     if (num_channels_ == 1) {
       gain_l = Interpolate(lut_sin, pan, 256.0f);
@@ -250,6 +252,5 @@ class GranularSamplePlayer {
   
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_GRANULAR_SAMPLE_PLAYER_H_

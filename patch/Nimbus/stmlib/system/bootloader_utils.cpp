@@ -52,7 +52,7 @@
   #include <stm32g4xx_hal_conf.h>
 #endif  // STM32G4XX
 
-namespace stmlib {
+namespace daisy {
 
 #define u32 uint32_t
 #define vu32 volatile uint32_t
@@ -113,5 +113,5 @@ void JumpTo(uint32_t address) {
   application();
 }
 
-}  // namespace stmlib
+}  // namespace daisy
 

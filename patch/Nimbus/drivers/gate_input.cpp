@@ -30,7 +30,7 @@
 
 #include <algorithm>
 
-namespace clouds {
+namespace daisysp {
 
 using namespace std;
 
@@ -57,4 +57,4 @@ void GateInput::Read() {
   trigger_ = !GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6);
 }
 
-}  // namespace clouds
+}  // namespace daisysp

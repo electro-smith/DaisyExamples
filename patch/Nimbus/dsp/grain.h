@@ -29,15 +29,11 @@
 #ifndef CLOUDS_DSP_GRAIN_H_
 #define CLOUDS_DSP_GRAIN_H_
 
-
-
-
-
 #include "audio_buffer.h"
 
 #include "resources.h"
 
-namespace clouds {
+using namespace daisysp;
 
 enum GrainQuality {
   GRAIN_QUALITY_LOW,
@@ -98,7 +94,7 @@ class Grain {
       if (use_lut_for_envelope) {
         if (quality == GRAIN_QUALITY_HIGH) {
           float window = 0.0f;
-          window = stmlib::Interpolate(lut_window, gain, 4096.0f);
+          window = Interpolate(lut_window, gain, 4096.0f);
           gain += smoothness * (window - gain);
         }
       } else {
@@ -199,6 +195,5 @@ class Grain {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_GRAIN_H_

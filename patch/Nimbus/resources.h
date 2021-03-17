@@ -33,12 +33,7 @@
 #ifndef CLOUDS_RESOURCES_H_
 #define CLOUDS_RESOURCES_H_
 
-
-
-
-
-
-namespace clouds {
+namespace daisysp {
 
 typedef uint8_t ResourceId;
 
@@ -88,6 +83,6 @@ extern const float lut_quantized_pitch[];
 #define LUT_QUANTIZED_PITCH 7
 #define LUT_QUANTIZED_PITCH_SIZE 1025
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_RESOURCES_H_

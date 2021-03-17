@@ -33,7 +33,7 @@
 #include <stm32f4xx_conf.h>
 #endif 
 
-namespace clouds {
+namespace daisysp {
 
 class DebugPin {
  public:
@@ -69,6 +69,6 @@ class DebugPin {
 #define TIC DebugPin::High();
 #define TOC DebugPin::Low();
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_DEBUG_PIN_H_

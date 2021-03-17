@@ -49,7 +49,7 @@
 
 #include <cstring>
 
-namespace stmlib {
+namespace daisy {
 
 enum NoteStackFlags {
   NOTE_STACK_PRIORITY_LAST,
@@ -212,6 +212,6 @@ class NoteStack {
   DISALLOW_COPY_AND_ASSIGN(NoteStack);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_ALGORITHMS_NOTE_STACK_H_

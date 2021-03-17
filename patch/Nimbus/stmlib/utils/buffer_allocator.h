@@ -31,7 +31,7 @@
 
 #include "stmlib/stmlib.h"
 
-namespace stmlib {
+namespace daisy {
 
 class BufferAllocator {
  public:
@@ -77,6 +77,6 @@ class BufferAllocator {
   DISALLOW_COPY_AND_ASSIGN(BufferAllocator);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif   // STMLIB_UTILS_STREAM_BUFFER_H_

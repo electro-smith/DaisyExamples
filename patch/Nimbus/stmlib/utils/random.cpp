@@ -28,9 +28,9 @@
 
 #include "stmlib/utils/random.h"
 
-namespace stmlib {
+namespace daisy {
 
 /* static */
 uint32_t Random::rng_state_ = 0x21;
 
-}  // namespace stmlib
+}  // namespace daisy

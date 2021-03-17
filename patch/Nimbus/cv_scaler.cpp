@@ -27,16 +27,16 @@
 // Calibration settings.
 
 #include "cv_scaler.h"
+#include "stmtemp.h"
 
 #include <algorithm>
 #include <cmath>
-
-#include "dsp_dsp.h"
+#include <stdint.h>
 
 #include "resources.h"
 
-namespace clouds {
-
+using namespace daisy;
+using namespace daisysp;
 using namespace std;
 
 /* static */
@@ -63,9 +63,9 @@ CvTransformation CvScaler::transformations_[ADC_CHANNEL_LAST] = {
   { false, true, 0.01f }
 };
 
-void CvScaler::Init(CalibrationData* calibration_data) {
-  adc_.Init();
-  gate_input_.Init();
+void CvScaler::Init(DaisyPatch* p, CalibrationData* calibration_data) {
+  patch_ = p;
+
   calibration_data_ = calibration_data;
   fill(&smoothed_adc_value_[0], &smoothed_adc_value_[ADC_CHANNEL_LAST], 0.0f);
   note_ = 0.0f;
@@ -212,4 +212,3 @@ void CvScaler::Read(Parameters* parameters) {
   adc_.Convert();
 }
 
-}  // namespace clouds

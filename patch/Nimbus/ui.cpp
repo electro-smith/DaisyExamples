@@ -34,12 +34,12 @@
 #include "cv_scaler.h"
 #include "meter.h"
 
-namespace clouds {
+namespace daisysp {
 
 const int32_t kLongPressDuration = 1000;
 const int32_t kVeryLongPressDuration = 4000;
 
-using namespace stmlib;
+using namespace daisy;
 /*
 void Ui::Init(
     Settings* settings,
@@ -389,4 +389,4 @@ uint8_t Ui::HandleFactoryTestingRequest(uint8_t command) {
   return reply;
 }
 */
-}  // namespace clouds
+}  // namespace daisysp

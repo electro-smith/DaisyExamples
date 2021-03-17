@@ -29,18 +29,22 @@
 #include "frame_transformation.h"
 
 #include <algorithm>
+#include <random>
 
-#include "atan.h"
-#include "units.h"
-#include "utils/random.h"
+//#include "atan.h"
+//#include "units.h"
+//#include "utils/random.h"
+
+#include "stmtemp.h"
+#include "daisysp.h"
+#include "daisy.h"
 
 #include "frame.h"
 #include "parameters.h"
 
-namespace clouds {
-
+using namespace daisysp;
 using namespace std;
-using namespace stmlib;
+using namespace daisy;
 
 void FrameTransformation::Init(
     float* buffer,
@@ -98,7 +102,7 @@ void FrameTransformation::Process(
   if (!glitch) {
     // Decide on which glitch algorithm will be used next time... if glitch
     // is enabled on the next frame!
-    glitch_algorithm_ = stmlib::Random::GetSample() & 3;
+    glitch_algorithm_ = static_cast<int16_t>(rand() >> 16) & 3;
   }
 
   ifft_in[0] = 0.0f;
@@ -133,7 +137,7 @@ void FrameTransformation::SetPhases(
   int32_t amount = static_cast<int32_t>(r * 32768.0f);
   for (int32_t i = 0; i < size_; ++i) {
     synthesis_phase[i] += \
-        static_cast<int32_t>(stmlib::Random::GetSample()) * amount >> 14;
+        static_cast<int32_t>(static_cast<int16_t>(rand() >> 16)) * amount >> 14;
   }
 }
 
@@ -159,7 +163,7 @@ void FrameTransformation::AddGlitch(float* xf_polar) {
         // Create trails
         float held = 0.0;
         for (int32_t i = 0; i < size_; ++i) {
-          if ((stmlib::Random::GetSample() & 15) == 0) {
+          if ((static_cast<int16_t>(rand() >> 16) & 15) == 0) {
             held = x[i];
           }
           x[i] = held;
@@ -171,7 +175,7 @@ void FrameTransformation::AddGlitch(float* xf_polar) {
     case 1:
       // Spectral shift up with aliasing.
       {
-        float factor = 1.0f + (stmlib::Random::GetSample() & 7) / 4.0f;
+        float factor = 1.0f + (static_cast<int16_t>(rand() >> 16) & 7) / 4.0f;
         float source = 0.0f;
         for (int32_t i = 0; i < size_; ++i) {
           source += factor;
@@ -193,7 +197,7 @@ void FrameTransformation::AddGlitch(float* xf_polar) {
       {
         // Nasty high-pass
         for (int32_t i = 0; i < size_; ++i) {
-          uint32_t random = stmlib::Random::GetSample() & 15;
+          uint32_t random = static_cast<int16_t>(rand() >> 16) & 15;
           if (random == 0) {
             x[i] *= static_cast<float>(i) / 16.0f;
           }
@@ -339,7 +343,7 @@ void FrameTransformation::StoreMagnitudes(
     uint16_t threshold = feedback * 65535.0f;
     for (int32_t i = 0; i < size_; ++i) {
       float x = *xf_polar++;
-      float gain = static_cast<uint16_t>(Random::GetSample()) <= threshold
+      float gain = static_cast<uint16_t>(static_cast<int16_t>(rand() >> 16)) <= threshold
           ? 1.0f : 0.0f;
       a[i] = Crossfade(a[i], x, gain_a * gain);
       b[i] = Crossfade(b[i], x, gain_b * gain);
@@ -358,4 +362,3 @@ void FrameTransformation::ReplayMagnitudes(float* xf_polar, float position) {
   }
 }
 
-}  // namespace clouds

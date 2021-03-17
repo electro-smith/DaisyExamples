@@ -31,7 +31,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 template<typename To, typename From>
 struct unsafe_bit_cast_t {
@@ -84,6 +84,6 @@ static inline float fast_rsqrt_accurate(float fp0) {
   return fp2 * fp3;
 }
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_RSQRT_H_

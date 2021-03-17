@@ -29,11 +29,9 @@
 #ifndef CLOUDS_DSP_FX_DIFFUSER_H_
 #define CLOUDS_DSP_FX_DIFFUSER_H_
 
-
-
 #include "fx_engine.h"
 
-namespace clouds {
+using namespace daisysp;
 
 class Diffuser {
  public:
@@ -107,6 +105,5 @@ class Diffuser {
  
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_FX_DIFFUSER_H_

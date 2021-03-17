@@ -41,11 +41,11 @@
 
 #include "resources.h"
 
-namespace clouds {
+using namespace daisysp;
 
 const float kCrossfadeDuration = 64.0f;
 
-using namespace stmlib;
+using namespace daisy;
 
 class LoopingSamplePlayer {
  public:
@@ -201,6 +201,5 @@ class LoopingSamplePlayer {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_LOOPING_SAMPLE_PLAYER_H_

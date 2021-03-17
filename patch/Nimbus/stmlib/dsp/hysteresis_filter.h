@@ -31,7 +31,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 class HysteresisFilter {
  public:
@@ -70,6 +70,6 @@ class HysteresisFilter {
   DISALLOW_COPY_AND_ASSIGN(HysteresisFilter);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_HYSTERESIS_FILTER_H_

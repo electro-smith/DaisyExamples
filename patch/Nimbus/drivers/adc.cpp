@@ -30,7 +30,7 @@
 
 #include <stm32f4xx_conf.h>
 
-namespace clouds {
+namespace daisysp {
   
 void Adc::Init() {
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
@@ -113,4 +113,4 @@ void Adc::DeInit() {
   ADC_DeInit();
 }
 
-}  // namespace clouds
+}  // namespace daisysp

@@ -4,8 +4,6 @@ TARGET = Nimbus
 # Sources
 CPP_SOURCES += \
 Nimbus.cpp \
-clouds.cpp \
-cv_scaler.cpp \
 dsp/correlator.cpp \
 dsp/granular_processor.cpp \
 dsp/mu_law.cpp \
@@ -14,12 +12,6 @@ dsp/pvoc/phase_vocoder.cpp \
 dsp/pvoc/stft.cpp \
 resources.cpp \
 settings.cpp \
-atan.cpp \
-units.cpp \
-system/bootloader_utils.cpp \
-system/system_clock.cpp \
-utils/random.cpp \
-ui.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy

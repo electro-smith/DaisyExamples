@@ -34,7 +34,9 @@
 //#include "gate_input.h"
 #include "parameters.h"
 
-namespace clouds {
+#include "daisy_patch.h"
+
+namespace daisysp {
 
 enum BlendParameter {
   BLEND_PARAMETER_DRY_WET,
@@ -55,7 +57,7 @@ class CvScaler {
   CvScaler() { }
   ~CvScaler() { }
   
-  void Init(CalibrationData* calibration_data);
+  void Init(DaisyPatch* p, CalibrationData* calibration_data);
   void Read(Parameters* parameters);
   
   void CalibrateC1() {
@@ -123,7 +125,8 @@ class CvScaler {
   void UpdateBlendParameters(float knob, float cv);
   static const int kAdcLatency = 5;
   
-  Adc adc_;
+  DaisyPatch* patch_;
+  
   GateInput gate_input_;
   CalibrationData* calibration_data_;
   
@@ -148,6 +151,6 @@ class CvScaler {
   
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_CV_SCALER_H_

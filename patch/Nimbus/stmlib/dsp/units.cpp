@@ -28,7 +28,7 @@
 
 #include "units.h"
 
-namespace stmlib {
+namespace daisy {
 
 /* extern */
 const float lut_pitch_ratio_high[] = {
@@ -177,4 +177,4 @@ const float lut_pitch_ratio_low[] = {
 // lookup_tables.append(('pitch_ratio_high', ratio))
 // lookup_tables.append(('pitch_ratio_low', semitone))
 
-}  // namespace stmlib
+}  // namespace daisy

@@ -31,17 +31,14 @@
 
 #include <algorithm>
 
-
-
 //#include "dsp_utils.h"
-
 
 #include "mu_law.h"
 
 const int32_t kCrossFadeSize = 256;
 const int32_t kInterpolationTail = 8;
 
-namespace clouds {
+using namespace daisysp;
 
 enum Resolution {
   RESOLUTION_16_BIT,
@@ -90,7 +87,7 @@ class AudioBuffer {
   
   inline void Write(float in) {
     if (resolution == RESOLUTION_16_BIT) {
-      s16_[write_head_] = stmlib::Clip16(
+      s16_[write_head_] = Clip16(
             static_cast<int32_t>(in * 32768.0f));
     } else if (resolution == RESOLUTION_8_BIT_DITHERED) {
       float sample = in * 127.0f;
@@ -101,11 +98,11 @@ class AudioBuffer {
       quantization_error_ = sample - static_cast<float>(in);
       s8_[write_head_] = quantized;
     } else if (resolution == RESOLUTION_8_BIT_MU_LAW) {
-      int16_t sample = stmlib::Clip16(static_cast<int32_t>(in * 32768.0f));
+      int16_t sample = Clip16(static_cast<int32_t>(in * 32768.0f));
       s8_[write_head_] = Lin2MuLaw(sample);
     } else {
       s8_[write_head_] = static_cast<int8_t>(
-          stmlib::Clip16(in * 32768.0f) >> 8);
+          Clip16(in * 32768.0f) >> 8);
     }
     
     if (resolution == RESOLUTION_16_BIT) {
@@ -134,7 +131,7 @@ class AudioBuffer {
       if (crossfade_counter_ < kCrossFadeSize) {
         while (size--) {
           if (crossfade_counter_ < kCrossFadeSize) {
-            tail_[crossfade_counter_++] = stmlib::Clip16(
+            tail_[crossfade_counter_++] = Clip16(
                 static_cast<int32_t>(*in * 32767.0f));
             in += stride;
           }
@@ -145,7 +142,7 @@ class AudioBuffer {
         write_head_ >= kInterpolationTail && write_head_ < (size_ - size)) {
       // Fast write routine for the most common case.
       while (size--) {
-        s16_[write_head_] = stmlib::Clip16(
+        s16_[write_head_] = Clip16(
             static_cast<int32_t>(*in * 32767.0f));
         ++write_head_;
         in += stride;
@@ -170,7 +167,7 @@ class AudioBuffer {
         && write_head_ >= kInterpolationTail && write_head_ < (size_ - size)) {
       // Fast write routine for the most common case.
       while (size--) {
-        s16_[write_head_] = stmlib::Clip16(
+        s16_[write_head_] = Clip16(
             static_cast<int32_t>(*in * 32768.0f));
         ++write_head_;
         in += stride;
@@ -297,6 +294,5 @@ class AudioBuffer {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_AUDIO_BUFFER_H_

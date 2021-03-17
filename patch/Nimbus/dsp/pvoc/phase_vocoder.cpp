@@ -30,12 +30,12 @@
 
 #include <algorithm>
 
-#include "utils/buffer_allocator.h"
+#include "buffer_allocator.h"
 
-namespace clouds {
+using namespace daisysp;
 
 using namespace std;
-using namespace stmlib;
+using namespace daisy;
 
 void PhaseVocoder::Init(
     void** buffer,
@@ -104,4 +104,3 @@ void PhaseVocoder::Buffer() {
   }
 }
 
-}  // namespace clouds

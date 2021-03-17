@@ -31,7 +31,7 @@
 
 #include <stdint.h>
 
-namespace clouds {
+namespace daisysp {
 
 enum AdcChannel {
   ADC_POSITION_POTENTIOMETER_CV,
@@ -67,6 +67,6 @@ class Adc {
 
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_ADC_H_

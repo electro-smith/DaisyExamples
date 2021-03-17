@@ -33,7 +33,7 @@
 
 #include "frame.h"
 
-namespace clouds {
+using namespace daisysp;
 
 template<int32_t ratio, int32_t filter_size, const float* coefficients>
 class SampleRateConverter {
@@ -91,6 +91,5 @@ class SampleRateConverter {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_SAMPLE_RATE_CONVERTER_H_

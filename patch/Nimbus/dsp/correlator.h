@@ -31,10 +31,10 @@
 #ifndef CLOUDS_DSP_CORRELATOR_H_
 #define CLOUDS_DSP_CORRELATOR_H_
 
+#include "daisysp.h"
 
+using namespace daisysp;
 
-namespace clouds {
-  
 class Correlator {
  public:
   Correlator() { }
@@ -83,6 +83,5 @@ class Correlator {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_CORRELATOR_H_

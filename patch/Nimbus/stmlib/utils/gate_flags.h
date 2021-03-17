@@ -46,7 +46,7 @@
 
 #include "stmlib/stmlib.h"
 
-namespace stmlib {
+namespace daisy {
 
 enum GateFlagsBits {
   GATE_FLAG_LOW = 0,
@@ -66,6 +66,6 @@ inline GateFlags ExtractGateFlags(GateFlags previous, bool current) {
   }
 }
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_UTILS_GATE_FLAGS_H_

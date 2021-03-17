@@ -30,7 +30,7 @@
 
 #include <algorithm>
 
-namespace clouds {
+using namespace daisysp;
 
 using namespace std;
 
@@ -85,4 +85,3 @@ void Correlator::StartSearch(
   done_ = false;
 }
 
-}  // namespace clouds

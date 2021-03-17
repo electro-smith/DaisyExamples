@@ -34,7 +34,7 @@
 #include <cstring>
 #include <algorithm>
 
-namespace stmlib {
+namespace daisy {
 
 template<size_t buffer_size>
 class StreamBuffer {
@@ -93,6 +93,6 @@ class StreamBuffer {
   DISALLOW_COPY_AND_ASSIGN(StreamBuffer);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif   // STMLIB_UTILS_STREAM_BUFFER_H_

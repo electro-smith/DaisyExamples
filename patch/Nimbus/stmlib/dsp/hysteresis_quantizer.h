@@ -32,7 +32,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 class HysteresisQuantizer {
  public:
@@ -74,6 +74,6 @@ class HysteresisQuantizer {
   DISALLOW_COPY_AND_ASSIGN(HysteresisQuantizer);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_HYSTERESIS_QUANTIZER_H_

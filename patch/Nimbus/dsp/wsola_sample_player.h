@@ -45,11 +45,11 @@
 #include "parameters.h"
 #include "resources.h"
 
-namespace clouds {
+using namespace daisysp;
 
 const int32_t kMaxWSOLASize = 4096;
 
-using namespace stmlib;
+using namespace daisy;
 
 class WSOLASamplePlayer {
  public:
@@ -285,6 +285,5 @@ class WSOLASamplePlayer {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_WSOLA_SAMPLE_PLAYER_H_

@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DRIVERS_VERSION_H_
 #define CLOUDS_DRIVERS_VERSION_H_
 
-namespace clouds {
+namespace daisysp {
 
 class Version {
  public:
@@ -52,6 +52,6 @@ class Version {
  private:
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_VERSION_H_

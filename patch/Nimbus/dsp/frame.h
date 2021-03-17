@@ -31,7 +31,7 @@
 
 
 
-namespace clouds {
+namespace daisysp {
 
 const int32_t kMaxNumChannels = 2;
 const size_t kMaxBlockSize = 32;
@@ -39,6 +39,6 @@ const size_t kMaxBlockSize = 32;
 typedef struct { short l; short r; } ShortFrame;
 typedef struct { float l; float r; } FloatFrame;
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DSP_FRAME_H_

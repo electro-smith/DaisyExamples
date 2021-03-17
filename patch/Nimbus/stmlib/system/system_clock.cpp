@@ -28,9 +28,9 @@
 
 #include "system/system_clock.h"
 
-namespace stmlib {
+namespace daisy {
 
 /* extern */
 SystemClock system_clock;
 
-}  // namespace stmlib
+}  // namespace daisy

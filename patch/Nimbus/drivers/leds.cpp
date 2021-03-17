@@ -30,7 +30,7 @@
 
 #include <algorithm>
 
-namespace clouds {
+namespace daisysp {
   
 using namespace std;
   
@@ -97,4 +97,4 @@ void Leds::Clear() {
   freeze_led_ = false;
 }
 
-}  // namespace clouds
+}  // namespace daisysp

@@ -42,7 +42,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace stmlib {
+namespace daisy {
 
 // Compile-time log 2
 template<size_t x>
@@ -767,6 +767,6 @@ const uint8_t ShyFFT<T, size, Phasor>::bit_rev_256_lut_[256] = {
 R6(0), R6(2), R6(1), R6(3)
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_FFT_SHY_FFT_H_

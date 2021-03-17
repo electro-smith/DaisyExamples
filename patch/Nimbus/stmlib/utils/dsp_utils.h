@@ -32,7 +32,7 @@
 
 #include "stmlib/stmlib.h"
 
-namespace stmlib {
+namespace daisy {
 
 inline int16_t Interpolate824(const int16_t* table, uint32_t phase)
   __attribute__((always_inline));
@@ -174,6 +174,6 @@ inline int16_t Crossfade115(
   return a + ((b - a) * static_cast<int32_t>(balance) >> 16);
 }
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_UTILS_DSP_H_

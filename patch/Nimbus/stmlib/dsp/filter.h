@@ -35,7 +35,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace stmlib {
+namespace daisy {
 
 enum FilterMode {
   FILTER_MODE_LOW_PASS,
@@ -763,6 +763,6 @@ class CrossoverSvf {
   DISALLOW_COPY_AND_ASSIGN(CrossoverSvf);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_FILTER_H_

@@ -31,11 +31,11 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 void Uninitialize();
 void JumpTo(uint32_t address);
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_SYSTEM_BOOTLOADER_UTILS_H_

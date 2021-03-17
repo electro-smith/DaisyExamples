@@ -34,12 +34,12 @@
 #include "frame.h"
 #include "fx_engine.h"
 
-namespace clouds {
+using namespace daisysp;
 
-class PitchShifter {
+class PitchShifterClouds {
  public:
-  PitchShifter() { }
-  ~PitchShifter() { }
+  PitchShifterClouds() { }
+  ~PitchShifterClouds() { }
   
   void Init(uint16_t* buffer) {
     engine_.Init(buffer);
@@ -98,7 +98,7 @@ class PitchShifter {
   
   inline void set_size(float size) {
     float target_size = 128.0f + (2047.0f - 128.0f) * size * size * size;
-    ONE_POLE(size_, target_size, 0.05f)
+    fonepole(size_, target_size, 0.05f);
   }
   
  private:
@@ -111,6 +111,5 @@ class PitchShifter {
  
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_FX_MINI_CHORUS_H_

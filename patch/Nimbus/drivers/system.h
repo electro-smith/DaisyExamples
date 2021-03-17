@@ -29,7 +29,7 @@
 #ifndef CLOUDS_DRIVERS_SYSTEM_H_
 #define CLOUDS_DRIVERS_SYSTEM_H_
 
-namespace clouds {
+namespace daisysp {
 
 class System {
  public:
@@ -42,6 +42,6 @@ class System {
  private:
 };
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_DRIVERS_SYSTEM_H_

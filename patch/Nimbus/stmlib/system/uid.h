@@ -31,7 +31,7 @@
 
 
 
-namespace stmlib {
+namespace daisy {
 
 uint32_t GetUniqueId(uint8_t word) {
 #ifdef STM32F4XX
@@ -42,6 +42,6 @@ uint32_t GetUniqueId(uint8_t word) {
   return base_address[word];
 }
 
-};  // namespace stmlib
+};  // namespace daisy
 
 #endif  // STMLIB_SYSTEM_UID_H_

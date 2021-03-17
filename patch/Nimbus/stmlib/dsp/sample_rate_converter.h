@@ -33,7 +33,7 @@
 
 #include <algorithm>
 
-namespace stmlib {
+namespace daisy {
 
 enum SampleRateConversionDirection {
   SRC_UP,
@@ -305,6 +305,6 @@ class SampleRateConverter<SRC_DOWN, ratio, filter_size> {
   DISALLOW_COPY_AND_ASSIGN(SampleRateConverter);
 };
 
-}  // namespace stmlib
+}  // namespace daisy
 
 #endif  // STMLIB_DSP_SAMPLE_RATE_CONVERTER_H_

@@ -43,7 +43,7 @@
 #include "sample_rate_converter.h"
 #include "wsola_sample_player.h"
 
-namespace clouds {
+using namespace daisysp;
 
 const int32_t kDownsamplingFactor = 2;
 
@@ -69,12 +69,13 @@ struct PersistentBlock {
   void* data;
 };
 
-class GranularProcessor {
+class GranularProcessorClouds {
  public:
-  GranularProcessor() { }
-  ~GranularProcessor() { }
+  GranularProcessorClouds() { }
+  ~GranularProcessorClouds() { }
   
   void Init(
+      float sample_rate,
       void* large_buffer,
       size_t large_buffer_size,
       void* small_buffer,
@@ -143,9 +144,9 @@ class GranularProcessor {
     return quality;
   }
   
-  void GetPersistentData(PersistentBlock* block, size_t *num_blocks);
-  bool LoadPersistentData(const uint32_t* data);
-  void PreparePersistentData();
+  //void GetPersistentData(PersistentBlock* block, size_t *num_blocks);
+  //bool LoadPersistentData(const uint32_t* data);
+  //void PreparePersistentData();
 
  private:
   inline int32_t resolution() const {
@@ -165,6 +166,8 @@ class GranularProcessor {
   int32_t num_channels_;
   bool low_fidelity_;
   
+  float sample_rate_;
+
   bool silence_;
   bool bypass_;
   bool reset_buffers_;
@@ -183,10 +186,10 @@ class GranularProcessor {
   
   Diffuser diffuser_;
   Reverb reverb_;
-  PitchShifter pitch_shifter_;
-  stmlib::Svf fb_filter_[2];
-  stmlib::Svf hp_filter_[2];
-  stmlib::Svf lp_filter_[2];
+  PitchShifterClouds pitch_shifter_;
+  Svf fb_filter_[2];
+  Svf hp_filter_[2];
+  Svf lp_filter_[2];
   
   AudioBuffer<RESOLUTION_8_BIT_MU_LAW> buffer_8_[2];
   AudioBuffer<RESOLUTION_16_BIT> buffer_16_[2];
@@ -209,6 +212,5 @@ class GranularProcessor {
 
 };
 
-}  // namespace clouds
 
 #endif  // CLOUDS_DSP_GRANULAR_PROCESSOR_H_

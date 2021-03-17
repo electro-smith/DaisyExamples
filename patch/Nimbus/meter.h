@@ -31,7 +31,7 @@
 
 //#include "codec.h"
 
-namespace clouds {
+namespace daisysp {
 
 class Meter {
  public:
@@ -77,6 +77,6 @@ class Meter {
 
 };    
 
-}  // namespace clouds
+}  // namespace daisysp
 
 #endif  // CLOUDS_METER_H_
