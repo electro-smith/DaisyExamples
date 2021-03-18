@@ -1,6 +1,6 @@
 #include "stmtemp.h"
 
-const float lut_pitch_ratio_high[] = {
+const float DSY_SDRAM_BSS lut_pitch_ratio_high[] = {
    6.151958251e-04,  6.517772725e-04,  6.905339660e-04,  7.315952524e-04,
    7.750981699e-04,  8.211879055e-04,  8.700182794e-04,  9.217522585e-04,
    9.765625000e-04,  1.034631928e-03,  1.096154344e-03,  1.161335073e-03,
@@ -68,7 +68,7 @@ const float lut_pitch_ratio_high[] = {
 };
 
 /* extern */
-const float lut_pitch_ratio_low[] = {
+const float DSY_SDRAM_BSS lut_pitch_ratio_low[] = {
    1.000000000e+00,  1.000225659e+00,  1.000451370e+00,  1.000677131e+00,
    1.000902943e+00,  1.001128806e+00,  1.001354720e+00,  1.001580685e+00,
    1.001806701e+00,  1.002032768e+00,  1.002258886e+00,  1.002485055e+00,
@@ -136,7 +136,7 @@ const float lut_pitch_ratio_low[] = {
 };
 
 
-const uint16_t atan_lut[513] = {
+const uint16_t DSY_SDRAM_BSS atan_lut[513] = {
       0,    20,    40,    61,    81,   101,   122,   142, 
     162,   183,   203,   224,   244,   264,   285,   305, 
     326,   346,   366,   387,   407,   427,   448,   468, 

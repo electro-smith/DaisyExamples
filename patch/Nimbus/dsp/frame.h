@@ -29,16 +29,11 @@
 #ifndef CLOUDS_DSP_FRAME_H_
 #define CLOUDS_DSP_FRAME_H_
 
-
-
-namespace daisysp {
-
 const int32_t kMaxNumChannels = 2;
 const size_t kMaxBlockSize = 32;
 
 typedef struct { short l; short r; } ShortFrame;
 typedef struct { float l; float r; } FloatFrame;
 
-}  // namespace daisysp
 
 #endif  // CLOUDS_DSP_FRAME_H_

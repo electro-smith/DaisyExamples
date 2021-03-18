@@ -29,10 +29,10 @@
 #ifndef CLOUDS_DSP_MU_LAW_H_
 #define CLOUDS_DSP_MU_LAW_H_
 
-#include "daisysp.h"
+#include "daisy.h"
 #include <stdint.h>
 
-using namespace daisysp;
+using namespace daisy;
 
 // inline short MuLaw2Lin(uint8_t u_val) {
 //   int16_t t;
@@ -42,7 +42,7 @@ using namespace daisysp;
 //   return ((u_val & 0x80) ? (0x84 - t) : (t - 0x84));
 // }
 
-extern int16_t lut_ulaw[256] ;
+extern int16_t lut_ulaw[256];
 
 inline short MuLaw2Lin(uint8_t u_val) {
   return lut_ulaw[u_val];

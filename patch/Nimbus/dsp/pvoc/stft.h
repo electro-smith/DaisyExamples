@@ -46,7 +46,7 @@ const size_t kMaxFftSize = 4096;
 #ifdef USE_ARM_FFT
   typedef arm_rfft_fast_instance_f32 FFT;
 #else
-  typedef stmlib::ShyFFT<float, kMaxFftSize, stmlib::RotationPhasor> FFT;
+  typedef ShyFFT<float, kMaxFftSize, RotationPhasor> FFT;
 #endif  // USE_ARM_FFT
 
 typedef class FrameTransformation Modifier;

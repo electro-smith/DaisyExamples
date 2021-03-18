@@ -14,13 +14,18 @@ resources.cpp \
 stmtemp.cpp \
 settings.cpp \
 
-
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
 DAISYSP_DIR = ../../DaisySP
 
-C_DEFS += \
--DUSE_ARM_FFT \
+#C_SOURCES += \
+#$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/TransformFunctions/arm_rfft_fast_f32.c \
+#$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/TransformFunctions/arm_rfft_fast_init_f32.c \
+#$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/CommonTables/arm_const_structs.c \
+#$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/CommonTables/arm_common_tables.c
+
+#C_DEFS += \
+#-DUSE_ARM_FFT \
 
 C_INCLUDES += \
 -I. \

@@ -34,7 +34,6 @@
 #include "frame_transformation.h"
 
 using namespace daisysp;
-
 using namespace std;
 using namespace daisy;
 

@@ -30,15 +30,13 @@
 #define CLOUDS_DSP_AUDIO_BUFFER_H_
 
 #include <algorithm>
-
-//#include "dsp_utils.h"
-
+#include "daisy.h"
 #include "mu_law.h"
 
-const int32_t kCrossFadeSize = 256;
-const int32_t kInterpolationTail = 8;
+using namespace daisy;
 
-using namespace daisysp;
+const int32_t DSY_SDRAM_BSS kCrossFadeSize = 256;
+const int32_t DSY_SDRAM_BSS kInterpolationTail = 8;
 
 enum Resolution {
   RESOLUTION_16_BIT,

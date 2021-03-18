@@ -33,7 +33,6 @@
 #include "resources.h"
 #include <stdint.h>
 
-
 using namespace daisy;
 
 const float DSY_SDRAM_BSS src_filter_1x_2_31[] = {

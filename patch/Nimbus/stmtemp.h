@@ -1,5 +1,7 @@
+#include "daisy.h"
 #include "daisysp.h"
 
+using namespace daisy;
 using namespace daisysp;
 
 #define MAKE_INTEGRAL_FRACTIONAL(x) \

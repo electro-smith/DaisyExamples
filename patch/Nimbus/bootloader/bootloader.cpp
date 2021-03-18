@@ -37,6 +37,8 @@
 
 #include <cstring>
 
+#include "daisy.h"
+
 using namespace daisysp;
 using namespace daisy;
 using namespace stm_audio_bootloader;
@@ -71,7 +73,7 @@ void PendSV_Handler() { }
 
 extern "C" {
 
-const int16_t lut_db[] = {
+const int16_t DSY_SDRAM_BSS lut_db[] = {
   -32768, -32768, -24576, -19783, -16384, -13746, -11591,  -9770,
    -8192,  -6799,  -5554,  -4428,  -3399,  -2453,  -1578,   -762,
        0,    716,   1392,   2031,   2637,   3213,   3763,   4289,
