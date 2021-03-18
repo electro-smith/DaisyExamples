@@ -150,10 +150,31 @@ inline int16_t SoftConvert(float x) {
   return Clip16(static_cast<int32_t>(SoftLimit(x * 0.5f) * 32768.0f));
 }
 
+extern const uint16_t atan_lut[513];
+
 static inline uint16_t fast_atan2r(float y, float x, float* r) {
   float squared_magnitude = x * x + y * y;
   if (squared_magnitude == 0.0f) {
     *r = 0.0f;
     return 0.0f;
   }
+  float rinv = fast_rsqrt_carmack(squared_magnitude);
+  *r = rinv * squared_magnitude;
+
+  static const uint32_t sign_mask = 0x80000000;
+  uint32_t ux_s = sign_mask & unsafe_bit_cast<uint32_t, float>(x);
+  uint32_t uy_s = sign_mask & unsafe_bit_cast<uint32_t, float>(y);
+  uint32_t quadrant = ((~ux_s & uy_s) >> 29 | ux_s >> 30);
+  uint16_t angle = 0;
+  x = fabs(x);
+  y = fabs(y);
+  if (y > x) {
+    angle = 16384 - atan_lut[static_cast<uint32_t>(x * rinv * 512.0f + 0.5f)];
+  } else {
+    angle = atan_lut[static_cast<uint32_t>(y * rinv * 512.0f + 0.5f)];
+  }
+  if (ux_s ^ uy_s) {
+    angle = -angle;
+  }
+  return angle + (quadrant << 14);
 }

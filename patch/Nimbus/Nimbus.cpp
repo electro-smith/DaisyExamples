@@ -36,7 +36,7 @@ uint8_t block_ccm[65536 - 128] __attribute__ ((section (".ccmdata")));
 extern "C" {
 
 void NMI_Handler() { }
-void HardFault_Handler() { while (1); }
+//void HardFault_Handler() { while (1); }
 void MemManage_Handler() { while (1); }
 void BusFault_Handler() { while (1); }
 void UsageFault_Handler() { while (1); }
@@ -48,16 +48,16 @@ void PendSV_Handler() { }
 
 extern "C" {
 
-void SysTick_Handler() {
-/*  ui.Poll();
-  if (settings.freshly_baked()) {
-    if (debug_port.readable()) {
-      uint8_t command = debug_port.Read();
-      uint8_t response = ui.HandleFactoryTestingRequest(command);
-      debug_port.Write(response);
-    }
-  }*/
-}
+// void SysTick_Handler() {
+//   ui.Poll();
+//   if (settings.freshly_baked()) {
+//     if (debug_port.readable()) {
+//       uint8_t command = debug_port.Read();
+//       uint8_t response = ui.HandleFactoryTestingRequest(command);
+//       debug_port.Write(response);
+//     }
+//   }
+// }
 
 }
 

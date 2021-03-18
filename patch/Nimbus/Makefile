@@ -11,12 +11,16 @@ dsp/pvoc/frame_transformation.cpp \
 dsp/pvoc/phase_vocoder.cpp \
 dsp/pvoc/stft.cpp \
 resources.cpp \
-settings.cpp \
 stmtemp.cpp \
+settings.cpp \
+
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
 DAISYSP_DIR = ../../DaisySP
+
+C_DEFS += \
+-DUSE_ARM_FFT \
 
 C_INCLUDES += \
 -I. \

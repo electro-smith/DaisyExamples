@@ -32,12 +32,10 @@
 #include "daisy.h"
 #include "daisysp.h"
 
-#define USE_ARM_FFT
-
 #ifdef USE_ARM_FFT
   #include <arm_math.h>
 #else
-  #include "fft/shy_fft.h"
+  #include "shy_fft.h"
 #endif  // USE_ARM_FFT
 
 using namespace daisysp;
