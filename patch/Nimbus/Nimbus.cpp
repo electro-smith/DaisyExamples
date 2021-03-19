@@ -9,7 +9,7 @@
 #include "granular_processor.h"
 //#include "meter.h"
 #include "resources.h"
-#include "settings.h"
+//#include "settings.h"
 //#include "ui.h"
 
 // #define PROFILE_INTERRUPT 1
@@ -22,7 +22,7 @@ GranularProcessorClouds processor;
 //DebugPort debug_port;
 //CvScaler cv_scaler;
 //Meter meter;
-Settings settings;
+//Settings settings;
 //Ui ui;
 DaisyPatch hw;
 
@@ -64,16 +64,26 @@ extern "C" {
 void AudioCallback(float **in, float **out, size_t size)
 {
   //cv_scaler.Read(processor.mutable_parameters());
-  //processor.Process((ShortFrame*)input, (ShortFrame*)output, n);
   //meter.Process(processor.parameters().freeze ? output : input, n);
 
 	hw.ProcessAllControls();
+
+  FloatFrame input[size];
+  FloatFrame output[size];
+
+  for(size_t i = 0; i < size; i++){
+    input[i].l = in[0][i];
+    input[i].r = in[1][i];
+    output[i].l = output[i].r = 0.f;
+  }
+
+  processor.Process(input, output, size);
+
 	for (size_t i = 0; i < size; i++)
 	{
-		out[0][i] = in[0][i];
-		out[1][i] = in[1][i];
-		out[2][i] = in[2][i];
-		out[3][i] = in[3][i];
+		out[0][i] = output[i].l;
+		out[1][i] = output[i].r;
+		out[2][i] = out[3][i] = 0.f;
 	}
 }
 
@@ -89,7 +99,7 @@ void Init(float sample_rate) {
       sample_rate, block_mem, sizeof(block_mem),
       block_ccm, sizeof(block_ccm));
 
-  settings.Init();
+  //settings.Init();
   //cv_scaler.Init(settings.mutable_calibration_data());
   //meter.Init(32000);
   //ui.Init(&settings, &cv_scaler, &processor, &meter);

@@ -81,7 +81,7 @@ class GranularProcessorClouds {
       void* small_buffer,
       size_t small_buffer_size);
 
-  void Process(ShortFrame* input, ShortFrame* output, size_t size);
+  void Process(FloatFrame* input, FloatFrame* output, size_t size);
   void Prepare();
   
   inline Parameters* mutable_parameters() {

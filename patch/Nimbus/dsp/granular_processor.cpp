@@ -159,8 +159,8 @@ void GranularProcessorClouds::ProcessGranular(
 }
 
 void GranularProcessorClouds::Process(
-    ShortFrame* input,
-    ShortFrame* output,
+    FloatFrame* input,
+    FloatFrame* output,
     size_t size) {
   // TIC
   if (bypass_) {
@@ -170,16 +170,11 @@ void GranularProcessorClouds::Process(
   
   if (silence_ || reset_buffers_ ||
       previous_playback_mode_ != playback_mode_) {
-    short* output_samples = &output[0].l;
+    float* output_samples = &output[0].l;
     std::fill(&output_samples[0], &output_samples[size << 1], 0);
     return;
   }
   
-  // Convert input buffers to float, and mixdown for mono processing.
-  for (size_t i = 0; i < size; ++i) {
-    in_[i].l = static_cast<float>(input[i].l) / 32768.0f;
-    in_[i].r = static_cast<float>(input[i].r) / 32768.0f;
-  }
   if (num_channels_ == 1) {
     for (size_t i = 0; i < size; ++i) {
       in_[i].l = (in_[i].l + in_[i].r) * 0.5f;
@@ -189,7 +184,7 @@ void GranularProcessorClouds::Process(
   
   // Apply feedback, with high-pass filtering to prevent build-ups at very
   // low frequencies (causing large DC swings).
-  // ONE_POLE(freeze_lp_, parameters_.freeze ? 1.0f : 0.0f, 0.0005f)
+  //ONE_POLE(freeze_lp_, parameters_.freeze ? 1.0f : 0.0f, 0.0005f)
   float feedback = 0.f;
   // float feedback = parameters_.feedback;
   float cutoff = (20.0f + 100.0f * feedback * feedback) / sample_rate();
@@ -297,12 +292,12 @@ void GranularProcessorClouds::Process(
     //float dry_wet = dry_wet_mod.Next();
     float fade_in = Interpolate(lut_xfade_in, dry_wet, 16.0f);
     float fade_out = Interpolate(lut_xfade_out, dry_wet, 16.0f);
-    float l = static_cast<float>(input[i].l) / 32768.0f * fade_out;
-    float r = static_cast<float>(input[i].r) / 32768.0f * fade_out;
+    float l = input[i].l * fade_out;
+    float r = input[i].r * fade_out;
     l += out_[i].l * post_gain * fade_in;
     r += out_[i].r * post_gain * fade_in;
-    output[i].l = SoftConvert(l);
-    output[i].r = SoftConvert(r);
+    output[i].l = l;
+    output[i].r = r;
   }
 }
 
