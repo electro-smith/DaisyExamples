@@ -29,8 +29,6 @@
 #ifndef CLOUDS_DSP_SAMPLE_RATE_CONVERTER_H_
 #define CLOUDS_DSP_SAMPLE_RATE_CONVERTER_H_
 
-
-
 #include "frame.h"
 
 using namespace daisysp;

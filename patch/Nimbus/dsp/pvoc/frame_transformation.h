@@ -29,11 +29,7 @@
 #ifndef CLOUDS_DSP_PVOC_FRAME_TRANSFORMATION_H_
 #define CLOUDS_DSP_PVOC_FRAME_TRANSFORMATION_H_
 
-#include "stft.h"
-
 #include "resources.h"
-
-using namespace daisysp;
 
 const int32_t kMaxNumTextures = 7;
 const int32_t kHighFrequencyTruncation = 16;

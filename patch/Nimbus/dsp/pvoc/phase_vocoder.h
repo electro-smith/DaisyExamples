@@ -29,10 +29,6 @@
 #ifndef CLOUDS_DSP_PVOC_PHASE_VOCODER_H_
 #define CLOUDS_DSP_PVOC_PHASE_VOCODER_H_
 
-
-
-//#include "fft/shy_fft.h"
-
 #include "frame.h"
 #include "stft.h"
 #include "frame_transformation.h"
@@ -63,12 +59,10 @@ class PhaseVocoder {
  private:
   FFT fft_;
   
-  STFT stft_[2];
+  //STFT stft_[2];
   FrameTransformation frame_transformation_[2];
 
   int32_t num_channels_;
-  
-
 };
 
 
