@@ -14,7 +14,6 @@ namespace EnvelopeOscillator
 
         void Trigger()
         {
-            _dt = 0.f;
             _state = State::Rising;
         }
 
