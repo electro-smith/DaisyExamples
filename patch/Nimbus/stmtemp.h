@@ -1,5 +1,6 @@
 #include "daisy.h"
 #include "daisysp.h"
+#include "resources.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -105,9 +106,6 @@ inline int32_t Clip16(int32_t x) {
   return a + (b - a) * index_fractional;
 }
 
-extern const float lut_pitch_ratio_high[257];
-extern const float lut_pitch_ratio_low[257];
-
 inline float SemitonesToRatio(float semitones) {
   float pitch = semitones + 128.0f;
   MAKE_INTEGRAL_FRACTIONAL(pitch)
@@ -151,8 +149,6 @@ static inline float fast_rsqrt_carmack(float x) {
 inline int16_t SoftConvert(float x) {
   return Clip16(static_cast<int32_t>(SoftLimit(x * 0.5f) * 32768.0f));
 }
-
-extern const uint16_t atan_lut[513];
 
 static inline uint16_t fast_atan2r(float y, float x, float* r) {
   float squared_magnitude = x * x + y * y;

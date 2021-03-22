@@ -63,10 +63,21 @@ using namespace daisy;
 #define LUT_QUANTIZED_PITCH 7
 #define LUT_QUANTIZED_PITCH_SIZE 1025
 
+#define LUT_ULAW_SIZE 256
+#define LUT_PITCH_RATIO_HIGH_SIZE 256
+#define LUT_PITCH_RATIO_LOW_SIZE 256
+#define ATAN_LUT_SIZE 513
+
+
 #define IR_LENGTH 8192
 #define CRITICAL_FREQUENCY 12000.f
 
 typedef uint8_t ResourceId;
+
+extern int16_t DSY_SDRAM_BSS lut_ulaw[LUT_ULAW_SIZE];
+extern float DSY_SDRAM_BSS lut_pitch_ratio_high[LUT_PITCH_RATIO_HIGH_SIZE];
+extern float DSY_SDRAM_BSS lut_pitch_ratio_low[LUT_PITCH_RATIO_LOW_SIZE];
+extern uint16_t DSY_SDRAM_BSS atan_lut[ATAN_LUT_SIZE];
 
 extern float DSY_SDRAM_BSS lut_sin[LUT_SIN_SIZE];
 extern const float src_filter_1x_2_45[SRC_FILTER_1X_2_45_SIZE];

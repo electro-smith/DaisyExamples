@@ -31,19 +31,11 @@
 
 #include "daisy.h"
 #include <stdint.h>
+#include "resources.h"
 
 using namespace daisy;
 
-// inline short MuLaw2Lin(uint8_t u_val) {
-//   int16_t t;
-//   u_val = ~u_val;
-//   t = ((u_val & 0xf) << 3) + 0x84;
-//   t <<= ((unsigned)u_val & 0x70) >> 4;
-//   return ((u_val & 0x80) ? (0x84 - t) : (t - 0x84));
-// }
-
-extern int16_t lut_ulaw[256];
-
+//lut_ulaw moved to resources.h
 inline short MuLaw2Lin(uint8_t u_val) {
   return lut_ulaw[u_val];
 }

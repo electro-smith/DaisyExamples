@@ -6,12 +6,10 @@ CPP_SOURCES += \
 Nimbus.cpp \
 dsp/correlator.cpp \
 dsp/granular_processor.cpp \
-dsp/mu_law.cpp \
 dsp/pvoc/frame_transformation.cpp \
 dsp/pvoc/phase_vocoder.cpp \
 dsp/pvoc/stft.cpp \
 resources.cpp \
-stmtemp.cpp \
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy

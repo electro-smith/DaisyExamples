@@ -36,14 +36,19 @@
 
 using namespace daisysp;
 
- float DSY_SDRAM_BSS lut_sin[LUT_SIN_SIZE];
- float DSY_SDRAM_BSS lut_window[LUT_WINDOW_SIZE];
- float DSY_SDRAM_BSS lut_xfade_in[LUT_XFADE_IN_SIZE];
- float DSY_SDRAM_BSS lut_xfade_out[LUT_XFADE_OUT_SIZE];
- float DSY_SDRAM_BSS lut_sine_window_4096[LUT_SINE_WINDOW_4096_SIZE];
- float DSY_SDRAM_BSS lut_grain_size[LUT_GRAIN_SIZE_SIZE];
+  int16_t DSY_SDRAM_BSS lut_ulaw[LUT_ULAW_SIZE];
+  float DSY_SDRAM_BSS lut_pitch_ratio_high[LUT_PITCH_RATIO_HIGH_SIZE];
+  float DSY_SDRAM_BSS lut_pitch_ratio_low[LUT_PITCH_RATIO_LOW_SIZE];
+  uint16_t DSY_SDRAM_BSS atan_lut[ATAN_LUT_SIZE];
 
-//helper function
+  float DSY_SDRAM_BSS lut_sin[LUT_SIN_SIZE];
+  float DSY_SDRAM_BSS lut_window[LUT_WINDOW_SIZE];
+  float DSY_SDRAM_BSS lut_xfade_in[LUT_XFADE_IN_SIZE];
+  float DSY_SDRAM_BSS lut_xfade_out[LUT_XFADE_OUT_SIZE];
+  float DSY_SDRAM_BSS lut_sine_window_4096[LUT_SINE_WINDOW_4096_SIZE];
+  float DSY_SDRAM_BSS lut_grain_size[LUT_GRAIN_SIZE_SIZE];
+
+//helper for sine window
 void sum_window(float* window, int steps, float* output){
   int n = LUT_SINE_WINDOW_4096_SIZE;
   int start = 0;
@@ -63,8 +68,37 @@ void sum_window(float* window, int steps, float* output){
    }
 }
 
+//helper for ulaw encoding
+inline short MuLaw2Lin(uint8_t u_val) {
+   int16_t t;
+   u_val = ~u_val;
+   t = ((u_val & 0xf) << 3) + 0x84;
+   t <<= ((unsigned)u_val & 0x70) >> 4;
+   return ((u_val & 0x80) ? (0x84 - t) : (t - 0x84));
+}
+
 //init all the luts
 void InitResources(float sample_rate){
+
+   // lut_ulaw
+   for(int i = 0; i < LUT_ULAW_SIZE; i++){
+      lut_ulaw[i] = MuLaw2Lin(i);
+   }
+
+   // lut_pitch_ratio_high + lut_pitch_ratio_low
+   for(int i = 0; i < LUT_PITCH_RATIO_HIGH_SIZE; i++){
+      float ratio = (float)i - 128.f;
+      ratio = powf(2.f, ratio / 12.f);
+      float semitone = powf(2.f, (float)i / 256.0 / 12.0);
+      lut_pitch_ratio_high[i] = ratio;
+      lut_pitch_ratio_low[i] = semitone;
+   }
+
+   // atan_lut
+   for (size_t i = 0; i < ATAN_LUT_SIZE; ++i) {
+      atan_lut[i] = 65536.0 / (2 * PI_F) * asinf(i / 512.0f);
+   }
+
    // lut_sin
    for(int i = 0; i < LUT_SIN_SIZE; i++){
       float t = (float)i / 1024.f * TWOPI_F;

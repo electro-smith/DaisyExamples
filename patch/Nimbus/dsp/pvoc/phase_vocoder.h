@@ -59,7 +59,7 @@ class PhaseVocoder {
  private:
   FFT fft_;
   
-  //STFT stft_[2];
+  STFT stft_[2];
   FrameTransformation frame_transformation_[2];
 
   int32_t num_channels_;

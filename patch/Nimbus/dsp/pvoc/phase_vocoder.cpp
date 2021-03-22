@@ -37,9 +37,6 @@ using namespace daisysp;
 using namespace std;
 using namespace daisy;
 
-//replacing the buffer allocators with DSY_SDRAM_BSS naively for now
-
-
 void PhaseVocoder::Init(
     void** buffer,
     size_t* buffer_size,
@@ -68,15 +65,15 @@ void PhaseVocoder::Init(
     num_textures = min(
         allocator[i]->free() / (sizeof(float) * texture_size),
         num_textures);
-    // stft_[i].Init(
-    //     &fft_,
-    //     fft_size,
-    //     fft_size / hop_ratio,
-    //     fft_buffer,
-    //     ifft_buffer,
-    //     large_window_lut,
-    //     ana_syn_buffer,
-    //     &frame_transformation_[i]);
+    stft_[i].Init(
+        &fft_,
+        fft_size,
+        fft_size / hop_ratio,
+        fft_buffer,
+        ifft_buffer,
+        large_window_lut,
+        ana_syn_buffer,
+        &frame_transformation_[i]);
   }
   for (int32_t i = 0; i < num_channels_; ++i) {
     float* texture_buffer = allocator[i]->Allocate<float>(
@@ -92,18 +89,18 @@ void PhaseVocoder::Process(
   const float* input_samples = &input[0].l;
   float* output_samples = &output[0].l;
   for (int32_t i = 0; i < num_channels_; ++i) {
-    // stft_[i].Process(
-    //     parameters,
-    //     input_samples + i,
-    //     output_samples + i,
-    //     size,
-    //     2);
+    stft_[i].Process(
+        parameters,
+        input_samples + i,
+        output_samples + i,
+        size,
+        2);
   }
 }
 
 void PhaseVocoder::Buffer() {
   for (int32_t i = 0; i < num_channels_; ++i) {
-    // stft_[i].Buffer();
+    stft_[i].Buffer();
   }
 }
 

@@ -35,8 +35,8 @@
 
 using namespace daisy;
 
-const int32_t DSY_SDRAM_BSS kCrossFadeSize = 256;
-const int32_t DSY_SDRAM_BSS kInterpolationTail = 8;
+const int32_t kCrossFadeSize = 256;
+const int32_t kInterpolationTail = 8;
 
 enum Resolution {
   RESOLUTION_16_BIT,
