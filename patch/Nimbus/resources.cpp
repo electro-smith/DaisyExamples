@@ -47,14 +47,18 @@ using namespace daisysp;
 void sum_window(float* window, int steps, float* output){
   int n = LUT_SINE_WINDOW_4096_SIZE;
   int start = 0;
-  float stride = n / (float)steps;
+  int stride = n / steps;
+ 
   for (int i = 0; i < LUT_SINE_WINDOW_4096_SIZE; i++){
      output[i] = 0.f;
   }
+ 
    for(int i = 0; i < steps; i++){
       for(int j = start; j < start + stride; j++){
-         output[j] += powf(window[j], 2.f);
+         output[j - start] += powf(window[j], 2.f);
+         output[j] = output[j-start];
       }
+      
       start += stride;
    }
 }
@@ -63,14 +67,14 @@ void sum_window(float* window, int steps, float* output){
 void InitResources(float sample_rate){
    // lut_sin
    for(int i = 0; i < LUT_SIN_SIZE; i++){
-      float phs = (TWOPI_F * i) / (float)LUT_SIN_SIZE;      
-      lut_sin[i] = sin(phs);
+      float t = (float)i / 1024.f * TWOPI_F;
+      lut_sin[i] = sin(t);
    }
 
    // lut_window
-   for(int i = 0; i < LUT_SINE_WINDOW_4096_SIZE; i++){
-      float t = (float)i / (float)LUT_SINE_WINDOW_4096_SIZE;
-      lut_sine_window_4096[i] = 1.f - (cos(t * PI_F) + 1.f) / 2.f;
+   for(int i = 0; i < LUT_WINDOW_SIZE; i++){
+      float t = (float)i / (float)LUT_WINDOW_SIZE;
+      lut_window[i] = 1.f - ((cos(t * PI_F) + 1.f) * .5f);
    }
 
    // lut_xfade_in + lut_xfade_out
@@ -91,18 +95,16 @@ void InitResources(float sample_rate){
       //float sine = sin(PI_F * t);
       //float raised = (0.5f * cos(PI_F * t * 2.f) + 0.5f) * sqrt(4.f / 3.f);
 
-      lut_sine_window_4096[i] = powf(powf(1.f - (2.f * t - 1.f), 2.f), 1.25f);
+      lut_sine_window_4096[i] = powf(1.f - powf((2.f * t - 1.f), 2.f), 1.25f);
    }
-
+   
    float compensation[LUT_SINE_WINDOW_4096_SIZE];
-   sum_window(lut_sine_window_4096, 2.f, compensation);
+   sum_window(lut_sine_window_4096, 2, compensation);
 
    for(int i = 0; i < LUT_SINE_WINDOW_4096_SIZE; i++){
       compensation[i] = powf(compensation[i], .5f);
-      compensation[i] *= 2.f;;
       lut_sine_window_4096[i] /= compensation[i];
    }
-   
 
    // lut_grain_size
    for(int i = 0; i < LUT_GRAIN_SIZE_SIZE; i++){
@@ -110,7 +112,6 @@ void InitResources(float sample_rate){
       lut_grain_size[i] = floor(1024.f * powf(2, size));
    }
 }
-
 const float src_filter_1x_2_45[] = {
   -6.928606892e-04, -5.894682972e-03,  4.393903915e-04,  5.352009980e-03,
    1.833575577e-03, -7.103853054e-03, -5.275577768e-03,  7.999060050e-03,
