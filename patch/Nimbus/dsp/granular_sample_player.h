@@ -42,8 +42,6 @@
 #include "grain.h"
 #include "parameters.h"
 
-#include "resources.h"
-
 #include <random>
 
 using namespace daisysp;

@@ -27,11 +27,8 @@
 // STFT with overlap-add.
 
 #include "stft.h"
-#include "resources.h"
 #include "stmtemp.h"
 #include <algorithm>
-
-#include "frame_transformation.h"
 
 using namespace daisysp;
 using namespace std;

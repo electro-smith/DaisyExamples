@@ -36,27 +36,6 @@
 #include "daisy.h"
 using namespace daisy;
 
-typedef uint8_t ResourceId;
-
-extern const float* src_filter_table[];
-
-extern const int16_t* lookup_table_int16_table[];
-
-extern const float* lookup_table_table[];
-
-extern const float  src_filter_1x_2_31[];
-extern const float  src_filter_1x_2_45[];
-extern const float  src_filter_1x_2_63[];
-extern const float  src_filter_1x_2_91[];
-extern const int16_t  lut_db[];
-extern const float  lut_sin[];
-extern const float  lut_window[];
-extern const float  lut_xfade_in[];
-extern const float  lut_xfade_out[];
-extern const float  lut_sine_window_4096[];
-extern const float  lut_cutoff[];
-extern const float  lut_grain_size[];
-extern const float  lut_quantized_pitch[];
 #define SRC_FILTER_1X_2_31 0
 #define SRC_FILTER_1X_2_31_SIZE 31
 #define SRC_FILTER_1X_2_45 1
@@ -84,5 +63,19 @@ extern const float  lut_quantized_pitch[];
 #define LUT_QUANTIZED_PITCH 7
 #define LUT_QUANTIZED_PITCH_SIZE 1025
 
+#define IR_LENGTH 8192
+#define CRITICAL_FREQUENCY 12000.f
+
+typedef uint8_t ResourceId;
+
+extern float DSY_SDRAM_BSS lut_sin[LUT_SIN_SIZE];
+extern const float src_filter_1x_2_45[SRC_FILTER_1X_2_45_SIZE];
+extern float DSY_SDRAM_BSS lut_window[LUT_WINDOW_SIZE];
+extern float DSY_SDRAM_BSS lut_xfade_in[LUT_XFADE_IN_SIZE];
+extern float DSY_SDRAM_BSS lut_xfade_out[LUT_XFADE_OUT_SIZE];
+extern float DSY_SDRAM_BSS lut_sine_window_4096[LUT_SINE_WINDOW_4096_SIZE];
+extern float DSY_SDRAM_BSS lut_grain_size[LUT_GRAIN_SIZE_SIZE];
+
+void InitResources(float sample_rate);
 
 #endif  // CLOUDS_RESOURCES_H_

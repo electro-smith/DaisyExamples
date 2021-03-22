@@ -12,7 +12,6 @@ dsp/pvoc/phase_vocoder.cpp \
 dsp/pvoc/stft.cpp \
 resources.cpp \
 stmtemp.cpp \
-settings.cpp \
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy

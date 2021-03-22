@@ -29,8 +29,6 @@
 #ifndef CLOUDS_DSP_LOOPING_SAMPLE_PLAYER_H_
 #define CLOUDS_DSP_LOOPING_SAMPLE_PLAYER_H_
 
-
-
 #include <algorithm>
 
 //#include "units.h"
@@ -38,8 +36,6 @@
 #include "audio_buffer.h"
 #include "frame.h"
 #include "parameters.h"
-
-#include "resources.h"
 
 using namespace daisysp;
 

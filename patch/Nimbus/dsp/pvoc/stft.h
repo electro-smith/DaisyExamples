@@ -38,6 +38,8 @@
   #include "shy_fft.h"
 #endif  // USE_ARM_FFT
 
+#include "frame_transformation.h"
+
 using namespace daisysp;
 
 struct Parameters;

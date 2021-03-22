@@ -8,7 +8,6 @@
 //#include "version.h"
 #include "granular_processor.h"
 //#include "meter.h"
-#include "resources.h"
 //#include "settings.h"
 //#include "ui.h"
 
@@ -98,6 +97,8 @@ void Init(float sample_rate) {
   processor.Init(
       sample_rate, block_mem, sizeof(block_mem),
       block_ccm, sizeof(block_ccm));
+
+  InitResources(sample_rate);
 
   //settings.Init();
   //cv_scaler.Init(settings.mutable_calibration_data());

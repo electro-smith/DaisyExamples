@@ -29,9 +29,8 @@
 #ifndef CLOUDS_DSP_GRAIN_H_
 #define CLOUDS_DSP_GRAIN_H_
 
-#include "audio_buffer.h"
-
 #include "resources.h"
+#include "audio_buffer.h"
 
 using namespace daisysp;
 

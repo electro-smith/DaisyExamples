@@ -35,8 +35,6 @@
 
 #include "audio_buffer.h"
 
-#include "resources.h"
-
 using namespace daisysp;
 
 enum WindowFlags {

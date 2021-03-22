@@ -34,7 +34,6 @@
 
 //#include "parameter_interpolator.h"
 #include "buffer_allocator.h"
-
 #include "resources.h"
 
 //using namespace daisysp;

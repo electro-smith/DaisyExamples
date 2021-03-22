@@ -43,7 +43,6 @@
 #include "frame.h"
 #include "window.h"
 #include "parameters.h"
-#include "resources.h"
 
 using namespace daisysp;
 
