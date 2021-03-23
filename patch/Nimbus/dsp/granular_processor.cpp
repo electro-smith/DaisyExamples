@@ -82,11 +82,11 @@ void GranularProcessorClouds::ProcessGranular(
     const float* input_samples = &input[0].l;
     for (int32_t i = 0; i < num_channels_; ++i) {
       if (resolution() == 8) {
-        // buffer_8_[i].WriteFade(
-        //     &input_samples[i], size, 2, !parameters_.freeze);
+        buffer_8_[i].WriteFade(
+            &input_samples[i], size, 2, !parameters_.freeze);
       } else {
-        // buffer_16_[i].WriteFade(
-        //     &input_samples[i], size, 2, !parameters_.freeze);
+        buffer_16_[i].WriteFade(
+            &input_samples[i], size, 2, !parameters_.freeze);
       }
     }
   }
@@ -94,55 +94,54 @@ void GranularProcessorClouds::ProcessGranular(
   switch (playback_mode_) {
     case PLAYBACK_MODE_GRANULAR:
       // In Granular mode, DENSITY is a meta parameter.
-      // parameters_.granular.use_deterministic_seed = parameters_.density < 0.5f;
-      // if (parameters_.density >= 0.53f) {
-      //   parameters_.granular.overlap = (parameters_.density - 0.53f) * 2.12f;
-      // } else if (parameters_.density <= 0.47f) {
-      //   parameters_.granular.overlap = (0.47f - parameters_.density) * 2.12f;
-      // } else {
-      //   parameters_.granular.overlap = 0.0f;
-      // }
+      parameters_.granular.use_deterministic_seed = parameters_.density < 0.5f;
+      if (parameters_.density >= 0.53f) {
+        parameters_.granular.overlap = (parameters_.density - 0.53f) * 2.12f;
+      } else if (parameters_.density <= 0.47f) {
+        parameters_.granular.overlap = (0.47f - parameters_.density) * 2.12f;
+      } else {
+        parameters_.granular.overlap = 0.0f;
+      }
       // And TEXTURE too.
-      // parameters_.granular.window_shape = parameters_.texture < 0.75f
-      //     ? parameters_.texture * 1.333f : 1.0f;
+      parameters_.granular.window_shape = parameters_.texture < 0.75f
+          ? parameters_.texture * 1.333f : 1.0f;
   
       if (resolution() == 8) {
-        // player_.Play(buffer_8_, parameters_, &output[0].l, size);
+        player_.Play(buffer_8_, parameters_, &output[0].l, size);
       } else {
-        // player_.Play(buffer_16_, parameters_, &output[0].l, size);
+        player_.Play(buffer_16_, parameters_, &output[0].l, size);
       }
       break;
 
     case PLAYBACK_MODE_STRETCH:
       if (resolution() == 8) {
-        // ws_player_.Play(buffer_8_, parameters_, &output[0].l, size);
+        ws_player_.Play(buffer_8_, parameters_, &output[0].l, size);
       } else {
-        // ws_player_.Play(buffer_16_, parameters_, &output[0].l, size);
+        ws_player_.Play(buffer_16_, parameters_, &output[0].l, size);
       }
       break;
 
     case PLAYBACK_MODE_LOOPING_DELAY:
       if (resolution() == 8) {
-        // looper_.Play(buffer_8_, parameters_, &output[0].l, size);
+        looper_.Play(buffer_8_, parameters_, &output[0].l, size);
       } else {
-        // looper_.Play(buffer_16_, parameters_, &output[0].l, size);
+        looper_.Play(buffer_16_, parameters_, &output[0].l, size);
       }
       break;
 
     case PLAYBACK_MODE_SPECTRAL:
       {
-        // parameters_.spectral.quantization = parameters_.texture;
-        // parameters_.spectral.refresh_rate = 0.01f + 0.99f * parameters_.density;
-        // float warp = parameters_.size - 0.5f;
-        // parameters_.spectral.warp = 4.0f * warp * warp * warp + 0.5f;
+        parameters_.spectral.quantization = parameters_.texture;
+        parameters_.spectral.refresh_rate = 0.01f + 0.99f * parameters_.density;
+        float warp = parameters_.size - 0.5f;
+        parameters_.spectral.warp = 4.0f * warp * warp * warp + 0.5f;
         
-        float randomization = 0.f;
-        // float randomization = parameters_.density - 0.5f;
+        float randomization = parameters_.density - 0.5f;
         randomization *= randomization * 4.2f;
         randomization -= 0.05f;
         CONSTRAIN(randomization, 0.0f, 1.0f);
-        // parameters_.spectral.phase_randomization = randomization;
-        // phase_vocoder_.Process(parameters_, input, output, size);
+        parameters_.spectral.phase_randomization = randomization;
+        phase_vocoder_.Process(parameters_, input, output, size);
         
         if (num_channels_ == 1) {
           for (size_t i = 0; i < size; ++i) {
@@ -183,9 +182,8 @@ void GranularProcessorClouds::Process(
   
   // Apply feedback, with high-pass filtering to prevent build-ups at very
   // low frequencies (causing large DC swings).
-  //ONE_POLE(freeze_lp_, parameters_.freeze ? 1.0f : 0.0f, 0.0005f)
-  float feedback = 0.f;
-  // float feedback = parameters_.feedback;
+  ONE_POLE(freeze_lp_, parameters_.freeze ? 1.0f : 0.0f, 0.0005f)
+  float feedback = parameters_.feedback;
   float cutoff = (20.0f + 100.0f * feedback * feedback) / sample_rate();
   
   fb_filter_[0].SetFreq(cutoff);
@@ -219,26 +217,25 @@ void GranularProcessorClouds::Process(
   
   // Diffusion and pitch-shifting post-processings.
   if (playback_mode_ != PLAYBACK_MODE_SPECTRAL) {
-    // float texture = parameters_.texture;
-    // float diffusion = playback_mode_ == PLAYBACK_MODE_GRANULAR 
-    //     ? texture > 0.75f ? (texture - 0.75f) * 4.0f : 0.0f
-    //     : parameters_.density;
-    // diffuser_.set_amount(diffusion);
+    float texture = parameters_.texture;
+    float diffusion = playback_mode_ == PLAYBACK_MODE_GRANULAR 
+         ? texture > 0.75f ? (texture - 0.75f) * 4.0f : 0.0f
+         : parameters_.density;
+     diffuser_.set_amount(diffusion);
     diffuser_.Process(out_, size);
   }
   
-  // if (playback_mode_ == PLAYBACK_MODE_LOOPING_DELAY &&
-  //     (!parameters_.freeze || looper_.synchronized())) {
-  //   pitch_shifter_.set_ratio(SemitonesToRatio(parameters_.pitch));
-  //   pitch_shifter_.set_size(parameters_.size);
-  //   pitch_shifter_.Process(out_, size);
-  // }
+  if (playback_mode_ == PLAYBACK_MODE_LOOPING_DELAY &&
+      (!parameters_.freeze || looper_.synchronized())) {
+    pitch_shifter_.set_ratio(SemitonesToRatio(parameters_.pitch));
+    pitch_shifter_.set_size(parameters_.size);
+    pitch_shifter_.Process(out_, size);
+  }
   
   // Apply filters.
   if (playback_mode_ == PLAYBACK_MODE_LOOPING_DELAY ||
       playback_mode_ == PLAYBACK_MODE_STRETCH) {
-    float cutoff = 0.f;
-    // float cutoff = parameters_.texture;
+    float cutoff = parameters_.texture;
     float lp_cutoff = 0.5f * SemitonesToRatio(
         (cutoff < 0.5f ? cutoff - 0.5f : 0.0f) * 216.0f);
     float hp_cutoff = 0.25f * SemitonesToRatio(
@@ -272,8 +269,7 @@ void GranularProcessorClouds::Process(
   std::copy(&out_[0], &out_[size], &fb_[0]);
   
   // Apply reverb.
-  float reverb_amount = 0.f;
-  // float reverb_amount = parameters_.reverb * 0.95f;
+  float reverb_amount = parameters_.reverb * 0.95f;
   reverb_amount += feedback * (2.0f - feedback) * freeze_lp_;
   CONSTRAIN(reverb_amount, 0.0f, 1.0f);
   
@@ -285,10 +281,9 @@ void GranularProcessorClouds::Process(
   reverb_.Process(out_, size);
   
   const float post_gain = 1.2f;
-  // ParameterInterpolator dry_wet_mod(&dry_wet_, parameters_.dry_wet, size);
+  ParameterInterpolator dry_wet_mod(&dry_wet_, parameters_.dry_wet, size);
   for (size_t i = 0; i < size; ++i) {
-    float dry_wet = 0.f;
-    //float dry_wet = dry_wet_mod.Next();
+    float dry_wet = dry_wet_mod.Next();
     float fade_in = Interpolate(lut_xfade_in, dry_wet, 16.0f);
     float fade_out = Interpolate(lut_xfade_out, dry_wet, 16.0f);
     float l = input[i].l * fade_out;
@@ -299,87 +294,6 @@ void GranularProcessorClouds::Process(
     output[i].r = r;
   }
 }
-
-// void GranularProcessorClouds::PreparePersistentData() {
-//   persistent_state_.write_head[0] = low_fidelity_ ?
-//       buffer_8_[0].head() : buffer_16_[0].head();
-//   persistent_state_.write_head[1] = low_fidelity_ ?
-//       buffer_8_[1].head() : buffer_16_[1].head();
-//   persistent_state_.quality = quality();
-//   persistent_state_.spectral = playback_mode() == PLAYBACK_MODE_SPECTRAL;
-// }
-
-// void GranularProcessorClouds::GetPersistentData(
-//       PersistentBlock* block, size_t *num_blocks) {
-//   PersistentBlock* first_block = block;
-  
-//   block->tag = FourCC<'s', 't', 'a', 't'>::value;
-//   block->data = &persistent_state_;
-//   block->size = sizeof(PersistentState);
-//   ++block;
-
-//   // Create save block holding the audio buffers.
-//   for (int32_t i = 0; i < num_channels_; ++i) {
-//     block->tag = FourCC<'b', 'u', 'f', 'f'>::value;
-//     block->data = buffer_[i];
-//     block->size = buffer_size_[num_channels_ - 1];
-//     ++block;
-//   }
-//   *num_blocks = block - first_block;
-// }
-
-// bool GranularProcessorClouds::LoadPersistentData(const uint32_t* data) {
-//   // Force a silent output while the swapping of buffers takes place.
-//   silence_ = true;
-  
-//   PersistentBlock block[4];
-//   size_t num_blocks;
-//   GetPersistentData(block, &num_blocks);
-  
-//   for (size_t i = 0; i < num_blocks; ++i) {
-//     // Check that the format is correct.
-//     if (block[i].tag != data[0] || block[i].size != data[1]) {
-//       silence_ = false;
-//       return false;
-//     }
-    
-//     // All good. Load the data. 2 words have already been used for the block tag
-//     // and the block size.
-//     data += 2;
-//     memcpy(block[i].data, data, block[i].size);
-//     data += block[i].size / sizeof(uint32_t);
-    
-//     if (i == 0) {
-//       // We now know from which mode the data was saved.
-//       bool currently_spectral = playback_mode_ == PLAYBACK_MODE_SPECTRAL;
-//       bool requires_spectral = persistent_state_.spectral;
-//       if (currently_spectral ^ requires_spectral) {
-//         set_playback_mode(requires_spectral
-//             ? PLAYBACK_MODE_SPECTRAL
-//             : PLAYBACK_MODE_GRANULAR);
-//       }
-//       set_quality(persistent_state_.quality);
-
-//       // We can force a switch to this mode, and once everything has been
-//       // initialized for this mode, we continue with the loop to copy the
-//       // actual buffer data - with all state variables correctly initialized.
-//       Prepare();
-//       GetPersistentData(block, &num_blocks);
-//     }
-//   }
-  
-//   // We can finally reset the position of the write heads.
-//   if (low_fidelity_) {
-//     buffer_8_[0].Resync(persistent_state_.write_head[0]);
-//     buffer_8_[1].Resync(persistent_state_.write_head[1]);
-//   } else {
-//     buffer_16_[0].Resync(persistent_state_.write_head[0]);
-//     buffer_16_[1].Resync(persistent_state_.write_head[1]);
-//   }
-//   // parameters_.freeze = true;
-//   silence_ = false;
-//   return true;
-// }
 
 void GranularProcessorClouds::Prepare() {
   bool playback_mode_changed = previous_playback_mode_ != playback_mode_;
@@ -394,7 +308,7 @@ void GranularProcessorClouds::Prepare() {
   }
   
   if ((playback_mode_changed && !benign_change) || reset_buffers_) {
-    // parameters_.freeze = false;
+    parameters_.freeze = false;
   }
   
   if (reset_buffers_ || (playback_mode_changed && !benign_change)) {

@@ -42,6 +42,7 @@
 #include "phase_vocoder.h"
 #include "sample_rate_converter.h"
 #include "wsola_sample_player.h"
+#include "parameter_interpolator.h"
 
 using namespace daisysp;
 
@@ -144,10 +145,6 @@ class GranularProcessorClouds {
     return quality;
   }
   
-  //void GetPersistentData(PersistentBlock* block, size_t *num_blocks);
-  //bool LoadPersistentData(const uint32_t* data);
-  //void PreparePersistentData();
-
  private:
   inline int32_t resolution() const {
     return low_fidelity_ ? 8 : 16;
