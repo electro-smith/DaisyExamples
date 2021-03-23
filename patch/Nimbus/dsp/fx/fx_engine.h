@@ -32,9 +32,6 @@
 #include <algorithm>
 #include "stmtemp.h"
 
-//#include "dsp.h"
-//#include "cosine_oscillator.h"
-
 using namespace daisysp;
 
 #define TAIL , -1

@@ -29,10 +29,6 @@
 #ifndef CLOUDS_DSP_WINDOW_H_
 #define CLOUDS_DSP_WINDOW_H_
 
-
-
-//#include "dsp.h"
-
 #include "audio_buffer.h"
 
 using namespace daisysp;

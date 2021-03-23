@@ -35,9 +35,6 @@
 #include <cstdio>
 #include <cstdlib>
 
-
-//#include "units.h"
-
 #include "audio_buffer.h"
 #include "correlator.h"
 #include "frame.h"
