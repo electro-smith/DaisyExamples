@@ -47,11 +47,6 @@ void AudioCallback(float **in, float **out, size_t size)
 	}
 }
 
-void Init(float sample_rate) {
-  // Init granular processor.
-
-}
-
 int main(void) {
 	hw.Init();
   float sample_rate = hw.AudioSampleRate();
@@ -60,11 +55,25 @@ int main(void) {
       sample_rate, block_mem, sizeof(block_mem),
       block_ccm, sizeof(block_ccm));
 
+  Parameters* parameters = processor.mutable_parameters();
+  
+  processor.set_bypass(false);
+  processor.set_silence(false);
+  processor.set_playback_mode(PLAYBACK_MODE_GRANULAR);
+  parameters->dry_wet = .5f;
+
+  //init the luts
   InitResources(sample_rate);
 
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
   while (1) {
+    hw.ProcessAllControls();
+
     processor.Prepare();
+    parameters->density = hw.controls[0].Process();
+    parameters->size = hw.controls[1].Process();
+    parameters->feedback = hw.controls[2].Process();
+    parameters->texture = hw.controls[3].Process();
   }
 }
