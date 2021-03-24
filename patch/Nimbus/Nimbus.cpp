@@ -35,6 +35,7 @@ void AudioCallback(float **in, float **out, size_t size)
 
 int main(void) {
 	hw.Init();
+  hw.SetAudioBlockSize(32);
   float sample_rate = hw.AudioSampleRate();
 
   //init the luts
@@ -46,20 +47,12 @@ int main(void) {
 
   Parameters* parameters = processor.mutable_parameters();
   
-  processor.set_bypass(false);
-  processor.set_silence(false);
   processor.set_playback_mode(PLAYBACK_MODE_GRANULAR);
   parameters->dry_wet = 1.f;
-  parameters->pitch = 12.f;
-  processor.set_freeze(false);
-  processor.set_num_channels(2);
 
-  parameters->granular.overlap = .5f;
-  parameters->granular.window_shape = .5f;
-  parameters->granular.use_deterministic_seed = true;
-  parameters->granular.stereo_spread = .5f;
   parameters->texture = .5f;
-  
+  processor.set_low_fidelity(false);
+  processor.set_num_channels(2);
 
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
@@ -71,5 +64,7 @@ int main(void) {
     parameters->size = hw.controls[1].Process();
     parameters->feedback = hw.controls[2].Process();
     parameters->position = hw.controls[3].Process();
+    int32_t q = processor.quality();
+    processor.set_quality(q);
   }
 }
