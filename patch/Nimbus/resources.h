@@ -74,18 +74,18 @@ using namespace daisy;
 
 typedef uint8_t ResourceId;
 
-extern int16_t DSY_SDRAM_BSS lut_ulaw[LUT_ULAW_SIZE];
-extern float DSY_SDRAM_BSS lut_pitch_ratio_high[LUT_PITCH_RATIO_HIGH_SIZE];
-extern float DSY_SDRAM_BSS lut_pitch_ratio_low[LUT_PITCH_RATIO_LOW_SIZE];
-extern uint16_t DSY_SDRAM_BSS atan_lut[ATAN_LUT_SIZE];
+extern int16_t lut_ulaw[LUT_ULAW_SIZE];
+extern float lut_pitch_ratio_high[LUT_PITCH_RATIO_HIGH_SIZE];
+extern float lut_pitch_ratio_low[LUT_PITCH_RATIO_LOW_SIZE];
+extern uint16_t atan_lut[ATAN_LUT_SIZE];
 
-extern float DSY_SDRAM_BSS lut_sin[LUT_SIN_SIZE];
+extern float lut_sin[LUT_SIN_SIZE];
 extern const float src_filter_1x_2_45[SRC_FILTER_1X_2_45_SIZE];
-extern float DSY_SDRAM_BSS lut_window[LUT_WINDOW_SIZE];
-extern float DSY_SDRAM_BSS lut_xfade_in[LUT_XFADE_IN_SIZE];
-extern float DSY_SDRAM_BSS lut_xfade_out[LUT_XFADE_OUT_SIZE];
-extern float DSY_SDRAM_BSS lut_sine_window_4096[LUT_SINE_WINDOW_4096_SIZE];
-extern float DSY_SDRAM_BSS lut_grain_size[LUT_GRAIN_SIZE_SIZE];
+extern float lut_window[LUT_WINDOW_SIZE];
+extern float lut_xfade_in[LUT_XFADE_IN_SIZE];
+extern float lut_xfade_out[LUT_XFADE_OUT_SIZE];
+extern float lut_sine_window_4096[LUT_SINE_WINDOW_4096_SIZE];
+extern float lut_grain_size[LUT_GRAIN_SIZE_SIZE];
 
 void InitResources(float sample_rate);
 

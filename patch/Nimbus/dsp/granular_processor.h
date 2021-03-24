@@ -29,8 +29,6 @@
 #ifndef CLOUDS_DSP_GRANULAR_PROCESSOR_H_
 #define CLOUDS_DSP_GRANULAR_PROCESSOR_H_
 
-//#include "filter.h"
-
 #include "correlator.h"
 #include "frame.h"
 #include "diffuser.h"
@@ -205,8 +203,6 @@ class GranularProcessorClouds {
   SampleRateConverter<+kDownsamplingFactor, 45, src_filter_1x_2_45> src_up_;
   
   PersistentState persistent_state_;
-  
-
 };
 
 

@@ -36,17 +36,17 @@
 
 using namespace daisysp;
 
-  int16_t DSY_SDRAM_BSS lut_ulaw[LUT_ULAW_SIZE];
-  float DSY_SDRAM_BSS lut_pitch_ratio_high[LUT_PITCH_RATIO_HIGH_SIZE];
-  float DSY_SDRAM_BSS lut_pitch_ratio_low[LUT_PITCH_RATIO_LOW_SIZE];
-  uint16_t DSY_SDRAM_BSS atan_lut[ATAN_LUT_SIZE];
+  int16_t  lut_ulaw[LUT_ULAW_SIZE];
+  float  lut_pitch_ratio_high[LUT_PITCH_RATIO_HIGH_SIZE];
+  float  lut_pitch_ratio_low[LUT_PITCH_RATIO_LOW_SIZE];
+  uint16_t  atan_lut[ATAN_LUT_SIZE];
 
-  float DSY_SDRAM_BSS lut_sin[LUT_SIN_SIZE];
-  float DSY_SDRAM_BSS lut_window[LUT_WINDOW_SIZE];
-  float DSY_SDRAM_BSS lut_xfade_in[LUT_XFADE_IN_SIZE];
-  float DSY_SDRAM_BSS lut_xfade_out[LUT_XFADE_OUT_SIZE];
-  float DSY_SDRAM_BSS lut_sine_window_4096[LUT_SINE_WINDOW_4096_SIZE];
-  float DSY_SDRAM_BSS lut_grain_size[LUT_GRAIN_SIZE_SIZE];
+  float  lut_sin[LUT_SIN_SIZE];
+  float  lut_window[LUT_WINDOW_SIZE];
+  float  lut_xfade_in[LUT_XFADE_IN_SIZE];
+  float  lut_xfade_out[LUT_XFADE_OUT_SIZE];
+  float  lut_sine_window_4096[LUT_SINE_WINDOW_4096_SIZE];
+  float  lut_grain_size[LUT_GRAIN_SIZE_SIZE];
 
 //helper for sine window
 void sum_window(float* window, int steps, float* output){

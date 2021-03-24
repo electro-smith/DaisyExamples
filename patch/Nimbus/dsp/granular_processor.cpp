@@ -173,6 +173,10 @@ void GranularProcessorClouds::Process(
     return;
   }
   
+  for (size_t i = 0; i < size; ++i) {
+    in_[i].l = input[i].l;
+    in_[i].r = input[i].r;
+  }
   if (num_channels_ == 1) {
     for (size_t i = 0; i < size; ++i) {
       in_[i].l = (in_[i].l + in_[i].r) * 0.5f;

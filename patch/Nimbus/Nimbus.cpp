@@ -1,17 +1,6 @@
 #include "daisy_patch.h"
 #include "daisysp.h"
-//#include "cv_scaler.h"
-//#include "codec.h"
-//#include "debug_pin.h"
-//#include "debug_port.h"
-//#include "system.h"
-//#include "version.h"
 #include "granular_processor.h"
-//#include "meter.h"
-//#include "settings.h"
-//#include "ui.h"
-
-// #define PROFILE_INTERRUPT 1
 
 using namespace daisysp;
 using namespace daisy;
@@ -20,14 +9,11 @@ GranularProcessorClouds processor;
 DaisyPatch hw;
 
 // Pre-allocate big blocks in main memory and CCM. No malloc here.
-uint8_t DSY_SDRAM_BSS block_mem[118784];
-uint8_t DSY_SDRAM_BSS block_ccm[65536 - 128];
-//uint8_t DSY_SDRAM_BSS block_ccm[65536 - 128] __attribute__ ((section (".ccmdata")));
+uint8_t block_mem[118784];
+uint8_t block_ccm[65536 - 128];
 
 void AudioCallback(float **in, float **out, size_t size)
 {
-	hw.ProcessAllControls();
-
   FloatFrame input[size];
   FloatFrame output[size];
 
@@ -51,6 +37,9 @@ int main(void) {
 	hw.Init();
   float sample_rate = hw.AudioSampleRate();
 
+  //init the luts
+  InitResources(sample_rate);
+
   processor.Init(
       sample_rate, block_mem, sizeof(block_mem),
       block_ccm, sizeof(block_ccm));
@@ -60,10 +49,17 @@ int main(void) {
   processor.set_bypass(false);
   processor.set_silence(false);
   processor.set_playback_mode(PLAYBACK_MODE_GRANULAR);
-  parameters->dry_wet = .5f;
+  parameters->dry_wet = 1.f;
+  parameters->pitch = 12.f;
+  processor.set_freeze(false);
+  processor.set_num_channels(2);
 
-  //init the luts
-  InitResources(sample_rate);
+  parameters->granular.overlap = .5f;
+  parameters->granular.window_shape = .5f;
+  parameters->granular.use_deterministic_seed = true;
+  parameters->granular.stereo_spread = .5f;
+  parameters->texture = .5f;
+  
 
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
@@ -74,6 +70,6 @@ int main(void) {
     parameters->density = hw.controls[0].Process();
     parameters->size = hw.controls[1].Process();
     parameters->feedback = hw.controls[2].Process();
-    parameters->texture = hw.controls[3].Process();
+    parameters->position = hw.controls[3].Process();
   }
 }
