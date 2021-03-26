@@ -152,7 +152,6 @@ int main(void) {
       paramControls[i].Process();
     }
 
-
     //encoder press
     selected ^= hw.encoder.RisingEdge();
 
