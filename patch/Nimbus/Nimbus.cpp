@@ -2,6 +2,8 @@
 #include "daisysp.h"
 #include "granular_processor.h"
 
+#define NUM_PARAMS 17
+#define NUM_PAGES 2
 using namespace daisysp;
 using namespace daisy;
 
@@ -12,7 +14,9 @@ DaisyPatch hw;
 uint8_t block_mem[118784];
 uint8_t block_ccm[65536 - 128];
 
-char paramNames[10][15];
+char paramNames[NUM_PARAMS][17];
+char pbModeNames[4][17];
+char qualityNames[4][17];
 
 int mymod(int a, int b){
   return (b + (a%b)) % b;
@@ -27,12 +31,11 @@ class ParamControl{
       params_ = params;
       control_ = control;
       param_num_ = 0;
-      param_max_ = 9;
     }
 
     void incParamNum(int inc){
       param_num_ += inc;
-      param_num_ = mymod(param_num_, param_max_);
+      param_num_ = mymod(param_num_, NUM_PARAMS);
     }
 
     char* getName(){
@@ -69,8 +72,30 @@ class ParamControl{
         case 8:
           params_->reverb = val;
           break;
-          
-
+        case 9:
+          params_->granular.overlap = val;
+          break;
+        case 10:
+          params_->granular.window_shape = val;
+          break;
+        case 11:
+          params_->granular.stereo_spread = val;
+          break;
+        case 12:
+          params_->granular.use_deterministic_seed = val > .5f;
+          break;          
+        case 13:
+          params_->spectral.quantization = val;
+          break;          
+        case 14:
+          params_->spectral.refresh_rate = val;
+          break;          
+        case 15:
+          params_->spectral.phase_randomization = val;
+          break;          
+        case 16:
+          params_->spectral.warp = val;
+          break;          
       }
     }
 
@@ -78,16 +103,26 @@ class ParamControl{
     AnalogControl* control_;
     Parameters* params_;
     int param_num_;
-    int param_max_;
 };
 
 ParamControl paramControls[4];
 
-int menupos;
+int cursorpos;
+int menupage;
 bool selected;
+bool held;
+bool freeze_btn;
+int pbMode;
+int quality;
+
+Parameters* parameters;
+
+void Controls();
 
 void AudioCallback(float **in, float **out, size_t size)
 {
+  Controls();
+
   FloatFrame input[size];
   FloatFrame output[size];
 
@@ -114,10 +149,29 @@ void InitStrings(){
   sprintf(paramNames[2], "pitch");
   sprintf(paramNames[3], "density");
   sprintf(paramNames[4], "texture");
-  sprintf(paramNames[5], "dry_wet");
+  sprintf(paramNames[5], "dry wet");
   sprintf(paramNames[6], "stereo_spread");
   sprintf(paramNames[7], "feedback");
   sprintf(paramNames[8], "reverb");
+  sprintf(paramNames[9], "grnlr overlap");
+  sprintf(paramNames[10], "grnlr wndw shape");
+  sprintf(paramNames[11], "grnlr streo sprd");
+  sprintf(paramNames[12], "grnlr det. seed");
+  sprintf(paramNames[13], "spctrl quant");
+  sprintf(paramNames[14], "spctrl refr rate");
+  sprintf(paramNames[15], "spctrl phase rnd");
+  sprintf(paramNames[16], "spctrl warp");
+
+  sprintf(pbModeNames[0], "Granular");
+  sprintf(pbModeNames[1], "Stretch");
+  sprintf(pbModeNames[2], "Looping Delay");
+  sprintf(pbModeNames[3], "Spectral");
+
+  sprintf(qualityNames[0], "16 bit stereo");
+  sprintf(qualityNames[1], "16 bit mono");
+  sprintf(qualityNames[2], "8 bit ulaw streo");
+  sprintf(qualityNames[3], "8 bit ulaw mono");
+
 }
 
 int main(void) {
@@ -133,7 +187,7 @@ int main(void) {
       block_ccm, sizeof(block_ccm));
   processor.set_playback_mode(PLAYBACK_MODE_GRANULAR);
 
-  Parameters* parameters = processor.mutable_parameters();  
+  parameters = processor.mutable_parameters();  
 
   InitStrings();
 
@@ -141,37 +195,101 @@ int main(void) {
     paramControls[i].Init(&hw.controls[i], parameters);
   }
 
+  paramControls[1].incParamNum(1);
+  paramControls[2].incParamNum(3);
+  paramControls[3].incParamNum(5);
+
+  cursorpos = 0;
+  selected = false;
+  held = false;
+  freeze_btn = false;
+  menupage = 0;
+
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
   while (1) {
     processor.Prepare();
     
-    //controls and menu
+    hw.display.Fill(false);
+    hw.display.DrawLine(0, 10, SSD1309_WIDTH, 10, true);
+
+    hw.display.SetCursor(0, cursorpos * 13 + 13);
+    hw.display.WriteString(selected ? "x" : "o", Font_7x10, true);
+
+    switch(menupage){
+      case 0:
+        hw.display.SetCursor(0, 0);
+        hw.display.WriteString("Controls", Font_7x10, true);
+
+        //param names
+        for(int i = 0; i < 4; i++){
+          hw.display.SetCursor(10,i * 13 + 13);
+          hw.display.WriteString(paramControls[i].getName(), Font_7x10, true);
+        };
+        break;
+      case 1:
+        hw.display.SetCursor(0, 0);
+        hw.display.WriteString("Buttons", Font_7x10, true);
+
+        hw.display.SetCursor(10, 13);
+        hw.display.WriteString("freeze", Font_7x10, !parameters->freeze);
+
+        hw.display.SetCursor(10, 1 * 13 + 13);
+        hw.display.WriteString(pbModeNames[pbMode], Font_7x10, true);
+
+        hw.display.SetCursor(10, 2 * 13 + 13);
+        hw.display.WriteString(qualityNames[quality], Font_7x10, true);
+        break;
+    }
+
+    hw.display.Update();
+  }
+}
+
+void Controls(){
     hw.ProcessAllControls();
+
+    //process knobs
     for(int i = 0; i < 4; i++){
       paramControls[i].Process();
     }
 
-    //encoder press
+    //long press switch page
+    menupage += hw.encoder.TimeHeldMs() > 1000.f && !held;
+    menupage %= NUM_PAGES;
+    held = hw.encoder.TimeHeldMs() > 1000.f; //only change pages once
+    held &= hw.encoder.Pressed(); //reset on release
+    selected &= !held; //deselect on page change
+
     selected ^= hw.encoder.RisingEdge();
 
+    if(menupage == 1 && cursorpos == 0 && selected){
+      freeze_btn ^= 1;
+      selected = false;
+    }
+
     //encoder turn
-    if(selected){
-      paramControls[menupos].incParamNum(hw.encoder.Increment());
+    if(selected && menupage == 0){ 
+        paramControls[cursorpos].incParamNum(hw.encoder.Increment());
+    }
+    else if(selected && cursorpos == 1){
+      pbMode += hw.encoder.Increment();
+      pbMode = mymod(pbMode, 4);
+    }
+    else if(selected && cursorpos == 2){
+      quality += hw.encoder.Increment();
+      quality = mymod(quality, 4);
     }
     else{
-      menupos += hw.encoder.Increment();
-      menupos = mymod(menupos, 4);
+      cursorpos += hw.encoder.Increment();
+      cursorpos = mymod(cursorpos, menupage ? 3 : 4);
     }
 
-    //oled
-    hw.display.Fill(false);
+    processor.set_playback_mode((PlaybackMode)pbMode);
+    processor.set_low_fidelity(quality);
 
-    for(int i = 0; i < 4; i++){
-      hw.display.SetCursor(0,i*13);
-      hw.display.WriteString(paramControls[i].getName(), Font_7x10, true);
-    };
-
-    hw.display.Update();
-  }
+    //gate ins
+    parameters->freeze = hw.gate_input[0].State() || freeze_btn;
+    parameters->trigger = hw.gate_input[1].Trig();
+    parameters->gate = hw.gate_input[1].State();
 }
