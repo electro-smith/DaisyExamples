@@ -2,7 +2,7 @@
     "configurations": [
         {
             "cStandard": "c11",
-            "compilerPath": "D:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\bin\\arm-none-eabi-g++.exe",
+            "compilerPath": "arm-none-eabi-g++.exe",
             "cppStandard": "c++17",
             "defines": [
                 "_DEBUG",
