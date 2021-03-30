@@ -31,6 +31,7 @@ class ParamControl{
       params_ = params;
       control_ = control;
       param_num_ = 0;
+      oldval_ = 0.f;
     }
 
     void incParamNum(int inc){
@@ -42,8 +43,18 @@ class ParamControl{
       return paramNames[param_num_];
     }
 
+    bool knobTouched(float newval){
+      bool ret = fabsf(newval - oldval_) > .0005f;
+      oldval_ = newval;
+      return ret;
+    }
+
     void Process(){
       float val = control_->Process();
+      if(!knobTouched(val)){
+        return;
+      }
+      
       switch(param_num_){
         case 0:
           params_->position = val;
@@ -104,6 +115,7 @@ class ParamControl{
     AnalogControl* control_;
     Parameters* params_;
     int param_num_;
+    float oldval_;
 };
 
 ParamControl paramControls[4];
