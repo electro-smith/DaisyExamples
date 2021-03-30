@@ -52,7 +52,8 @@ class ParamControl{
           params_->size = val;
           break;
         case 2:
-          params_->pitch = val;
+          params_->pitch = powf(9.798f * (val - .5f), 2.f); 
+          params_->pitch *= val < .5f ? -1.f : 1.f;
           break;
         case 3:
           params_->density = val;
@@ -185,7 +186,6 @@ int main(void) {
   processor.Init(
       sample_rate, block_mem, sizeof(block_mem),
       block_ccm, sizeof(block_ccm));
-  processor.set_playback_mode(PLAYBACK_MODE_GRANULAR);
 
   parameters = processor.mutable_parameters();  
 
