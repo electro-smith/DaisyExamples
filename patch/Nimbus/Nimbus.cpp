@@ -2,7 +2,7 @@
 #include "daisysp.h"
 #include "granular_processor.h"
 
-#define NUM_PARAMS 17
+#define NUM_PARAMS 9
 #define NUM_PAGES 2
 using namespace daisysp;
 using namespace daisy;
@@ -54,7 +54,7 @@ class ParamControl{
       if(!knobTouched(val)){
         return;
       }
-      
+
       switch(param_num_){
         case 0:
           params_->position = val;
@@ -83,31 +83,7 @@ class ParamControl{
           break;
         case 8:
           params_->reverb = val;
-          break;
-        case 9:
-          params_->granular.overlap = val;
-          break;
-        case 10:
-          params_->granular.window_shape = val;
-          break;
-        case 11:
-          params_->granular.stereo_spread = val;
-          break;
-        case 12:
-          params_->granular.use_deterministic_seed = val > .5f;
-          break;          
-        case 13:
-          params_->spectral.quantization = val;
-          break;          
-        case 14:
-          params_->spectral.refresh_rate = val;
-          break;          
-        case 15:
-          params_->spectral.phase_randomization = val;
-          break;          
-        case 16:
-          params_->spectral.warp = val;
-          break;          
+          break;      
       }
     }
 
@@ -163,17 +139,9 @@ void InitStrings(){
   sprintf(paramNames[3], "density");
   sprintf(paramNames[4], "texture");
   sprintf(paramNames[5], "dry wet");
-  sprintf(paramNames[6], "stereo_spread");
+  sprintf(paramNames[6], "stereo spread");
   sprintf(paramNames[7], "feedback");
   sprintf(paramNames[8], "reverb");
-  sprintf(paramNames[9], "grnlr overlap");
-  sprintf(paramNames[10], "grnlr wndw shape");
-  sprintf(paramNames[11], "grnlr streo sprd");
-  sprintf(paramNames[12], "grnlr det. seed");
-  sprintf(paramNames[13], "spctrl quant");
-  sprintf(paramNames[14], "spctrl refr rate");
-  sprintf(paramNames[15], "spctrl phase rnd");
-  sprintf(paramNames[16], "spctrl warp");
 
   sprintf(pbModeNames[0], "Granular");
   sprintf(pbModeNames[1], "Stretch");
