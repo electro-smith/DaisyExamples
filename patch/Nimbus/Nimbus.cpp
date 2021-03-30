@@ -44,7 +44,7 @@ class ParamControl{
     }
 
     bool knobTouched(float newval){
-      bool ret = fabsf(newval - oldval_) > .0005f;
+      bool ret = fabsf(newval - oldval_) > .001f;
       oldval_ = newval;
       return ret;
     }
@@ -243,22 +243,26 @@ void Controls(){
 
     selected ^= hw.encoder.RisingEdge();
 
-    if(menupage == 1 && cursorpos == 0 && selected){
-      freeze_btn ^= 1;
-      selected = false;
-    }
-
     //encoder turn
-    if(selected && menupage == 0){ 
-        paramControls[cursorpos].incParamNum(hw.encoder.Increment());
-    }
-    else if(selected && cursorpos == 1){
-      pbMode += hw.encoder.Increment();
-      pbMode = mymod(pbMode, 4);
-    }
-    else if(selected && cursorpos == 2){
-      quality += hw.encoder.Increment();
-      quality = mymod(quality, 4);
+    if(selected){
+        if(menupage == 0){ 
+          paramControls[cursorpos].incParamNum(hw.encoder.Increment());
+        }
+        else{
+          switch(cursorpos){
+            case 0:
+              freeze_btn ^= abs(hw.encoder.Increment());
+              break;
+            case 1:
+              pbMode += hw.encoder.Increment();
+              pbMode = mymod(pbMode, 4);
+              break;
+            case 2:
+              quality += hw.encoder.Increment();
+              quality = mymod(quality, 4);
+              break;
+          }          
+        }
     }
     else{
       cursorpos += hw.encoder.Increment();
