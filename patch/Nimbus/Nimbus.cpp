@@ -167,7 +167,7 @@ int main(void) {
       sample_rate, block_mem, sizeof(block_mem),
       block_ccm, sizeof(block_ccm));
 
-  parameters = processor.mutable_parameters();  
+  parameters = processor.mutable_parameters(); 
 
   InitStrings();
 
@@ -272,7 +272,7 @@ void Controls(){
     processor.set_playback_mode((PlaybackMode)pbMode);
     processor.set_low_fidelity(quality);
 
-    //gate ins
+    // gate ins
     parameters->freeze = hw.gate_input[0].State() || freeze_btn;
     parameters->trigger = hw.gate_input[1].Trig();
     parameters->gate = hw.gate_input[1].State();
