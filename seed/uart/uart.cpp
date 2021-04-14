@@ -14,12 +14,13 @@ int main(void)
 
 	UartHandler::Config uart_config;
 	uart_config.baudrate = 31250;
-	uart_config.parity = UartHandler::Config::Parity::PARITY_NONE;
+	uart_config.parity = UartHandler::Config::Parity::NONE;
 	uart_config.periph = UartHandler::Config::Peripheral::USART_1;
-	uart_config.stopbits = UartHandler::Config::StopBits::STOP_BITS_1;
+	uart_config.stopbits = UartHandler::Config::StopBits::BITS_1;
 	uart_config.pin_config.rx = {DSY_GPIOB, 7};
 	uart_config.pin_config.tx = {DSY_GPIOB, 6};
-	uart_config.mode = UartHandler::Config::Mode::MODE_TX_RX;
+	uart_config.mode = UartHandler::Config::Mode::TX_RX;
+	uart_config.wordlength = UartHandler::Config::WordLength::BITS_8;
 
 	uart.Init(uart_config);
 
