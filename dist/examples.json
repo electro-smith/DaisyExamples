@@ -1,220 +1,10 @@
 [
     {
-        "name": "balance",
+        "name": "variableshapeosc",
         "platform": "seed",
-        "filepath": "./dist/seed/balance.bin",
+        "filepath": "./dist/seed/variableshapeosc.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/balance/README.md"
-    },
-    {
-        "name": "string",
-        "platform": "seed",
-        "filepath": "./dist/seed/string.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/string/README.md"
-    },
-    {
-        "name": "comb",
-        "platform": "seed",
-        "filepath": "./dist/seed/comb.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/comb/README.md"
-    },
-    {
-        "name": "flanger",
-        "platform": "seed",
-        "filepath": "./dist/seed/flanger.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/flanger/README.md"
-    },
-    {
-        "name": "varisaw",
-        "platform": "seed",
-        "filepath": "./dist/seed/varisaw.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/varisaw/README.md"
-    },
-    {
-        "name": "tremolo",
-        "platform": "seed",
-        "filepath": "./dist/seed/tremolo.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/tremolo/README.md"
-    },
-    {
-        "name": "overdrive",
-        "platform": "seed",
-        "filepath": "./dist/seed/overdrive.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/overdrive/README.md"
-    },
-    {
-        "name": "compressor",
-        "platform": "seed",
-        "filepath": "./dist/seed/compressor.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/compressor/README.md"
-    },
-    {
-        "name": "faustnoise",
-        "platform": "seed",
-        "filepath": "./dist/seed/faustnoise.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/faustnoise/README.md"
-    },
-    {
-        "name": "zoscillator",
-        "platform": "seed",
-        "filepath": "./dist/seed/zoscillator.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/zoscillator/README.md"
-    },
-    {
-        "name": "bitcrush",
-        "platform": "seed",
-        "filepath": "./dist/seed/bitcrush.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/bitcrush/README.md"
-    },
-    {
-        "name": "bypass",
-        "platform": "seed",
-        "filepath": "./dist/seed/bypass.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/bypass/README.md"
-    },
-    {
-        "name": "vosim",
-        "platform": "seed",
-        "filepath": "./dist/seed/vosim.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/vosim/README.md"
-    },
-    {
-        "name": "Logger",
-        "platform": "seed",
-        "filepath": "./dist/seed/Logger.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Logger/README.md"
-    },
-    {
-        "name": "Drum",
-        "platform": "seed",
-        "filepath": "./dist/seed/Drum.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Drum/README.md"
-    },
-    {
-        "name": "delayline",
-        "platform": "seed",
-        "filepath": "./dist/seed/delayline.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/delayline/README.md"
-    },
-    {
-        "name": "synthsnaredrum",
-        "platform": "seed",
-        "filepath": "./dist/seed/synthsnaredrum.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/synthsnaredrum/README.md"
-    },
-    {
-        "name": "pluck",
-        "platform": "seed",
-        "filepath": "./dist/seed/pluck.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/pluck/README.md"
-    },
-    {
-        "name": "LCD_HD44780",
-        "platform": "seed",
-        "filepath": "./dist/seed/LCD_HD44780.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/LCD_HD44780/README.md"
-    },
-    {
-        "name": "tone",
-        "platform": "seed",
-        "filepath": "./dist/seed/tone.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/tone/README.md"
-    },
-    {
-        "name": "autowah",
-        "platform": "seed",
-        "filepath": "./dist/seed/autowah.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/autowah/README.md"
-    },
-    {
-        "name": "analogsnaredrum",
-        "platform": "seed",
-        "filepath": "./dist/seed/analogsnaredrum.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/analogsnaredrum/README.md"
-    },
-    {
-        "name": "pitchshifter",
-        "platform": "seed",
-        "filepath": "./dist/seed/pitchshifter.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/pitchshifter/README.md"
-    },
-    {
-        "name": "fractal_noise",
-        "platform": "seed",
-        "filepath": "./dist/seed/fractal_noise.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/fractal_noise/README.md"
-    },
-    {
-        "name": "port",
-        "platform": "seed",
-        "filepath": "./dist/seed/port.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/port/README.md"
-    },
-    {
-        "name": "analogbassdrum",
-        "platform": "seed",
-        "filepath": "./dist/seed/analogbassdrum.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/analogbassdrum/README.md"
-    },
-    {
-        "name": "blosc",
-        "platform": "seed",
-        "filepath": "./dist/seed/blosc.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/blosc/README.md"
-    },
-    {
-        "name": "reverbsc",
-        "platform": "seed",
-        "filepath": "./dist/seed/reverbsc.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/reverbsc/README.md"
-    },
-    {
-        "name": "oscbank",
-        "platform": "seed",
-        "filepath": "./dist/seed/oscbank.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/oscbank/README.md"
-    },
-    {
-        "name": "metro",
-        "platform": "seed",
-        "filepath": "./dist/seed/metro.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/metro/README.md"
-    },
-    {
-        "name": "Ram",
-        "platform": "seed",
-        "filepath": "./dist/seed/Ram.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Ram/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/variableshapeosc/README.md"
     },
     {
         "name": "QSPI",
@@ -224,172 +14,18 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/QSPI/README.md"
     },
     {
-        "name": "stringvoice",
+        "name": "pitchshifter",
         "platform": "seed",
-        "filepath": "./dist/seed/stringvoice.bin",
+        "filepath": "./dist/seed/pitchshifter.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/stringvoice/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/pitchshifter/README.md"
     },
     {
-        "name": "smooth_random",
+        "name": "flanger",
         "platform": "seed",
-        "filepath": "./dist/seed/smooth_random.bin",
+        "filepath": "./dist/seed/flanger.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/smooth_random/README.md"
-    },
-    {
-        "name": "samplehold",
-        "platform": "seed",
-        "filepath": "./dist/seed/samplehold.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/samplehold/README.md"
-    },
-    {
-        "name": "harmonic_osc",
-        "platform": "seed",
-        "filepath": "./dist/seed/harmonic_osc.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/harmonic_osc/README.md"
-    },
-    {
-        "name": "decimator",
-        "platform": "seed",
-        "filepath": "./dist/seed/decimator.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/decimator/README.md"
-    },
-    {
-        "name": "Knob",
-        "platform": "seed",
-        "filepath": "./dist/seed/Knob.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Knob/README.md"
-    },
-    {
-        "name": "phasor",
-        "platform": "seed",
-        "filepath": "./dist/seed/phasor.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/phasor/README.md"
-    },
-    {
-        "name": "resonator",
-        "platform": "seed",
-        "filepath": "./dist/seed/resonator.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/resonator/README.md"
-    },
-    {
-        "name": "Button",
-        "platform": "seed",
-        "filepath": "./dist/seed/Button.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Button/README.md"
-    },
-    {
-        "name": "formantosc",
-        "platform": "seed",
-        "filepath": "./dist/seed/formantosc.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/formantosc/README.md"
-    },
-    {
-        "name": "whitenoise",
-        "platform": "seed",
-        "filepath": "./dist/seed/whitenoise.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/whitenoise/README.md"
-    },
-    {
-        "name": "Blink",
-        "platform": "seed",
-        "filepath": "./dist/seed/Blink.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Blink/README.md"
-    },
-    {
-        "name": "svf",
-        "platform": "seed",
-        "filepath": "./dist/seed/svf.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/svf/README.md"
-    },
-    {
-        "name": "clockednoise",
-        "platform": "seed",
-        "filepath": "./dist/seed/clockednoise.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/clockednoise/README.md"
-    },
-    {
-        "name": "allpass",
-        "platform": "seed",
-        "filepath": "./dist/seed/allpass.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/allpass/README.md"
-    },
-    {
-        "name": "crossfade",
-        "platform": "seed",
-        "filepath": "./dist/seed/crossfade.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/crossfade/README.md"
-    },
-    {
-        "name": "grainlet",
-        "platform": "seed",
-        "filepath": "./dist/seed/grainlet.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/grainlet/README.md"
-    },
-    {
-        "name": "chorus",
-        "platform": "seed",
-        "filepath": "./dist/seed/chorus.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/chorus/README.md"
-    },
-    {
-        "name": "fm2",
-        "platform": "seed",
-        "filepath": "./dist/seed/fm2.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/fm2/README.md"
-    },
-    {
-        "name": "ReceiveTest",
-        "platform": "seed",
-        "filepath": "./dist/seed/ReceiveTest.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/ReceiveTest/README.md"
-    },
-    {
-        "name": "fir",
-        "platform": "seed",
-        "filepath": "./dist/seed/fir.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/fir/README.md"
-    },
-    {
-        "name": "HWTest",
-        "platform": "seed",
-        "filepath": "./dist/seed/HWTest.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/HWTest/README.md"
-    },
-    {
-        "name": "OLED",
-        "platform": "seed",
-        "filepath": "./dist/seed/OLED.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/OLED/README.md"
-    },
-    {
-        "name": "atone",
-        "platform": "seed",
-        "filepath": "./dist/seed/atone.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/atone/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/flanger/README.md"
     },
     {
         "name": "WavPlayer",
@@ -399,60 +35,25 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/WavPlayer/README.md"
     },
     {
-        "name": "jitter",
+        "name": "sampleratereducer",
         "platform": "seed",
-        "filepath": "./dist/seed/jitter.bin",
+        "filepath": "./dist/seed/sampleratereducer.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/jitter/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/sampleratereducer/README.md"
     },
     {
-        "name": "dust",
+        "name": "OLED",
         "platform": "seed",
-        "filepath": "./dist/seed/dust.bin",
+        "filepath": "./dist/seed/OLED.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/dust/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/OLED/README.md"
     },
     {
-        "name": "drip",
+        "name": "formantosc",
         "platform": "seed",
-        "filepath": "./dist/seed/drip.bin",
+        "filepath": "./dist/seed/formantosc.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/drip/README.md"
-    },
-    {
-        "name": "oscillator",
-        "platform": "seed",
-        "filepath": "./dist/seed/oscillator.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/oscillator/README.md"
-    },
-    {
-        "name": "biquad",
-        "platform": "seed",
-        "filepath": "./dist/seed/biquad.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/biquad/README.md"
-    },
-    {
-        "name": "particle",
-        "platform": "seed",
-        "filepath": "./dist/seed/particle.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/particle/README.md"
-    },
-    {
-        "name": "synthbassdrum",
-        "platform": "seed",
-        "filepath": "./dist/seed/synthbassdrum.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/synthbassdrum/README.md"
-    },
-    {
-        "name": "line",
-        "platform": "seed",
-        "filepath": "./dist/seed/line.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/line/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/formantosc/README.md"
     },
     {
         "name": "adsr",
@@ -462,39 +63,18 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/adsr/README.md"
     },
     {
-        "name": "phaser",
+        "name": "stringvoice",
         "platform": "seed",
-        "filepath": "./dist/seed/phaser.bin",
+        "filepath": "./dist/seed/stringvoice.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/phaser/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/stringvoice/README.md"
     },
     {
-        "name": "USB_CDC",
+        "name": "comb",
         "platform": "seed",
-        "filepath": "./dist/seed/USB_CDC.bin",
+        "filepath": "./dist/seed/comb.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/USB_CDC/README.md"
-    },
-    {
-        "name": "Osc",
-        "platform": "seed",
-        "filepath": "./dist/seed/Osc.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Osc/README.md"
-    },
-    {
-        "name": "variableshapeosc",
-        "platform": "seed",
-        "filepath": "./dist/seed/variableshapeosc.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/variableshapeosc/README.md"
-    },
-    {
-        "name": "SDMMC",
-        "platform": "seed",
-        "filepath": "./dist/seed/SDMMC.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/SDMMC/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/comb/README.md"
     },
     {
         "name": "hihat",
@@ -504,11 +84,102 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/hihat/README.md"
     },
     {
-        "name": "adenv",
+        "name": "Drum",
         "platform": "seed",
-        "filepath": "./dist/seed/adenv.bin",
+        "filepath": "./dist/seed/Drum.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/adenv/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Drum/README.md"
+    },
+    {
+        "name": "fir",
+        "platform": "seed",
+        "filepath": "./dist/seed/fir.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/fir/README.md"
+    },
+    {
+        "name": "dust",
+        "platform": "seed",
+        "filepath": "./dist/seed/dust.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/dust/README.md"
+    },
+    {
+        "name": "phaser",
+        "platform": "seed",
+        "filepath": "./dist/seed/phaser.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/phaser/README.md"
+    },
+    {
+        "name": "autowah",
+        "platform": "seed",
+        "filepath": "./dist/seed/autowah.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/autowah/README.md"
+    },
+    {
+        "name": "metro",
+        "platform": "seed",
+        "filepath": "./dist/seed/metro.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/metro/README.md"
+    },
+    {
+        "name": "synthsnaredrum",
+        "platform": "seed",
+        "filepath": "./dist/seed/synthsnaredrum.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/synthsnaredrum/README.md"
+    },
+    {
+        "name": "tremolo",
+        "platform": "seed",
+        "filepath": "./dist/seed/tremolo.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/tremolo/README.md"
+    },
+    {
+        "name": "clockednoise",
+        "platform": "seed",
+        "filepath": "./dist/seed/clockednoise.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/clockednoise/README.md"
+    },
+    {
+        "name": "drip",
+        "platform": "seed",
+        "filepath": "./dist/seed/drip.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/drip/README.md"
+    },
+    {
+        "name": "bypass",
+        "platform": "seed",
+        "filepath": "./dist/seed/bypass.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/bypass/README.md"
+    },
+    {
+        "name": "Osc",
+        "platform": "seed",
+        "filepath": "./dist/seed/Osc.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Osc/README.md"
+    },
+    {
+        "name": "delayline",
+        "platform": "seed",
+        "filepath": "./dist/seed/delayline.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/delayline/README.md"
+    },
+    {
+        "name": "smooth_random",
+        "platform": "seed",
+        "filepath": "./dist/seed/smooth_random.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/smooth_random/README.md"
     },
     {
         "name": "dcblock",
@@ -518,32 +189,74 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/dcblock/README.md"
     },
     {
-        "name": "maytrig",
+        "name": "allpass",
         "platform": "seed",
-        "filepath": "./dist/seed/maytrig.bin",
+        "filepath": "./dist/seed/allpass.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/maytrig/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/allpass/README.md"
     },
     {
-        "name": "moogladder",
+        "name": "Button",
         "platform": "seed",
-        "filepath": "./dist/seed/moogladder.bin",
+        "filepath": "./dist/seed/Button.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/moogladder/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Button/README.md"
     },
     {
-        "name": "sampleratereducer",
+        "name": "USB_CDC",
         "platform": "seed",
-        "filepath": "./dist/seed/sampleratereducer.bin",
+        "filepath": "./dist/seed/USB_CDC.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/sampleratereducer/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/USB_CDC/README.md"
     },
     {
-        "name": "modalvoice",
+        "name": "zoscillator",
         "platform": "seed",
-        "filepath": "./dist/seed/modalvoice.bin",
+        "filepath": "./dist/seed/zoscillator.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/modalvoice/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/zoscillator/README.md"
+    },
+    {
+        "name": "balance",
+        "platform": "seed",
+        "filepath": "./dist/seed/balance.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/balance/README.md"
+    },
+    {
+        "name": "varisaw",
+        "platform": "seed",
+        "filepath": "./dist/seed/varisaw.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/varisaw/README.md"
+    },
+    {
+        "name": "port",
+        "platform": "seed",
+        "filepath": "./dist/seed/port.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/port/README.md"
+    },
+    {
+        "name": "ReceiveTest",
+        "platform": "seed",
+        "filepath": "./dist/seed/ReceiveTest.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/ReceiveTest/README.md"
+    },
+    {
+        "name": "analogbassdrum",
+        "platform": "seed",
+        "filepath": "./dist/seed/analogbassdrum.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/analogbassdrum/README.md"
+    },
+    {
+        "name": "compressor",
+        "platform": "seed",
+        "filepath": "./dist/seed/compressor.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/compressor/README.md"
     },
     {
         "name": "nlfilt",
@@ -553,11 +266,312 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/nlfilt/README.md"
     },
     {
+        "name": "synthbassdrum",
+        "platform": "seed",
+        "filepath": "./dist/seed/synthbassdrum.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/synthbassdrum/README.md"
+    },
+    {
+        "name": "oscbank",
+        "platform": "seed",
+        "filepath": "./dist/seed/oscbank.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/oscbank/README.md"
+    },
+    {
+        "name": "crossfade",
+        "platform": "seed",
+        "filepath": "./dist/seed/crossfade.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/crossfade/README.md"
+    },
+    {
+        "name": "jitter",
+        "platform": "seed",
+        "filepath": "./dist/seed/jitter.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/jitter/README.md"
+    },
+    {
+        "name": "particle",
+        "platform": "seed",
+        "filepath": "./dist/seed/particle.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/particle/README.md"
+    },
+    {
+        "name": "overdrive",
+        "platform": "seed",
+        "filepath": "./dist/seed/overdrive.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/overdrive/README.md"
+    },
+    {
+        "name": "string",
+        "platform": "seed",
+        "filepath": "./dist/seed/string.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/string/README.md"
+    },
+    {
+        "name": "chorus",
+        "platform": "seed",
+        "filepath": "./dist/seed/chorus.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/chorus/README.md"
+    },
+    {
+        "name": "atone",
+        "platform": "seed",
+        "filepath": "./dist/seed/atone.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/atone/README.md"
+    },
+    {
+        "name": "biquad",
+        "platform": "seed",
+        "filepath": "./dist/seed/biquad.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/biquad/README.md"
+    },
+    {
+        "name": "pluck",
+        "platform": "seed",
+        "filepath": "./dist/seed/pluck.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/pluck/README.md"
+    },
+    {
+        "name": "decimator",
+        "platform": "seed",
+        "filepath": "./dist/seed/decimator.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/decimator/README.md"
+    },
+    {
+        "name": "modalvoice",
+        "platform": "seed",
+        "filepath": "./dist/seed/modalvoice.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/modalvoice/README.md"
+    },
+    {
+        "name": "maytrig",
+        "platform": "seed",
+        "filepath": "./dist/seed/maytrig.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/maytrig/README.md"
+    },
+    {
+        "name": "tone",
+        "platform": "seed",
+        "filepath": "./dist/seed/tone.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/tone/README.md"
+    },
+    {
+        "name": "analogsnaredrum",
+        "platform": "seed",
+        "filepath": "./dist/seed/analogsnaredrum.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/analogsnaredrum/README.md"
+    },
+    {
+        "name": "blosc",
+        "platform": "seed",
+        "filepath": "./dist/seed/blosc.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/blosc/README.md"
+    },
+    {
+        "name": "faustnoise",
+        "platform": "seed",
+        "filepath": "./dist/seed/faustnoise.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/faustnoise/README.md"
+    },
+    {
+        "name": "HWTest",
+        "platform": "seed",
+        "filepath": "./dist/seed/HWTest.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/HWTest/README.md"
+    },
+    {
+        "name": "Knob",
+        "platform": "seed",
+        "filepath": "./dist/seed/Knob.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Knob/README.md"
+    },
+    {
+        "name": "LCD_HD44780",
+        "platform": "seed",
+        "filepath": "./dist/seed/LCD_HD44780.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/LCD_HD44780/README.md"
+    },
+    {
+        "name": "oscillator",
+        "platform": "seed",
+        "filepath": "./dist/seed/oscillator.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/oscillator/README.md"
+    },
+    {
+        "name": "whitenoise",
+        "platform": "seed",
+        "filepath": "./dist/seed/whitenoise.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/whitenoise/README.md"
+    },
+    {
+        "name": "svf",
+        "platform": "seed",
+        "filepath": "./dist/seed/svf.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/svf/README.md"
+    },
+    {
+        "name": "fractal_noise",
+        "platform": "seed",
+        "filepath": "./dist/seed/fractal_noise.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/fractal_noise/README.md"
+    },
+    {
+        "name": "grainlet",
+        "platform": "seed",
+        "filepath": "./dist/seed/grainlet.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/grainlet/README.md"
+    },
+    {
+        "name": "moogladder",
+        "platform": "seed",
+        "filepath": "./dist/seed/moogladder.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/moogladder/README.md"
+    },
+    {
+        "name": "reverbsc",
+        "platform": "seed",
+        "filepath": "./dist/seed/reverbsc.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/reverbsc/README.md"
+    },
+    {
+        "name": "Blink",
+        "platform": "seed",
+        "filepath": "./dist/seed/Blink.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Blink/README.md"
+    },
+    {
+        "name": "phasor",
+        "platform": "seed",
+        "filepath": "./dist/seed/phasor.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/phasor/README.md"
+    },
+    {
+        "name": "adenv",
+        "platform": "seed",
+        "filepath": "./dist/seed/adenv.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/adenv/README.md"
+    },
+    {
+        "name": "Ram",
+        "platform": "seed",
+        "filepath": "./dist/seed/Ram.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Ram/README.md"
+    },
+    {
+        "name": "SDMMC",
+        "platform": "seed",
+        "filepath": "./dist/seed/SDMMC.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/SDMMC/README.md"
+    },
+    {
+        "name": "line",
+        "platform": "seed",
+        "filepath": "./dist/seed/line.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/line/README.md"
+    },
+    {
+        "name": "harmonic_osc",
+        "platform": "seed",
+        "filepath": "./dist/seed/harmonic_osc.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/harmonic_osc/README.md"
+    },
+    {
+        "name": "samplehold",
+        "platform": "seed",
+        "filepath": "./dist/seed/samplehold.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/samplehold/README.md"
+    },
+    {
+        "name": "Logger",
+        "platform": "seed",
+        "filepath": "./dist/seed/Logger.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/Logger/README.md"
+    },
+    {
+        "name": "fm2",
+        "platform": "seed",
+        "filepath": "./dist/seed/fm2.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/fm2/README.md"
+    },
+    {
+        "name": "vosim",
+        "platform": "seed",
+        "filepath": "./dist/seed/vosim.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/vosim/README.md"
+    },
+    {
+        "name": "bitcrush",
+        "platform": "seed",
+        "filepath": "./dist/seed/bitcrush.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/bitcrush/README.md"
+    },
+    {
+        "name": "resonator",
+        "platform": "seed",
+        "filepath": "./dist/seed/resonator.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/seed/resonator/README.md"
+    },
+    {
         "name": "Looper",
         "platform": "pod",
         "filepath": "./dist/pod/Looper.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/Looper/README.md"
+    },
+    {
+        "name": "ChordMachine",
+        "platform": "pod",
+        "filepath": "./dist/pod/ChordMachine.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/ChordMachine/README.md"
+    },
+    {
+        "name": "SynthVoice",
+        "platform": "pod",
+        "filepath": "./dist/pod/SynthVoice.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/README.md"
     },
     {
         "name": "Midi",
@@ -574,32 +588,11 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleButton/README.md"
     },
     {
-        "name": "MultiEffect",
+        "name": "Encoder",
         "platform": "pod",
-        "filepath": "./dist/pod/MultiEffect.bin",
+        "filepath": "./dist/pod/Encoder.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/README.md"
-    },
-    {
-        "name": "EuclideanDrums",
-        "platform": "pod",
-        "filepath": "./dist/pod/EuclideanDrums.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/EuclideanDrums/README.md"
-    },
-    {
-        "name": "SimpleOscillator",
-        "platform": "pod",
-        "filepath": "./dist/pod/SimpleOscillator.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleOscillator/README.md"
-    },
-    {
-        "name": "SynthVoice",
-        "platform": "pod",
-        "filepath": "./dist/pod/SynthVoice.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SynthVoice/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/Encoder/README.md"
     },
     {
         "name": "MusicBox",
@@ -609,18 +602,25 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MusicBox/README.md"
     },
     {
-        "name": "Encoder",
+        "name": "StepSequencer",
         "platform": "pod",
-        "filepath": "./dist/pod/Encoder.bin",
+        "filepath": "./dist/pod/StepSequencer.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/Encoder/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/StepSequencer/README.md"
     },
     {
-        "name": "ChordMachine",
+        "name": "EuclideanDrums",
         "platform": "pod",
-        "filepath": "./dist/pod/ChordMachine.bin",
+        "filepath": "./dist/pod/EuclideanDrums.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/ChordMachine/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/EuclideanDrums/README.md"
+    },
+    {
+        "name": "MultiEffect",
+        "platform": "pod",
+        "filepath": "./dist/pod/MultiEffect.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/README.md"
     },
     {
         "name": "SimpleLed",
@@ -630,11 +630,18 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleLed/README.md"
     },
     {
-        "name": "StepSequencer",
+        "name": "SimpleOscillator",
         "platform": "pod",
-        "filepath": "./dist/pod/StepSequencer.bin",
+        "filepath": "./dist/pod/SimpleOscillator.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/StepSequencer/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/SimpleOscillator/README.md"
+    },
+    {
+        "name": "CombFilter",
+        "platform": "petal",
+        "filepath": "./dist/petal/CombFilter.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/CombFilter/README.md"
     },
     {
         "name": "Looper",
@@ -651,6 +658,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/flanger/README.md"
     },
     {
+        "name": "phaser",
+        "platform": "petal",
+        "filepath": "./dist/petal/phaser.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/phaser/README.md"
+    },
+    {
         "name": "tremolo",
         "platform": "petal",
         "filepath": "./dist/petal/tremolo.bin",
@@ -658,32 +672,11 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/tremolo/README.md"
     },
     {
-        "name": "MultiEffect",
-        "platform": "petal",
-        "filepath": "./dist/petal/MultiEffect.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/MultiEffect/README.md"
-    },
-    {
-        "name": "Distortion",
-        "platform": "petal",
-        "filepath": "./dist/petal/Distortion.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Distortion/README.md"
-    },
-    {
         "name": "MultiDelay",
         "platform": "petal",
         "filepath": "./dist/petal/MultiDelay.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/MultiDelay/README.md"
-    },
-    {
-        "name": "FilterBank",
-        "platform": "petal",
-        "filepath": "./dist/petal/FilterBank.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/FilterBank/README.md"
     },
     {
         "name": "GeneralFunctionTest",
@@ -700,18 +693,11 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/chorus/README.md"
     },
     {
-        "name": "phaser",
+        "name": "FilterBank",
         "platform": "petal",
-        "filepath": "./dist/petal/phaser.bin",
+        "filepath": "./dist/petal/FilterBank.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/phaser/README.md"
-    },
-    {
-        "name": "CombFilter",
-        "platform": "petal",
-        "filepath": "./dist/petal/CombFilter.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/CombFilter/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/FilterBank/README.md"
     },
     {
         "name": "Verb",
@@ -721,39 +707,18 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Verb/README.md"
     },
     {
-        "name": "verb",
-        "platform": "patch",
-        "filepath": "./dist/patch/verb.bin",
+        "name": "MultiEffect",
+        "platform": "petal",
+        "filepath": "./dist/petal/MultiEffect.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/verb/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/MultiEffect/README.md"
     },
     {
-        "name": "Sequencer",
-        "platform": "patch",
-        "filepath": "./dist/patch/Sequencer.bin",
+        "name": "Distortion",
+        "platform": "petal",
+        "filepath": "./dist/petal/Distortion.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Sequencer/README.md"
-    },
-    {
-        "name": "QuadMixer",
-        "platform": "patch",
-        "filepath": "./dist/patch/QuadMixer.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadMixer/README.md"
-    },
-    {
-        "name": "Midi",
-        "platform": "patch",
-        "filepath": "./dist/patch/Midi.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Midi/README.md"
-    },
-    {
-        "name": "PluckEcho",
-        "platform": "patch",
-        "filepath": "./dist/patch/PluckEcho.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/PluckEcho/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Distortion/README.md"
     },
     {
         "name": "SequentialSwitch",
@@ -763,13 +728,6 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SequentialSwitch/README.md"
     },
     {
-        "name": "QuadEnvelope",
-        "platform": "patch",
-        "filepath": "./dist/patch/QuadEnvelope.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadEnvelope/README.md"
-    },
-    {
         "name": "SampleAndHold",
         "platform": "patch",
         "filepath": "./dist/patch/SampleAndHold.bin",
@@ -777,46 +735,18 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SampleAndHold/README.md"
     },
     {
-        "name": "Svf",
+        "name": "Midi",
         "platform": "patch",
-        "filepath": "./dist/patch/Svf.bin",
+        "filepath": "./dist/patch/Midi.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Svf/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Midi/README.md"
     },
     {
-        "name": "Noise",
+        "name": "Sequencer",
         "platform": "patch",
-        "filepath": "./dist/patch/Noise.bin",
+        "filepath": "./dist/patch/Sequencer.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Noise/README.md"
-    },
-    {
-        "name": "MultiDelay",
-        "platform": "patch",
-        "filepath": "./dist/patch/MultiDelay.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/MultiDelay/README.md"
-    },
-    {
-        "name": "lfo",
-        "platform": "patch",
-        "filepath": "./dist/patch/lfo.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/lfo/README.md"
-    },
-    {
-        "name": "FilterBank",
-        "platform": "patch",
-        "filepath": "./dist/patch/FilterBank.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/FilterBank/README.md"
-    },
-    {
-        "name": "PolyOsc",
-        "platform": "patch",
-        "filepath": "./dist/patch/PolyOsc.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/PolyOsc/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Sequencer/README.md"
     },
     {
         "name": "logic",
@@ -833,11 +763,46 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadraphonicMixer/README.md"
     },
     {
-        "name": "vco",
+        "name": "MultiDelay",
         "platform": "patch",
-        "filepath": "./dist/patch/vco.bin",
+        "filepath": "./dist/patch/MultiDelay.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/vco/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/MultiDelay/README.md"
+    },
+    {
+        "name": "verb",
+        "platform": "patch",
+        "filepath": "./dist/patch/verb.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/verb/README.md"
+    },
+    {
+        "name": "PluckEcho",
+        "platform": "patch",
+        "filepath": "./dist/patch/PluckEcho.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/PluckEcho/README.md"
+    },
+    {
+        "name": "PolyOsc",
+        "platform": "patch",
+        "filepath": "./dist/patch/PolyOsc.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/PolyOsc/README.md"
+    },
+    {
+        "name": "FilterBank",
+        "platform": "patch",
+        "filepath": "./dist/patch/FilterBank.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/FilterBank/README.md"
+    },
+    {
+        "name": "Noise",
+        "platform": "patch",
+        "filepath": "./dist/patch/Noise.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Noise/README.md"
     },
     {
         "name": "Compressor",
@@ -847,18 +812,46 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Compressor/README.md"
     },
     {
+        "name": "Svf",
+        "platform": "patch",
+        "filepath": "./dist/patch/Svf.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Svf/README.md"
+    },
+    {
+        "name": "QuadMixer",
+        "platform": "patch",
+        "filepath": "./dist/patch/QuadMixer.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadMixer/README.md"
+    },
+    {
+        "name": "vco",
+        "platform": "patch",
+        "filepath": "./dist/patch/vco.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/vco/README.md"
+    },
+    {
+        "name": "lfo",
+        "platform": "patch",
+        "filepath": "./dist/patch/lfo.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/lfo/README.md"
+    },
+    {
+        "name": "QuadEnvelope",
+        "platform": "patch",
+        "filepath": "./dist/patch/QuadEnvelope.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadEnvelope/README.md"
+    },
+    {
         "name": "flanger",
         "platform": "field",
         "filepath": "./dist/field/flanger.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/flanger/README.md"
-    },
-    {
-        "name": "Midi",
-        "platform": "field",
-        "filepath": "./dist/field/Midi.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/Midi/README.md"
     },
     {
         "name": "stringvoice",
@@ -868,13 +861,6 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/stringvoice/README.md"
     },
     {
-        "name": "chorus",
-        "platform": "field",
-        "filepath": "./dist/field/chorus.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/chorus/README.md"
-    },
-    {
         "name": "phaser",
         "platform": "field",
         "filepath": "./dist/field/phaser.bin",
@@ -882,11 +868,11 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/phaser/README.md"
     },
     {
-        "name": "modalvoice",
+        "name": "Midi",
         "platform": "field",
-        "filepath": "./dist/field/modalvoice.bin",
+        "filepath": "./dist/field/Midi.bin",
         "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/modalvoice/README.md"
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/Midi/README.md"
     },
     {
         "name": "KeyboardTest",
@@ -894,6 +880,20 @@
         "filepath": "./dist/field/KeyboardTest.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/KeyboardTest/README.md"
+    },
+    {
+        "name": "chorus",
+        "platform": "field",
+        "filepath": "./dist/field/chorus.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/chorus/README.md"
+    },
+    {
+        "name": "modalvoice",
+        "platform": "field",
+        "filepath": "./dist/field/modalvoice.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/modalvoice/README.md"
     },
     {
         "name": "Decimator",
