@@ -45,7 +45,7 @@ void UpdateControls()
     env.SetRise(ctrl[2]);
     env.SetFall(ctrl[3]);
 
-    if (gate[0])
+    if (gate[0] || patch.encoder.FallingEdge())
     {
         env.Trigger();
     }
@@ -58,6 +58,9 @@ static void AudioCallback(float **in, float **out, size_t size)
     for (size_t n = 0; n < size; n++)
     {
         out[0][n] = env.Process() * osc.Process();
+        out[1][n] = 0.f;
+        out[2][n] = 0.f;
+        out[3][n] = 0.f;
     }
 
     patch.seed.dac.WriteValue(DacHandle::Channel::BOTH, static_cast<uint16_t>(4095 * env.GetCurrValue()));

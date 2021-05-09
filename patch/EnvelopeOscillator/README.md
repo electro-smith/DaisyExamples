@@ -18,6 +18,7 @@ Basic oscillator with built in envelope generator.
 | Ctrl 3 | Rise | Envelope rise length |
 | Ctrl 4 | Fall | Envelope fall length |
 | Gate In 1 | Trigger | Trigger envelope |
+| Encoder Press | Trigger | Trigger envelope |
 | CV Outs 1 & 2 | Envelope CV Out | CV output of current envelope value |
 | Audio Out 1 | Audio Out | Mono oscillator output |
 

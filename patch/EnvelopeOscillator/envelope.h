@@ -15,6 +15,14 @@ namespace EnvelopeOscillator
         void Trigger()
         {
             _state = State::Rising;
+            if (_value > 0.f)
+            {
+                _dt = _value * _riseLength;
+            }
+            else
+            {
+                _dt = 0.f;
+            }
         }
 
         void SetRise(const float value)
