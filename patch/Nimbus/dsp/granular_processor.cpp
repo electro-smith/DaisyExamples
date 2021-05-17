@@ -196,11 +196,13 @@ void GranularProcessorClouds::Process(
   fb_filter_[1].SetFreq(cutoff);
   fb_filter_[1].SetRes(1.f);
 
-  fb_filter_[0].Process(fb_[0].l);
-  fb_[0].l = fb_filter_[0].High();
+  for(size_t i = 0; i < size; i++){
+    fb_filter_[0].Process(fb_[i].l);
+    fb_[i].l = fb_filter_[0].High();
 
-  fb_filter_[1].Process(fb_[0].r);
-  fb_[0].r = fb_filter_[1].High();
+    fb_filter_[1].Process(fb_[i].r);
+    fb_[i].r = fb_filter_[1].High();
+  }
 
   float fb_gain = feedback * (1.0f - freeze_lp_);
   for (size_t i = 0; i < size; ++i) {
@@ -239,6 +241,7 @@ void GranularProcessorClouds::Process(
   // Apply filters.
   if (playback_mode_ == PLAYBACK_MODE_LOOPING_DELAY ||
       playback_mode_ == PLAYBACK_MODE_STRETCH) {
+    
     float cutoff = parameters_.texture;
     float lp_cutoff = 0.5f * SemitonesToRatio(
         (cutoff < 0.5f ? cutoff - 0.5f : 0.0f) * 216.0f);
@@ -248,25 +251,27 @@ void GranularProcessorClouds::Process(
     CONSTRAIN(hp_cutoff, 0.0f, 0.499f);
     float lpq = 1.0f + 3.0f * (1.0f - feedback) * (0.5f - lp_cutoff);
     
-    lp_filter_[0].SetFreq(lp_cutoff);
-    lp_filter_[0].SetRes(lpq);
-    lp_filter_[0].Process(out_[0].l);
-    out_[0].l = lp_filter_[0].Low();
+    for(size_t i = 0; i < size; i++){
+      lp_filter_[0].SetFreq(lp_cutoff);
+      lp_filter_[0].SetRes(lpq);
+      lp_filter_[0].Process(out_[i].l);
+      out_[i].l = lp_filter_[0].Low();
 
-    lp_filter_[1].SetFreq(lp_cutoff);
-    lp_filter_[1].SetRes(lpq);
-    lp_filter_[1].Process(out_[0].r);
-    out_[0].r = lp_filter_[1].Low();
+      lp_filter_[1].SetFreq(lp_cutoff);
+      lp_filter_[1].SetRes(lpq);
+      lp_filter_[1].Process(out_[i].r);
+      out_[i].r = lp_filter_[1].Low();
 
-    hp_filter_[0].SetFreq(hp_cutoff);
-    hp_filter_[0].SetRes(1.f);
-    hp_filter_[0].Process(out_[0].l);
-    out_[0].l = hp_filter_[0].High();
+      hp_filter_[0].SetFreq(hp_cutoff);
+      hp_filter_[0].SetRes(1.f);
+      hp_filter_[0].Process(out_[i].l);
+      out_[i].l = hp_filter_[0].High();
 
-    hp_filter_[1].SetFreq(hp_cutoff);
-    hp_filter_[1].SetRes(1.f);
-    hp_filter_[1].Process(out_[0].r);
-    out_[0].r = hp_filter_[1].High();
+      hp_filter_[1].SetFreq(hp_cutoff);
+      hp_filter_[1].SetRes(1.f);
+      hp_filter_[1].Process(out_[i].r);
+      out_[i].r = hp_filter_[1].High();
+    }
   }
   
   // This is what is fed back. Reverb is not fed back.
