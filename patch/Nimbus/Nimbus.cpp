@@ -256,10 +256,12 @@ void Controls(){
             case 1:
               pbMode += hw.encoder.Increment();
               pbMode = mymod(pbMode, 4);
+              processor.set_playback_mode((PlaybackMode)pbMode);
               break;
             case 2:
               quality += hw.encoder.Increment();
               quality = mymod(quality, 4);
+              processor.set_quality(quality);
               break;
           }          
         }
@@ -268,9 +270,6 @@ void Controls(){
       cursorpos += hw.encoder.Increment();
       cursorpos = mymod(cursorpos, menupage ? 3 : 4);
     }
-
-    processor.set_playback_mode((PlaybackMode)pbMode);
-    processor.set_quality(quality);
 
     // gate ins
     parameters->freeze = hw.gate_input[0].State() || freeze_btn;
