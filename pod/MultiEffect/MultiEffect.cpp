@@ -36,7 +36,9 @@ void GetDelaySample(float &outl, float &outr, float inl, float inr);
 void GetCrushSample(float &outl, float &outr, float inl, float inr);
 
 
-void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float outl, outr, inl, inr;
 

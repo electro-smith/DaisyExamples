@@ -10,7 +10,9 @@ static Oscillator osc_sine;
 
 uint8_t finished;
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float sine, freq;
     for(size_t i = 0; i < size; i += 2)

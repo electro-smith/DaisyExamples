@@ -38,7 +38,9 @@ int   drywet;
 
 void ProcessControls();
 
-static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     ProcessControls();
 

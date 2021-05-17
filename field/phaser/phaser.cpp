@@ -34,7 +34,9 @@ void Controls()
     effectOn ^= hw.sw[0].RisingEdge();
 }
 
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     Controls();
 

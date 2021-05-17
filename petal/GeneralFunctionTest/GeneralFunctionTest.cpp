@@ -28,7 +28,9 @@ SdmmcHandler sd;
 int32_t enc_tracker;
 
 // This runs at a fixed rate to prepare audio samples
-void callback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void callback(AudioHandle::InterleavingInputBuffer  in,
+              AudioHandle::InterleavingOutputBuffer out,
+              size_t                                size)
 {
     int32_t inc;
     hw.ProcessDigitalControls();

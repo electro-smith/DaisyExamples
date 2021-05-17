@@ -24,7 +24,9 @@ uint8_t snareStep = 0;
 void ProcessTick();
 void ProcessControls();
 
-void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float osc_out, noise_out, snr_env_out, kck_env_out, sig;
 

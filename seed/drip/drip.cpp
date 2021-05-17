@@ -18,7 +18,9 @@ static Drip      drip;
 static Metro     tick;
 bool             gate;
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float output;
     bool  trig;

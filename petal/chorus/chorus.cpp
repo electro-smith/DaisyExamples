@@ -34,7 +34,9 @@ void Controls()
     wet = hw.encoder.RisingEdge() ? .9f : wet;
 }
 
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     Controls();
 

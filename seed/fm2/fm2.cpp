@@ -8,7 +8,9 @@ static DaisySeed seed;
 Fm2              osc;
 Oscillator       lfo1, lfo2, lfo3;
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float output;
     for(size_t i = 0; i < size; i += 2)

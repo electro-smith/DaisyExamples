@@ -14,7 +14,9 @@ static uint32_t DSY_SDRAM_BSS test_buff[TEST_BUFF_SIZE];
 static DaisySeed hw;
 static uint32_t  start, end, dur;
 
-void bad_callback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void bad_callback(AudioHandle::InterleavingInputBuffer  in,
+                  AudioHandle::InterleavingOutputBuffer out,
+                  size_t                                size)
 {
     start = System::GetTick();
     //	int32_t* ram = (int32_t*)0x20000000; // DTCM
@@ -30,7 +32,9 @@ void bad_callback(AudioHandle::InterleavingInputBuffer in, AudioHandle::Interlea
     memcpy(out, in, sizeof(float) * size);
 }
 
-void passthru(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void passthru(AudioHandle::InterleavingInputBuffer  in,
+              AudioHandle::InterleavingOutputBuffer out,
+              size_t                                size)
 {
     memcpy(out, in, sizeof(float) * size);
 }

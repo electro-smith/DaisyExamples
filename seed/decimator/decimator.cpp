@@ -18,7 +18,9 @@ static Oscillator osc;
 static Decimator  decim;
 static Phasor     phs;
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float osc_out, decimated_out;
     float downsample_amt;

@@ -16,7 +16,9 @@ static Oscillator lfo;
 const float kArpeggio[3] = {48.0f, 52.0f, 55.0f};
 uint8_t     arp_idx;
 
-static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     for(size_t i = 0; i < size; i++)
     {

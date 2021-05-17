@@ -10,7 +10,9 @@ MidiHandler midi;
 Oscillator  osc;
 Svf         filt;
 
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     float sig;
     for(size_t i = 0; i < size; i++)
@@ -79,7 +81,7 @@ int main(void)
 
     //display
     std::string str  = "Midi";
-    char *      cstr = &str[0];
+    char*       cstr = &str[0];
     hw.display.WriteString(cstr, Font_7x10, true);
     hw.display.Update();
 

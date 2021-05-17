@@ -26,7 +26,9 @@ static float get_new_note()
 static float freq;
 float        sig, rawsig, filtsig, sendsig, wetvl, wetvr;
 float        xf, vamt, dec, time;
-static void  audio(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void  audio(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     hw.ProcessDigitalControls();
     if(hw.button1.RisingEdge())

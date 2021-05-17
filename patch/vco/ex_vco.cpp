@@ -9,7 +9,9 @@ DaisyPatch patch;
 Oscillator osc;
 Parameter  freqctrl, wavectrl, ampctrl, finectrl;
 
-static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     float  sig, freq, amp;
     size_t wave;
@@ -54,7 +56,7 @@ int main(void)
 
     //briefly display module name
     std::string str  = "VCO";
-    char *      cstr = &str[0];
+    char*       cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
     patch.display.Update();
     patch.DelayMs(1000);

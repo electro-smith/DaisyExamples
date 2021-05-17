@@ -17,7 +17,9 @@ static SampleHold sh;
 
 float osc_out = 0;
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float osc_out, env_out;
     for(size_t i = 0; i < size; i += 2)

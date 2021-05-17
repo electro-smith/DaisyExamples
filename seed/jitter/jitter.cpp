@@ -20,7 +20,9 @@ static Jitter     jitter;
 static Oscillator osc;
 bool              gate;
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float osc_out, jitter_out;
     for(size_t i = 0; i < size; i += 2)

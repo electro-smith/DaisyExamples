@@ -53,7 +53,9 @@ void GetSample(float &inl, float &inr, effectTypes type)
     }
 }
 
-void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     Controls();
 

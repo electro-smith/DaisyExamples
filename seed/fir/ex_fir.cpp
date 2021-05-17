@@ -81,7 +81,9 @@ static void ApplyFilter()
     }
 }
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     /* Copy generated coefficients to active buffer */
     ApplyFilter();

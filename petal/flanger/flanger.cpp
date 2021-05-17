@@ -12,7 +12,9 @@ float wet;
 float deltarget, del;
 float lfotarget, lfo;
 
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     hw.ProcessAllControls();
 

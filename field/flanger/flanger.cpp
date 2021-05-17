@@ -13,7 +13,9 @@ float del, deltarget;
 float lfo, lfotarget;
 
 float knob_vals[4];
-void  AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void  AudioCallback(AudioHandle::InputBuffer  in,
+                    AudioHandle::OutputBuffer out,
+                    size_t                    size)
 {
     hw.ProcessAllControls();
 

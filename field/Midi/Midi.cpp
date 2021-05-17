@@ -152,7 +152,9 @@ class VoiceManager
 
 static VoiceManager<24> voice_handler;
 
-void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float sum = 0.f;
     hw.ProcessDigitalControls();

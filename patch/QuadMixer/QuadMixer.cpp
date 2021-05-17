@@ -6,7 +6,9 @@ using namespace daisysp;
 
 DaisyPatch patch;
 
-static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     float ctrlVal[4];
     for(int i = 0; i < 4; i++)

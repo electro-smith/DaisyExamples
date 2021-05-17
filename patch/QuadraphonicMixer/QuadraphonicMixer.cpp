@@ -167,7 +167,9 @@ void UpdateControls()
     }
 }
 
-static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     UpdateControls();
 
@@ -236,7 +238,7 @@ void UpdateDisplay()
     }
 
     std::string str  = "QUADRAPHONIC MIXER";
-    char *      cstr = &str[0];
+    char*       cstr = &str[0];
     patch.display.SetCursor(minX, minY);
     patch.display.WriteString(cstr, Font_6x8, true);
 

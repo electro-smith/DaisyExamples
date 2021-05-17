@@ -8,7 +8,9 @@ DaisySeed  hw;
 Overdrive  drive;
 Oscillator osc, lfo;
 
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     for(size_t i = 0; i < size; i++)
     {

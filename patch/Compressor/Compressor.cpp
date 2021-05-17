@@ -14,7 +14,9 @@ void UpdateControls();
 
 Parameter threshParam, ratioParam, attackParam, releaseParam;
 
-static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     float sig;
     float dry_in, dry_sidechain;
@@ -64,7 +66,7 @@ int main(void)
 
         patch.display.SetCursor(0, 0);
         std::string str  = "Compressor";
-        char *      cstr = &str[0];
+        char*       cstr = &str[0];
         patch.display.WriteString(cstr, Font_7x10, true);
 
         patch.display.SetCursor(0, 25);
