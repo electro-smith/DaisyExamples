@@ -12,7 +12,7 @@ bool      bypass;
 ReverbSc  verb;
 
 // This runs at a fixed rate, to prepare audio samples
-void callback(float *in, float *out, size_t size)
+void callback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     float dryl, dryr, wetl, wetr, sendl, sendr;
     hw.ProcessDigitalControls();

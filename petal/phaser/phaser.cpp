@@ -38,7 +38,7 @@ void Controls()
     phaser.SetPoles(numstages);
 }
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     Controls();
 

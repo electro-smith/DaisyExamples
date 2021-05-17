@@ -22,9 +22,9 @@ bool                res    = false;
 void ResetBuffer();
 void Controls();
 
-void NextSamples(float &output, float *in, size_t i);
+void NextSamples(float &output, AudioHandle::InterleavingInputBuffer in, size_t i);
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     float output = 0;
 
@@ -118,7 +118,7 @@ void Controls()
     UpdateButtons();
 }
 
-void WriteBuffer(float *in, size_t i)
+void WriteBuffer(AudioHandle::InterleavingInputBuffer in, size_t i)
 {
     buf[pos] = buf[pos] * 0.5 + in[i] * 0.5;
     if(first)
@@ -127,7 +127,7 @@ void WriteBuffer(float *in, size_t i)
     }
 }
 
-void NextSamples(float &output, float *in, size_t i)
+void NextSamples(float &output, AudioHandle::InterleavingInputBuffer in, size_t i)
 {
     if(rec)
     {
