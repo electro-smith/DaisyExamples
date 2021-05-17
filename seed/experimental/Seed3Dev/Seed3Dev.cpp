@@ -38,7 +38,7 @@ float DSY_SDRAM_BSS fftoutbuff[1024];
 
 float amp, targetamp;
 
-void AudioTest(float *in, float *out, size_t size)
+void AudioTest(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     hw.ProcessAnalogControls();
     hw.ProcessDigitalControls();
@@ -136,7 +136,7 @@ void AudioTest(float *in, float *out, size_t size)
     }
 }
 
-void verbthru(float *in, float *out, size_t size)
+void verbthru(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {
@@ -154,7 +154,7 @@ void verbthru(float *in, float *out, size_t size)
         //        out[i + 1] = in[i];
     }
 }
-void passthru(float *in, float *out, size_t size)
+void passthru(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {
@@ -164,7 +164,7 @@ void passthru(float *in, float *out, size_t size)
 }
 
 uint8_t waveform;
-void    r2d2(float *in, float *out, size_t size)
+void    r2d2(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     float sig, freq;
     hw.ProcessDigitalControls();

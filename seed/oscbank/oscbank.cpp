@@ -12,7 +12,7 @@ Metro          tick;
 
 float freqs[] = {523.25f, 659.25f, 783.99f};
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     for(size_t i = 0; i < size; i++)
     {

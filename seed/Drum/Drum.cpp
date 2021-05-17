@@ -16,7 +16,7 @@ AdEnv kickVolEnv, kickPitchEnv, snareEnv;
 
 Switch kick, snare;
 
-void AudioCallback(float* in, float* out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     float osc_out, noise_out, snr_env_out, kck_env_out, sig;
     //Get rid of any bouncing

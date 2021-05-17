@@ -19,7 +19,7 @@ static Oscillator osc;
 static Metro      tick;
 static Autowah    autowah;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     float osc_out, env_out;
     for(size_t i = 0; i < size; i += 2)

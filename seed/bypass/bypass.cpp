@@ -5,7 +5,7 @@ using namespace daisy;
 
 DaisySeed seed;
 
-static void Callback(float *in, float *out, size_t size)
+static void Callback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     memcpy(out, in, size * sizeof(float));
 }

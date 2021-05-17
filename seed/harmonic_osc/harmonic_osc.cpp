@@ -12,7 +12,7 @@ static AdEnv                  env;
 float scale[] = {55.f, 65.41f, 73.42f, 82.41f, 98.f, 110.f};
 int   note    = 0;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {

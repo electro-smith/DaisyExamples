@@ -8,7 +8,7 @@ static DaisySeed  seed;
 static Metro      clock;
 static Oscillator osc_sine;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     float   sine, freq;
     uint8_t tic;

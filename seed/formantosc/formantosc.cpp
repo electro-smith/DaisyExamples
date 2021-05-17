@@ -12,7 +12,7 @@ static Oscillator        lfo;
 float freqs[3][2] = {{390, 2300}, {610, 1900}, {820, 1530}};
 int   idx         = 0;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {

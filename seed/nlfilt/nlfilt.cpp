@@ -22,7 +22,7 @@ static Metro      tick;
 
 static NlFilt filt;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     // The NlFilt object currently only works on blocks of audio at a time.
     // This can be accomodated easily with an extra loop at the end.
