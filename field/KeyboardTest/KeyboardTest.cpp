@@ -61,7 +61,7 @@ static daisysp::ReverbSc verb;
 float kvals[8];
 float cvvals[4];
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     bool trig, use_verb;
     trig = false;

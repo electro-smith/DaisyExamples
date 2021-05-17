@@ -35,7 +35,7 @@ int8_t octaves = 0;
 // Use two side buttons to change octaves.
 float kvals[NUM_CONTROLS];
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     hw.ProcessAnalogControls();
     hw.ProcessDigitalControls();
