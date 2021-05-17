@@ -14,7 +14,7 @@ Decimator decimator_r;
 static float kval;
 
 // This runs at a fixed rate, to prepare audio samples
-void callback(float *in, float *out, size_t size)
+void callback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     // Audio is interleaved stereo by default
     for(size_t i = 0; i < size; i += 2)
