@@ -270,7 +270,7 @@ void Controls(){
     }
 
     processor.set_playback_mode((PlaybackMode)pbMode);
-    processor.set_low_fidelity(quality);
+    processor.set_quality(quality);
 
     // gate ins
     parameters->freeze = hw.gate_input[0].State() || freeze_btn;
