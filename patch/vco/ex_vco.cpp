@@ -9,7 +9,7 @@ DaisyPatch patch;
 Oscillator osc;
 Parameter  freqctrl, wavectrl, ampctrl, finectrl;
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     float  sig, freq, amp;
     size_t wave;

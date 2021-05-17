@@ -50,7 +50,7 @@ lfoStruct lfos[2];
 void UpdateOled();
 void UpdateEncoder();
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     for(size_t i = 0; i < size; i++)
     {

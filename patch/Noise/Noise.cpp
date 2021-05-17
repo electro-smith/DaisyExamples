@@ -62,7 +62,7 @@ struct filter
 
 filter lowpass, highpass;
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     patch.ProcessAnalogControls();
 

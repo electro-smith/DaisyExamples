@@ -9,7 +9,7 @@ DaisyPatch patch;
 Parameter  cutoff_ctrl, res_ctrl, drive_ctrl;
 Svf        svf;
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     //get new control values
     float cutoff = cutoff_ctrl.Process();

@@ -21,7 +21,7 @@ ReverbSc                                  verb;
 // Persistent filtered Value for smooth delay time changes.
 float smooth_time;
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     float sig, delsig;           // Mono Audio Vars
     float trig, nn, decay;       // Pluck Vars

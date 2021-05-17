@@ -167,7 +167,7 @@ void UpdateControls()
     }
 }
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     UpdateControls();
 

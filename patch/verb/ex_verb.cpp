@@ -10,7 +10,7 @@ static DcBlock    blk[2];
 Parameter         lpParam;
 static float      drylevel, send;
 
-static void VerbCallback(float **in, float **out, size_t size)
+static void VerbCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     float dryL, dryR, wetL, wetR, sendL, sendR;
     patch.ProcessAnalogControls();
