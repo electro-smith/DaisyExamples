@@ -191,7 +191,7 @@ int main(void) {
     processor.Prepare();
     
     hw.display.Fill(false);
-    hw.display.DrawLine(0, 10, SSD1309_WIDTH, 10, true);
+    hw.display.DrawLine(0, 10, 128, 10, true);
 
     hw.display.SetCursor(0, cursorpos * 13 + 13);
     hw.display.WriteString(selected ? "x" : "o", Font_7x10, true);
