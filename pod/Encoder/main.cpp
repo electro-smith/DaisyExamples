@@ -10,7 +10,7 @@ static int32_t  inc;
 
 Color my_colors[5];
 
-static void callback(float *in, float *out, size_t size)
+static void callback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     // Debounce the Encoder at a steady, fixed rate.
     hw.encoder.Debounce();
