@@ -25,6 +25,7 @@ static uint32_t  dur_erase, dur_write_4k, dur_write_4m, dur_read_qspi,
 int main(void)
 {
     // Initialize Hardware
+    hw.Configure();
     hw.Init();
     //	for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
     //	{

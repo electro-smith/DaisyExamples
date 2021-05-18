@@ -8,8 +8,8 @@ CPP_SOURCES = GeneralFunctionTest.cpp
 LIBDAISY_DIR = ../../libdaisy
 DAISYSP_DIR = ../../DaisySP
 
-# FATFS dir contains fatfs itself, libdaisy sys folder contains ffconf 
-C_INCLUDES = -I$(FATFS_DIR) -I$(LIBDAISY_DIR)/src/sys
+# Includes FatFS source files within project.
+USE_FATFS = 1
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
