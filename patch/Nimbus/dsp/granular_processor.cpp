@@ -222,7 +222,7 @@ void GranularProcessorClouds::Process(FloatFrame* input,
     // low frequencies (causing large DC swings).
     ONE_POLE(freeze_lp_, parameters_.freeze ? 1.0f : 0.0f, 0.0005f)
     float feedback = parameters_.feedback;
-    float cutoff   = (20.0f + 100.0f * feedback * feedback) / sample_rate();
+    float cutoff   = (20.0f + 100.0f * feedback * feedback);
 
     fb_filter_[0].SetFreq(cutoff);
     fb_filter_[0].SetRes(1.f);
@@ -296,26 +296,30 @@ void GranularProcessorClouds::Process(FloatFrame* input,
         CONSTRAIN(lp_cutoff, 0.0f, 0.499f);
         CONSTRAIN(hp_cutoff, 0.0f, 0.499f);
         float lpq = 1.0f + 3.0f * (1.0f - feedback) * (0.5f - lp_cutoff);
+        lpq *= .25f;
+
+        lp_filter_[0].SetFreq(lp_cutoff * sample_rate_);
+        lp_filter_[0].SetRes(lpq);
+        lp_filter_[1].SetFreq(lp_cutoff * sample_rate_);
+        lp_filter_[1].SetRes(lpq);
+
+        hp_filter_[0].SetFreq(hp_cutoff * sample_rate_);
+        hp_filter_[0].SetRes(lpq);
+        hp_filter_[1].SetFreq(hp_cutoff * sample_rate_);
+        hp_filter_[1].SetRes(lpq);
+
 
         for(size_t i = 0; i < size; i++)
         {
-            lp_filter_[0].SetFreq(lp_cutoff);
-            lp_filter_[0].SetRes(lpq);
             lp_filter_[0].Process(out_[i].l);
             out_[i].l = lp_filter_[0].Low();
 
-            lp_filter_[1].SetFreq(lp_cutoff);
-            lp_filter_[1].SetRes(lpq);
             lp_filter_[1].Process(out_[i].r);
             out_[i].r = lp_filter_[1].Low();
 
-            hp_filter_[0].SetFreq(hp_cutoff);
-            hp_filter_[0].SetRes(1.f);
             hp_filter_[0].Process(out_[i].l);
             out_[i].l = hp_filter_[0].High();
 
-            hp_filter_[1].SetFreq(hp_cutoff);
-            hp_filter_[1].SetRes(1.f);
             hp_filter_[1].Process(out_[i].r);
             out_[i].r = hp_filter_[1].High();
         }
