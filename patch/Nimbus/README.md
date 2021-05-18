@@ -51,7 +51,7 @@ Freeze can be forced on using the menu control. To do so, click freeze, and turn
 Freeze can also be turned on using Gate In 1. This will turn Freeze on (if it isn't already) for the duration the gate is high. The box will also be drawn when Freeze is turned on via the gate.
 
 #### Mode
-You can select from Clouds' four alternate modes here. These are:
+You can select from Nimbus' four alternate modes here. These are:
 - Granular
 - Pitch Shift / Time Stretch
 - Looping Delay
