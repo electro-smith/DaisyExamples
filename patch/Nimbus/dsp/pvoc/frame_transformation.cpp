@@ -157,7 +157,7 @@ void FrameTransformation::PolarToRectangular(float* fft_data)
     {
         fast_p2r(magnitude[i], angle[i], &real[i], &imag[i]);
     }
-    for(int32_t i = size_; i<fft_size_> > 1; ++i)
+    for(int32_t i = size_; i < (fft_size_ >> 1); ++i)
     {
         real[i] = imag[i] = 0.0f;
     }
