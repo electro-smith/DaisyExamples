@@ -2,7 +2,7 @@
 TARGET = spi
 
 # Sources
-CPP_SOURCES = spi.cpp
+CPP_SOURCES = spi_master.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
