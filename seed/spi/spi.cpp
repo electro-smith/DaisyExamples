@@ -5,42 +5,46 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyField hw;
-UartHandler uart;
+SpiHandle spi;
 uint8_t counter;
 
 int main(void)
 {
 	hw.Init();
 
-	UartHandler::Config uart_config;
-	uart_config.baudrate = 31250;
-	uart_config.parity = UartHandler::Config::Parity::NONE;
-	uart_config.periph = UartHandler::Config::Peripheral::USART_1;
-	uart_config.stopbits = UartHandler::Config::StopBits::BITS_2;
-	uart_config.pin_config.tx = {DSY_GPIOB, 6};
-	uart_config.pin_config.rx = {DSY_GPIOB, 7};
-	uart_config.mode = UartHandler::Config::Mode::TX_RX;
-	uart_config.wordlength = UartHandler::Config::WordLength::BITS_8;
+	SpiHandle::Config spi_config;
+	spi_config.periph = SpiHandle::Config::Peripheral::SPI_1;
+	spi_config.mode = SpiHandle::Config::Mode::MASTER;
+	spi_config.direction = SpiHandle::Config::Direction::TWO_LINES;
+	spi_config.clock_polarity = SpiHandle::Config::ClockPolarity::HIGH;
+	spi_config.clock_phase = SpiHandle::Config::ClockPhase::ONE_EDGE;
+	spi_config.nss = SpiHandle::Config::NSS::HARD_INPUT;
+	spi_config.baud_prescaler = SpiHandle::Config::BaudPrescaler::BAUDRATEPRESCALER_64;
+	spi_config.datasize = 8;
 
-	uart.Init(uart_config);
+	spi_config.pin_config.sclk = {DSY_GPIOA, 5};
+	spi_config.pin_config.miso = {DSY_GPIOA, 6};
+	spi_config.pin_config.mosi = {DSY_GPIOA, 7};
+	spi_config.pin_config.nss = {DSY_GPIOA, 4};
+
+	spi.Init(spi_config);
 
 	counter = 0;
 
 	hw.StartAdc();
 	while(1) {
 		//onboard led on if no errors
-		hw.seed.SetLed(uart.CheckError() == HAL_UART_ERROR_NONE);
+		// hw.seed.SetLed(spi.CheckError() == HAL_SPI_ERROR_NONE);
 		
 		//transmit
 		uint8_t buff[] = {counter};
-		uart.PollTx(buff, 1);
+		spi.BlockingTransmit(buff, 1);
 		counter++;
 		hw.DelayMs(10);
 
 		//receive
 		uint8_t rxbuff;
-		uart.PollReceive(&rxbuff, 1, 10);
-		uart.FlushRx();
+		spi.PollReceive(&rxbuff, 1, 10);
 
 		//oled
 		hw.display.Fill(false);				
