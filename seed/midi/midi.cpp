@@ -46,6 +46,14 @@ void HandleMidiMessage(MidiEvent m)
 
         }
 		break;
+		case PitchBend:
+        {
+            PitchBendEvent p = m.AsPitchBend();
+			logger.Print("Pitch Bend\n");
+			logger.Print("   Value: %d:\n", p.value);
+
+        }
+		break;
         default: break;
     }
 }
