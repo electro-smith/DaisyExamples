@@ -31,7 +31,7 @@ void HandleMidiMessage(MidiEvent m)
         break;
 		case PolyphonicKeyPressure:
 		{
-			PolyphonicKeyPressureEvent p = m.AsPolyphonicKeyPressureEvent();
+			PolyphonicKeyPressureEvent p = m.AsPolyphonicKeyPressure();
 			logger.Print("PKP Event\n");
 			logger.Print("   Note: %d\n", p.note);
 			logger.Print("   Pressure: %d:\n", p.pressure);
