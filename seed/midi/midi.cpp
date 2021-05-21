@@ -5,19 +5,27 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisySeed hw;
-void AudioCallback(float **in, float **out, size_t size)
+MidiHandler midi;
+
+// Typical Switch case for Message Type.
+void HandleMidiMessage(MidiEvent m)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		out[0][i] = in[0][i];
-		out[1][i] = in[1][i];
-	}
 }
 
 int main(void)
 {
 	hw.Configure();
 	hw.Init();
-	hw.StartAudio(AudioCallback);
-	while(1) {}
+
+    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
+    midi.StartReceive();
+    for(;;)
+    {
+        midi.Listen();
+        // Handle MIDI Events
+        while(midi.HasEvents())
+        {
+            HandleMidiMessage(midi.PopEvent());
+        }
+    }
 }
