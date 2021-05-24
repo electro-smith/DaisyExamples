@@ -1,4 +1,4 @@
-#N canvas 229 130 1536 830 10;
+#N canvas 258 117 1536 830 10;
 #X text 83 21 This patch sends a comprehensive set of midi test data
 ;
 #X obj 53 217 bng 38 250 50 0 empty empty empty 17 7 0 10 -262144 -1
