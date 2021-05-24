@@ -46,6 +46,20 @@ void HandleMidiMessage(MidiEvent m)
 
         }
 		break;
+		case ProgramChange:
+        {
+            ProgramChangeEvent p = m.AsProgramChange();
+			logger.Print("Program Change\n");
+			logger.Print("   Program Number: %d\n", p.program);
+        }
+		break;        
+		case ChannelPressure:
+        {
+            ChannelPressureEvent p = m.AsChannelPressure();
+			logger.Print("Channel Pressure\n");
+			logger.Print("   Pressure: %d\n", p.pressure);
+        }
+		break;
 		case PitchBend:
         {
             PitchBendEvent p = m.AsPitchBend();
