@@ -65,8 +65,19 @@ void HandleMidiMessage(MidiEvent m)
             PitchBendEvent p = m.AsPitchBend();
 			logger.Print("Pitch Bend\n");
 			logger.Print("   Value: %d:\n", p.value);
-
         }
+		break;
+		case SystemCommon:
+        {
+			logger.Print("System Common");
+
+        }		
+		break;
+		case SystemRealTime:
+        {
+			logger.Print("System Real Time");
+
+        }		
 		break;
         default: break;
     }
