@@ -69,14 +69,60 @@ void HandleMidiMessage(MidiEvent m)
 		break;
 		case SystemCommon:
         {
-			logger.Print("System Common");
+			switch(m.sc_type){
+				case SystemExclusive:
+				{
+					SystemExclusiveEvent p = m.AsSystemExclusive();
+					logger.Print("SysEx\n");
+					logger.Print("    Message Length: %d\n", p.length);
+					for(int i = 0; i < p.length; i++){
+						logger.Print("    SysEx data: %d\n", p.data[i]);
+					}
+				}
+				break;
+				case MTCQuarterFrame:
+				{
+					MTCQuarterFrameEvent p = m.AsMTCQuarterFrame();
+					logger.Print("MTCQuarterFrame\n");
+					logger.Print("   Message Type: %d\n", p.message_type);
+					logger.Print("   Value: %d\n", p.value);
+				}
+				break;
+				case SongPositionPointer:
+				{
+					SongPositionPointerEvent p = m.AsSongPositionPointer();
+					logger.Print("SongPositionPointer\n");
+					logger.Print("   Position: %d\n", p.position);
+				}
+				break;
+				case SongSelect:
+				{
+					SongSelectEvent p = m.AsSongSelect();
+					logger.Print("Song Select\n");
+					logger.Print("   Song: %d\n", p.song);
 
+				}
+				break;
+				case Undefined0:
+					logger.Print("Undefined0\n");
+					break;
+				case Undefined1:
+					logger.Print("Undefined1\n");
+					break;
+				case TuneRequest:
+					logger.Print("TuneRequest\n");
+					break;
+				case SysExEnd:
+					logger.Print("SysExEnd\n");
+					break;
+				default: break;
+			}
         }		
 		break;
 		case SystemRealTime:
         {
-			logger.Print("System Real Time");
-
+			logger.Print("System Real Time\n");
+			logger.Print("   SRT_Type: %d\n", m.srt_type);
         }		
 		break;
         default: break;
@@ -91,7 +137,7 @@ int main(void)
     midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
     midi.StartReceive();
 	logger.StartLog();
-    for(;;)
+	for(;;)
     {
         midi.Listen();
         // Handle MIDI Events
