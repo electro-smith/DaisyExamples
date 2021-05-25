@@ -9,7 +9,9 @@ DaisyPatch patch;
 Parameter  cutoff_ctrl, res_ctrl, drive_ctrl;
 Svf        svf;
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     //get new control values
     float cutoff = cutoff_ctrl.Process();
@@ -50,7 +52,7 @@ int main(void)
 
     //Put controls onscreen
     std::string str  = "Cut  Res  Drive  ";
-    char *      cstr = &str[0];
+    char*       cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
 
     patch.display.SetCursor(0, 50);

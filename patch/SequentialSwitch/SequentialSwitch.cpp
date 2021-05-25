@@ -12,7 +12,9 @@ uint8_t step;
 
 void UpdateControls();
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     UpdateControls();
 
@@ -40,7 +42,7 @@ int main(void)
 
         patch.display.SetCursor(0, 0);
         std::string str  = "Sequential Switch";
-        char *      cstr = &str[0];
+        char*       cstr = &str[0];
         patch.display.WriteString(cstr, Font_7x10, true);
 
         patch.display.SetCursor(0, 25);

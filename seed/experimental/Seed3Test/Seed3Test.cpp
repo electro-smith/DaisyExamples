@@ -186,7 +186,7 @@ DaisySeed hw;
 uint32_t phasor = 0;
 float    sig;
 
-void AudioTest(float *in, float *out, size_t size)
+void AudioTest(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     for(size_t i = 0; i < size; i += 2)
     {

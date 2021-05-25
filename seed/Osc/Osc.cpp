@@ -13,7 +13,9 @@ AdEnv      env;
 
 Switch button1;
 
-void AudioCallback(float* in, float* out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float osc_out, env_out;
 

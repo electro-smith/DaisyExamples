@@ -50,7 +50,9 @@ lfoStruct lfos[2];
 void UpdateOled();
 void UpdateEncoder();
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     for(size_t i = 0; i < size; i++)
     {
@@ -98,7 +100,7 @@ void UpdateOled()
 
     patch.display.SetCursor(0, 0);
     std::string str  = "Dual LFO";
-    char *      cstr = &str[0];
+    char*       cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
 
     //cursor

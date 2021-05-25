@@ -11,7 +11,9 @@ MidiHandler midi;
 Oscillator  osc;
 Svf         filt;
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float sig;
     for(size_t i = 0; i < size; i += 2)

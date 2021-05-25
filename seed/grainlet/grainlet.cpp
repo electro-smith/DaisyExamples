@@ -13,7 +13,9 @@ float notes[]
     = {329.63f, 392.f, 440.f, 392.f, 587.33f, 523.25f, 587.33f, 659.25};
 int idx = 0;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     for(size_t i = 0; i < size; i += 2)
     {

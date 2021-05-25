@@ -17,7 +17,9 @@ DaisyPod     hw;
 SdmmcHandler sdcard;
 WavPlayer    sampler;
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     int32_t inc;
 

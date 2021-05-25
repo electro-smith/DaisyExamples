@@ -17,7 +17,7 @@ uint8_t waveforms[4] = {
 
 uint8_t waveidx = 0;
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     float sig;
     hw.ProcessAnalogControls();
@@ -62,7 +62,7 @@ void AudioCallback(float **in, float **out, size_t size)
                                * 4095.0f);
 }
 
-void BypassTest(float **in, float **out, size_t size)
+void BypassTest(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     hw.ProcessAnalogControls();
     hw.ProcessDigitalControls();
