@@ -148,7 +148,63 @@ void HandleMidiMessage(MidiEvent m)
 					break;
 				default: break;
 			}
-        }		
+        }	
+		case ChannelMode:
+			switch(m.cm_type){
+				case AllSoundOff:{
+					AllSoundOffEvent p = m.AsAllSoundOff();
+					logger.Print("AllSoundOff\n");
+					logger.Print("   Channel: %d\n", p.channel);
+				}
+				break;
+				case ResetAllControllers:{
+					ResetAllControllersEvent p = m.AsResetAllControllers();
+					logger.Print("ResetAllControllers\n");
+					logger.Print("   Channel: %d\n", p.channel);
+					logger.Print("   Value: %d\n", p.value);
+				}
+				break;
+				case LocalControl:{
+					LocalControlEvent p = m.AsLocalControl();
+					logger.Print("LocalControl\n");
+					logger.Print("   Channel: %d\n", p.channel);
+					logger.Print("   LocalControlOn: %d\n", p.local_control_on);
+					logger.Print("   LocalControlOff: %d\n", p.local_control_off);
+				}
+				break;
+				case AllNotesOff:{
+					AllNotesOffEvent p = m.AsAllNotesOff();
+					logger.Print("AllNotesOff\n");
+					logger.Print("   Channel: %d\n", p.channel);
+				}
+				break;
+				case OmniModeOff:{
+					OmniModeOffEvent p = m.AsOmniModeOff();
+					logger.Print("OmniModeOff\n");
+					logger.Print("   Channel: %d\n", p.channel);
+				}
+				break;
+				case OmniModeOn:{
+					OmniModeOnEvent p = m.AsOmniModeOn();
+					logger.Print("OmniModeOn\n");
+					logger.Print("   Channel: %d\n", p.channel);
+				}
+				break;
+				case MonoModeOn:{
+					MonoModeOnEvent p = m.AsMonoModeOn();
+					logger.Print("MonoModeOn\n");
+					logger.Print("   Channel: %d\n", p.channel);
+					logger.Print("   Num Channels: %d\n", p.num_channels);
+				}
+				break;
+				case PolyModeOn:{
+					PolyModeOnEvent p = m.AsPolyModeOn();
+					logger.Print("PolyModeOn\n");
+					logger.Print("   Channel: %d\n", p.channel);
+				}
+				break;
+				default: break;	
+			}
 		break;
         default: break;
     }
