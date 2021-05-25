@@ -1,10 +1,10 @@
-#include "daisy_seed.h"
+#include "daisy_pod.h"
 #include "daisysp.h"
 
 using namespace daisy;
 using namespace daisysp;
 
-DaisySeed hw;
+DaisyPod hw;
 MidiHandler midi;
 Logger<> logger;
 
@@ -103,10 +103,10 @@ void HandleMidiMessage(MidiEvent m)
 
 				}
 				break;
-				case Undefined0:
+				case SCUndefined0:
 					logger.Print("Undefined0\n");
 					break;
-				case Undefined1:
+				case SCUndefined1:
 					logger.Print("Undefined1\n");
 					break;
 				case TuneRequest:
@@ -121,8 +121,33 @@ void HandleMidiMessage(MidiEvent m)
 		break;
 		case SystemRealTime:
         {
-			logger.Print("System Real Time\n");
-			logger.Print("   SRT_Type: %d\n", m.srt_type);
+			switch(m.srt_type){
+				case TimingClock:
+					logger.Print("Timing Clock\n");
+					break;
+				case SRTUndefined0:
+					logger.Print("SRTUndefined0\n");			
+					break;			
+				case Start:
+					logger.Print("Start\n");
+					break;
+				case Continue:
+					logger.Print("Continue\n");
+					break;
+				case Stop:
+					logger.Print("Stop\n");
+					break;				
+				case SRTUndefined1:
+					logger.Print("SRTUndefined1\n");		
+					break;			
+				case ActiveSensing:
+					logger.Print("ActiveSensing\n");
+					break;
+				case Reset:
+					logger.Print("Reset\n");
+					break;
+				default: break;
+			}
         }		
 		break;
         default: break;
@@ -131,12 +156,12 @@ void HandleMidiMessage(MidiEvent m)
 
 int main(void)
 {
-	hw.Configure();
 	hw.Init();
 
     midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
     midi.StartReceive();
 	logger.StartLog();
+	hw.StartAdc();
 	for(;;)
     {
         midi.Listen();
@@ -145,5 +170,6 @@ int main(void)
         {
             HandleMidiMessage(midi.PopEvent());
         }
+
     }
 }
