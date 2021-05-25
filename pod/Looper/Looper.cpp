@@ -22,7 +22,7 @@ bool                res    = false;
 void ResetBuffer();
 void Controls();
 
-void NextSamples(float &                              output,
+void NextSamples(float&                               output,
                  AudioHandle::InterleavingInputBuffer in,
                  size_t                               i);
 
@@ -130,7 +130,7 @@ void WriteBuffer(AudioHandle::InterleavingInputBuffer in, size_t i)
     }
 }
 
-void NextSamples(float &                              output,
+void NextSamples(float&                               output,
                  AudioHandle::InterleavingInputBuffer in,
                  size_t                               i)
 {
