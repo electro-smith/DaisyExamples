@@ -40,7 +40,7 @@ int main(void)
 		// field.seed.SetLed(spi.CheckError() == HAL_SPI_ERROR_NONE);
 		
 		uint8_t rxbuff;
-		spi.PollReceive(&rxbuff, 1, 10);
+		spi.BlockingReceive(&rxbuff, 1, 10);
 		logger.PrintLine("%d\n", rxbuff);
 	}		
 }
