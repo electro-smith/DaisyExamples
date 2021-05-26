@@ -107,8 +107,8 @@ void AudioCallback(float** in, float** out, size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
-        input[i].l  = in[0][i];
-        input[i].r  = in[1][i];
+        input[i].l  = in[0][i] * .5f + in[2][i] * .5f;
+        input[i].r  = in[1][i] * .5f + in[3][i] * .5f;
         output[i].l = output[i].r = 0.f;
     }
 
@@ -116,9 +116,8 @@ void AudioCallback(float** in, float** out, size_t size)
 
     for(size_t i = 0; i < size; i++)
     {
-        out[0][i] = output[i].l;
-        out[1][i] = output[i].r;
-        out[2][i] = out[3][i] = 0.f;
+        out[0][i] = out[2][i] = output[i].l;
+        out[1][i] = out[3][i] = output[i].r;
     }
 }
 

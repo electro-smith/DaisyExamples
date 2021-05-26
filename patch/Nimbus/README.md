@@ -21,10 +21,14 @@ Ported from [pichenettes/eurorack](https://github.com/pichenettes/eurorack)
 | Encoder Click | Select a menu item to edit | |
 | Encoder Long Press | Switch between pages one and two | |
 | Gate In 1 | Freeze Gate In | Activates Freeze if not already done via menu |
-| Audio In 1 | Left In | |
-| Audio In 2 | Right In | |
-| Audio Out 1 | Left Out | |
-| Audio Out 2 | Right Out | |
+| Audio In 1 | Left In 1 | All Audio Ins are a mix of In 1 and In 2 |
+| Audio In 2 | Right In 1 | |
+| Audio In 3 | Left In 2 | |
+| Audio In 4 | Right In 2 | |
+| Audio Out 1 | Left Out 1 | |
+| Audio Out 2 | Right Out 1 | |
+| Audio Out 3 | Left Out 2 | Copy of Out 1 |
+| Audio Out 4 | Right Out 2 | Copy of Out 1 |
 
 ## Menu
 You can toggle between pages one and two by long pressing on the encoder.
