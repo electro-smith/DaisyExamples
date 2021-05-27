@@ -5,7 +5,6 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPod hw;
-MidiHandler midi;
 Logger<> logger;
 
 // Typical Switch case for Message Type.
@@ -214,17 +213,16 @@ int main(void)
 {
 	hw.Init();
 
-    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
-    midi.StartReceive();
+    hw.midi.StartReceive();
 	logger.StartLog();
 	hw.StartAdc();
 	for(;;)
     {
-        midi.Listen();
+        hw.midi.Listen();
         // Handle MIDI Events
-        while(midi.HasEvents())
+        while(hw.midi.HasEvents())
         {
-            HandleMidiMessage(midi.PopEvent());
+            HandleMidiMessage(hw.midi.PopEvent());
         }
 
     }
