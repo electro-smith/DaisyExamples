@@ -4,6 +4,211 @@
 using namespace daisy;
 using namespace daisysp;
 
+/** Fake transport for testing the MidiHandler */
+class MidiTestTransport
+{
+  public:
+    MidiTestTransport() {}
+    ~MidiTestTransport() {}
+
+    //stubs just to trick the MidiHandler
+    inline void   StartRx() {}
+    inline size_t Readable() { return msg_idx_ < 149; }
+    inline bool   RxActive() { return true; }
+    inline void   FlushRx() {}
+    inline void   Tx(uint8_t* buff, size_t size) {}
+
+    struct Config
+    {
+    };
+
+    inline void Init(Config config) { msg_idx_ = 0; }
+
+    inline uint8_t Rx()
+    {
+        uint8_t ret = messages_[msg_idx_];
+        msg_idx_++;
+        return ret;
+    }
+
+  private:
+    int msg_idx_;
+
+    //for now all on channel 0
+    uint8_t messages_[149] = {
+        // ============ Channel Voice Messages ==============
+
+        0x80,
+        0x00,
+        0x00, // Note Off, key 0, vel 0
+        0x80,
+        0x40,
+        0x40, // Note Off, key 64, vel 64
+        0x80,
+        0x7f,
+        0x7f, // Note Off, key 127, vel 127
+
+        0x90,
+        0x00,
+        0x00, // Note On, key 0, vel 0
+        0x90,
+        0x40,
+        0x40, // Note On, key 64, vel 64
+        0x90,
+        0x7f,
+        0x7f, // Note On, key 127, vel 127
+
+        0xa0,
+        0x00,
+        0x00, // PKP, key 0, vel 0
+        0xa0,
+        0x40,
+        0x40, // PKP, key 64, vel 64
+        0xa0,
+        0x7f,
+        0x7f, // PKP, key 127, vel 127
+
+        0xb0,
+        0x00,
+        0x00, // Control Change, cc 0, val 0
+        0xb0,
+        0x40,
+        0x40, // Control Change, cc 64, val 64
+        0xb0,
+        0x77,
+        0x7f, // Control Change, cc 119, val 127
+
+        0xc0,
+        0x00, // Program Change, program 0
+        0xc0,
+        0x40, // Program Change, program 64
+        0xc0,
+        0x7f, // Program Change, program 127
+
+        0xd0,
+        0x00, // Channel Pressure, program 0
+        0xd0,
+        0x40, // Channel Pressure, program 64
+        0xd0,
+        0x7f, // Channel Pressure, program 127
+
+        0xe0,
+        0x00,
+        0x00, // Pitch Bend, val -8192
+        0xe0,
+        0x00,
+        0x40, // Pitch Bend, val 0
+        0xe0,
+        0x7f,
+        0x7f, // Pitch Bend, val 8191
+
+        // ============ Channel Mode Messages ==============
+
+        0xb0,
+        0x78,
+        0x00, // All Sound Off, value 0
+
+        0xb0,
+        0x79,
+        0x00, // Reset All Controllers, value 0
+        0xb0,
+        0x79,
+        0x40, // Reset All Controllers, value 64
+        0xb0,
+        0x79,
+        0x7f, // Reset All Controllers, value 127
+
+        0xb0,
+        0x7a,
+        0x00, // Local Control, value Off
+        0xb0,
+        0x7a,
+        0x7f, // Local Control, value On
+
+        0xb0,
+        0x7b,
+        0x00, // All Notes Off, value 0
+
+        0xb0,
+        0x7c,
+        0x00, // Omni Mode Off
+        0xb0,
+        0x7d,
+        0x00, // Omni Mode On
+
+        0xb0,
+        0x7e,
+        0x00, // Mono Mode On, value 0
+        0xb0,
+        0x7e,
+        0x40, // Mono Mode On, value 64
+        0xb0,
+        0x7e,
+        0x7f, // Mono Mode On, value 127
+
+        0xb0,
+        0x7f,
+        0x00, // Poly Mode On, value 0
+
+        // ============ System Common Messages (minus sysex) ==============
+
+        0xf1,
+        0x00, // MTC Quarter Frame, type 0, value 0
+        0xf1,
+        0x33, // MTC Quarter Frame, type 3, value 3
+        0xf1,
+        0x7f, // MTC Quarter Frame, type 7, value 15
+
+        0xf2,
+        0x00,
+        0x00, // Song Position Pointer, value 0
+        0xf2,
+        0x40,
+        0x40, // Song Position Pointer, value 8256
+        0xf2,
+        0x7f,
+        0x7f, // Song Position Pointer, value 16383
+
+        0xf3,
+        0x00, // Song Select, value 0
+        0xf3,
+        0x40, // Song Select, value 64
+        0xf3,
+        0x7f, // Song Select, value 127
+
+        0xf4, // Undefined
+        0xf5, // Undefined
+        0xf6, // Tune Request
+        0xf7, // End of Exclusive
+
+        // ============ System Real Time ==============
+        0xf8, // Timing Clock
+        0xf9, // Undefined
+        0xfa, // Start
+        0xfb, // Continue
+        0xfc, // Stop
+        0xfd, // Undefined
+        0xfe, // Active Sensing
+        0xff, // Reset
+
+        // ============ System Exclusive ==============
+        0xf0,
+        0xf7, // empty
+        0xf0,
+        0x00,
+        0x01,
+        0x02,
+        0xf7, // 0, 1, 2
+        0xf0,
+        0x7b,
+        0x7c,
+        0x7d,
+        0x7e,
+        0x7f,
+        0xf7, // 123, 124, 125, 126, 127
+    };
+};
+
 DaisyPod hw;
 Logger<> logger;
 MidiHandler<MidiTestTransport> midi;
