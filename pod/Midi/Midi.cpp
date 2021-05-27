@@ -7,7 +7,6 @@ using namespace daisy;
 using namespace daisysp;
 
 DaisyPod    hw;
-MidiHandler midi;
 Oscillator  osc;
 Svf         filt;
 
@@ -78,7 +77,6 @@ int main(void)
     hw.Init();
     hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
     System::Delay(250);
-    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
 
     // Synthesis
     samplerate = hw.AudioSampleRate();
@@ -89,14 +87,14 @@ int main(void)
     // Start stuff.
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
-    midi.StartReceive();
+    hw.midi.StartReceive();
     for(;;)
     {
-        midi.Listen();
+        hw.midi.Listen();
         // Handle MIDI Events
-        while(midi.HasEvents())
+        while(hw.midi.HasEvents())
         {
-            HandleMidiMessage(midi.PopEvent());
+            HandleMidiMessage(hw.midi.PopEvent());
         }
     }
 }
