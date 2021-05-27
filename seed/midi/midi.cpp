@@ -6,6 +6,7 @@ using namespace daisysp;
 
 DaisyPod hw;
 Logger<> logger;
+MidiHandler<MidiTestTransport> midi;
 
 // Typical Switch case for Message Type.
 void HandleMidiMessage(MidiEvent m)
@@ -148,6 +149,7 @@ void HandleMidiMessage(MidiEvent m)
 				default: break;
 			}
         }	
+		break;
 		case ChannelMode:
 			switch(m.cm_type){
 				case AllSoundOff:{
@@ -213,17 +215,24 @@ int main(void)
 {
 	hw.Init();
 
-    hw.midi.StartReceive();
+	MidiHandler<MidiTestTransport>::Config config;
+	config.transport_config.periph_config = 0;
+	midi.Init(config);
+
+    midi.StartReceive();
 	logger.StartLog();
 	hw.StartAdc();
 	for(;;)
     {
-        hw.midi.Listen();
-        // Handle MIDI Events
-        while(hw.midi.HasEvents())
-        {
-            HandleMidiMessage(hw.midi.PopEvent());
-        }
+		hw.ProcessAllControls();
+		if(hw.buttons[0]->RisingEdge()){
+			midi.Listen();
+			// Handle MIDI Events
+			while(midi.HasEvents())
+			{
+				HandleMidiMessage(midi.PopEvent());
+			}
+		}
 
     }
 }
