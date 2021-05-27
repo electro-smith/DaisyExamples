@@ -216,7 +216,6 @@ int main(void)
 	hw.Init();
 
 	MidiHandler<MidiTestTransport>::Config config;
-	config.transport_config.periph_config = 0;
 	midi.Init(config);
 
     midi.StartReceive();
