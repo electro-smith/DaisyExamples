@@ -170,7 +170,7 @@ def create_from_template(destination, board):
         f.write('using namespace daisy;\n')
         f.write('using namespace daisysp;\n\n') # extra line below
         f.write('Daisy{} hw;\n'.format(board.capitalize()))
-        f.write('void AudioCallback(float **in, float **out, size_t size)\n')
+        f.write('void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)\n')
         f.write('{\n')
         if controls:
             f.write('\thw.ProcessAllControls();\n')
