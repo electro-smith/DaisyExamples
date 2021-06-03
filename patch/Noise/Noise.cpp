@@ -62,7 +62,9 @@ struct filter
 
 filter lowpass, highpass;
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     patch.ProcessAnalogControls();
 
@@ -98,7 +100,7 @@ int main(void)
         samplerate, filter::mode::HIGH, patch.controls[2], patch.controls[3]);
 
     std::string str  = "Noise";
-    char *      cstr = &str[0];
+    char*       cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
     patch.display.Update();
     patch.DelayMs(1000);

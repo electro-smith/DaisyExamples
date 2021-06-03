@@ -226,7 +226,9 @@ mydsp DSP;
 
 static DaisySeed seed;
 
-static void AudioCallback(float* in, float* out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     // Deinterleave
     for(size_t frame = 0; frame < size; frame++)

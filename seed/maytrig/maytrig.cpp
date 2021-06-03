@@ -14,7 +14,9 @@ static Oscillator osc;
 static Maytrig    maytrig;
 static Metro      tick;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float osc_out, env_out;
     for(size_t i = 0; i < size; i += 2)

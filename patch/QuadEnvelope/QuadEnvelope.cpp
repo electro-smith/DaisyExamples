@@ -21,7 +21,9 @@ struct envStruct
 envStruct envelopes[2];
 void      ProcessControls();
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     //Process control inputs
     ProcessControls();
@@ -100,7 +102,7 @@ void UpdateOled()
 
     hw.display.SetCursor(0, 0);
     std::string str  = "env1";
-    char *      cstr = &str[0];
+    char*       cstr = &str[0];
     hw.display.WriteString(cstr, Font_7x10, true);
 
     hw.display.SetCursor(70, 0);

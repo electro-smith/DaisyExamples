@@ -8,7 +8,9 @@ static DaisySeed  seed;
 static CrossFade  cfade;
 static Oscillator osc_sine, osc_saw, lfo;
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float saw, sine, pos, output;
     for(size_t i = 0; i < size; i += 2)

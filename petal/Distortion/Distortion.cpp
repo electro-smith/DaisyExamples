@@ -21,7 +21,9 @@ float softClip(float in)
 }
 
 bool        bypassHard, bypassSoft;
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     petal.ProcessAnalogControls();
     petal.ProcessDigitalControls();
@@ -37,8 +39,8 @@ static void AudioCallback(float **in, float **out, size_t size)
     {
         for(int chn = 0; chn < 2; chn++)
         {
-            in[chn][i] *= Pregain;
-            float wet = in[chn][i];
+            float input = in[chn][i] * Pregain;
+            float wet   = input;
 
             if(!bypassSoft || !bypassHard)
             {
@@ -55,7 +57,7 @@ static void AudioCallback(float **in, float **out, size_t size)
                 wet = hardClip(wet);
             }
 
-            out[chn][i] = wet * drywet + in[chn][i] * (1 - drywet);
+            out[chn][i] = wet * drywet + input * (1 - drywet);
         }
     }
 }
