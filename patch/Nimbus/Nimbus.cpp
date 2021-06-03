@@ -98,7 +98,9 @@ Parameters* parameters;
 
 void Controls();
 
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     Controls();
 
