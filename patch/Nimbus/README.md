@@ -69,3 +69,21 @@ You can also select from four quality / mono stereo modes. These are:
 - 8bit u-law Stereo
 - 8bit u-law Mono
 Refer to the [Clouds Manual](https://mutable-instruments.net/modules/clouds/manual/) section on "Audio Quality".  
+
+#### Midi Channel
+In this Menu you can configure which midi channel Nimbus should listen to.
+
+You can control all paramters via Midi:
+- NoteOn events set the pitch parameter.
+- All other parameters can be adjusted using midi ControlChange messages. 
+
+| CC# | parameter     |
+| --- | ------------- |
+| CC1 | position      |
+| CC2 | size          |
+| CC3 | density       |
+| CC4 | texture       |
+| CC5 | dry_wet       |
+| CC6 | stereo_spread |
+| CC7 | feedback      |
+| CC8 | reverb        |

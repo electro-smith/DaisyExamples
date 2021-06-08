@@ -9,6 +9,7 @@ using namespace daisy;
 
 GranularProcessorClouds processor;
 DaisyPatch              hw;
+MidiHandler midi;
 
 // Pre-allocate big blocks in main memory and CCM. No malloc here.
 uint8_t block_mem[118784];
@@ -17,6 +18,7 @@ uint8_t block_ccm[65536 - 128];
 char paramNames[NUM_PARAMS][17];
 char pbModeNames[4][17];
 char qualityNames[4][17];
+char channelName[32];
 
 int mymod(int a, int b)
 {
@@ -43,7 +45,7 @@ class ParamControl
         param_num_ = mymod(param_num_, NUM_PARAMS);
     }
 
-    char* getName() { return paramNames[param_num_]; }
+    char* getName(int inc = 0) { return paramNames[mymod(param_num_ + inc, NUM_PARAMS)]; }
 
     bool knobTouched(float newval)
     {
@@ -93,6 +95,8 @@ bool held;
 bool freeze_btn;
 int  pbMode;
 int  quality;
+int  increment;
+int  channel;
 
 Parameters* parameters;
 
@@ -147,11 +151,52 @@ void InitStrings()
     sprintf(qualityNames[3], "8 bit ulaw mono");
 }
 
+void HandleMidiMessage(MidiEvent m, int channel, Parameters* params)
+{
+    if(m.channel == channel)
+    {
+        switch(m.type)
+        {
+            case NoteOn:
+            {
+                NoteOnEvent p = m.AsNoteOn();
+                // This is to avoid Max/MSP Note outs for now..
+                if(m.data[1] != 0)
+                {
+                    p = m.AsNoteOn();
+                    params->pitch = p.note - 64.0f;
+                }
+            }
+            break;
+            case ControlChange:
+            {
+                ControlChangeEvent p = m.AsControlChange();
+                switch(p.control_number)
+                {
+                    case 1: params->position = p.value/127.f; break;
+                    case 2: params->size = p.value/127.f; break;
+                    case 3: params->density = p.value/127.f; break;
+                    case 4: params->texture = p.value/127.f; break;
+                    case 5: params->dry_wet = p.value/127.f; break;
+                    case 6: params->stereo_spread = p.value/127.f; break;
+                    case 7: params->feedback = p.value/127.f; break;
+                    case 8: params->reverb = p.value/127.f; break;
+                    default: break;
+                }
+                break;
+            }
+            default: break;
+        }
+    }
+}
+
 int main(void)
 {
     hw.Init();
     hw.SetAudioBlockSize(32); // clouds won't work with blocks bigger than 32
     float sample_rate = hw.AudioSampleRate();
+
+    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
 
     //init the luts
     InitResources(sample_rate);
@@ -180,12 +225,21 @@ int main(void)
     held       = false;
     freeze_btn = false;
     menupage   = 0;
+    increment  = 0;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
+    midi.StartReceive();
     while(1)
     {
         processor.Prepare();
+
+        midi.Listen();
+        // Handle MIDI Events
+        while(midi.HasEvents())
+        {
+            HandleMidiMessage(midi.PopEvent(), channel, parameters);
+        }
 
         hw.display.Fill(false);
         hw.display.DrawLine(0, 10, 128, 10, true);
@@ -204,7 +258,7 @@ int main(void)
                 {
                     hw.display.SetCursor(10, i * 13 + 13);
                     hw.display.WriteString(
-                        paramControls[i].getName(), Font_7x10, true);
+                        paramControls[i].getName((i == cursorpos) ? increment : 0), Font_7x10, !(selected && (i == cursorpos)));
                 };
                 break;
             case 1:
@@ -220,6 +274,10 @@ int main(void)
 
                 hw.display.SetCursor(10, 2 * 13 + 13);
                 hw.display.WriteString(qualityNames[quality], Font_7x10, true);
+
+                hw.display.SetCursor(10, 3 * 13 + 13);
+                sprintf(channelName, "Midi channel: %d", channel+1);
+                hw.display.WriteString(channelName, Font_7x10, true);
                 break;
         }
 
@@ -251,7 +309,7 @@ void Controls()
     {
         if(menupage == 0)
         {
-            paramControls[cursorpos].incParamNum(hw.encoder.Increment());
+            increment += hw.encoder.Increment();
         }
         else
         {
@@ -268,13 +326,21 @@ void Controls()
                     quality = mymod(quality, 4);
                     processor.set_quality(quality);
                     break;
+                case 3:
+                    channel += hw.encoder.Increment();
+                    channel = mymod(channel, 16);
+                    break;
             }
         }
     }
     else
     {
+        if (increment != 0){
+            paramControls[cursorpos].incParamNum(increment);
+            increment = 0;
+        }
         cursorpos += hw.encoder.Increment();
-        cursorpos = mymod(cursorpos, menupage ? 3 : 4);
+        cursorpos = mymod(cursorpos, 4);
     }
 
     // gate ins
