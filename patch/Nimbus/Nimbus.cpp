@@ -43,7 +43,10 @@ class ParamControl
         param_num_ = mymod(param_num_, NUM_PARAMS);
     }
 
-    char* getName(int inc = 0) { return paramNames[mymod(param_num_ + inc, NUM_PARAMS)]; }
+    char* getName(int inc = 0)
+    {
+        return paramNames[mymod(param_num_ + inc, NUM_PARAMS)];
+    }
 
     bool knobTouched(float newval)
     {
@@ -206,7 +209,10 @@ int main(void)
                 {
                     hw.display.SetCursor(10, i * 13 + 13);
                     hw.display.WriteString(
-                        paramControls[i].getName((i == cursorpos) ? increment : 0), Font_7x10, !(selected && (i == cursorpos)));
+                        paramControls[i].getName((i == cursorpos) ? increment
+                                                                  : 0),
+                        Font_7x10,
+                        !(selected && (i == cursorpos)));
                 };
                 break;
             case 1:
@@ -275,7 +281,8 @@ void Controls()
     }
     else
     {
-        if (increment != 0){
+        if(increment != 0)
+        {
             paramControls[cursorpos].incParamNum(increment);
             increment = 0;
         }
