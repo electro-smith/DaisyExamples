@@ -43,7 +43,7 @@ class ParamControl
         param_num_ = mymod(param_num_, NUM_PARAMS);
     }
 
-    char* getName() { return paramNames[param_num_]; }
+    char* getName(int inc = 0) { return paramNames[mymod(param_num_ + inc, NUM_PARAMS)]; }
 
     bool knobTouched(float newval)
     {
@@ -93,6 +93,7 @@ bool held;
 bool freeze_btn;
 int  pbMode;
 int  quality;
+int  increment;
 
 Parameters* parameters;
 
@@ -180,6 +181,7 @@ int main(void)
     held       = false;
     freeze_btn = false;
     menupage   = 0;
+    increment  = 0;
 
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
@@ -204,7 +206,7 @@ int main(void)
                 {
                     hw.display.SetCursor(10, i * 13 + 13);
                     hw.display.WriteString(
-                        paramControls[i].getName(), Font_7x10, true);
+                        paramControls[i].getName((i == cursorpos) ? increment : 0), Font_7x10, !(selected && (i == cursorpos)));
                 };
                 break;
             case 1:
@@ -251,7 +253,7 @@ void Controls()
     {
         if(menupage == 0)
         {
-            paramControls[cursorpos].incParamNum(hw.encoder.Increment());
+            increment += hw.encoder.Increment();
         }
         else
         {
@@ -273,6 +275,10 @@ void Controls()
     }
     else
     {
+        if (increment != 0){
+            paramControls[cursorpos].incParamNum(increment);
+            increment = 0;
+        }
         cursorpos += hw.encoder.Increment();
         cursorpos = mymod(cursorpos, menupage ? 3 : 4);
     }
