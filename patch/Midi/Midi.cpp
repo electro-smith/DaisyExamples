@@ -5,10 +5,9 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch  hw;
-MidiHandler midi;
-Oscillator  osc;
-Svf         filt;
+DaisyPatch hw;
+Oscillator osc;
+Svf        filt;
 
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
@@ -72,7 +71,6 @@ int main(void)
     float samplerate;
     hw.Init();
     samplerate = hw.AudioSampleRate();
-    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
 
     // Synthesis
     osc.Init(samplerate);
@@ -86,16 +84,16 @@ int main(void)
     hw.display.Update();
 
     // Start stuff.
-    midi.StartReceive();
+    hw.midi.StartReceive();
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
     for(;;)
     {
-        midi.Listen();
+        hw.midi.Listen();
         // Handle MIDI Events
-        while(midi.HasEvents())
+        while(hw.midi.HasEvents())
         {
-            HandleMidiMessage(midi.PopEvent());
+            HandleMidiMessage(hw.midi.PopEvent());
         }
     }
 }
