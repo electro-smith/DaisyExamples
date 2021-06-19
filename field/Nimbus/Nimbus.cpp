@@ -854,6 +854,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV2;
         can_map[CV2]         = true;
+        current_display_page = CVMAPPINGS2;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_2))
@@ -867,6 +868,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV3;
         can_map[CV3]         = true;
+        current_display_page = CVMAPPINGS3;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_3))
@@ -880,6 +882,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV4;
         can_map[CV4]         = true;
+        current_display_page = CVMAPPINGS4;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_4))
