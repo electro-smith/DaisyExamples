@@ -54,25 +54,29 @@ Originally ported by Ben Sergentanis from [pichenettes/eurorack](https://github.
 
 The display will automatically jump to the page that contains the parameter you are currently editing, and you can navigate between pages using SW1 and SW2.
 
-### Parameters Page 1
+### Splash Screen
 
-This page contains bars indicating the values of:
+Because sometimes you gotta be reminded what code is running on you Daisy.
+
+### Parameters Screen 1
+
+This screen shows the values of parameters:
 
 - position
 - size
 - pitch
 
-### Parameters Page 2
+### Parameters Screen 2
 
-This page contains bars indicating the values of:
+This screen shows the values of parameters:
 
 - density
 - texture
 - dry/wet
 
-### Parameters Page 3
+### Parameters Screen 3
 
-This page contains bars indicating the values of:
+This screen shows the values of parameters:
 
 - stereo spread
 - feedback
@@ -80,32 +84,36 @@ This page contains bars indicating the values of:
 
 The code also contains a mechanism for showing the parameters as integer values between 0 and 100.
 
-### Buttons Page 1
+### Buttons Screen 1
 
-This page shows the current setting for Playback Mode and Quality.
+This screen shows the current setting for Playback Mode and Quality.
 
-### Buttons Page 2
+### Buttons Screen 2
 
-This page shows the current toggled state of:
+This screen shows the current toggled state of:
 
 - shift
 - freeze
 - silence
 - bypass
 
-### CV2 Parameter Mapping Page
-
-This page shows the current parameters that are mapped to CV In 2.
-
-### CV3 Parameter Mapping Page
-
-This page shows the current parameters that are mapped to CV In 3.
-
-### CV4 Parameter Mapping Page
-
-This page shows the current parameters that are mapped to CV In 4.
-
 Refer to the [Clouds Manual](https://mutable-instruments.net/modules/clouds/manual/) for more information on these controls.
+
+### CV2 Parameter Mapping Screen
+
+This screen shows the current parameters that are mapped to CV In 2.
+
+### CV3 Parameter Mapping Screen
+
+This screen shows the current parameters that are mapped to CV In 3.
+
+### CV4 Parameter Mapping Screen
+
+This screen shows the current parameters that are mapped to CV In 4.
+
+### Scope Screen
+
+This screen shows the current CPU utilization and a simple scope showing the current audio output.
 
 #### Freeze
 

@@ -2,13 +2,20 @@
 #include "daisysp.h"
 #include "granular_processor.h"
 
+#define AUDIO_BLOCK_SIZE 32 //DO NOT CHANGE!
+
+#define MAIN_LOOP_DELAY 6       //milliseconds
+#define OLED_LED_UPDATE_DELAY 5 //in Frames not milliseconds
+
 #define NUM_KNOBS 8
 #define NUM_PARAMS 9
-#define NUM_PAGES 8
+#define NUM_PAGES 10
 
-#define KNOB_TOLERANCE .001f
+#define KNOB_TOLERANCE .005f
 
 #define DISPLAY_WIDTH 128
+#define DISPLAY_HEIGHT 60
+#define HEADER_HEIGHT 10
 #define LEFT_BORDER_WIDTH 2
 #define PARAM_NAME_COL_WIDTH 70
 #define ROW_HEIGHT 14
@@ -21,6 +28,7 @@
 #define VALUE_BAR_WIDTH 55
 #define VALUE_BAR_MARGIN 3
 #define MAPPED_PARAM_CONTAINER_WIDTH 18
+#define MAX_SCOPE_HEIGHT 60
 
 #define PARAM_BUFFER_SIZE 8
 
@@ -35,6 +43,7 @@ enum DEVICE_STATE
 
 enum DISPLAY_PAGE
 {
+    SPLASH,
     PARAMETERS1TO3,
     PARAMETERS4TO6,
     PARAMETERS7TO9,
@@ -43,6 +52,7 @@ enum DISPLAY_PAGE
     CVMAPPINGS2,
     CVMAPPINGS3,
     CVMAPPINGS4,
+    SCOPE,
 };
 
 enum DISPLAY_ROW
@@ -106,13 +116,6 @@ enum MAPPABLE_CVS
     CV3,
     CV4,
 };
-
-GranularProcessorClouds processor;
-DaisyField              field;
-
-// Pre-allocate big blocks in main memory and CCM. No malloc here.
-uint8_t block_mem[118784];
-uint8_t block_ccm[65536 - 128];
 
 class ParamControl
 {
@@ -237,25 +240,41 @@ class ParamControl
     MAPPABLE_CVS mapped_cv_;
 };
 
+GranularProcessorClouds processor;
+DaisyField              field;
+
+// Pre-allocate big blocks in main memory and CCM. No malloc here.
+uint8_t block_mem[118784];
+uint8_t block_ccm[65536 - 128];
+
+float        cpu_usage                        = 0.f;
+char         cpu_usage_str[PARAM_BUFFER_SIZE] = "";
 ParamControl param_controls[NUM_PARAMS];
 Parameters*  parameters;
-
 DEVICE_STATE current_device_state = RUNNING;
 MAPPABLE_CVS currently_mapping_cv = NONE;
 bool         can_map[4]           = {true};
-
+int          oled_led_update_gate = 0;
 DISPLAY_PAGE current_display_page;
 bool         is_silenced, is_bypassed, is_shifted, is_frozen_by_button;
+float        scope_buffer[AUDIO_BLOCK_SIZE] = {0.f};
 
 void Controls();
 void UpdateLeds();
 void UpdateOled();
 void ProcessButtons();
 
+int Mod(int n, int m)
+{
+    return ((n % m) + m) % m;
+}
+
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
+    uint32_t start = System::GetTick();
+
     Controls();
 
     FloatFrame input[size];
@@ -272,9 +291,12 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
     for(size_t i = 0; i < size; i++)
     {
-        out[0][i] = output[i].l;
-        out[1][i] = output[i].r;
+        out[0][i]       = output[i].l;
+        out[1][i]       = output[i].r;
+        scope_buffer[i] = (out[0][i] + out[1][i]) * .5f;
     }
+
+    cpu_usage += 0.03f * (((System::GetTick() - start) / 200.f) - cpu_usage);
 }
 
 void InitParams()
@@ -288,6 +310,7 @@ void InitParams()
                            parameters,
                            0,
                            DISPLAY_PAGE::PARAMETERS1TO3);
+
     param_controls[1].Init("Size:",
                            "Sz",
                            &field.knob[1],
@@ -296,6 +319,7 @@ void InitParams()
                            parameters,
                            1,
                            DISPLAY_PAGE::PARAMETERS1TO3);
+
     param_controls[2].Init("Pitch:",
                            "Pi",
                            &field.knob[2],
@@ -304,6 +328,7 @@ void InitParams()
                            parameters,
                            2,
                            DISPLAY_PAGE::PARAMETERS1TO3);
+
     param_controls[3].Init("Density:",
                            "Dn",
                            &field.knob[3],
@@ -312,6 +337,7 @@ void InitParams()
                            parameters,
                            3,
                            DISPLAY_PAGE::PARAMETERS4TO6);
+
     param_controls[4].Init("Texture:",
                            "Tx",
                            &field.knob[4],
@@ -320,6 +346,7 @@ void InitParams()
                            parameters,
                            4,
                            DISPLAY_PAGE::PARAMETERS4TO6);
+
     param_controls[5].Init("Dry/Wet:",
                            "DW",
                            &field.knob[5],
@@ -328,6 +355,7 @@ void InitParams()
                            parameters,
                            5,
                            DISPLAY_PAGE::PARAMETERS4TO6);
+
     param_controls[6].Init("Spread:",
                            "Sp",
                            &field.knob[6],
@@ -336,6 +364,7 @@ void InitParams()
                            parameters,
                            6,
                            DISPLAY_PAGE::PARAMETERS7TO9);
+
     param_controls[7].Init("Feedback:",
                            "Fb",
                            &field.knob[7],
@@ -344,6 +373,7 @@ void InitParams()
                            parameters,
                            7,
                            DISPLAY_PAGE::PARAMETERS7TO9);
+
     param_controls[8].Init("Reverb:",
                            "Rv",
                            &field.knob[7],
@@ -357,7 +387,7 @@ void InitParams()
 int main(void)
 {
     field.Init();
-    field.SetAudioBlockSize(32);
+    field.SetAudioBlockSize(AUDIO_BLOCK_SIZE);
     float sample_rate = field.AudioSampleRate();
 
     //init the luts
@@ -377,25 +407,39 @@ int main(void)
     InitParams();
 
     //Process all params once to set inital state
-    for(int i = 0; i < NUM_PARAMS; i++)
+    for(int i = NUM_PARAMS - 1; i >= 0; i--)
     {
         param_controls[i].Process();
     }
+    
+    current_display_page = SPLASH;
+    UpdateOled();
 
-    current_display_page = PARAMETERS1TO3;
+    //Delay for a second to show the splash screen
+    System::Delay(1000);
 
     field.StartAdc();
     field.StartAudio(AudioCallback);
-
+ 
     while(1)
     {
         processor.Prepare();
-        UpdateOled();
-        UpdateLeds();
+
+        //Since we dont need to update the UI on every execution of the loop only update every nth iteration
+        oled_led_update_gate
+            = Mod(oled_led_update_gate + 1, OLED_LED_UPDATE_DELAY);
+        if(oled_led_update_gate == OLED_LED_UPDATE_DELAY - 1)
+        {
+            UpdateLeds();
+            UpdateOled();
+        }
+
+        //And we probably dont need to call Prepare so often so we can sleep a bit
+        System::Delay(MAIN_LOOP_DELAY);
     }
 }
 
-void RenderParamsPage(DISPLAY_PAGE page)
+void RenderParams(DISPLAY_PAGE page)
 {
     int offset = 0;
     for(int i = 0; i < NUM_PARAMS; i++)
@@ -435,7 +479,32 @@ void RenderParamsPage(DISPLAY_PAGE page)
     }
 }
 
-void RenderCVMappingsPage(MAPPABLE_CVS cv)
+inline void RenderSplash()
+{
+    field.display.SetCursor(17, 2);
+    field.display.WriteString("NIMBUS", Font_16x26, true);
+    field.display.SetCursor(20, 28);
+    field.display.WriteString("based on Clouds", SMALL_FONT, true);
+    field.display.SetCursor(32, 38);
+    field.display.WriteString("by Mutable", SMALL_FONT, true);
+    field.display.SetCursor(29, 48);
+    field.display.WriteString("Instruments", SMALL_FONT, true);
+}
+
+inline void RenderCpuUsage()
+{
+    snprintf(cpu_usage_str,
+             cpu_usage,
+             "%02d%%",
+             int(0.0001f * cpu_usage * (field.seed.AudioSampleRate())
+                 / field.seed.AudioBlockSize()));
+    field.display.SetCursor(80, 0);
+    field.display.WriteString("CPU:", SMALL_FONT, true);
+    field.display.SetCursor(105, 0);
+    field.display.WriteString(cpu_usage_str, SMALL_FONT, true);
+}
+
+inline void RenderCVMappings(MAPPABLE_CVS cv)
 {
     if(cv == NONE)
     {
@@ -472,7 +541,7 @@ void RenderCVMappingsPage(MAPPABLE_CVS cv)
     }
 }
 
-inline void RenderButtonPage1()
+inline void RenderButtons1()
 {
     field.display.SetCursor(LEFT_BORDER_WIDTH, ROW_HEIGHT);
     field.display.WriteString("Quality:", SMALL_FONT, true);
@@ -532,7 +601,7 @@ inline void RenderButtonPage1()
     }
 }
 
-inline void RenderButtonPage2()
+inline void RenderButtons2()
 {
     field.display.SetCursor(LEFT_BORDER_WIDTH, ROW_HEIGHT);
 
@@ -575,53 +644,87 @@ inline void RenderButtonPage2()
                            is_bypassed);
 }
 
+inline void RenderScope()
+{
+    int prev_x = 0;
+    int prev_y = (DISPLAY_HEIGHT + HEADER_HEIGHT) / 2;
+    for(size_t i = 0; i < AUDIO_BLOCK_SIZE; i++)
+    {
+        int y = std::min(std::max((DISPLAY_HEIGHT + HEADER_HEIGHT) / 2
+                                      - int(scope_buffer[i] * MAX_SCOPE_HEIGHT),
+                                  0),
+                         DISPLAY_HEIGHT);
+        int x = i * DISPLAY_WIDTH / AUDIO_BLOCK_SIZE;
+        if(i != 0)
+        {
+            field.display.DrawLine(prev_x, prev_y, x, y, true);
+        }
+        prev_x = x;
+        prev_y = y;
+    }
+}
+
 void UpdateOled()
 {
     field.display.Fill(false);
-    field.display.DrawLine(0, 10, DISPLAY_WIDTH, 10, true);
 
-    field.display.SetCursor(0, 0);
+    if(current_display_page != SPLASH)
+    {
+        field.display.DrawLine(
+            0, HEADER_HEIGHT, DISPLAY_WIDTH, HEADER_HEIGHT, true);
+        field.display.SetCursor(0, 0);
+    }
+
     switch(current_display_page)
     {
+        case SPLASH: RenderSplash(); break;
+
         case PARAMETERS1TO3:
             field.display.WriteString("Paramters Page 1", DEFAULT_FONT, true);
-            RenderParamsPage(PARAMETERS1TO3);
+            RenderParams(PARAMETERS1TO3);
             break;
 
         case PARAMETERS4TO6:
             field.display.WriteString("Paramters Page 2", DEFAULT_FONT, true);
-            RenderParamsPage(PARAMETERS4TO6);
+            RenderParams(PARAMETERS4TO6);
             break;
 
         case PARAMETERS7TO9:
             field.display.WriteString("Paramters Page 3", DEFAULT_FONT, true);
-            RenderParamsPage(PARAMETERS7TO9);
+            RenderParams(PARAMETERS7TO9);
             break;
 
         case BUTTONS1:
             field.display.WriteString("Buttons Page 1", DEFAULT_FONT, true);
-            RenderButtonPage1();
+            RenderButtons1();
             break;
 
         case BUTTONS2:
             field.display.WriteString("Buttons Page 2", DEFAULT_FONT, true);
-            RenderButtonPage2();
+            RenderButtons2();
             break;
 
         case CVMAPPINGS2:
             field.display.WriteString("CV2 Mappings", DEFAULT_FONT, true);
-            RenderCVMappingsPage(CV2);
+            RenderCVMappings(CV2);
             break;
 
         case CVMAPPINGS3:
             field.display.WriteString("CV3 Mappings", DEFAULT_FONT, true);
-            RenderCVMappingsPage(CV3);
+            RenderCVMappings(CV3);
             break;
 
         case CVMAPPINGS4:
             field.display.WriteString("CV4 Mappings", DEFAULT_FONT, true);
-            RenderCVMappingsPage(CV4);
+            RenderCVMappings(CV4);
             break;
+
+        case SCOPE:
+            field.display.WriteString("Scope", DEFAULT_FONT, true);
+            RenderCpuUsage();
+            RenderScope();
+            break;
+
         default: break;
     }
 
@@ -698,12 +801,7 @@ void UpdateLeds()
     field.led_driver.SwapBuffersAndTransmit();
 }
 
-int Mod(int n, int m)
-{
-    return ((n % m) + m) % m;
-}
-
-void ProcessParam(ParamControl& pc)
+void ProcessParam(ParamControl& pc, bool auto_page_change)
 {
     pc.Process();
 
@@ -713,7 +811,7 @@ void ProcessParam(ParamControl& pc)
             if(pc.HasParamChanged())
             {
                 //If control is mapped to CV then don't change the page when its value is changed
-                if(pc.GetMappedCV() == NONE)
+                if(pc.GetMappedCV() == NONE && auto_page_change)
                 {
                     current_display_page = pc.GetDisplayPage();
                 }
@@ -748,14 +846,14 @@ void ProcessParam(ParamControl& pc)
     }
 }
 
-void ProcessParams()
+void ProcessParams(bool auto_page_change = true)
 {
-    for(int i = 0; i < NUM_PARAMS; i++)
+    for(int i = NUM_PARAMS - 1; i >= 0; i--)
     {
         if((is_shifted && param_controls[i].IsShifted())
            || (!is_shifted && !param_controls[i].IsShifted()))
         {
-            ProcessParam(param_controls[i]);
+            ProcessParam(param_controls[i], auto_page_change);
         }
     }
 }
