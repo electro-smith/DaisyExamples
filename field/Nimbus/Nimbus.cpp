@@ -11,7 +11,7 @@
 #define NUM_PARAMS 9
 #define NUM_PAGES 10
 
-#define KNOB_TOLERANCE .005f
+#define KNOB_TOLERANCE .001f
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 60
