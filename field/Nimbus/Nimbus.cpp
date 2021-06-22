@@ -9,8 +9,8 @@
 
 #define MAIN_LOOP_DELAY 6                      //milliseconds
 #define OLED_LED_UPDATE_DELAY 5                //in Frames not milliseconds
-#define CV_FREEZE_UPDATE_DEBOUNCE_INTERVAL 200 //milliseconds
-#define GATE_TRIGGER_THRESHOLD 0.7f
+#define CV_FREEZE_UPDATE_DEBOUNCE_INTERVAL 500 //milliseconds
+#define CV_FREEZE_TRIGGER_THRESHOLD 0.65f //TODO: make these last 2 parameters
 
 #define NUM_KNOBS 8
 #define NUM_PARAMS 9
@@ -266,7 +266,6 @@ bool is_silenced, is_bypassed, is_shifted, is_frozen_by_button, is_frozen_by_cv;
 float scope_buffer[AUDIO_BLOCK_SIZE] = {0.f};
 
 uint32_t last_freeze_cv_update;
-float    current_freeze_cv_val;
 
 void Controls();
 void UpdateLeds();
@@ -1006,36 +1005,34 @@ void ProcessGatesTriggersCv()
     //Using CV1 in as a gate to freeze and unfreeze the processor
     //0.7f should map to 3.5 volts for HIGH state
     //Debounced
-    float new_freeze_cv_val = field.GetCvValue(field.CV_1);
     if(!is_frozen_by_button)
     {
-        if(new_freeze_cv_val != current_freeze_cv_val)
-        {
 #ifdef TOGGLE_FREEZE_ON_HIGH
-            //Has the debounce interval elapsed? If not then we just disregard this value
-            if(System::GetNow()
-               >= last_freeze_cv_update + CV_FREEZE_UPDATE_DEBOUNCE_INTERVAL)
+        //Has the debounce interval elapsed? If not then we just disregard this value
+        if(System::GetNow()
+           > last_freeze_cv_update + CV_FREEZE_UPDATE_DEBOUNCE_INTERVAL)
+        {
+            auto  cv1               = field.GetCv(field.CV_1);
+            float new_freeze_cv_val = cv1->Process();
+            if(new_freeze_cv_val > CV_FREEZE_TRIGGER_THRESHOLD)
             {
-                if(new_freeze_cv_val > GATE_TRIGGER_THRESHOLD)
-                {
-                    //Toggle to freeze the processor if the gate is held high
-                    is_frozen_by_cv    = !is_frozen_by_cv;
-                    parameters->freeze = is_frozen_by_cv;
-                }
-                last_freeze_cv_update = System::GetNow();
+                //Toggle freeze for the processor if the gate is held high
+                is_frozen_by_cv    = !is_frozen_by_cv;
+                parameters->freeze = is_frozen_by_cv;
             }
-#else
-            //Only freeze the processor while the gate is held high
-            parameters->freeze
-                = is_frozen_by_cv = (new_freeze_cv_val > GATE_TRIGGER_THRESHOLD);
-#endif
-            current_freeze_cv_val = new_freeze_cv_val;
+            last_freeze_cv_update = System::GetNow();
         }
+#else
+        auto  cv1               = field.GetCv(field.CV_1);
+        float new_freeze_cv_val = cv1->Process();
+        //Only freeze the processor while the gate is held high
+        parameters->freeze = is_frozen_by_cv
+            = (new_freeze_cv_val > GATE_TRIGGER_THRESHOLD);
+#endif
     }
     else
     {
-        is_frozen_by_cv       = false;
-        current_freeze_cv_val = new_freeze_cv_val;
+        is_frozen_by_cv = false;
     }
 
     parameters->trigger = field.gate_in.Trig();
