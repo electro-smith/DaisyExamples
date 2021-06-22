@@ -2,10 +2,15 @@
 #include "daisysp.h"
 #include "granular_processor.h"
 
+//#define SHOW_KNOB_VALUES
+#define TOGGLE_FREEZE_ON_HIGH //as opposed to Freezing only while the gate is open
+
 #define AUDIO_BLOCK_SIZE 32 //DO NOT CHANGE!
 
-#define MAIN_LOOP_DELAY 6       //milliseconds
-#define OLED_LED_UPDATE_DELAY 5 //in Frames not milliseconds
+#define MAIN_LOOP_DELAY 6                      //milliseconds
+#define OLED_LED_UPDATE_DELAY 5                //in Frames not milliseconds
+#define CV_FREEZE_UPDATE_DEBOUNCE_INTERVAL 200 //milliseconds
+#define GATE_TRIGGER_THRESHOLD 0.7f
 
 #define NUM_KNOBS 8
 #define NUM_PARAMS 9
@@ -249,6 +254,7 @@ uint8_t block_ccm[65536 - 128];
 
 float        cpu_usage                        = 0.f;
 char         cpu_usage_str[PARAM_BUFFER_SIZE] = "";
+bool         param_val_changed_;
 ParamControl param_controls[NUM_PARAMS];
 Parameters*  parameters;
 DEVICE_STATE current_device_state = RUNNING;
@@ -256,8 +262,11 @@ MAPPABLE_CVS currently_mapping_cv = NONE;
 bool         can_map[4]           = {true};
 int          oled_led_update_gate = 0;
 DISPLAY_PAGE current_display_page;
-bool         is_silenced, is_bypassed, is_shifted, is_frozen_by_button;
-float        scope_buffer[AUDIO_BLOCK_SIZE] = {0.f};
+bool is_silenced, is_bypassed, is_shifted, is_frozen_by_button, is_frozen_by_cv;
+float scope_buffer[AUDIO_BLOCK_SIZE] = {0.f};
+
+uint32_t last_freeze_cv_update;
+float    current_freeze_cv_val;
 
 void Controls();
 void UpdateLeds();
@@ -304,7 +313,6 @@ void InitParams()
     param_controls[0].Init("Position:",
                            "Po",
                            &field.knob[0],
-
                            DaisyField::LED_KNOB_1,
                            false,
                            parameters,
@@ -411,7 +419,7 @@ int main(void)
     {
         param_controls[i].Process();
     }
-    
+
     current_display_page = SPLASH;
     UpdateOled();
 
@@ -420,7 +428,7 @@ int main(void)
 
     field.StartAdc();
     field.StartAudio(AudioCallback);
- 
+
     while(1)
     {
         processor.Prepare();
@@ -995,11 +1003,39 @@ void ProcessButtons()
 
 void ProcessGatesTriggersCv()
 {
-    //Using CV1 in as a gate for Freeze
+    //Using CV1 in as a gate to freeze and unfreeze the processor
     //0.7f should map to 3.5 volts for HIGH state
+    //Debounced
+    float new_freeze_cv_val = field.GetCvValue(field.CV_1);
     if(!is_frozen_by_button)
     {
-        parameters->freeze = field.GetCvValue(field.CV_1) > 0.7f;
+        if(new_freeze_cv_val != current_freeze_cv_val)
+        {
+#ifdef TOGGLE_FREEZE_ON_HIGH
+            //Has the debounce interval elapsed? If not then we just disregard this value
+            if(System::GetNow()
+               >= last_freeze_cv_update + CV_FREEZE_UPDATE_DEBOUNCE_INTERVAL)
+            {
+                if(new_freeze_cv_val > GATE_TRIGGER_THRESHOLD)
+                {
+                    //Toggle to freeze the processor if the gate is held high
+                    is_frozen_by_cv    = !is_frozen_by_cv;
+                    parameters->freeze = is_frozen_by_cv;
+                }
+                last_freeze_cv_update = System::GetNow();
+            }
+#else
+            //Only freeze the processor while the gate is held high
+            parameters->freeze
+                = is_frozen_by_cv = (new_freeze_cv_val > GATE_TRIGGER_THRESHOLD);
+#endif
+            current_freeze_cv_val = new_freeze_cv_val;
+        }
+    }
+    else
+    {
+        is_frozen_by_cv       = false;
+        current_freeze_cv_val = new_freeze_cv_val;
     }
 
     parameters->trigger = field.gate_in.Trig();
