@@ -5,9 +5,9 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch  hw;
-Oscillator  osc;
-Svf         filt;
+DaisyPatch hw;
+Oscillator osc;
+Svf        filt;
 
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,

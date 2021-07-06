@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyField  hw;
+DaisyField hw;
 
 class Voice
 {

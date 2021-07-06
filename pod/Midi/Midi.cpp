@@ -6,9 +6,9 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPod    hw;
-Oscillator  osc;
-Svf         filt;
+DaisyPod   hw;
+Oscillator osc;
+Svf        filt;
 
 void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                    AudioHandle::InterleavingOutputBuffer out,

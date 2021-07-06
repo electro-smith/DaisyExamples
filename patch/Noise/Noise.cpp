@@ -71,7 +71,7 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
     lowpass.UpdateControls();
     highpass.UpdateControls();
 
-    for(size_t i = 0; i < size; i += 2)
+    for(size_t i = 0; i < size; i++)
     {
         float sig = noise.Process();
         sig       = lowpass.Process(sig);
