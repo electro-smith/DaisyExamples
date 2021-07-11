@@ -1,5 +1,7 @@
 #include "daisysp.h"
 #include "daisy_pod.h"
+#include <stddef.h>
+
 
 // Set max delay time to 0.75 of samplerate.
 #define MAX_DELAY static_cast<size_t>(48000 * 2.5f)
@@ -96,8 +98,36 @@ int main(void)
     // start callback
     pod.StartAdc();
     pod.StartAudio(AudioCallback);
+//    pod.midi.StartReceive();
 
-    while(1) {}
+    while(1) {
+        /**pod.midi.Listen();
+        // Handle MIDI Events
+        while(pod.midi.HasEvents())
+        {
+            HandleMidiMessage(pod.midi.PopEvent());
+        }**/
+    }
+}
+
+void HandleMidiMessage(MidiEvent m)
+{
+    /**if (m.type == ControlChange)
+        {
+            ControlChangeEvent p = m.AsControlChange();
+            switch(p.control_number)
+            {
+                case 1:
+                    // CC 1 for cutoff.
+                    filt.SetFreq(mtof((float)p.value));
+                    break;
+                case 2:
+                    // CC 2 for res.
+                    filt.SetRes(((float)p.value / 127.0f));
+                    break;
+                default: break;
+            }
+        }**/
 }
 
 void UpdateKnobs(float &k1, float &k2)
@@ -105,7 +135,12 @@ void UpdateKnobs(float &k1, float &k2)
     k1 = pod.knob1.Process();
     k2 = pod.knob2.Process();
 
-    switch(mode)
+    cutoff = cutoffParam.Process();
+    tone.SetFreq(cutoff);
+    crushmod = (int)crushrate.Process();
+
+
+    /**switch(mode)
     {
         case REV:
             drywet = k1;
@@ -119,7 +154,7 @@ void UpdateKnobs(float &k1, float &k2)
             cutoff = cutoffParam.Process();
             tone.SetFreq(cutoff);
             crushmod = (int)crushrate.Process();
-    }
+    }**/
 }
 
 void UpdateEncoder()
