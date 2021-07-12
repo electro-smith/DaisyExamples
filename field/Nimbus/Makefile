@@ -21,6 +21,9 @@ DAISYSP_DIR = ../../DaisySP
 #$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/CommonTables/arm_const_structs.c \
 #$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/CommonTables/arm_common_tables.c
 
+# Compiler optimization to reduce code size
+OPT=-Os
+
 #C_DEFS += \
 #-DUSE_ARM_FFT \
 
