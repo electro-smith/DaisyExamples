@@ -56,7 +56,6 @@ Compilation options: -lang cpp -scal -ftz 0
 #endif
 
 using namespace daisysp;
-using namespace daisy;
 
 struct Meta
 {
@@ -224,10 +223,10 @@ mydsp DSP;
 
 #define MY_BUFFER_SIZE 8
 
-static DaisySeed seed;
+static daisy::DaisySeed seed;
 
-static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
-                          AudioHandle::InterleavingOutputBuffer out,
+static void AudioCallback(daisy::AudioHandle::InterleavingInputBuffer  in,
+                          daisy::AudioHandle::InterleavingOutputBuffer out,
                           size_t                                size)
 {
     // Deinterleave
