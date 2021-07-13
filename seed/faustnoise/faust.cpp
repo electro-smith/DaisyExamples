@@ -227,7 +227,7 @@ static daisy::DaisySeed seed;
 
 static void AudioCallback(daisy::AudioHandle::InterleavingInputBuffer  in,
                           daisy::AudioHandle::InterleavingOutputBuffer out,
-                          size_t                                size)
+                          size_t                                       size)
 {
     // Deinterleave
     for(size_t frame = 0; frame < size; frame++)
