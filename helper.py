@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import argparse, glob, os, shutil, codecs
+import argparse, glob, os, shutil, codecs, pathlib
 import subprocess
 
 ################################################################
@@ -38,6 +38,12 @@ def rewrite_replace(filepath, a, b):
     except Exception as e:
         print("Cannot process file: {} \t {} into {}".format(filepath, a, b))
         print(e)
+
+def rec_rewrite_replace(dir_path, a, b):
+    for dname, dirs, files in os.walk(dir_path):
+        for fname in files:
+            fpath = os.path.join(dname, fname)
+            rewrite_replace(fpath, a, b)
 
 # Takes a filename and a list of extensions
 # returns true if the file name ends with that extension
@@ -133,8 +139,15 @@ def create_from_template(destination, board):
     print("creating new project: {} for platform: {}".format(destination, board))
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
-    template_dir = os.path.abspath(os.path.sep.join(('utils', 'Template')))
+    template_dir = os.path.abspath(os.path.sep.join(('utils', 'Template'))) 
     copy_project(destination, template_dir)
+
+    libdaisy_dir = pathlib.Path.cwd().as_posix() + "/libdaisy/"
+    rec_rewrite_replace(destination, "@LIBDAISY_DIR@", libdaisy_dir)
+
+    daisysp_dir = pathlib.Path.cwd().as_posix() + "/daisysp/"
+    rec_rewrite_replace(destination, "@DAISYSP_DIR@", daisysp_dir)
+
     src_file = os.path.abspath(destination + os.path.sep + os.path.basename(destination) + '.cpp')
     # Copy resources/diagram files (if available)
     dfiles = glob.glob(os.path.sep.join(('resources', '*')))
@@ -148,7 +161,6 @@ def create_from_template(destination, board):
         os.mkdir(os.path.sep.join((destination,'resources', 'png')))
         for s, d in zip(dsrc, ddest):
             shutil.copy(s, d)
-
 
     # Platform specific differences summarized:
     # - seed: needs hw.Configure() before init. No hw.UpdateAllControls()
