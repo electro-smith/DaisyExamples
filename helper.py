@@ -11,7 +11,8 @@ usage = {
     'operation': 'Keyword argument for the desired helper action. Can be any of the following: create, copy, update, rebuild_all.',
     'destination': 'Second positional argument to set where the action should be applied. This is the final destination of the project.',
     'source': 'optional argument for selecting the project to copy from. required for the copy operation.',
-    'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio'
+    'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio',
+    'libs': 'optional argument for specifying the path to libDaisy and DaisySP. Both libraries should be contained in this directory. Default is ./ .'
 }
 supported_boards= ['seed', 'pod', 'patch', 'field', 'petal', 'versio']
 
@@ -135,20 +136,22 @@ def copy_project(destination, source):
         print("source directory is not valid.")
 
 # Called via the 'create' operation
-def create_from_template(destination, board):
+def create_from_template(destination, board, libs):
     print("creating new project: {} for platform: {}".format(destination, board))
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
-    template_dir = os.path.abspath(os.path.sep.join(('utils', 'Template'))) 
+    libs = pathlib.Path(libs).absolute().as_posix()
+    template_dir = libs + '/utils/Template'
     copy_project(destination, template_dir)
 
-    libdaisy_dir = pathlib.Path.cwd().as_posix() + "/libdaisy/"
+
+    libdaisy_dir = libs + "/libdaisy/"
     rec_rewrite_replace(destination, "@LIBDAISY_DIR@", libdaisy_dir)
 
-    daisysp_dir = pathlib.Path.cwd().as_posix() + "/daisysp/"
+    daisysp_dir = libs + "/daisysp/"
     rec_rewrite_replace(destination, "@DAISYSP_DIR@", daisysp_dir)
 
-    src_file = os.path.abspath(destination + os.path.sep + os.path.basename(destination) + '.cpp')
+    src_file = pathlib.Path(destination + os.path.sep + os.path.basename(destination) + '.cpp').absolute()
     # Copy resources/diagram files (if available)
     dfiles = glob.glob(os.path.sep.join(('resources', '*')))
     dfiles += glob.glob(os.path.sep.join(('resources', '**', '*')))
@@ -236,13 +239,15 @@ def run():
     parser.add_argument('destination', help =usage.get('destination'), nargs='?')
     parser.add_argument('-s', '--source', help=usage.get('source'))
     parser.add_argument('-b', '--board', help=usage.get('board'), default='seed', choices=supported_boards)
+    parser.add_argument('-l', '--libs', help=usage.get('libs'), default='.')
     args = parser.parse_args()
     op = args.operation.casefold()
     if op == 'create':
         # create new project
         brd = args.board
         dest = args.destination
-        create_from_template(dest, brd)
+        libs = args.libs
+        create_from_template(dest, brd, libs)
     elif op == 'copy':
         # copy from source to dest
         src = args.source
