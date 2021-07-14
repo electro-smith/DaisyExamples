@@ -12,7 +12,7 @@ usage = {
     'destination': 'Second positional argument to set where the action should be applied. This is the final destination of the project.',
     'source': 'optional argument for selecting the project to copy from. required for the copy operation.',
     'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio',
-    'libs': 'optional argument for specifying the path to libDaisy and DaisySP. Both libraries should be contained in this directory. Default is ./ .'
+    'libs': 'optional argument for specifying the path containing libDaisy and DaisySP. Used with create and update. Default is ./ .'
 }
 supported_boards= ['seed', 'pod', 'patch', 'field', 'petal', 'versio']
 
@@ -63,7 +63,7 @@ def has_extension(fname, ext_list):
 # Called via the 'update' operation
 # Removes old, copies new from template, processes for string replacement
 # only affects .vscode/, vs/ and .sln files.
-def  update_project(destination):
+def  update_project(destination, libs):
     basedir = os.path.abspath(destination)
     root = os.path.dirname(os.path.realpath(__file__))
     tdir = os.path.sep.join((root,'utils','Template'))
@@ -82,6 +82,7 @@ def  update_project(destination):
             print('deleting: {}'.format(os.path.relpath(f)))
             os.remove(f)
     # Copying
+    libs = pathlib.Path(libs).absolute().as_posix()
     cp_patts = ['*.sln', '*.vgdbsettings', '.vscode/*', 'vs/*']
     cplists = list(glob.glob(tdir+os.path.sep+pat) for pat in cp_patts)
     f_to_cp = list(item for sublist in cplists for item in sublist)
@@ -93,7 +94,10 @@ def  update_project(destination):
             os.mkdir(dir_path)
         print('copying: {} to {}'.format(os.path.relpath(sname), os.path.relpath(dname)))
         shutil.copyfile(sname, dname)
-        rewrite_replace(dname, 'Template', proj_name) 
+        rewrite_replace(dname, 'Template', proj_name)
+        rewrite_replace(dname, '@LIBDAISY_DIR@', libs + '/libDaisy')
+        rewrite_replace(dname, '@DAISYSP_DIR@', libs + '/DaisySP')
+
 
 # Called via the 'copy' operation
 # copies _all_ files from source directory, 
@@ -260,7 +264,8 @@ def run():
     elif op == 'update':
         if args.destination:
             dest = args.destination
-            update_project(dest)
+            libs = args.libs
+            update_project(dest, libs)
         else:
             for brd_dir in supported_boards:
                 brd_ex = list(os.path.sep.join((brd_dir, d)) for d in os.listdir(brd_dir) if 'experimental' not in d.casefold())
