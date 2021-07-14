@@ -82,10 +82,11 @@ def  update_project(destination, libs):
             print('deleting: {}'.format(os.path.relpath(f)))
             os.remove(f)
     # Copying
-    libs = pathlib.Path(libs).absolute().as_posix()
+    libs = pathlib.Path(libs).as_posix()
     cp_patts = ['*.sln', '*.vgdbsettings', '.vscode/*', 'vs/*']
     cplists = list(glob.glob(tdir+os.path.sep+pat) for pat in cp_patts)
     f_to_cp = list(item for sublist in cplists for item in sublist)
+    libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
     for f in f_to_cp:
         sname = os.path.abspath(f)
         dname = os.path.abspath(sname.replace(tdir, basedir)).replace('Template', proj_name)
@@ -95,6 +96,7 @@ def  update_project(destination, libs):
         print('copying: {} to {}'.format(os.path.relpath(sname), os.path.relpath(dname)))
         shutil.copyfile(sname, dname)
         rewrite_replace(dname, 'Template', proj_name)
+
         rewrite_replace(dname, '@LIBDAISY_DIR@', libs + '/libDaisy')
         rewrite_replace(dname, '@DAISYSP_DIR@', libs + '/DaisySP')
 
@@ -145,13 +147,12 @@ def create_from_template(destination, board, libs):
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
 
-    libs = pathlib.Path(libs).absolute().as_posix()
-    file_path = pathlib.Path(__file__).absolute().as_posix().replace('helper.py', '')
-    print("print", file_path)
+    libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
+    print ('DESTINATEIONAAAA   ', libs, destination)
+    file_path = pathlib.Path(__file__).as_posix().replace('helper.py', '')
 
     template_dir = file_path + '/utils/Template'
     copy_project(destination, template_dir)
-
 
     libdaisy_dir = libs + "/libdaisy/"
     rec_rewrite_replace(destination, "@LIBDAISY_DIR@", libdaisy_dir)
@@ -159,7 +160,7 @@ def create_from_template(destination, board, libs):
     daisysp_dir = libs + "/daisysp/"
     rec_rewrite_replace(destination, "@DAISYSP_DIR@", daisysp_dir)
 
-    src_file = pathlib.Path(destination + os.path.sep + os.path.basename(destination) + '.cpp').absolute()
+    src_file = pathlib.Path(destination + os.path.sep + os.path.basename(destination) + '.cpp')
     # Copy resources/diagram files (if available)
     dfiles = glob.glob(os.path.sep.join(('resources', '*')))
     dfiles += glob.glob(os.path.sep.join(('resources', '**', '*')))
