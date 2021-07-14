@@ -1,18 +1,19 @@
 #include "daisy_pod.h"
 #include "daisysp.h"
 #include <stdio.h>
+#include <stddef.h>
 #include <string.h>
 
-using namespace daisy;
-using namespace daisysp;
+namespace dsp = daisysp;
 
-DaisyPod   hw;
-Oscillator osc;
-Svf        filt;
+daisy::DaisyPod    hw;
+daisy::MidiHandler midi;
+dsp::Oscillator    osc;
+dsp::Svf           filt;
 
-void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
-                   AudioHandle::InterleavingOutputBuffer out,
-                   size_t                                size)
+void AudioCallback(daisy::AudioHandle::InterleavingInputBuffer  in,
+                   daisy::AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                       size)
 {
     float sig;
     for(size_t i = 0; i < size; i += 2)
@@ -24,14 +25,14 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 }
 
 // Typical Switch case for Message Type.
-void HandleMidiMessage(MidiEvent m)
+void HandleMidiMessage(daisy::MidiEvent m)
 {
     switch(m.type)
     {
-        case NoteOn:
+        case daisy::NoteOn:
         {
-            NoteOnEvent p = m.AsNoteOn();
-            char        buff[512];
+            daisy::NoteOnEvent p = m.AsNoteOn();
+            char               buff[512];
             sprintf(buff,
                     "Note Received:\t%d\t%d\t%d\r\n",
                     m.channel,
@@ -42,19 +43,19 @@ void HandleMidiMessage(MidiEvent m)
             if(m.data[1] != 0)
             {
                 p = m.AsNoteOn();
-                osc.SetFreq(mtof(p.note));
+                osc.SetFreq(dsp::mtof(p.note));
                 osc.SetAmp((p.velocity / 127.0f));
             }
         }
         break;
-        case ControlChange:
+        case daisy::ControlChange:
         {
-            ControlChangeEvent p = m.AsControlChange();
+            daisy::ControlChangeEvent p = m.AsControlChange();
             switch(p.control_number)
             {
                 case 1:
                     // CC 1 for cutoff.
-                    filt.SetFreq(mtof((float)p.value));
+                    filt.SetFreq(dsp::mtof((float)p.value));
                     break;
                 case 2:
                     // CC 2 for res.
@@ -75,26 +76,28 @@ int main(void)
     // Init
     float samplerate;
     hw.Init();
-    hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
-    System::Delay(250);
+    midi.Init(daisy::MidiHandler::MidiInputMode::INPUT_MODE_UART1,
+              daisy::MidiHandler::MidiOutputMode::OUTPUT_MODE_UART1);
+    hw.seed.usb_handle.Init(daisy::UsbHandle::FS_INTERNAL);
+    daisy::System::Delay(250);
 
     // Synthesis
     samplerate = hw.AudioSampleRate();
     osc.Init(samplerate);
-    osc.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
+    osc.SetWaveform(dsp::Oscillator::WAVE_POLYBLEP_SAW);
     filt.Init(samplerate);
 
     // Start stuff.
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
-    hw.midi.StartReceive();
+    midi.StartReceive();
     for(;;)
     {
-        hw.midi.Listen();
+        midi.Listen();
         // Handle MIDI Events
-        while(hw.midi.HasEvents())
+        while(midi.HasEvents())
         {
-            HandleMidiMessage(hw.midi.PopEvent());
+            HandleMidiMessage(midi.PopEvent());
         }
     }
 }
