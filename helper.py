@@ -140,8 +140,12 @@ def create_from_template(destination, board, libs):
     print("creating new project: {} for platform: {}".format(destination, board))
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
+
     libs = pathlib.Path(libs).absolute().as_posix()
-    template_dir = libs + '/utils/Template'
+    file_path = pathlib.Path(__file__).absolute().as_posix().replace('helper.py', '')
+    print("print", file_path)
+
+    template_dir = file_path + '/utils/Template'
     copy_project(destination, template_dir)
 
 
