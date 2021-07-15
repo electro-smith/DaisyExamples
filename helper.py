@@ -148,7 +148,6 @@ def create_from_template(destination, board, libs):
     # * run copy_project on template and then rewrite the cpp file..
 
     libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
-    print ('DESTINATEIONAAAA   ', libs, destination)
     file_path = pathlib.Path(__file__).as_posix().replace('helper.py', '')
 
     template_dir = file_path + '/utils/Template'
