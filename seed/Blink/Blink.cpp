@@ -7,8 +7,6 @@ using namespace daisy;
 // Declare a DaisySeed object called hardware
 DaisySeed hardware;
 
-#include "lut.h"
-
 int main(void)
 {
     // Declare a variable to store the state we want to set for the LED.
@@ -26,8 +24,6 @@ int main(void)
     {
         // Set the onboard LED
         hardware.SetLed(led_state);
-
-        lut[0] += 1;
 
         // Toggle the LED state for the next time around.
         led_state = !led_state;
