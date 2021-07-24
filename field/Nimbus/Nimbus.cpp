@@ -55,9 +55,9 @@ enum DISPLAY_PAGE
     PARAMETERS7TO9,
     BUTTONS1,
     BUTTONS2,
-    CVMAPPINGS2,
-    CVMAPPINGS3,
-    CVMAPPINGS4,
+    CV_MAPPINGS2,
+    CV_MAPPINGS3,
+    CV_MAPPINGS4,
     SCOPE,
 };
 
@@ -122,6 +122,19 @@ enum MAPPABLE_CVS
     CV3,
     CV4,
 };
+
+inline float Constrain(float var, float min, float max)
+{
+    if(var < min)
+    {
+        var = min;
+    }
+    else if(var > max)
+    {
+        var = max;
+    }
+    return var;
+}
 
 class ParamControl
 {
@@ -273,8 +286,8 @@ float scope_buffer[AUDIO_BLOCK_SIZE] = {0.f};
 uint32_t last_freeze_cv_update;
 
 void Controls();
-void UpdateLeds();
-void UpdateOled();
+void UpdateLEDs();
+void UpdateOLED();
 void ProcessButtons();
 
 int Mod(int n, int m)
@@ -425,7 +438,7 @@ int main(void)
     }
 
     current_display_page = SPLASH;
-    UpdateOled();
+    UpdateOLED();
 
     //Delay for a second to show the splash screen
     System::Delay(1000);
@@ -442,8 +455,8 @@ int main(void)
             = Mod(oled_led_update_gate + 1, OLED_LED_UPDATE_DELAY);
         if(oled_led_update_gate == OLED_LED_UPDATE_DELAY - 1)
         {
-            UpdateLeds();
-            UpdateOled();
+            UpdateLEDs();
+            UpdateOLED();
         }
 
         //And we probably dont need to call Prepare so often so we can sleep a bit
@@ -676,7 +689,7 @@ inline void RenderScope()
     }
 }
 
-void UpdateOled()
+void UpdateOLED()
 {
     field.display.Fill(false);
 
@@ -716,17 +729,17 @@ void UpdateOled()
             RenderButtons2();
             break;
 
-        case CVMAPPINGS2:
+        case CV_MAPPINGS2:
             field.display.WriteString("CV2 Mappings", DEFAULT_FONT, true);
             RenderCVMappings(CV2);
             break;
 
-        case CVMAPPINGS3:
+        case CV_MAPPINGS3:
             field.display.WriteString("CV3 Mappings", DEFAULT_FONT, true);
             RenderCVMappings(CV3);
             break;
 
-        case CVMAPPINGS4:
+        case CV_MAPPINGS4:
             field.display.WriteString("CV4 Mappings", DEFAULT_FONT, true);
             RenderCVMappings(CV4);
             break;
@@ -743,7 +756,7 @@ void UpdateOled()
     field.display.Update();
 }
 
-void UpdateLeds()
+void UpdateLEDs()
 {
     for(int i = 0; i < 8; i++)
     {
@@ -964,7 +977,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV2;
         can_map[CV2]         = true;
-        current_display_page = CVMAPPINGS2;
+        current_display_page = CV_MAPPINGS2;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_2))
@@ -978,7 +991,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV3;
         can_map[CV3]         = true;
-        current_display_page = CVMAPPINGS3;
+        current_display_page = CV_MAPPINGS3;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_3))
@@ -992,7 +1005,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV4;
         can_map[CV4]         = true;
-        current_display_page = CVMAPPINGS4;
+        current_display_page = CV_MAPPINGS4;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_4))
@@ -1049,7 +1062,8 @@ void ProcessGatesTriggersCv()
         if(param_controls[i].GetMappedCV() != NONE)
         {
             float cv_value = field.GetCvValue(param_controls[i].GetMappedCV());
-            param_controls[i].ControlChange(cv_value);
+            float clamped_cv_value = Constrain(cv_value, 0.0f, 1.0f);
+            param_controls[i].ControlChange(clamped_cv_value);
             param_controls[i].Process();
         }
     }
