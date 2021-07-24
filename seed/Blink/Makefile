@@ -2,10 +2,7 @@
 TARGET = Blink
 
 # Sources
-CPP_SOURCES = Blink.cpp \
-lut.cpp \
-
-C_INCLUDES += -I. \
+CPP_SOURCES = Blink.cpp 
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy
