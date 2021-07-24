@@ -159,11 +159,12 @@ class ParamControl
     bool ControlChange(float newval, bool catch_val = true)
     {
         auto delta = fabsf(newval - param_val_);
-        auto ret   = delta > KNOB_CHANGE_TOLERANCE && delta < KNOB_CATCH_TOLERANCE;
-        
+        auto ret
+            = delta > KNOB_CHANGE_TOLERANCE && delta < KNOB_CATCH_TOLERANCE;
+
         if(ret)
         {
-            param_val_ = newval;
+            param_val_         = newval;
             param_val_changed_ = true;
 
 #ifdef SHOW_KNOB_VALUES
@@ -195,8 +196,9 @@ class ParamControl
         float val;
 
         auto new_knob_val = knob_->Process();
-        knob_val_changed_  = fabsf(new_knob_val - knob_val_) > KNOB_CHANGE_TOLERANCE;
-        knob_val_          = new_knob_val;
+        knob_val_changed_
+            = fabsf(new_knob_val - knob_val_) > KNOB_CHANGE_TOLERANCE;
+        knob_val_ = new_knob_val;
 
         if(mapped_cv_ == NONE)
         {
@@ -416,7 +418,7 @@ int main(void)
 
     InitParams();
 
-    //Process all params once to set inital state and suppress catch mechanism
+    //Process all params once to set inital state
     for(int i = NUM_PARAMS - 1; i >= 0; i--)
     {
         param_controls[i].Process();
@@ -941,7 +943,7 @@ void ProcessButtons()
 
     if(field.KeyboardRisingEdge(BUTTON_SHIFT))
     {
-        is_shifted           = !is_shifted;
+        is_shifted = !is_shifted;
         //current_display_page = BUTTONS2;
     }
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import argparse, glob, os, shutil, codecs
+import argparse, glob, os, shutil, codecs, pathlib
 import subprocess
 
 ################################################################
@@ -11,7 +11,8 @@ usage = {
     'operation': 'Keyword argument for the desired helper action. Can be any of the following: create, copy, update, rebuild_all.',
     'destination': 'Second positional argument to set where the action should be applied. This is the final destination of the project.',
     'source': 'optional argument for selecting the project to copy from. required for the copy operation.',
-    'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio'
+    'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio',
+    'libs': 'optional argument for specifying the path containing libDaisy and DaisySP. Used with create and update. Default is ./ .'
 }
 supported_boards= ['seed', 'pod', 'patch', 'field', 'petal', 'versio']
 
@@ -39,6 +40,12 @@ def rewrite_replace(filepath, a, b):
         print("Cannot process file: {} \t {} into {}".format(filepath, a, b))
         print(e)
 
+def rec_rewrite_replace(dir_path, a, b):
+    for dname, dirs, files in os.walk(dir_path):
+        for fname in files:
+            fpath = os.path.join(dname, fname)
+            rewrite_replace(fpath, a, b)
+
 # Takes a filename and a list of extensions
 # returns true if the file name ends with that extension
 def has_extension(fname, ext_list):
@@ -56,7 +63,7 @@ def has_extension(fname, ext_list):
 # Called via the 'update' operation
 # Removes old, copies new from template, processes for string replacement
 # only affects .vscode/, vs/ and .sln files.
-def  update_project(destination):
+def  update_project(destination, libs):
     basedir = os.path.abspath(destination)
     root = os.path.dirname(os.path.realpath(__file__))
     tdir = os.path.sep.join((root,'utils','Template'))
@@ -75,9 +82,11 @@ def  update_project(destination):
             print('deleting: {}'.format(os.path.relpath(f)))
             os.remove(f)
     # Copying
+    libs = pathlib.Path(libs).as_posix()
     cp_patts = ['*.sln', '*.vgdbsettings', '.vscode/*', 'vs/*']
     cplists = list(glob.glob(tdir+os.path.sep+pat) for pat in cp_patts)
     f_to_cp = list(item for sublist in cplists for item in sublist)
+    libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
     for f in f_to_cp:
         sname = os.path.abspath(f)
         dname = os.path.abspath(sname.replace(tdir, basedir)).replace('Template', proj_name)
@@ -86,7 +95,11 @@ def  update_project(destination):
             os.mkdir(dir_path)
         print('copying: {} to {}'.format(os.path.relpath(sname), os.path.relpath(dname)))
         shutil.copyfile(sname, dname)
-        rewrite_replace(dname, 'Template', proj_name) 
+        rewrite_replace(dname, 'Template', proj_name)
+
+        rewrite_replace(dname, '@LIBDAISY_DIR@', libs + '/libDaisy')
+        rewrite_replace(dname, '@DAISYSP_DIR@', libs + '/DaisySP')
+
 
 # Called via the 'copy' operation
 # copies _all_ files from source directory, 
@@ -129,13 +142,24 @@ def copy_project(destination, source):
         print("source directory is not valid.")
 
 # Called via the 'create' operation
-def create_from_template(destination, board):
+def create_from_template(destination, board, libs):
     print("creating new project: {} for platform: {}".format(destination, board))
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
-    template_dir = os.path.abspath(os.path.sep.join(('utils', 'Template')))
+
+    libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
+    file_path = pathlib.Path(__file__).as_posix().replace('helper.py', '')
+
+    template_dir = file_path + '/utils/Template'
     copy_project(destination, template_dir)
-    src_file = os.path.abspath(destination + os.path.sep + os.path.basename(destination) + '.cpp')
+
+    libdaisy_dir = libs + "/libdaisy/"
+    rec_rewrite_replace(destination, "@LIBDAISY_DIR@", libdaisy_dir)
+
+    daisysp_dir = libs + "/daisysp/"
+    rec_rewrite_replace(destination, "@DAISYSP_DIR@", daisysp_dir)
+
+    src_file = pathlib.Path(destination + os.path.sep + os.path.basename(destination) + '.cpp')
     # Copy resources/diagram files (if available)
     dfiles = glob.glob(os.path.sep.join(('resources', '*')))
     dfiles += glob.glob(os.path.sep.join(('resources', '**', '*')))
@@ -148,7 +172,6 @@ def create_from_template(destination, board):
         os.mkdir(os.path.sep.join((destination,'resources', 'png')))
         for s, d in zip(dsrc, ddest):
             shutil.copy(s, d)
-
 
     # Platform specific differences summarized:
     # - seed: needs hw.Configure() before init. No hw.UpdateAllControls()
@@ -224,13 +247,15 @@ def run():
     parser.add_argument('destination', help =usage.get('destination'), nargs='?')
     parser.add_argument('-s', '--source', help=usage.get('source'))
     parser.add_argument('-b', '--board', help=usage.get('board'), default='seed', choices=supported_boards)
+    parser.add_argument('-l', '--libs', help=usage.get('libs'), default='.')
     args = parser.parse_args()
     op = args.operation.casefold()
     if op == 'create':
         # create new project
         brd = args.board
         dest = args.destination
-        create_from_template(dest, brd)
+        libs = args.libs
+        create_from_template(dest, brd, libs)
     elif op == 'copy':
         # copy from source to dest
         src = args.source
@@ -239,7 +264,8 @@ def run():
     elif op == 'update':
         if args.destination:
             dest = args.destination
-            update_project(dest)
+            libs = args.libs
+            update_project(dest, libs)
         else:
             for brd_dir in supported_boards:
                 brd_ex = list(os.path.sep.join((brd_dir, d)) for d in os.listdir(brd_dir) if 'experimental' not in d.casefold())
