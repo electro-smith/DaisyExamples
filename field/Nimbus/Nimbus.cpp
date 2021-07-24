@@ -16,7 +16,8 @@
 #define NUM_PARAMS 9
 #define NUM_PAGES 10
 
-#define KNOB_TOLERANCE .001f
+#define KNOB_CHANGE_TOLERANCE .001f
+#define KNOB_CATCH_TOLERANCE .075f
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 60
@@ -145,7 +146,7 @@ class ParamControl
         shifted_          = shifted;
         params_           = params;
         param_num_        = param_num;
-        param_val_        = ControlChange(0.f);
+        param_val_        = 0.5f;
         display_page_     = display_page;
         mapped_cv_        = mapped_cv;
         knob_val_         = 0.f;
@@ -155,12 +156,14 @@ class ParamControl
     bool HasParamChanged() { return param_val_changed_; }
     bool HasKnobChanged() { return knob_val_changed_; }
 
-    bool ControlChange(float newval)
+    bool ControlChange(float newval, bool catch_val = true)
     {
-        bool ret   = fabsf(newval - param_val_) > KNOB_TOLERANCE;
-        param_val_ = newval;
+        auto delta = fabsf(newval - param_val_);
+        auto ret   = delta > KNOB_CHANGE_TOLERANCE && delta < KNOB_CATCH_TOLERANCE;
+        
         if(ret)
         {
+            param_val_ = newval;
             param_val_changed_ = true;
 
 #ifdef SHOW_KNOB_VALUES
@@ -191,8 +194,8 @@ class ParamControl
     {
         float val;
 
-        float new_knob_val = knob_->Process();
-        knob_val_changed_  = fabsf(new_knob_val - knob_val_) > KNOB_TOLERANCE;
+        auto new_knob_val = knob_->Process();
+        knob_val_changed_  = fabsf(new_knob_val - knob_val_) > KNOB_CHANGE_TOLERANCE;
         knob_val_          = new_knob_val;
 
         if(mapped_cv_ == NONE)
@@ -413,7 +416,7 @@ int main(void)
 
     InitParams();
 
-    //Process all params once to set inital state
+    //Process all params once to set inital state and suppress catch mechanism
     for(int i = NUM_PARAMS - 1; i >= 0; i--)
     {
         param_controls[i].Process();
@@ -919,27 +922,27 @@ void ProcessButtons()
     {
         is_frozen_by_button = !is_frozen_by_button;
         processor.ToggleFreeze();
-        current_display_page = BUTTONS2;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.KeyboardRisingEdge(BUTTON_SILENCE))
     {
         is_silenced = !is_silenced;
         processor.set_silence(is_silenced);
-        current_display_page = BUTTONS2;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.KeyboardRisingEdge(BUTTON_BYPASS))
     {
         is_bypassed = !is_bypassed;
         processor.set_bypass(is_bypassed);
-        current_display_page = BUTTONS2;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.KeyboardRisingEdge(BUTTON_SHIFT))
     {
         is_shifted           = !is_shifted;
-        current_display_page = BUTTONS2;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.sw[0].RisingEdge())
