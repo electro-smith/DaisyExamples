@@ -43,9 +43,6 @@ int main(void)
     //uint32_t small_buff[1024];
     //uint32_t writesize = 1024 * sizeof(test_buff[0]);
     dur_write_4m = 0;
-    // Get into write mode.
-    hw.qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
-    dsy_qspi_init(&hw.qspi_handle);
     // Erase
     uint32_t base = 0x90000000;
     for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
@@ -53,17 +50,14 @@ int main(void)
         inbuff[i] = i;
     }
     start = System::GetTick();
-    dsy_qspi_erase(base, base + (TEST_BUFF_SIZE * sizeof(test_buff[0])));
+    hw.qspi.Erase(base, base + (TEST_BUFF_SIZE * sizeof(test_buff[0])));
     end       = System::GetTick();
     dur_erase = (end - start) / 200;
     start     = System::GetTick();
-    res       = dsy_qspi_write(
+    res       = hw.qspi.Write(
         base, TEST_BUFF_SIZE * sizeof(test_buff[0]), (uint8_t*)inbuff);
     end          = System::GetTick();
     dur_write_4k = (end - start) / 200;
-
-    hw.qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
-    dsy_qspi_init(&hw.qspi_handle);
 
     start = System::GetTick();
     memcpy(outbuff, test_buff, sizeof(test_buff[0]) * TEST_BUFF_SIZE);
@@ -82,6 +76,13 @@ int main(void)
            sizeof(test_flash_buff[0]) * TEST_BUFF_SIZE);
     end          = System::GetTick();
     dur_read_axi = (end - start) / 200;
+
+    // Testing to see if the data was all transferred correctly
+    for (int i = 0; i < TEST_BUFF_SIZE; i++)
+    {
+        if (axi_outbuff[i] != inbuff[i])
+            res = 1;
+    }
 
     if(res)
         asm("bkpt 255");
