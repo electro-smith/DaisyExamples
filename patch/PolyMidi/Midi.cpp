@@ -31,7 +31,7 @@ class PolyOsc {
         {
             sr_ = samplerate;
             currAss_ = 0;
-            for (int i = 0; i < size; i++)
+            for (size_t i = 0; i < size; i++)
             {
                 voices[i].assignmentIdx = 0;
                 voices[i].note = -1;
@@ -69,7 +69,7 @@ class PolyOsc {
 
         bool saturated()
         {
-            for (int i = 0; i < size; i++)
+            for (size_t i = 0; i < size; i++)
             {
                 if (voices[i].note == -1)
                     return false;
@@ -87,7 +87,7 @@ class PolyOsc {
                     // TODO -- this could eventually fail if a lot of voices are played
                     int lowest = 1000000;
                     int lowIdx = 0;
-                    for (int i = 0; i < size; i++)
+                    for (size_t i = 0; i < size; i++)
                     {
                         if (voices[i].assignmentIdx < lowest)
                         {
@@ -103,7 +103,7 @@ class PolyOsc {
                 }
                 else
                 {
-                    for (int i = 0; i < size; i++)
+                    for (size_t i = 0; i < size; i++)
                     {
                         if (voices[i].note == -1)
                         {
@@ -121,7 +121,7 @@ class PolyOsc {
 
         void NoteOff(uint8_t note_num)
         {
-            for (int i = 0; i < size; i++)
+            for (size_t i = 0; i < size; i++)
             {
                 if (voices[i].note == note_num)
                 {
@@ -134,7 +134,7 @@ class PolyOsc {
 
         void SetWave(int wave)
         {
-            for (int i = 0; i < size; i++)
+            for (size_t i = 0; i < size; i++)
             {
                 voices[i].osc.SetWaveform((const uint8_t) wave);
             }
@@ -143,7 +143,7 @@ class PolyOsc {
         float Process()
         {
             float accum = 0;
-            for (int i = 0; i < size; i++)
+            for (size_t i = 0; i < size; i++)
             {
                 accum += voices[i].osc.Process();
             }
@@ -153,43 +153,10 @@ class PolyOsc {
     private:
         int currAss_;
         int sr_;
-        // vector<Voice> voices;
         Voice voices[size];
 };
 
 PolyOsc<16> poly;
-std::list<int> notes;
-// MidiUsbHandler midi;
-
-bool findNote(int note)
-{
-    for (auto n : notes)
-    {
-        if (n == note)
-            return true;
-    }
-    return false;
-}
-
-void removeNote(int note)
-{
-    // for (int i = notes.size() - 1; i > -1; i--)
-    // {
-    //     if (notes[i] == note)
-    //         notes.remove(i);
-    // }
-    notes.remove(note);
-}
-
-void addNote(int note)
-{
-    notes.push_back(note);
-}
-
-int numNotes()
-{
-    return notes.size();
-}
 
 void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
@@ -235,43 +202,12 @@ void HandleMidiMessage(MidiEvent m)
         {
             NoteOnEvent p = m.AsNoteOn();
             poly.NoteOn(p.note, p.velocity);
-            // // This is to avoid Max/MSP Note outs for now..
-            // if(m.data[1] != 0)
-            // {
-            //     addNote(p.note);
-            //     osc.SetFreq(mtof(p.note));
-            //     osc.SetAmp((p.velocity / 127.0f));
-            // }
-            // else
-            // {
-            //     removeNote(p.note);
-            //     if (numNotes() > 0)
-            //     {
-            //         int note = notes.back();
-            //         osc.SetFreq(mtof(note));
-            //     }
-            //     else
-            //     {
-            //         osc.SetAmp(0);
-            //     }
-            // }
-
         }
         break;
         case NoteOff:
         {
                 NoteOffEvent p = m.AsNoteOff();
                 poly.NoteOff(p.note);
-                // removeNote(p.note);
-                // if (numNotes() > 0)
-                // {
-                //     int note = notes.back();
-                //     osc.SetFreq(mtof(note));
-                // }
-                // else
-                // {
-                //     osc.SetAmp(0);
-                // }
         }
         break;
         case ControlChange:
@@ -308,15 +244,8 @@ int main(void)
     samplerate = hw.AudioSampleRate();
 
     // Synthesis
-    // osc.Init(samplerate);
-    // osc.SetWaveform(Oscillator::WAVE_SAW);
-    // filt.Init(samplerate);
     poly.Init(samplerate);
-    // poly.SetNumVoices(4);
-	
-	// MidiUsbHandler::Config config;
-	// midi.Init(config);
-    // midi.StartReceive();
+
     hw.display.Fill(false);
     hw.display.Update();
 
