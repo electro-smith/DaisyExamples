@@ -73,7 +73,7 @@ def run():
     args = parser.parse_args()
 
     if not args.directory_list:
-        directories = [ 'seed', 'pod', 'patch', 'field', 'petal', 'versio' ]
+        directories = [ 'seed', 'pod', 'patch', 'field', 'petal', 'versio', 'patch_sm' ]
     else:
         directories = list(args.directory_list) 
 
