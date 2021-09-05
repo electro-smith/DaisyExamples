@@ -150,7 +150,7 @@ def create_from_template(destination, board, libs):
     libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
     file_path = pathlib.Path(__file__).as_posix().replace('helper.py', '')
 
-    template_dir = file_path + '/utils/Template'
+    template_dir = os.path.join(file_path, 'utils', 'Template')
     copy_project(destination, template_dir)
 
     libdaisy_dir = libs + "/libdaisy/"
