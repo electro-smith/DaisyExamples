@@ -29,10 +29,11 @@ DaisyPatchSM hw;
  * efficient to do the processing on larger chunks at a time.
  *
  */
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out,
-                   size_t size) {
-
-  /** The easiest way to do pass thru is to simply copy the input to the output
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
+{
+    /** The easiest way to do pass thru is to simply copy the input to the output
    * In C++ the standard way of doing this is with std::copy. However, those
    * familliar with C can use memcpy. A simple loop is also a good way to do
    * this.
@@ -41,18 +42,19 @@ void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out,
    *  and the output, and not just passing it through we'll demonstrate doing
    *  so with a for loop.
    */
-  for (size_t i = 0; i < size; i++) {
-    out[0][i] = in[0][i]; /**< Copy the left input to the left output */
-    out[1][i] = in[1][i]; /**< Copy the right input to the right output */
-  }
+    for(size_t i = 0; i < size; i++)
+    {
+        out[0][i] = in[0][i]; /**< Copy the left input to the left output */
+        out[1][i] = in[1][i]; /**< Copy the right input to the right output */
+    }
 }
 
-int main(void) {
-  /** Initialize the hardware */
-  hw.Init();
+int main(void)
+{
+    /** Initialize the hardware */
+    hw.Init();
 
-  /** Start Processing the audio */
-  hw.StartAudio(AudioCallback);
-  while (1) {
-  }
+    /** Start Processing the audio */
+    hw.StartAudio(AudioCallback);
+    while(1) {}
 }
