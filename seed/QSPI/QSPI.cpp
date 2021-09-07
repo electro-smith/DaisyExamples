@@ -1,112 +1,77 @@
-#include <string.h>
 #include "daisy_seed.h"
 #include "daisysp.h"
-#include "test_const.h"
-#include <math.h>
-
-// 1MB test
-#define TEST_BUFF_SIZE (1024 * 8)
 
 using namespace daisy;
-using namespace daisysp;
 
-static uint32_t DSY_QSPI_BSS test_buff[TEST_BUFF_SIZE];
-static uint32_t __attribute__((section(".dtcmram_bss")))
-outbuff[TEST_BUFF_SIZE];
-static uint32_t axi_outbuff[TEST_BUFF_SIZE];
-uint32_t        inbuff[TEST_BUFF_SIZE];
+DaisySeed       hw;
+daisysp::Phasor phs;
 
-static DaisySeed hw;
-static uint32_t  start, end;
-static uint32_t  dur_erase, dur_write_4k, dur_write_4m, dur_read_qspi,
-    dur_read_flash, dur_read_axi;
+#define WAVE_LENGTH 16384
+float wavform_ram[WAVE_LENGTH];
+/** The DSY_QSPI_BSS attribute places your array in QSPI memory */
+float DSY_QSPI_BSS qspi_buffer[WAVE_LENGTH];
 
+void Callback(AudioHandle::InputBuffer  in,
+              AudioHandle::OutputBuffer out,
+              size_t                    size)
+{
+    for(size_t i = 0; i < size; i++)
+    {
+        float    idx  = phs.Process() * 16383.f;
+        uint32_t tdx  = (uint32_t)idx;
+        float    frac = idx - tdx;
+        float    a, b;
+        a          = qspi_buffer[tdx];
+        b          = qspi_buffer[(tdx + 1) % WAVE_LENGTH];
+        float samp = a + (b - a) * frac;
+
+        out[0][i] = out[1][i] = samp;
+    }
+}
 
 int main(void)
 {
-    // Initialize Hardware
     hw.Configure();
     hw.Init();
-    //	for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
-    //	{
-    //		test_buff[i] = i;
-    //	}
-    //	for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
-    //	{
-    //		if(test_buff[i] != i)
-    //		{
-    //			asm("bkpt 255");
-    //		}
-    //	}
-    uint32_t res;
-    //uint32_t val = 0;
-    //uint32_t small_buff[1024];
-    //uint32_t writesize = 1024 * sizeof(test_buff[0]);
-    dur_write_4m = 0;
-    // Get into write mode.
-    hw.qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
-    dsy_qspi_init(&hw.qspi_handle);
-    // Erase
-    uint32_t base = 0x90000000;
-    for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
+
+    phs.Init(hw.AudioSampleRate());
+    phs.SetFreq(440.f);
+
+    /** Fill 64kB wave */
+    for(uint32_t i = 0; i < WAVE_LENGTH; i++)
     {
-        inbuff[i] = i;
+        float frac = (float)i / (float)WAVE_LENGTH;
+
+        /** Simple saw wave gen */
+        float accum = 0;
+        for(int j = 1; j < 64; j++)
+        {
+            accum += sin(TWOPI_F * frac * j) / j;
+        }
+        wavform_ram[i] = accum;
     }
-    start = System::GetTick();
-    dsy_qspi_erase(base, base + (TEST_BUFF_SIZE * sizeof(test_buff[0])));
-    end       = System::GetTick();
-    dur_erase = (end - start) / 200;
-    start     = System::GetTick();
-    res       = dsy_qspi_write(
-        base, TEST_BUFF_SIZE * sizeof(test_buff[0]), (uint8_t*)inbuff);
-    end          = System::GetTick();
-    dur_write_4k = (end - start) / 200;
 
-    hw.qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
-    dsy_qspi_init(&hw.qspi_handle);
+    size_t size = sizeof(wavform_ram[0]) * WAVE_LENGTH;
+    /** Grab physical address from pointer */
+    size_t address = (size_t)qspi_buffer;
+    /** Erase qspi and then write that wave */
+    hw.qspi.Erase(address, address + size);
+    hw.qspi.Write(address, size, (uint8_t*)wavform_ram);
 
-    start = System::GetTick();
-    memcpy(outbuff, test_buff, sizeof(test_buff[0]) * TEST_BUFF_SIZE);
-    end           = System::GetTick();
-    dur_read_qspi = (end - start) / 200;
+    /** Now compare to RAM version */
+    uint32_t failcnt = 0;
+    for(uint32_t i = 0; i < WAVE_LENGTH; i++)
+    {
+        if(qspi_buffer[i] != wavform_ram[i])
+            failcnt++;
+    }
 
-    start = System::GetTick();
-    memcpy(
-        outbuff, test_flash_buff, sizeof(test_flash_buff[0]) * TEST_BUFF_SIZE);
-    end            = System::GetTick();
-    dur_read_flash = (end - start) / 200;
+    unsigned int rate = (failcnt > 0) ? 128 : 512;
 
-    start = System::GetTick();
-    memcpy(axi_outbuff,
-           test_flash_buff,
-           sizeof(test_flash_buff[0]) * TEST_BUFF_SIZE);
-    end          = System::GetTick();
-    dur_read_axi = (end - start) / 200;
+    hw.StartAudio(Callback);
 
-    if(res)
-        asm("bkpt 255");
-
-    // READ test
-    // Write 4kb chunks at a time
-    //	for(uint32_t i = 0; i < 1024; i++)
-    //	{
-    //		for(uint32_t j = 0; j < 1024; j++)
-    //		{
-    //			small_buff[j] = val;
-    //			val++;
-    //		}
-    //		start = System::GetTick();
-    //		res = dsy_qspi_write(base + (i * writesize), writesize, (uint8_t*)small_buff);
-    //		end = System::GetTick();
-    //		dur_write_4k = (end - start) / 200;
-    //		dur_write_4m += dur_write_4k;
-    //	}
-    bool ledstate;
-    ledstate = true;
     while(1)
     {
-        System::Delay(250);
-        hw.SetLed(ledstate);
-        ledstate = !ledstate;
+        hw.SetLed(System::GetNow() & rate);
     }
 }
