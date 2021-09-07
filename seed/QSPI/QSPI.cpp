@@ -1,13 +1,16 @@
 #include "daisy_seed.h"
 #include "daisysp.h"
-​
+
 using namespace daisy;
-​
+
 DaisySeed       hw;
 daisysp::Phasor phs;
-​
-float wavform_ram[16384];
-​
+
+#define WAVE_LENGTH 16384
+float wavform_ram[WAVE_LENGTH];
+/** The DSY_QSPI_BSS attribute places your array in QSPI memory */
+float DSY_QSPI_BSS qspi_buffer[WAVE_LENGTH];
+
 void Callback(AudioHandle::InputBuffer  in,
               AudioHandle::OutputBuffer out,
               size_t                    size)
@@ -18,47 +21,55 @@ void Callback(AudioHandle::InputBuffer  in,
         uint32_t tdx  = (uint32_t)idx;
         float    frac = idx - tdx;
         float    a, b;
-        float*   qspi_buff = (float*)System::qspi_start;
-        a                  = qspi_buff[tdx];
-        b                  = qspi_buff[(tdx + 1) % 16834];
-        float samp         = a + (b - a) * frac;
+        a          = qspi_buffer[tdx];
+        b          = qspi_buffer[(tdx + 1) % WAVE_LENGTH];
+        float samp = a + (b - a) * frac;
+
         out[0][i] = out[1][i] = samp;
     }
 }
-​
+
 int main(void)
 {
     hw.Configure();
     hw.Init();
-    hw.SetAudioBlockSize(2);
+
     phs.Init(hw.AudioSampleRate());
-    phs.SetFreq(100.f);
-​
-    /** Fill 64kB sine wave */
-    for(uint32_t i = 0; i < 16384; i++)
+    phs.SetFreq(440.f);
+
+    /** Fill 64kB wave */
+    for(uint32_t i = 0; i < WAVE_LENGTH; i++)
     {
-        float frac     = i / 16384.f;
-        wavform_ram[i] = sin(TWOPI_F * frac);
+        float frac = (float)i / (float)WAVE_LENGTH;
+
+        /** Simple saw wave gen */
+        float accum = 0;
+        for(int j = 1; j < 64; j++)
+        {
+            accum += sin(TWOPI_F * frac * j) / j;
+        }
+        wavform_ram[i] = accum;
     }
-​
-    /** erase and then write that sin */
-    size_t size = sizeof(wavform_ram[0]) * 16834;
-    hw.qspi.Erase(System::qspi_start, System::qspi_start + size);
-    hw.qspi.Write(System::qspi_start, size, (uint8_t*)wavform_ram);
-​
+
+    size_t size = sizeof(wavform_ram[0]) * WAVE_LENGTH;
+    /** Grab physical address from pointer */
+    size_t address = (size_t)qspi_buffer;
+    /** Erase qspi and then write that wave */
+    hw.qspi.Erase(address, address + size);
+    hw.qspi.Write(address, size, (uint8_t*)wavform_ram);
+
     /** Now compare to RAM version */
     uint32_t failcnt = 0;
-    for(uint32_t i = 0; i < 16384; i++)
+    for(uint32_t i = 0; i < WAVE_LENGTH; i++)
     {
-        float* wavform_qspi = (float*)(System::qspi_start) + i;
-        if(*wavform_qspi != wavform_ram[i])
+        if(qspi_buffer[i] != wavform_ram[i])
             failcnt++;
     }
-​
+
     unsigned int rate = (failcnt > 0) ? 128 : 512;
 
     hw.StartAudio(Callback);
-​
+
     while(1)
     {
         hw.SetLed(System::GetNow() & rate);

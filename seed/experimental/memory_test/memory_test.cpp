@@ -27,17 +27,17 @@ int main(void)
     // Initialize Hardware
     hw.Configure();
     hw.Init();
-    //	for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
-    //	{
-    //		test_buff[i] = i;
-    //	}
-    //	for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
-    //	{
-    //		if(test_buff[i] != i)
-    //		{
-    //			asm("bkpt 255");
-    //		}
-    //	}
+    //    for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
+    //    {
+    //        test_buff[i] = i;
+    //    }
+    //    for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
+    //    {
+    //        if(test_buff[i] != i)
+    //        {
+    //            asm("bkpt 255");
+    //        }
+    //    }
     uint32_t res;
     //uint32_t val = 0;
     //uint32_t small_buff[1024];
@@ -89,19 +89,19 @@ int main(void)
 
     // READ test
     // Write 4kb chunks at a time
-    //	for(uint32_t i = 0; i < 1024; i++)
-    //	{
-    //		for(uint32_t j = 0; j < 1024; j++)
-    //		{
-    //			small_buff[j] = val;
-    //			val++;
-    //		}
-    //		start = System::GetTick();
-    //		res = dsy_qspi_write(base + (i * writesize), writesize, (uint8_t*)small_buff);
-    //		end = System::GetTick();
-    //		dur_write_4k = (end - start) / 200;
-    //		dur_write_4m += dur_write_4k;
-    //	}
+    //    for(uint32_t i = 0; i < 1024; i++)
+    //    {
+    //        for(uint32_t j = 0; j < 1024; j++)
+    //        {
+    //            small_buff[j] = val;
+    //            val++;
+    //        }
+    //        start = System::GetTick();
+    //        res = dsy_qspi_write(base + (i * writesize), writesize, (uint8_t*)small_buff);
+    //        end = System::GetTick();
+    //        dur_write_4k = (end - start) / 200;
+    //        dur_write_4m += dur_write_4k;
+    //    }
     bool ledstate;
     ledstate = true;
     while(1)
