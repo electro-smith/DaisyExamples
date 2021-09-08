@@ -1,7 +1,15 @@
-# Description
+# State Variable Filter
+
+## Author
+
+Ben Sergentanis
+
+## Description
 State variable filter with simultaneous low pass, high pass, band pass, and notch outputs.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Svf)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Ctrl 1 | Cutoff Frequency | 20Hz to 20,000kHz |
@@ -13,20 +21,9 @@ State variable filter with simultaneous low pass, high pass, band pass, and notc
 | Audio Out 3 | Band Pass Out | Passes frequencies in a band, centered around cutoff |
 | Audio Out 4 | Notch Out | Rejects a band of frequencies, centered around cutoff |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Svf/resources/Svf.png" alt="Svf.png" style="width: 100%;"/>
 
-# Code Snippet
-```cpp
-for (size_t i = 0; i < size; i ++)
-{
-    //send the next sample to the filter
-    svf.Process(in[0][i]);
-    
-    //send the different filter types to the different outputs
-    out[0][i] = svf.Low();
-    out[1][i] = svf.High();
-    out[2][i] = svf.Band();
-    out[3][i] = svf.Notch();
-}
-```
+
+
+

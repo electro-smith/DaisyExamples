@@ -5,19 +5,20 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch          hw;
-MidiHandler         midi;
+DaisyPatch hw;
 Oscillator osc;
 Svf        filt;
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     float sig;
-    for(size_t i = 0; i < size; i ++)
+    for(size_t i = 0; i < size; i++)
     {
         sig = osc.Process();
         filt.Process(sig);
-        for (size_t chn = 0; chn < 4; chn++)
+        for(size_t chn = 0; chn < 4; chn++)
         {
             out[chn][i] = filt.Low();
         }
@@ -70,7 +71,6 @@ int main(void)
     float samplerate;
     hw.Init();
     samplerate = hw.AudioSampleRate();
-    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
 
     // Synthesis
     osc.Init(samplerate);
@@ -78,22 +78,22 @@ int main(void)
     filt.Init(samplerate);
 
     //display
-    std::string str = "Midi";
-    char* cstr = &str[0];
+    std::string str  = "Midi";
+    char*       cstr = &str[0];
     hw.display.WriteString(cstr, Font_7x10, true);
     hw.display.Update();
-    
+
     // Start stuff.
-    midi.StartReceive();
+    hw.midi.StartReceive();
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
     for(;;)
     {
-        midi.Listen();
+        hw.midi.Listen();
         // Handle MIDI Events
-        while (midi.HasEvents())
+        while(hw.midi.HasEvents())
         {
-            HandleMidiMessage(midi.PopEvent());
+            HandleMidiMessage(hw.midi.PopEvent());
         }
     }
 }

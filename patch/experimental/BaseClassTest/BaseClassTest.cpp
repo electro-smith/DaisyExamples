@@ -59,7 +59,7 @@ class JustEncoder : public DaisyBoard
                  seed.GetPin(PIN_ENC_CLICK),
                  AudioCallbackRate());
     }
-    void DebounceControls() { enc.Debounce(); }
+    void ProcessDigitalControls() { enc.Debounce(); }
     int32_t Increment() { return enc.Increment(); }
     bool    Click() { return enc.FallingEdge(); }
 
@@ -75,8 +75,8 @@ float      test;
 // If we use DerivedTwo we'll be reading from the first knob of the Daisy Patch
 void TestCallback(float *in, float *out, size_t size)
 {
-    hw.UpdateAnalogControls();
-    hw.DebounceControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
     test = hw.GetControlValue(0);
     test += 1.0f; // temp offset for bad AnalogControl code.
     for(size_t i = 0; i < size; i += 2)

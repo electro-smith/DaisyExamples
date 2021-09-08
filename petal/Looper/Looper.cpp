@@ -12,19 +12,23 @@ bool first = true;  //first loop (sets length)
 bool rec   = false; //currently recording
 bool play  = false; //currently playing
 
-int   pos = 0;
+int                 pos = 0;
 float DSY_SDRAM_BSS buf[MAX_SIZE];
-int                 mod = MAX_SIZE;
-int                 len = 0;
-float drywet = 0;
-bool res = false;
+int                 mod    = MAX_SIZE;
+int                 len    = 0;
+float               drywet = 0;
+bool                res    = false;
 
 void ResetBuffer();
 void Controls();
 
-void NextSamples(float &output, float* in, size_t i);
+void NextSamples(float&                               output,
+                 AudioHandle::InterleavingInputBuffer in,
+                 size_t                               i);
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float output = 0;
 
@@ -32,12 +36,11 @@ static void AudioCallback(float *in, float *out, size_t size)
 
     for(size_t i = 0; i < size; i += 2)
     {
-        NextSamples(output, in, i);   
-	
-        // left and right outs
-        out[i] = out[i+1] = output;
-    }
+        NextSamples(output, in, i);
 
+        // left and right outs
+        out[i] = out[i + 1] = output;
+    }
 }
 
 int main(void)
@@ -51,13 +54,13 @@ int main(void)
     petal.StartAdc();
     petal.StartAudio(AudioCallback);
 
-    while(1) 
+    while(1)
     {
         //leds
         petal.SetFootswitchLed((DaisyPetal::FootswitchLed)1, play);
         petal.SetFootswitchLed((DaisyPetal::FootswitchLed)0, rec);
         petal.UpdateLeds();
-        dsy_system_delay(16); // 60Hz
+        System::Delay(16); // 60Hz
     }
 }
 
@@ -73,7 +76,7 @@ void ResetBuffer()
     {
         buf[i] = 0;
     }
-    mod   = MAX_SIZE;
+    mod = MAX_SIZE;
 }
 
 void UpdateButtons()
@@ -88,7 +91,7 @@ void UpdateButtons()
             len   = 0;
         }
 
-	res = true;
+        res  = true;
         play = true;
         rec  = !rec;
     }
@@ -97,63 +100,64 @@ void UpdateButtons()
     if(petal.switches[0].TimeHeldMs() >= 1000 && res)
     {
         ResetBuffer();
-	res = false;
+        res = false;
     }
-    
+
     //switch2 pressed and not empty buffer
     if(petal.switches[1].RisingEdge() && !(!rec && first))
     {
         play = !play;
-	rec = false;
+        rec  = false;
     }
 }
 
-//Deals with analog controls 
+//Deals with analog controls
 void Controls()
 {
-    petal.UpdateAnalogControls();
-    petal.DebounceControls();
+    petal.ProcessAnalogControls();
+    petal.ProcessDigitalControls();
 
     drywet = petal.knob[0].Process();
 
     UpdateButtons();
-
 }
 
-void WriteBuffer(float* in, size_t i)
+void WriteBuffer(AudioHandle::InterleavingInputBuffer in, size_t i)
 {
     buf[pos] = buf[pos] * 0.5 + in[i] * 0.5;
     if(first)
     {
-	len++;
+        len++;
     }
 }
 
-void NextSamples(float &output, float* in, size_t i)
+void NextSamples(float&                               output,
+                 AudioHandle::InterleavingInputBuffer in,
+                 size_t                               i)
 {
-    if (rec)
+    if(rec)
     {
-	WriteBuffer(in, i);
+        WriteBuffer(in, i);
     }
-    
+
     output = buf[pos];
-    
+
     //automatic looptime
     if(len >= MAX_SIZE)
     {
         first = false;
-	mod   = MAX_SIZE;
-	len   = 0;
-    }
-    
-    if(play)
-    {
-	pos++;
-	pos %= mod;
+        mod   = MAX_SIZE;
+        len   = 0;
     }
 
-    if (!rec)
+    if(play)
     {
-	output = output * drywet + in[i] * (1 -drywet);
+        pos++;
+        pos %= mod;
+    }
+
+    if(!rec)
+    {
+        output = output * drywet + in[i] * (1 - drywet);
     }
 }

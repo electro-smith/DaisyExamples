@@ -6,12 +6,13 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPod    hw;
-MidiHandler midi;
-Oscillator  osc;
-Svf         filt;
+DaisyPod   hw;
+Oscillator osc;
+Svf        filt;
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float sig;
     for(size_t i = 0; i < size; i += 2)
@@ -30,10 +31,13 @@ void HandleMidiMessage(MidiEvent m)
         case NoteOn:
         {
             NoteOnEvent p = m.AsNoteOn();
-			char buff[512];
-			sprintf(
-				buff, "Note Received:\t%d\t%d\t%d\r\n", m.channel, m.data[0], m.data[1]);
-			hw.seed.usb_handle.TransmitInternal((uint8_t*)buff, strlen(buff));
+            char        buff[512];
+            sprintf(buff,
+                    "Note Received:\t%d\t%d\t%d\r\n",
+                    m.channel,
+                    m.data[0],
+                    m.data[1]);
+            hw.seed.usb_handle.TransmitInternal((uint8_t *)buff, strlen(buff));
             // This is to avoid Max/MSP Note outs for now..
             if(m.data[1] != 0)
             {
@@ -72,8 +76,7 @@ int main(void)
     float samplerate;
     hw.Init();
     hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
-    dsy_system_delay(250);
-    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
+    System::Delay(250);
 
     // Synthesis
     samplerate = hw.AudioSampleRate();
@@ -84,14 +87,14 @@ int main(void)
     // Start stuff.
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
-    midi.StartReceive();
+    hw.midi.StartReceive();
     for(;;)
     {
-        midi.Listen();
+        hw.midi.Listen();
         // Handle MIDI Events
-        while(midi.HasEvents())
+        while(hw.midi.HasEvents())
         {
-            HandleMidiMessage(midi.PopEvent());
+            HandleMidiMessage(hw.midi.PopEvent());
         }
     }
 }

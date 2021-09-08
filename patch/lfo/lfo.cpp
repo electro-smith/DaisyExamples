@@ -12,12 +12,12 @@ DaisyPatch patch;
 struct lfoStruct
 {
     Oscillator osc;
-    Parameter freqCtrl;
-    Parameter ampCtrl;
-    float amp;
-    float freq;
-    int waveform;
-    float value;
+    Parameter  freqCtrl;
+    Parameter  ampCtrl;
+    float      amp;
+    float      freq;
+    int        waveform;
+    float      value;
 
     void Init(float samplerate, AnalogControl freqKnob, AnalogControl ampKnob)
     {
@@ -28,19 +28,21 @@ struct lfoStruct
         ampCtrl.Init(ampKnob, 0, 1, Parameter::LINEAR);
     }
 
-    void Process(dsy_dac_channel chn)
+    void Process(DacHandle::Channel chn)
     {
         //read the knobs and set params
-        osc.SetFreq(freqCtrl.Process());        
+        osc.SetFreq(freqCtrl.Process());
         osc.SetWaveform(waveform);
 
         //write to the DAC
-        dsy_dac_write(chn, (osc.Process() + 1.f ) * .5f * ampCtrl.Process() * 4095.f);
+        patch.seed.dac.WriteValue(
+            chn,
+            uint16_t((osc.Process() + 1.f) * .5f * ampCtrl.Process() * 4095.f));
     }
 };
 
-bool menuSelect;
-int lfoSelect;
+bool        menuSelect;
+int         lfoSelect;
 std::string waveNames[5];
 
 lfoStruct lfos[2];
@@ -48,15 +50,17 @@ lfoStruct lfos[2];
 void UpdateOled();
 void UpdateEncoder();
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
-    for (size_t i = 0; i < size; i++)
+    for(size_t i = 0; i < size; i++)
     {
-        lfos[0].Process(DSY_DAC_CHN1);
-        lfos[1].Process(DSY_DAC_CHN2);
+        lfos[0].Process(DacHandle::Channel::ONE);
+        lfos[1].Process(DacHandle::Channel::TWO);
     }
 }
-        
+
 void SetupWaveNames()
 {
     waveNames[0] = "sine";
@@ -81,31 +85,32 @@ int main(void)
 
     patch.StartAdc();
     patch.StartAudio(AudioCallback);
-    
-    while(1) 
+
+    while(1)
     {
         patch.DelayMs(1);
         UpdateOled();
         UpdateEncoder();
-    } 
+    }
 }
 
 void UpdateOled()
 {
     patch.display.Fill(false);
 
-    patch.display.SetCursor(0,0);
-    std::string str = "Dual LFO";
-    char* cstr = &str[0];
+    patch.display.SetCursor(0, 0);
+    std::string str  = "Dual LFO";
+    char*       cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
 
     //cursor
-    patch.display.SetCursor(lfoSelect * 70,25);
+    patch.display.SetCursor(lfoSelect * 70, 25);
     char select = menuSelect ? '@' : 'o';
-    patch.display.WriteChar(select,Font_7x10, true);
+    patch.display.WriteChar(select, Font_7x10, true);
 
     //waveforms
-    for (int i = 0; i < 2; i++){
+    for(int i = 0; i < 2; i++)
+    {
         cstr = &waveNames[lfos[i].waveform][0];
         patch.display.SetCursor(i * 70, 35);
         patch.display.WriteString(cstr, Font_7x10, true);
@@ -116,23 +121,24 @@ void UpdateOled()
 
 void UpdateEncoder()
 {
-    patch.UpdateAnalogControls();
-    patch.DebounceControls();
+    patch.ProcessAnalogControls();
+    patch.ProcessDigitalControls();
 
     //annoying menu stuff
-    if (patch.encoder.RisingEdge())
+    if(patch.encoder.RisingEdge())
     {
         menuSelect = !menuSelect;
     }
 
-    if (menuSelect)
+    if(menuSelect)
     {
-        lfos[lfoSelect].waveform  += patch.encoder.Increment();
-        lfos[lfoSelect].waveform  = (lfos[lfoSelect].waveform % MAX_WAVE + MAX_WAVE) % MAX_WAVE;
+        lfos[lfoSelect].waveform += patch.encoder.Increment();
+        lfos[lfoSelect].waveform
+            = (lfos[lfoSelect].waveform % MAX_WAVE + MAX_WAVE) % MAX_WAVE;
     }
     else
     {
-        lfoSelect  += patch.encoder.Increment();
-        lfoSelect  = (lfoSelect % 2 + 2) % 2;
+        lfoSelect += patch.encoder.Increment();
+        lfoSelect = (lfoSelect % 2 + 2) % 2;
     }
 }

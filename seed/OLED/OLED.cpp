@@ -1,26 +1,38 @@
 #include <stdio.h>
 #include <string.h>
 #include "daisy_seed.h"
+#include "dev/oled_ssd130x.h"
 
 using namespace daisy;
 
-DaisySeed   hw;
-OledDisplay display;
+/** Typedef the OledDisplay to make syntax cleaner below 
+ *  This is a 4Wire SPI Transport controlling an 128x64 sized SSDD1306
+ * 
+ *  There are several other premade test 
+*/
+using MyOledDisplay = OledDisplay<SSD130x4WireSpi128x64Driver>;
+
+DaisySeed     hw;
+MyOledDisplay display;
 
 int main(void)
 {
     uint8_t message_idx;
-    dsy_gpio_pin oled_pins[OledDisplay::NUM_PINS];
     hw.Configure();
     hw.Init();
-    oled_pins[OledDisplay::DATA_COMMAND] = hw.GetPin(10);
-    oled_pins[OledDisplay::RESET] = hw.GetPin(31);
-    display.Init(oled_pins);
+
+    /** Configure the Display */
+    MyOledDisplay::Config disp_cfg;
+    disp_cfg.driver_config.transport_config.pin_config.dc    = hw.GetPin(9);
+    disp_cfg.driver_config.transport_config.pin_config.reset = hw.GetPin(30);
+    /** And Initialize */
+    display.Init(disp_cfg);
+
     message_idx = 0;
     char strbuff[128];
     while(1)
     {
-        dsy_system_delay(500);
+        System::Delay(500);
         switch(message_idx)
         {
             case 0: sprintf(strbuff, "Testing. . ."); break;

@@ -1,7 +1,15 @@
-# Description
+# Filter Bank
+
+## Author
+
+Ben Sergentanis	
+
+## Description
 Fixed resonant peak filterbank with amplitude control per filter. Try running it with whitenoise, oscillators, or any sound source you please!
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/FilterBank)
+
+## Controls
 
 | Control | Description | Comment |
 | --- | --- | --- |
@@ -10,23 +18,5 @@ Fixed resonant peak filterbank with amplitude control per filter. Try running it
 | Audio In 1 | Filter bank Input | |
 | Audio Out 1-4 | Filter Bank Output | |
 
-# Diagram
+## Diagram
 <img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/FilterBank/resources/FilterBank.png" alt="FilterBank.png" style="width: 100%;"/>
-
-# Code Snippet
-```cpp
-static void AudioCallback(float **in, float **out, size_t size)
-{
-    for (size_t i = 0; i < size; i++)
-    {
-	float sig = 0.f;
-	for (int j = 0; j < 16; j++)
-	{
-	    sig += filters[j].Process(in[0][i]);
-	}
-	sig *= .06;
-	
-	out[0][i] = out[1][i] = out[2][i] = out[3][i] = sig;
-    }
-}
-```

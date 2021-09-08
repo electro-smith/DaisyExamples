@@ -1,5 +1,5 @@
 #include "daisy_petal.h"
-#include "daisysp.h" 
+#include "daisysp.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -8,36 +8,38 @@ using namespace daisysp;
 DaisyPetal hw;
 
 Parameter vtime, vfreq, vsend;
-bool bypass;
-ReverbSc verb;
+bool      bypass;
+ReverbSc  verb;
 
 // This runs at a fixed rate, to prepare audio samples
-void callback(float *in, float *out, size_t size)
+void callback(AudioHandle::InterleavingInputBuffer  in,
+              AudioHandle::InterleavingOutputBuffer out,
+              size_t                                size)
 {
     float dryl, dryr, wetl, wetr, sendl, sendr;
-    hw.DebounceControls();
+    hw.ProcessDigitalControls();
     verb.SetFeedback(vtime.Process());
     verb.SetLpFreq(vfreq.Process());
     vsend.Process(); // Process Send to use later
     //bypass = hw.switches[DaisyPetal::SW_5].Pressed();
     if(hw.switches[DaisyPetal::SW_1].RisingEdge())
         bypass = !bypass;
-    for (size_t i = 0; i < size; i+=2)
+    for(size_t i = 0; i < size; i += 2)
     {
-        dryl = in[i];
-        dryr = in[i+1];
+        dryl  = in[i];
+        dryr  = in[i + 1];
         sendl = dryl * vsend.Value();
         sendr = dryr * vsend.Value();
         verb.Process(sendl, sendr, &wetl, &wetr);
-        if (bypass)
+        if(bypass)
         {
-            out[i] = in[i]; // left
-            out[i+1] = in[i+1]; // right
+            out[i]     = in[i];     // left
+            out[i + 1] = in[i + 1]; // right
         }
         else
         {
-            out[i] = dryl + wetl;
-            out[i+1] = dryr + wetr;
+            out[i]     = dryl + wetl;
+            out[i + 1] = dryr + wetr;
         }
     }
 }
@@ -56,10 +58,10 @@ int main(void)
 
     hw.StartAdc();
     hw.StartAudio(callback);
-    while(1) 
+    while(1)
     {
         // Do Stuff InfInitely Here
-        dsy_system_delay(10);
+        System::Delay(10);
         hw.ClearLeds();
         hw.SetFootswitchLed(hw.FOOTSWITCH_LED_1, bypass ? 0.0f : 1.0f);
         hw.UpdateLeds();

@@ -1,7 +1,17 @@
-# Description
+# Chord Machine
+
+## Author
+
+Ben Sergentanis
+
+
+
+## Description
 A simple sine wave chord machine. Cycle through different chord types and inversions.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/ChordMachine)
+
+## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Knob 1 | Root pitch | Shifts the whole chord |
@@ -9,7 +19,7 @@ A simple sine wave chord machine. Cycle through different chord types and invers
 | Encoder | Rotate: Cycle through different chord types<br>Press: Reset to the first chord | |
 | LED | Chord indicator | |
 
-### Chord types
+## Chord types
   1. Major triad, Red
   2. Minor triad, Green
   3. Augmented triad, Blue
@@ -20,15 +30,7 @@ A simple sine wave chord machine. Cycle through different chord types and invers
   8. Minor/Major seven, Yellow
   9. Diminished seven, Pink
   10. Half diminished seven, Light green
+  
+## Diagram
 
-# Code Snippet
-    void UpdateKnobs()
-    {
-        int freq = (int) p_freq.Process(); 
-        int inversion = (int) p_inversion.Process();
-        
-        notes[0] = freq + (12 * (inversion >= 1));
-        notes[1] = freq + chord[chordNum][0] + (12 * (inversion >= 2));
-        notes[2] = freq + chord[chordNum][1] + (12 * (inversion >= 3));
-        notes[3] = freq + chord[chordNum][2] + (12 * (inversion >= 4));
-    }
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/ChordMachine/resources/ChordMachine.png" alt="ChordMachine.png" style="width: 100%;"/>

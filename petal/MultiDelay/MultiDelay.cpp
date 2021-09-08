@@ -40,7 +40,9 @@ bool  passThruOn;
 
 void ProcessControls();
 
-static void AudioCallback(float **in, float **out, size_t size)
+static void AudioCallback(AudioHandle::InputBuffer  in,
+                          AudioHandle::OutputBuffer out,
+                          size_t                    size)
 {
     ProcessControls();
 
@@ -115,14 +117,14 @@ int main(void)
         // Update Pass thru
         petal.SetFootswitchLed(DaisyPetal::FOOTSWITCH_LED_1, passThruOn);
         petal.UpdateLeds();
-        dsy_system_delay(6);
+        System::Delay(6);
     }
 }
 
 void ProcessControls()
 {
-    petal.UpdateAnalogControls();
-    petal.DebounceControls();
+    petal.ProcessAnalogControls();
+    petal.ProcessDigitalControls();
 
     //knobs
     for(int i = 0; i < 3; i++)

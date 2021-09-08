@@ -21,7 +21,9 @@ ReverbSc                                  verb;
 // Persistent filtered Value for smooth delay time changes.
 float smooth_time;
 
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
     float sig, delsig;           // Mono Audio Vars
     float trig, nn, decay;       // Pluck Vars
@@ -35,8 +37,8 @@ void AudioCallback(float **in, float **out, size_t size)
     out_right = out[1];
 
     samplerate = hw.AudioSampleRate();
-    hw.DebounceControls();
-    hw.UpdateAnalogControls();
+    hw.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
 
     // Handle Triggering the Plucks
     trig = 0.0f;
@@ -44,17 +46,17 @@ void AudioCallback(float **in, float **out, size_t size)
         trig = 1.0f;
 
     // Set MIDI Note for new Pluck notes.
-    nn = 24.0f + hw.GetCtrlValue(DaisyPatch::CTRL_1) * 60.0f;
+    nn = 24.0f + hw.GetKnobValue(DaisyPatch::CTRL_1) * 60.0f;
     nn = static_cast<int32_t>(nn); // Quantize to semitones
 
     // Read knobs for decay;
-    decay = 0.5f + (hw.GetCtrlValue(DaisyPatch::CTRL_2) * 0.5f);
+    decay = 0.5f + (hw.GetKnobValue(DaisyPatch::CTRL_2) * 0.5f);
     synth.SetDecay(decay);
 
     // Get Delay Parameters from knobs.
-    kval    = hw.GetCtrlValue(DaisyPatch::CTRL_3);
+    kval    = hw.GetKnobValue(DaisyPatch::CTRL_3);
     deltime = (0.001f + (kval * kval) * 5.0f) * samplerate;
-    delfb   = hw.GetCtrlValue(DaisyPatch::CTRL_4);
+    delfb   = hw.GetKnobValue(DaisyPatch::CTRL_4);
 
     // Synthesis.
     for(size_t i = 0; i < size; i++)

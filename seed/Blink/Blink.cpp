@@ -1,6 +1,6 @@
 #include "daisy_seed.h"
 
-// Use the daisy namespace to prevent having to type 
+// Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
 using namespace daisy;
 
@@ -29,6 +29,6 @@ int main(void)
         led_state = !led_state;
 
         // Wait 500ms
-        dsy_system_delay(500);
+        System::Delay(500);
     }
 }

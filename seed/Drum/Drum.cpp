@@ -1,7 +1,7 @@
 #include "daisy_seed.h"
 #include "daisysp.h"
 
-// Use the daisy namespace to prevent having to type 
+// Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
 using namespace daisy;
 using namespace daisysp;
@@ -16,7 +16,9 @@ AdEnv kickVolEnv, kickPitchEnv, snareEnv;
 
 Switch kick, snare;
 
-void AudioCallback(float* in, float* out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float osc_out, noise_out, snr_env_out, kck_env_out, sig;
     //Get rid of any bouncing
@@ -24,44 +26,44 @@ void AudioCallback(float* in, float* out, size_t size)
     kick.Debounce();
 
     //If you press the kick button...
-    if (kick.RisingEdge())
+    if(kick.RisingEdge())
     {
         //Trigger both envelopes!
         kickVolEnv.Trigger();
-	kickPitchEnv.Trigger();
+        kickPitchEnv.Trigger();
     }
 
     //If press the snare button trigger its envelope
-    if (snare.RisingEdge())
+    if(snare.RisingEdge())
     {
         snareEnv.Trigger();
     }
 
     //Prepare the audio block
-    for (size_t i = 0; i < size; i+= 2)
+    for(size_t i = 0; i < size; i += 2)
     {
         //Get the next volume samples
         snr_env_out = snareEnv.Process();
-	kck_env_out = kickVolEnv.Process();
+        kck_env_out = kickVolEnv.Process();
 
-	//Apply the pitch envelope to the kick
-	osc.SetFreq(kickPitchEnv.Process());
-	//Set the kick volume to the envelope's output
-	osc.SetAmp(kck_env_out);
-	//Process the next oscillator sample
-	osc_out = osc.Process();
+        //Apply the pitch envelope to the kick
+        osc.SetFreq(kickPitchEnv.Process());
+        //Set the kick volume to the envelope's output
+        osc.SetAmp(kck_env_out);
+        //Process the next oscillator sample
+        osc_out = osc.Process();
 
-	//Get the next snare sample
-	noise_out = noise.Process();
-	//Set the sample to the correct volume
-	noise_out *= snr_env_out;
+        //Get the next snare sample
+        noise_out = noise.Process();
+        //Set the sample to the correct volume
+        noise_out *= snr_env_out;
 
-	//Mix the two signals at half volume
-	sig = .5 * noise_out + .5 + osc_out;
+        //Mix the two signals at half volume
+        sig = .5 * noise_out + .5 * osc_out;
 
-	//Set the left and right outputs to the mixed signals
-        out[i] = sig;
-	out[i+1] = sig;
+        //Set the left and right outputs to the mixed signals
+        out[i]     = sig;
+        out[i + 1] = sig;
     }
 }
 
@@ -73,7 +75,7 @@ int main(void)
     hardware.Configure();
     hardware.Init();
     float samplerate = hardware.AudioSampleRate();
-    
+
     //Initialize oscillator for kickdrum
     osc.Init(samplerate);
     osc.SetWaveform(Oscillator::WAVE_TRI);
@@ -81,7 +83,7 @@ int main(void)
 
     //Initialize noise
     noise.Init();
-    
+
     //Initialize envelopes, this one's for the snare amplitude
     snareEnv.Init(samplerate);
     snareEnv.SetTime(ADENV_SEG_ATTACK, .01);
@@ -111,7 +113,7 @@ int main(void)
 
     //Start calling the callback function
     hardware.StartAudio(AudioCallback);
-    
+
     // Loop forever
     for(;;) {}
 }

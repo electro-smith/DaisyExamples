@@ -5,21 +5,23 @@
 using namespace daisy;
 using namespace daisysp;
 static DaisyPatch patch;
-static ReverbSc verb;
-static DcBlock blk[2];
-Parameter lpParam;
-static float drylevel, send;
+static ReverbSc   verb;
+static DcBlock    blk[2];
+Parameter         lpParam;
+static float      drylevel, send;
 
-static void VerbCallback(float **in, float **out, size_t size)
+static void VerbCallback(AudioHandle::InputBuffer  in,
+                         AudioHandle::OutputBuffer out,
+                         size_t                    size)
 {
     float dryL, dryR, wetL, wetR, sendL, sendR;
-    patch.UpdateAnalogControls();
-    for (size_t i = 0; i < size; i++)
+    patch.ProcessAnalogControls();
+    for(size_t i = 0; i < size; i++)
     {
         // read some controls
-        drylevel = patch.GetCtrlValue(patch.CTRL_1);
-        send     = patch.GetCtrlValue(patch.CTRL_2);
-        verb.SetFeedback(patch.GetCtrlValue(patch.CTRL_3) * .94f);
+        drylevel = patch.GetKnobValue(patch.CTRL_1);
+        send     = patch.GetKnobValue(patch.CTRL_2);
+        verb.SetFeedback(patch.GetKnobValue(patch.CTRL_3) * .94f);
         verb.SetLpFreq(lpParam.Process());
 
         // Read Inputs (only stereo in are used)
@@ -35,7 +37,7 @@ static void VerbCallback(float **in, float **out, size_t size)
         wetL = blk[0].Process(wetL);
         wetR = blk[1].Process(wetR);
 
-        // Out 1 and 2 are Mixed 
+        // Out 1 and 2 are Mixed
         out[0][i] = (dryL * drylevel) + wetL;
         out[1][i] = (dryR * drylevel) + wetR;
 
@@ -63,8 +65,8 @@ int main(void)
     lpParam.Init(patch.controls[3], 20, 20000, Parameter::LOGARITHMIC);
 
     //briefly display the module name
-    std::string str = "Stereo Reverb";
-    char* cstr = &str[0];
+    std::string str  = "Stereo Reverb";
+    char*       cstr = &str[0];
     patch.display.WriteString(cstr, Font_7x10, true);
     patch.display.Update();
     patch.DelayMs(1000);
@@ -72,7 +74,7 @@ int main(void)
     patch.StartAdc();
     patch.StartAudio(VerbCallback);
 
-    while(1) 
+    while(1)
     {
         UpdateOled();
     }

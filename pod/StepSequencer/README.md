@@ -1,10 +1,19 @@
-# Description
+# Step Sequencer
+
+## Author
+
+Ben Sergentanis
+
+
+## Description
 Simple 8 step sequencer. Has controls per step for envelope decay, pitch, and step activation.
 
-# Controls
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/StepSequencer)
+
+## Controls
 Edit and play mode, press encoder to switch modes. Edit is multicolored, play is green.
 
-## Edit mode
+#### Edit mode
 | Control | Description | Comment |
 | --- | --- | --- |
 | Encoder | Rotate: run through steps | |
@@ -17,7 +26,7 @@ Edit and play mode, press encoder to switch modes. Edit is multicolored, play is
 
 When a step is activated, its envelope will cycle. Listen for pitch and envelope shape.
 
-### Step Colors
+###### Step Colors
 | Step | Color |
 | --- | --- |
 | 1 | Red |
@@ -30,39 +39,15 @@ When a step is activated, its envelope will cycle. Listen for pitch and envelope
 | 8 | Yellow |
 
 
-## Play mode
+#### Play mode
 | Control | Description | Comment |
 | --- | --- | --- |
 | Encoder | Rotate: Waveform | Ramp, Square |
 | Knob 1 | Tempo | |
 | Knob 2 | Filter cutoff |  |
 
+## Diagram
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/StepSequencer/resources/StepSequencer.png" alt="StepSequencer.png" style="width: 100%;"/>
 
-# Code Snippet
-    void NextSamples(float& sig)
-    {
-        env_out = env.Process();
-        osc.SetAmp(env_out);
-        sig = osc.Process();
-        sig = flt.Process(sig);
 
-        if (tick.Process() && !edit)
-        {
-	    step++;
-    	    step %= 8;
-    	    if (active[step])
-    	    {
-    	        env.Trigger();
-    	    }
-        }
 
-        if (active[step])
-        {
-    	    env.SetTime(ADENV_SEG_DECAY, dec[step]);
-    	    osc.SetFreq(pitch[step]);
-    	    if (edit && ! env.IsRunning())
-    	    {
-    	        env.Trigger();
-    	    }
-        }
-    }

@@ -5,8 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyField  hw;
-MidiHandler midi;
+DaisyField hw;
 
 class Voice
 {
@@ -54,10 +53,7 @@ class Voice
         env_gate_ = true;
     }
 
-    void OnNoteOff()
-    {
-        env_gate_ = false;
-    }
+    void OnNoteOff() { env_gate_ = false; }
 
     void SetCutoff(float val) { filt_.SetFreq(val); }
 
@@ -155,10 +151,12 @@ class VoiceManager
 
 static VoiceManager<24> voice_handler;
 
-void AudioCallback(float *in, float *out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
 {
     float sum = 0.f;
-    hw.UpdateDigitalControls();
+    hw.ProcessDigitalControls();
     hw.ProcessAnalogControls();
     if(hw.GetSwitch(hw.SW_1)->FallingEdge())
     {
@@ -168,7 +166,7 @@ void AudioCallback(float *in, float *out, size_t size)
 
     for(size_t i = 0; i < size; i += 2)
     {
-        sum = 0.f;
+        sum        = 0.f;
         sum        = voice_handler.Process() * 0.5f;
         out[i]     = sum;
         out[i + 1] = sum;
@@ -183,7 +181,7 @@ void HandleMidiMessage(MidiEvent m)
         case NoteOn:
         {
             NoteOnEvent p = m.AsNoteOn();
-			// Note Off can come in as Note On w/ 0 Velocity
+            // Note Off can come in as Note On w/ 0 Velocity
             if(p.velocity == 0.f)
             {
                 voice_handler.OnNoteOff(p.note, p.velocity);
@@ -211,26 +209,25 @@ int main(void)
     float samplerate;
     hw.Init();
     samplerate = hw.AudioSampleRate();
-    midi.Init(MidiHandler::INPUT_MODE_UART1, MidiHandler::OUTPUT_MODE_NONE);
     voice_handler.Init(samplerate);
 
     //display
-    const char  str[] = "Midi";
-    char *      cstr = (char*)str;
+    const char str[] = "Midi";
+    char *     cstr  = (char *)str;
     hw.display.WriteString(cstr, Font_7x10, true);
     hw.display.Update();
 
     // Start stuff.
-    midi.StartReceive();
+    hw.midi.StartReceive();
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
     for(;;)
     {
-        midi.Listen();
+        hw.midi.Listen();
         // Handle MIDI Events
-        while(midi.HasEvents())
+        while(hw.midi.HasEvents())
         {
-            HandleMidiMessage(midi.PopEvent());
+            HandleMidiMessage(hw.midi.PopEvent());
         }
     }
 }

@@ -1,0 +1,1 @@
+Sets oscillator freq with generated ramp values

@@ -1,0 +1,1 @@
+Left output is steady tone being keyed by right output. The comressed signal 'ducks' when the right signal is triggered.

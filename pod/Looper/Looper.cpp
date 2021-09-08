@@ -12,19 +12,23 @@ bool first = true;  //first loop (sets length)
 bool rec   = false; //currently recording
 bool play  = false; //currently playing
 
-int   pos = 0;
+int                 pos = 0;
 float DSY_SDRAM_BSS buf[MAX_SIZE];
-int                 mod = MAX_SIZE;
-int                 len = 0;
-float drywet = 0;
-bool res = false;
+int                 mod    = MAX_SIZE;
+int                 len    = 0;
+float               drywet = 0;
+bool                res    = false;
 
 void ResetBuffer();
 void Controls();
 
-void NextSamples(float &output, float* in, size_t i);
+void NextSamples(float&                               output,
+                 AudioHandle::InterleavingInputBuffer in,
+                 size_t                               i);
 
-static void AudioCallback(float *in, float *out, size_t size)
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
     float output = 0;
 
@@ -32,12 +36,11 @@ static void AudioCallback(float *in, float *out, size_t size)
 
     for(size_t i = 0; i < size; i += 2)
     {
-        NextSamples(output, in, i);   
-	
-        // left and right outs
-        out[i] = out[i+1] = output;
-    }
+        NextSamples(output, in, i);
 
+        // left and right outs
+        out[i] = out[i + 1] = output;
+    }
 }
 
 int main(void)
@@ -66,7 +69,7 @@ void ResetBuffer()
     {
         buf[i] = 0;
     }
-    mod   = MAX_SIZE;
+    mod = MAX_SIZE;
 }
 
 void UpdateButtons()
@@ -81,7 +84,7 @@ void UpdateButtons()
             len   = 0;
         }
 
-	res = true;
+        res  = true;
         play = true;
         rec  = !rec;
     }
@@ -90,22 +93,22 @@ void UpdateButtons()
     if(pod.button2.TimeHeldMs() >= 1000 && res)
     {
         ResetBuffer();
-	res = false;
+        res = false;
     }
-    
+
     //button2 pressed and not empty buffer
     if(pod.button1.RisingEdge() && !(!rec && first))
     {
         play = !play;
-	rec = false;
+        rec  = false;
     }
 }
 
-//Deals with analog controls 
+//Deals with analog controls
 void Controls()
 {
-    pod.UpdateAnalogControls();
-    pod.DebounceControls();
+    pod.ProcessAnalogControls();
+    pod.ProcessDigitalControls();
 
     drywet = pod.knob1.Process();
 
@@ -114,44 +117,46 @@ void Controls()
     //leds
     pod.led1.Set(0, play == true, 0);
     pod.led2.Set(rec == true, 0, 0);
-   
+
     pod.UpdateLeds();
 }
 
-void WriteBuffer(float* in, size_t i)
+void WriteBuffer(AudioHandle::InterleavingInputBuffer in, size_t i)
 {
     buf[pos] = buf[pos] * 0.5 + in[i] * 0.5;
     if(first)
     {
-	len++;
+        len++;
     }
 }
 
-void NextSamples(float &output, float* in, size_t i)
+void NextSamples(float&                               output,
+                 AudioHandle::InterleavingInputBuffer in,
+                 size_t                               i)
 {
-    if (rec)
+    if(rec)
     {
-	WriteBuffer(in, i);
+        WriteBuffer(in, i);
     }
-    
+
     output = buf[pos];
-    
+
     //automatic looptime
     if(len >= MAX_SIZE)
     {
         first = false;
-	mod   = MAX_SIZE;
-	len   = 0;
-    }
-    
-    if(play)
-    {
-	pos++;
-	pos %= mod;
+        mod   = MAX_SIZE;
+        len   = 0;
     }
 
-    if (!rec)
+    if(play)
     {
-	output = output * drywet + in[i] * (1 -drywet);
+        pos++;
+        pos %= mod;
+    }
+
+    if(!rec)
+    {
+        output = output * drywet + in[i] * (1 - drywet);
     }
 }

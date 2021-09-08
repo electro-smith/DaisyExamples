@@ -1,16 +1,23 @@
 # Keyboard Test
 
-SW 1 and SW 2 function as octave up/down buttons
+## Author
 
-All 13 of the keyboard buttons work as a chromatic keyboard with 13-note polyphony.
+Shensley
 
-oscillators are each Bandlimited Saw waves
+## Description
+Keyboard based synth with 13 note polyphony, and built in reverb.
+Oscillators are each Bandlimited Saw waves.
 
-SW 3 enables/disables the reverb.
+[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/KeyboardTest)
 
-## building
+## Controls
 
-Currently for some reason this only works when built with VisualStudio/VisualGDB..
+| Control | Description |
+| --- | --- |
+| SW 1 2 |  Octave up/down |
+| Keyboard buttons | Chromatic keyboard |
 
-It builds correctly with Make, but doesn't run. Likely just something not being correctly included with Make or something.
+## Diagram
+
+<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/KeyboardTest/resources/KeyboardTest.png" alt="KeyboardTest.png" style="width: 100%;"/>
 
