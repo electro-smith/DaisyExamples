@@ -11,8 +11,8 @@
       ],
       "includePath": [
         "${workspaceFolder}/**",
-        "../libdaisy/**",
-        "../daisysp/**",
+        "../../libDaisy/**",
+        "../../DaisySP/**",
         "../Common/**"
       ],
       "name": "Win32",
