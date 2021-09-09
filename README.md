@@ -2,10 +2,10 @@
 
 <p align="center">
     <a href="https://github.com/electro-smith/DaisyExamples/actions/workflows/build.yml">
-      <img src="https://github.com/electro-smith/libDaisy/workflows/Build%20All/badge.svg">
+      <img src="https://github.com/electro-smith/DaisyExamples/workflows/Build%20All/badge.svg">
     </a>
     <a href="https://github.com/electro-smith/DaisyExamples/actions/workflows/fix_style.yaml">
-      <img src="https://github.com/electro-smith/libDaisy/workflows/Fix%20Style/badge.svg">
+      <img src="https://github.com/electro-smith/DaisyExamples/workflows/Fix%20Style/badge.svg">
     </a>
 </p>
 
