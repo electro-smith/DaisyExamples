@@ -6,8 +6,13 @@ for e in ${example_dirs[@]}; do
     for d in $e/*/; do
         echo "building $d"
         cd "$d"
-        make clean | grep "warning\|error" # grep for silencing make outputs when regenerating everything.
-        make | grep "warning\|error"
+        make -s clean
+        make -s
+        if [ $? -ne 0 ]
+        then
+            echo "Failed to compile $d"
+            exit 1
+        fi
         cd "$start_dir"
         echo "done"
     done
