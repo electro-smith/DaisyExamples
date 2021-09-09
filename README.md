@@ -1,10 +1,10 @@
-# Daisy_Examples
+<h1 align="center">Daisy Examples</h1>
 
 <p align="center">
     <a href="https://github.com/electro-smith/DaisyExamples/actions/workflows/build.yml">
       <img src="https://github.com/electro-smith/DaisyExamples/workflows/Build%20All/badge.svg">
     </a>
-    <a href="https://github.com/electro-smith/DaisyExamples/actions/workflows/fix_style.yaml">
+    <a href="https://github.com/electro-smith/DaisyExamples/actions/workflows/fix_style.yml">
       <img src="https://github.com/electro-smith/DaisyExamples/workflows/Fix%20Style/badge.svg">
     </a>
 </p>
