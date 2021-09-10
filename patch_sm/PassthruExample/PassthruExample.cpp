@@ -1,6 +1,9 @@
 #include "daisy_patch_sm.h"
 #include "daisysp.h"
 
+#define LEFT 0
+#define RIGHT 1
+
 /** These are namespaces for the daisy libraries.
  *  These lines allow us to omit the "daisy::" and "daisysp::" before
  * referencing modules, and functions within the daisy libraries.
@@ -10,51 +13,51 @@ using namespace daisysp;
 
 /** Our hardware board class handles the interface to the actual DaisyPatchSM
  * hardware. */
-DaisyPatchSM hw;
+DaisyPatchSM patch;
 
-/** Callback for processing and synthesizing audio
- *
- *  The audio buffers are arranged as arrays of samples for each channel.
- *  For example, to access the left input you would use:
- *    in[0][n]
- *  where n is the specific sample.
- *  There are "size" samples in each array.
- *
- *  The default size is very small (just 4 samples per channel). This means the
- * callback is being called at 16kHz.
- *
- *  This size is acceptable for many applications, and provides an extremely low
- * latency from input to output. However, you can change this size by calling
- * hw.SetAudioBlockSize(desired_size). When running complex DSP it can be more
- * efficient to do the processing on larger chunks at a time.
- *
- */
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
-    /** The easiest way to do pass thru is to simply copy the input to the output
-   * In C++ the standard way of doing this is with std::copy. However, those
-   * familliar with C can use memcpy. A simple loop is also a good way to do
-   * this.
-   *
-   * Since you'll most likely want to be doing something between the input,
-   *  and the output, and not just passing it through we'll demonstrate doing
-   *  so with a for loop.
-   */
+    /** Ways to passthru: */
+    /*****************************************
+     ** 1. Block based - standard CPP  *******
+     *****************************************/
+    std::copy(in[0], in[0] + size, out[0]);
+    std::copy(in[1], in[1] + size, out[1]);
+    /** Or with channel name macro macro */
+    std::copy(in[LEFT], in[LEFT] + size, out[LEFT]);
+    std::copy(in[RIGHT], in[RIGHT] + size, out[RIGHT]);
+
+    /*****************************************
+     ** 2. Loop based - c-style addressing ***
+     *****************************************/
+
     for(size_t i = 0; i < size; i++)
     {
-        out[0][i] = in[0][i]; /**< Copy the left input to the left output */
-        out[1][i] = in[1][i]; /**< Copy the right input to the right output */
+        out[LEFT][i]  = in[LEFT][i];
+        out[RIGHT][i] = in[RIGHT][i];
     }
-}
 
-int main(void)
-{
-    /** Initialize the hardware */
-    hw.Init();
+    /** or nested loop style */
+    for(size_t i = 0; i < size; i++)
+        for(int channel = 0; channel < 2; channel++)
+            out[channel][i] = in[channel][i];
 
-    /** Start Processing the audio */
-    hw.StartAudio(AudioCallback);
-    while(1) {}
+    /******************************************
+     ** 3. Loop based - update Buffer types ***
+     ******************************************/
+
+    for(size_t i = 0; i < size; i++)
+    {
+        // A few ways we could do this.
+        out.left.Get(i)  = in.left.Get(i);
+        out.right.Get(i) = in.right.Get(i);
+        // or
+        out.left[i]  = in.left[i];
+        out.right[i] = in.right[i];
+        // or
+        out.Left(i)  = in.Left(i);  /** Not 100% sure this is valid */
+        out.Right(i) = in.Right(i); /** Not 100% sure this is valid */
+    }
 }
