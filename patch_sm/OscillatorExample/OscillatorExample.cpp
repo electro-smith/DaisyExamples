@@ -1,12 +1,7 @@
 #include "daisy_patch_sm.h"
 #include "daisysp.h"
 
-
-/** TODO move these to libDaisy if we like them */
-#define IN_LEFT in[0][i]
-#define IN_RIGHT in[1][i]
-#define OUT_LEFT out[0][i]
-#define OUT_RIGHT out[1][i]
+/** TODO: ADD CALIBRATION */
 
 using namespace daisy;
 using namespace daisysp;
@@ -20,21 +15,31 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 {
     patch.ProcessAnalogControls();
 
-    float coarse_tune = 12.f + (patch.GetAdcValue(DaisyPatchSM::CV_1) * 72.f);
+    /** Get Coarse, Fine, and V/OCT inputs from hardware 
+     *  MIDI Note number are easy to use for defining ranges */
+    float coarse_tune = 12.f + (patch.GetAdcValue(patch.CV_1) * 72.f);
     float fine_tune   = patch.GetAdcValue(patch.CV_2) * 10.f;
-    float freq_a      = mtof(coarse_tune + fine_tune);
-    float detune_amt  = patch.GetAdcValue(patch.CV_3);
-    float freq_b      = freq_a + (0.05 * freq_a * detune_amt);
-    float freq_c      = freq_a - (0.05 * freq_a * detune_amt);
+    float voct        = patch.GetAdcValue(patch.CV_5) * 60.f;
 
+    /** Convert to frequency */
+    float freq_a = mtof(fclamp(coarse_tune + fine_tune + voct, 0.f, 127.f));
+
+    /** Calculate a detune amount */
+    float detune_amt = patch.GetAdcValue(patch.CV_3);
+    float freq_b     = freq_a + (0.05 * freq_a * detune_amt);
+    float freq_c     = freq_a - (0.05 * freq_a * detune_amt);
+
+    /** Set all three oscillators' frequencies */
     osc_a.SetFreq(freq_a);
     osc_b.SetFreq(freq_b);
     osc_c.SetFreq(freq_c);
 
+    /** Process each sample of the oscillator and send to the hardware outputs */
     for(size_t i = 0; i < size; i++)
     {
-        float sig = osc_a.Process() + osc_b.Process() + osc_c.Process();
-        OUT_LEFT = OUT_RIGHT = sig;
+        float sig    = osc_a.Process() + osc_b.Process() + osc_c.Process();
+        OUT_LEFT[i]  = sig;
+        OUT_RIGHT[i] = sig;
     }
 }
 

@@ -39,11 +39,14 @@ void EnvelopeCallback(uint16_t **output, size_t size)
         env_state = false;
     }
 
-    /** Assign four controls to the times and level of the envelope segments */
-    envelope.SetTime(ADSR_SEG_ATTACK, 0.01 + (patch.GetAdcValue(0)));
-    envelope.SetTime(ADSR_SEG_DECAY, 0.01 + (patch.GetAdcValue(1)));
-    envelope.SetSustainLevel(patch.GetAdcValue(2));
-    envelope.SetTime(ADSR_SEG_RELEASE, 0.01 + (patch.GetAdcValue(3)));
+    /** Assign four controls to the times and level of the envelope segments 
+     *  Attack, Decay, and Release will be set between 10ms to 1.01 seconds
+     *  Sustain will be set between 0 and 1 
+     */
+    envelope.SetTime(ADSR_SEG_ATTACK, 0.01 + (patch.GetAdcValue(patch.CV_1)));
+    envelope.SetTime(ADSR_SEG_DECAY, 0.01 + (patch.GetAdcValue(patch.CV_2)));
+    envelope.SetSustainLevel(patch.GetAdcValue(patch.CV_3));
+    envelope.SetTime(ADSR_SEG_RELEASE, 0.01 + (patch.GetAdcValue(patch.CV_4)));
 
     /** Loop through the samples, and output the ADSR signal */
     for(size_t i = 0; i < size; i++)
