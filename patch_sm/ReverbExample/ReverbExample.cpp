@@ -10,7 +10,7 @@ using namespace daisysp;
 
 /** Our hardware board class handles the interface to the actual DaisyPatchSM
  * hardware. */
-DaisyPatchSM hw;
+DaisyPatchSM patch;
 
 ReverbSc reverb;
 
@@ -27,7 +27,7 @@ ReverbSc reverb;
  *
  *  This size is acceptable for many applications, and provides an extremely low
  * latency from input to output. However, you can change this size by calling
- * hw.SetAudioBlockSize(desired_size). When running complex DSP it can be more
+ * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
  * efficient to do the processing on larger chunks at a time.
  *
  */
@@ -36,20 +36,20 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    size_t                    size)
 {
     /** First we'll tell the hardware to process the 8 analog inputs */
-    hw.ProcessAnalogControls();
+    patch.ProcessAnalogControls();
 
     /** The first control will set the reverb time */
-    float rev_time = 0.3 + (0.67 * hw.GetAdcValue(0));
+    float rev_time = 0.3 + (0.67 * patch.GetAdcValue(patch.CV_1));
     reverb.SetFeedback(rev_time);
 
     /** The second control will be the dampening frequency of the reverb
-   *  There are several ways to get a good feeling knob for this, but
-   *  surprisingly MIDI note numbers provide an easy range.
-   *
-   *  The range from Note 72 to Note 127 will make the knob go from
-   *  523Hz to 12543Hz
-   */
-    float damping = mtof(72.0 + hw.GetAdcValue(1) * 55.0);
+     *  There are several ways to get a good feeling knob for this, but
+     *  surprisingly MIDI note numbers provide an easy range.
+     *
+     *  The range from Note 72 to Note 127 will make the knob go from
+     *  523Hz to 12543Hz
+     */
+    float damping = mtof(72.0 + patch.GetAdcValue(patch.CV_2) * 55.0);
     reverb.SetLpFreq(damping);
 
     /** There are a number of ways to control the blend between the dry signal and
@@ -57,40 +57,40 @@ void AudioCallback(AudioHandle::InputBuffer  in,
    * dry amount and the effects send amount. */
 
     /** The third control will be the dry level going to the output */
-    float inlevel = hw.GetAdcValue(2);
+    float inlevel = patch.GetAdcValue(patch.CV_3);
 
     /** The fourth controll will control how much of the input is sent to the
    * reverb */
-    float sendamt = hw.GetAdcValue(3);
+    float sendamt = patch.GetAdcValue(patch.CV_4);
 
 
     /** This loop will allow us to process the individual samples of audio */
     for(size_t i = 0; i < size; i++)
     {
         /** Let's scale the input for the two destinations we want to send it to using multiplication. */
-        float dryl  = in[0][i] * inlevel;
-        float dryr  = in[1][i] * inlevel;
-        float sendl = in[0][i] * sendamt;
-        float sendr = in[1][i] * sendamt;
+        float dryl  = IN_L[i] * inlevel;
+        float dryr  = IN_R[i] * inlevel;
+        float sendl = IN_L[i] * sendamt;
+        float sendr = IN_R[i] * sendamt;
         float wetl, wetr;
         /** Process the send signal through the reverb */
         reverb.Process(sendl, sendr, &wetl, &wetr);
 
         /** Add the dry and the wet together, and assign those to the output */
-        out[0][i] = dryl + wetl;
-        out[1][i] = dryr + wetr;
+        OUT_L[i] = dryl + wetl;
+        OUT_R[i] = dryr + wetr;
     }
 }
 
 int main(void)
 {
     /** Initialize the hardware */
-    hw.Init();
+    patch.Init();
 
     /** Initialize the reverb module */
-    reverb.Init(hw.AudioSampleRate());
+    reverb.Init(patch.AudioSampleRate());
 
     /** Start Processing the audio */
-    hw.StartAudio(AudioCallback);
+    patch.StartAudio(AudioCallback);
     while(1) {}
 }

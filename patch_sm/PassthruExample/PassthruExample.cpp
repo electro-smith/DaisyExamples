@@ -12,8 +12,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 {
     for(size_t i = 0; i < size; i++)
     {
-        OUT_LEFT[i]  = IN_LEFT[i];
-        OUT_RIGHT[i] = IN_RIGHT[i];
+        OUT_L[i] = IN_L[i];
+        OUT_R[i] = IN_R[i];
     }
 }
 
@@ -23,6 +23,9 @@ int main(void)
     patch.Init();
     /** Set samplerate to 96kHz. Default is 48kHz */
     patch.SetAudioSampleRate(96000);
+    /** Set the number of samples to handle per callback
+     *  This defaults to 16 */
+    patch.SetAudioBlockSize(96);
     /** Start the callback */
     patch.StartAudio(AudioCallback);
     for(;;) {}
