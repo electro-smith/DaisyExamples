@@ -24,8 +24,8 @@ int main(void)
     /** Set samplerate to 96kHz. Default is 48kHz */
     patch.SetAudioSampleRate(96000);
     /** Set the number of samples to handle per callback
-     *  This defaults to 16 */
-    patch.SetAudioBlockSize(96);
+     *  Default is 4 */
+    patch.SetAudioBlockSize(16);
     /** Start the callback */
     patch.StartAudio(AudioCallback);
     for(;;) {}

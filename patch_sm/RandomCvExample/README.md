@@ -1,9 +1,9 @@
 # RandomCvExample
 
-## Author
+This example demonstrates basic usage of the CV Outputs on the Daisy Patch SM.
 
-<!-- Insert Your Name Here -->
+Both CV outputs will output the same random voltage.
 
-## Description
+## Controls
 
-<!-- Describe your example here -->
+None
