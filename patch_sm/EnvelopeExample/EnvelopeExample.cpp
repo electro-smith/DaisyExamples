@@ -15,8 +15,7 @@ DaisyPatchSM patch;
 /** Create ADSR envelope module */
 Adsr envelope;
 
-/** Create a Gate input and a button to control the ADSR activation */
-GateIn gate;
+/** Create a button to control the ADSR activation */
 Switch button;
 
 /** Similar to the audio callback, you can generate audio rate CV signals out of the CV outputs. 
@@ -30,14 +29,10 @@ void EnvelopeCallback(uint16_t **output, size_t size)
 
     /** Set the input value of the ADSR */
     bool env_state;
-    if(button.Pressed() || gate.State())
-    {
+    if(button.Pressed() || patch.gate_in_1.State())
         env_state = true;
-    }
     else
-    {
         env_state = false;
-    }
 
     /** Assign four controls to the times and level of the envelope segments 
      *  Attack, Decay, and Release will be set between instantaneous to 1 second
@@ -55,8 +50,8 @@ void EnvelopeCallback(uint16_t **output, size_t size)
         /** We could use OUT_L, and OUT_R here as well, _but_ 
          *  these correspond to CV_OUT_1, and CV_OUT_2 so that
          *  would be a bit misleading */
-        output[0][i]   = value;
-        output[1][i]   = value;
+        output[0][i] = value;
+        output[1][i] = value;
     }
 }
 
@@ -65,12 +60,8 @@ int main(void)
     /** Initialize the hardware */
     patch.Init();
 
-    /** Initialize the gate input to pin B10 (Gate 1 on the MicroPatch Eval board) */
-    dsy_gpio_pin gate_pin = patch.B10;
-    gate.Init(&gate_pin);
-
     /** Initialize the button input to pin B7 (Button on the MicroPatch Eval board) */
-    button.Init(patch.B7, 48000 / 16);
+    button.Init(patch.B7, 1000);
 
     /** Initialize the ADSR */
     envelope.Init(48000);
