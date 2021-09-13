@@ -63,11 +63,11 @@ int main(void)
     patch.Init();
 
     /** Initialize the gate input to pin B10 (Gate 1 on the MicroPatch Eval board) */
-    dsy_gpio_pin gate_pin = patch.GetPin(B10);
+    dsy_gpio_pin gate_pin = patch.B10;
     gate.Init(&gate_pin);
 
     /** Initialize the button input to pin B7 (Button on the MicroPatch Eval board) */
-    button.Init(patch.GetPin(B7), 48000 / 16);
+    button.Init(patch.B7, 48000 / 16);
 
     /** Initialize the ADSR */
     envelope.Init(48000);
