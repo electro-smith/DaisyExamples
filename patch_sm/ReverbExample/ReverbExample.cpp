@@ -20,7 +20,6 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     float in_level   = patch.GetAdcValue(CV_3);
     float send_level = patch.GetAdcValue(CV_3);
 
-
     reverb.SetFeedback(time);
     reverb.SetLpFreq(damp);
 
@@ -41,10 +40,6 @@ int main(void)
 {
     patch.Init();
     reverb.Init(patch.AudioSampleRate());
-
     patch.StartAudio(AudioCallback);
-
-    /** And the new stuff for gpio as well */
-
     while(1) {}
 }
