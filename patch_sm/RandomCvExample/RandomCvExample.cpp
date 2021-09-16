@@ -1,6 +1,7 @@
 #include "daisy_patch_sm.h"
 
 using namespace daisy;
+using namespace patch_sm;
 
 DaisyPatchSM patch;
 

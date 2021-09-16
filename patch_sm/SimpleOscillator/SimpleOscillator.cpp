@@ -2,6 +2,7 @@
 #include "daisysp.h"
 
 using namespace daisy;
+using namespace patch_sm;
 using namespace daisysp;
 
 /** TODO: ADD CALIBRATION */
@@ -14,8 +15,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    size_t                    size)
 {
     patch.ProcessAllControls();
-    float coarse = 36.f + (patch.GetAdcValue(patch.CV_1) * 60.f);
-    float voct   = patch.GetAdcValue(patch.CV_5) * 60.f;
+    float coarse = fmap(patch.GetAdcValue(CV_1), 36.f, 96.f);
+    float voct   = fmap(patch.GetAdcValue(CV_5), 0.f, 60.f);
     float freq   = mtof(fclamp(coarse + voct, 0.f, 127.f));
     osc.SetFreq(freq);
     for(size_t i = 0; i < size; i++)

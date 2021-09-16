@@ -4,6 +4,7 @@
 /** TODO: ADD CALIBRATION */
 
 using namespace daisy;
+using namespace patch_sm;
 using namespace daisysp;
 
 DaisyPatchSM patch;
@@ -17,15 +18,15 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
     /** Get Coarse, Fine, and V/OCT inputs from hardware 
      *  MIDI Note number are easy to use for defining ranges */
-    float coarse_tune = 12.f + (patch.GetAdcValue(patch.CV_1) * 72.f);
-    float fine_tune   = patch.GetAdcValue(patch.CV_2) * 10.f;
-    float voct        = patch.GetAdcValue(patch.CV_5) * 60.f;
+    float coarse_tune = fmap(patch.GetAdcValue(CV_1), 12, 84);
+    float fine_tune   = fmap(patch.GetAdcValue(CV_2), 0, 10);
+    float voct        = fmap(patch.GetAdcValue(CV_5), 0, 60.f);
 
     /** Convert from MIDI note number to frequency */
     float freq_a = mtof(fclamp(coarse_tune + fine_tune + voct, 0.f, 127.f));
 
     /** Calculate a detune amount */
-    float detune_amt = patch.GetAdcValue(patch.CV_3);
+    float detune_amt = patch.GetAdcValue(CV_3);
     float freq_b     = freq_a + (0.05 * freq_a * detune_amt);
     float freq_c     = freq_a - (0.05 * freq_a * detune_amt);
 

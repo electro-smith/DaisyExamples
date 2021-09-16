@@ -6,6 +6,7 @@
  * referencing modules, and functions within the daisy libraries.
  */
 using namespace daisy;
+using namespace patch_sm;
 using namespace daisysp;
 
 /** Our hardware board class handles the interface to the actual DaisyPatchSM
@@ -38,20 +39,17 @@ void EnvelopeCallback(uint16_t **output, size_t size)
      *  Attack, Decay, and Release will be set between instantaneous to 1 second
      *  Sustain will be set between 0 and 1 
      */
-    envelope.SetTime(ADSR_SEG_ATTACK, patch.GetAdcValue(patch.CV_1));
-    envelope.SetTime(ADSR_SEG_DECAY, patch.GetAdcValue(patch.CV_2));
-    envelope.SetSustainLevel(patch.GetAdcValue(patch.CV_3));
-    envelope.SetTime(ADSR_SEG_RELEASE, patch.GetAdcValue(patch.CV_4));
+    envelope.SetTime(ADSR_SEG_ATTACK, patch.GetAdcValue(CV_1));
+    envelope.SetTime(ADSR_SEG_DECAY, patch.GetAdcValue(CV_2));
+    envelope.SetSustainLevel(patch.GetAdcValue(CV_3));
+    envelope.SetTime(ADSR_SEG_RELEASE, patch.GetAdcValue(CV_4));
 
     /** Loop through the samples, and output the ADSR signal */
     for(size_t i = 0; i < size; i++)
     {
         uint16_t value = (envelope.Process(env_state) * 4095.0);
-        /** We could use OUT_L, and OUT_R here as well, _but_ 
-         *  these correspond to CV_OUT_1, and CV_OUT_2 so that
-         *  would be a bit misleading */
-        output[0][i] = value;
-        output[1][i] = value;
+        output[0][i]   = value; /**< To CV OUT 1 - Jack */
+        output[1][i]   = value; /**< To CV OUT 2 - LED */
     }
 }
 

@@ -2,6 +2,7 @@
 #include "daisysp.h"
 
 using namespace daisy;
+using namespace patch_sm;
 using namespace daisysp;
 
 DaisyPatchSM patch;
