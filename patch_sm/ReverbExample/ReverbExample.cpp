@@ -15,10 +15,15 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     patch.ProcessAnalogControls();
 
     /** Update Params with the four knobs */
-    float time = fmap(patch.GetAdcValue(CV_1), 0.3f, 0.99f);
-    float damp = fmap(patch.GetAdcValue(CV_2), 1000.f, 19000.f, Mapping::LOG);
+    float time_knob = patch.GetAdcValue(CV_1);
+    float time = fmap(time_knob, 0.3f, 0.99f);
+
+    float damp_knob = patch.GetAdcValue(CV_2);
+    float damp = fmap(damp_knob, 1000.f, 19000.f, Mapping::LOG);
+
     float in_level   = patch.GetAdcValue(CV_3);
-    float send_level = patch.GetAdcValue(CV_3);
+
+    float send_level = patch.GetAdcValue(CV_4);
 
     reverb.SetFeedback(time);
     reverb.SetLpFreq(damp);

@@ -39,14 +39,21 @@ void EnvelopeCallback(uint16_t **output, size_t size)
      *  Attack, Decay, and Release will be set between instantaneous to 1 second
      *  Sustain will be set between 0 and 1 
      */
-    envelope.SetTime(ADSR_SEG_ATTACK, patch.GetAdcValue(CV_1));
-    envelope.SetTime(ADSR_SEG_DECAY, patch.GetAdcValue(CV_2));
-    envelope.SetSustainLevel(patch.GetAdcValue(CV_3));
-    envelope.SetTime(ADSR_SEG_RELEASE, patch.GetAdcValue(CV_4));
+    float knob_attack = patch.GetAdcValue(CV_1);
+    envelope.SetAttackTime(knob_attack);
 
-    /** Loop through the samples, and output the ADSR signal */
+    float knob_decay = patch.GetAdcValue(CV_2);
+    envelope.SetDecayTime(knob_decay);
+
+    float knob_sustain = patch.GetAdcValue(CV_3);
+    envelope.SetSustainLevel(knob_sustain);
+
+    float knob_release = patch.GetAdcValue(CV_4);
+    envelope.SetReleaseTime(knob_release);
+
     for(size_t i = 0; i < size; i++)
     {
+        // convert to 12-bit integer (0-4095)
         uint16_t value = (envelope.Process(env_state) * 4095.0);
         output[0][i]   = value; /**< To CV OUT 1 - Jack */
         output[1][i]   = value; /**< To CV OUT 2 - LED */

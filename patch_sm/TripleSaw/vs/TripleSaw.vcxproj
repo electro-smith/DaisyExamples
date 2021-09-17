@@ -76,10 +76,10 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="../../libDaisy\core\startup_stm32h750xx.c" />
-    <ClCompile Include="..\SimpleOscillator.cpp" />
+    <ClCompile Include="..\TripleSaw.cpp" />
     <None Include="stm32.props" />
-    <None Include="SimpleOscillator-Debug.vgdbsettings" />
-    <None Include="SimpleOscillator-Release.vgdbsettings" />
+    <None Include="TripleSaw-Debug.vgdbsettings" />
+    <None Include="TripleSaw-Release.vgdbsettings" />
     <None Include="stm32.xml" />
   </ItemGroup>
 </Project>

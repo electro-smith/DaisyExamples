@@ -76,10 +76,10 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="../../libDaisy\core\startup_stm32h750xx.c" />
-    <ClCompile Include="..\SimpleOscillator.cpp" />
+    <ClCompile Include="..\ReverbExample.cpp" />
     <None Include="stm32.props" />
-    <None Include="SimpleOscillator-Debug.vgdbsettings" />
-    <None Include="SimpleOscillator-Release.vgdbsettings" />
+    <None Include="ReverbExample-Debug.vgdbsettings" />
+    <None Include="ReverbExample-Release.vgdbsettings" />
     <None Include="stm32.xml" />
   </ItemGroup>
 </Project>

@@ -29,5 +29,5 @@ int main(void)
     patch.SetAudioBlockSize(16);
     /** Start the callback */
     patch.StartAudio(AudioCallback);
-    for(;;) {}
+    while(1) {}
 }

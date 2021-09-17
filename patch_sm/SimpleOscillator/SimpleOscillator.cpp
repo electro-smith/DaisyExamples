@@ -15,10 +15,18 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    size_t                    size)
 {
     patch.ProcessAllControls();
-    float coarse = fmap(patch.GetAdcValue(CV_1), 36.f, 96.f);
-    float voct   = fmap(patch.GetAdcValue(CV_5), 0.f, 60.f);
-    float freq   = mtof(fclamp(coarse + voct, 0.f, 127.f));
+
+    float coarse_knob = patch.GetAdcValue(CV_1);
+    float coarse      = fmap(coarse_knob, 36.f, 96.f);
+
+    float voct_cv = patch.GetAdcValue(CV_5);
+    float voct    = fmap(voct_cv, 0.f, 60.f);
+
+    float midi_nn = fclamp(coarse + voct, 0.f, 127.f);
+    float freq    = mtof(midi_nn);
+
     osc.SetFreq(freq);
+
     for(size_t i = 0; i < size; i++)
     {
         float sig = osc.Process();

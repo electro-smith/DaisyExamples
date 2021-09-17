@@ -18,12 +18,18 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
     /** Get Coarse, Fine, and V/OCT inputs from hardware 
      *  MIDI Note number are easy to use for defining ranges */
-    float coarse_tune = fmap(patch.GetAdcValue(CV_1), 12, 84);
-    float fine_tune   = fmap(patch.GetAdcValue(CV_2), 0, 10);
-    float voct        = fmap(patch.GetAdcValue(CV_5), 0, 60.f);
+    float knob_coarse = patch.GetAdcValue(CV_1);
+    float coarse_tune = fmap(knob_coarse, 12, 84);
+
+    float knob_fine = patch.GetAdcValue(CV_2);
+    float fine_tune = fmap(knob_fine, 0, 10);
+
+    float cv_voct = patch.GetAdcValue(CV_5);
+    float voct    = fmap(cv_voct, 0, 60);
 
     /** Convert from MIDI note number to frequency */
-    float freq_a = mtof(fclamp(coarse_tune + fine_tune + voct, 0.f, 127.f));
+    float midi_nn = fclamp(coarse_tune + fine_tune + cv_voct, 0.f, 127.f);
+    float freq_a  = mtof(midi_nn);
 
     /** Calculate a detune amount */
     float detune_amt = patch.GetAdcValue(CV_3);

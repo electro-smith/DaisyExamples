@@ -21,16 +21,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\RandomCvExample.cpp">
+    <ClCompile Include="..\EnvelopeExample.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
     </None>
-    <None Include="RandomCvExample-Debug.vgdbsettings">
+    <None Include="EnvelopeExample-Debug.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
-    <None Include="RandomCvExample-Release.vgdbsettings">
+    <None Include="EnvelopeExample-Release.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="stm32.xml">
