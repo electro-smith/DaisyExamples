@@ -211,8 +211,12 @@ def create_from_template(destination, board, libs):
             f.write('\thw.ProcessAllControls();\n')
         f.write('\tfor (size_t i = 0; i < size; i++)\n')
         f.write('\t{\n')
-        for i in range(0, audio_channels):
-            f.write('\t\tout[{}][i] = in[{}][i];\n'.format(i, i))
+        if board == 'patch_sm':
+            f.write('\t\tOUT_L[i] = IN_L[i];\n')
+            f.write('\t\tOUT_R[i] = IN_R[i];\n')
+        else:
+            for i in range(0, audio_channels):
+                f.write('\t\tout[{}][i] = in[{}][i];\n'.format(i, i))
         f.write('\t}\n')
         f.write('}\n\n') # extra line  before main
         f.write('int main(void)\n')
