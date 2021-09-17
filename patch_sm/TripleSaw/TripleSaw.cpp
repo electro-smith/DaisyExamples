@@ -28,7 +28,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     float voct    = fmap(cv_voct, 0, 60);
 
     /** Convert from MIDI note number to frequency */
-    float midi_nn = fclamp(coarse_tune + fine_tune + cv_voct, 0.f, 127.f);
+    float midi_nn = fclamp(coarse_tune + fine_tune + voct, 0.f, 127.f);
     float freq_a  = mtof(midi_nn);
 
     /** Calculate a detune amount */
