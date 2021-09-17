@@ -1,12 +1,12 @@
 # Project Name
-TARGET = OscillatorExample
+TARGET = SimpleOscillator
 
 # Sources
-CPP_SOURCES = OscillatorExample.cpp \
+CPP_SOURCES = SimpleOscillator.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy/
-DAISYSP_DIR = ../../DaisySP/
+DAISYSP_DIR = ../../daisysp/
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
