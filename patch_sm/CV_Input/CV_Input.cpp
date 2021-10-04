@@ -13,12 +13,15 @@ DaisyPatchSM hw; // hardware object for the patch_sm
 
 int main(void)
 {
-	hw.Init(); //initialize the patch_sm hardware object
+    hw.Init(); //initialize the patch_sm hardware object
 
-	while(1) {	// loop forever
-		hw.ProcessAllControls(); // update the control ins
+    while(1)
+    {                            // loop forever
+        hw.ProcessAllControls(); // update the control ins
 
-		float value = hw.GetAdcValue(0); // read from CV_1 (-1, 1)
-		hw.SetLed(value > 0.f); //turn the onboard led on for positive CV, and off for negative
-	}
+        float value = hw.GetAdcValue(0); // read from CV_1 (-1, 1)
+        hw.SetLed(
+            value
+            > 0.f); //turn the onboard led on for positive CV, and off for negative
+    }
 }
