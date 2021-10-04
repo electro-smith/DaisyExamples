@@ -973,6 +973,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch_sm/EnvelopeExample/README.md"
     },
     {
+        "name": "Gate_In",
+        "platform": "patch_sm",
+        "filepath": "./dist/patch_sm/Gate_In.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch_sm/Gate_In/README.md"
+    },
+    {
         "name": "SimpleOscillator",
         "platform": "patch_sm",
         "filepath": "./dist/patch_sm/SimpleOscillator.bin",
