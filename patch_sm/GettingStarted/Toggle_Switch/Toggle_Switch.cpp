@@ -20,18 +20,11 @@ int main(void)
     /** Initialize the patch_sm hardware object */
     hw.Init(); 
 
-    /* initialize the switch
+    /* Initialize the switch
 	 - We'll read the switch on pin B8
-	 - The switch will be read at a rate of 1000hz
-	 - We're using a toggle switch
-	 - We'll need to invert the signal
-	 - We'll use the internal pullup
+	 - The switch will be read at a rate of 1 kHz. (Achieved with delay in loop)
 	*/
-    toggle.Init(hw.B8,
-                1000,
-                Switch::Type::TYPE_TOGGLE,
-                Switch::Polarity::POLARITY_INVERTED,
-                Switch::Pull::PULL_UP);
+    toggle.Init(hw.B8, 1000);
 
     /** Loop forever */
     while(1)

@@ -13,7 +13,7 @@ using namespace daisysp;
 DaisyPatchSM hw;
 
 /** Switch object */
-Switch       momentary;
+Switch momentary;
 
 int main(void)
 {
@@ -22,16 +22,9 @@ int main(void)
 
     /* Initialize the switch
 	 - We'll read the switch on pin B7
-	 - The switch will be read at a rate of 1000hz
-	 - We're using a momentary switch
-	 - We'll need to invert the signal
-	 - We'll use the internal pullup
+	 - The switch will be read at a rate of 1 kHz (Achieved with delay in loop)
 	*/
-    momentary.Init(hw.B7,
-                   1000,
-                   Switch::Type::TYPE_MOMENTARY,
-                   Switch::Polarity::POLARITY_INVERTED,
-                   Switch::Pull::PULL_UP);
+    momentary.Init(hw.B7, 1000);
 
     /** loop forever */
     while(1)
