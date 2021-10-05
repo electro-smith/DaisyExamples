@@ -28,22 +28,24 @@ DaisyPatchSM hw; // Daisy patch sm object
  * efficient to do the processing on larger chunks at a time.
  *
  */
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer  in,
+                   AudioHandle::OutputBuffer out,
+                   size_t                    size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		OUT_L[i] = IN_L[i]; // set the left output to the current left input
-		OUT_R[i] = IN_R[i]; // set the right output to the current right input
-	}
+    for(size_t i = 0; i < size; i++)
+    {
+        OUT_L[i] = IN_L[i]; // set the left output to the current left input
+        OUT_R[i] = IN_R[i]; // set the right output to the current right input
+    }
 }
 
 int main(void)
 {
-	hw.Init(); // Initialize the patch_sm object
+    hw.Init(); // Initialize the patch_sm object
 
-	hw.SetAudioSampleRate(16000.f); // set the samplerate to 16kHz
-	hw.SetAudioBlockSize(4); // Set the blocksize to 4 samples
+    hw.SetAudioSampleRate(16000.f); // set the samplerate to 16kHz
+    hw.SetAudioBlockSize(4);        // Set the blocksize to 4 samples
 
-	hw.StartAudio(AudioCallback); // Start the audio callback
-	while(1) {}
+    hw.StartAudio(AudioCallback); // Start the audio callback
+    while(1) {}
 }

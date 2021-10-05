@@ -23,8 +23,11 @@ int main(void)
 	 - We'll need to invert the signal
 	 - We'll use the internal pullup
 	*/
-    toggle.Init(
-        hw.B8, 1000, Switch::Type::TYPE_TOGGLE, Switch::Polarity::POLARITY_INVERTED, Switch::Pull::PULL_UP);
+    toggle.Init(hw.B8,
+                1000,
+                Switch::Type::TYPE_TOGGLE,
+                Switch::Polarity::POLARITY_INVERTED,
+                Switch::Pull::PULL_UP);
 
     while(1)
     {                                  // loop forever
