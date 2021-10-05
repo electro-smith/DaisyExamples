@@ -10,15 +10,15 @@ using namespace patch_sm;
 using namespace daisysp;
 
 /** Hardware object for the patch_sm */
-DaisyPatchSM hw;    
+DaisyPatchSM hw;
 
 /** Switch object */
-Switch       toggle;
+Switch toggle;
 
 int main(void)
 {
     /** Initialize the patch_sm hardware object */
-    hw.Init(); 
+    hw.Init();
 
     /* Initialize the switch
 	 - We'll read the switch on pin B8
@@ -28,16 +28,16 @@ int main(void)
 
     /** Loop forever */
     while(1)
-    {                                 
+    {
         /** Debounce the switch */
-        toggle.Debounce();           
-    
+        toggle.Debounce();
+
         /** Get the current toggle state */
-        bool state = toggle.Pressed(); 
-    
+        bool state = toggle.Pressed();
+
         /** Set the onboard led to the current state */
         hw.SetLed(state);
-        
+
         /** Delay 1 ms to achieve the 1000 hz update rate */
         hw.Delay(1);
     }
