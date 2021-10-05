@@ -24,10 +24,11 @@ int main(void)
     - Led will be on the onboard_led pin
     - Won't need to invert the signal
     */
-    led.Init(hw.user_led.pin, false);    
+    led.Init(hw.user_led.pin, false);
 
     /** Loop forever */
-    while(1) {
+    while(1)
+    {
         /** Update all cv inputs */
         hw.ProcessAllControls();
 
