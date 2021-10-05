@@ -1,6 +1,6 @@
 #include "daisy_patch_sm.h"
 #include "daisysp.h"
-#include "looper.h"
+#include "Looper.h"
 
 using namespace daisy;
 using namespace patch_sm;
