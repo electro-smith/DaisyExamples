@@ -9,17 +9,27 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw; // hardware object for the patch_sm
+/** Hardware object for the patch_sm */
+DaisyPatchSM hw;
 
 int main(void)
 {
-    hw.Init(); // initialize the patch_sm hardware object
+    /** Initialize the patch_sm hardware object */
+    hw.Init();
 
+    /** Loop forever */
     while(1)
-    {                                          // loop forever
-        dsy_gpio_write(&hw.gate_out_1, true);  // Set the gate high
-        hw.Delay(250);                         // wait 250 ms
-        dsy_gpio_write(&hw.gate_out_1, false); // Set the gate low
-        hw.Delay(250);                         // wait 250 ms
+    {
+        /** Set the gate high */
+        dsy_gpio_write(&hw.gate_out_1, true);
+
+        /** Wait 250 ms */
+        hw.Delay(250);
+
+        /** Set the gate low */
+        dsy_gpio_write(&hw.gate_out_1, false);
+
+        /** Wait 250 ms */
+        hw.Delay(250);
     }
 }

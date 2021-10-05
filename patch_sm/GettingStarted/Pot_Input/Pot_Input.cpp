@@ -9,8 +9,11 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw;  // hardware object for the patch_sm
-Oscillator   osc; // Oscillator object
+/** Hardware object for the patch_sm */
+DaisyPatchSM hw;
+
+/** Oscillator object */
+Oscillator   osc;
 
 /** Callback for processing and synthesizing audio
  *
@@ -33,30 +36,47 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
-    hw.ProcessAllControls(); // update all cv inputs
+    /** Update all cv inputs */
+    hw.ProcessAllControls();
 
-    float pitch = hw.GetAdcValue(0); // Get CV_1 Input (0, 1)
-    pitch       = pitch * 1000.f;    // scale to hz (0, 1) -> (0, 1000)
-    osc.SetFreq(pitch); // set osc frequency to pitch variable value
+    /** Get CV_1 Input (0, 1) */
+    float pitch = hw.GetAdcValue(0);
 
-    for(size_t i = 0; i < size; i++) // loop over the whole audio buffer
+    /** Scale to hz (0, 1) -> (0, 1000) */
+    pitch       = pitch * 1000.f;
+
+    /** Set osc frequency to pitch variable value */
+    osc.SetFreq(pitch);
+
+    /** Loop over the whole audio buffer */
+    for(size_t i = 0; i < size; i++)
     {
-        float signal = osc.Process(); // get the next sample from the oscillator
 
-        OUT_L[i] = signal; // set the left output to the signal value
-        OUT_R[i] = signal; // set the right output to the signal value
+        /** Get the next sample from the oscillator */
+        float signal = osc.Process();
+
+        /** Set the left output to the signal value */
+        OUT_L[i] = signal;
+    
+        /** Set the right output to the signal value */
+        OUT_R[i] = signal;
     }
 }
 
 int main(void)
 {
-    hw.Init(); // initialize the patch_sm hardware object
-    float sample_rate
-        = hw.AudioSampleRate(); // Audio engine speed in samples / second
+    /** Initialize the patch_sm hardware object */
+    hw.Init();
+    
+    /** Audio engine speed in samples / second */
+    float sample_rate = hw.AudioSampleRate();
 
-    osc.Init(sample_rate); // initialize the oscillator object
+    /** Initialize the oscillator object */
+    osc.Init(sample_rate);
 
-    hw.StartAudio(AudioCallback); // start the audio callback
+    /** Start the audio callback */
+    hw.StartAudio(AudioCallback);
 
-    while(1) {} // loop forever
+    /** Loop forever */
+    while(1) {}
 }

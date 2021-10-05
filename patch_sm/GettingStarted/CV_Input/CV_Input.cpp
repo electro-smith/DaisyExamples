@@ -9,19 +9,24 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw; // hardware object for the patch_sm
+/** Hardware object for the patch_sm */
+DaisyPatchSM hw;
 
 int main(void)
 {
-    hw.Init(); //initialize the patch_sm hardware object
+    /** Initialize the patch_sm hardware object */
+    hw.Init();
 
+    /** Loop forever */
     while(1)
-    {                            // loop forever
-        hw.ProcessAllControls(); // update the control ins
+    {
+        /** Update the control ins */
+        hw.ProcessAllControls();
 
-        float value = hw.GetAdcValue(0); // read from CV_1 (-1, 1)
-        hw.SetLed(
-            value
-            > 0.f); //turn the onboard led on for positive CV, and off for negative
+        /** Read from CV_1 (-1, 1) */
+        float value = hw.GetAdcValue(0);
+
+        /** Turn the onboard led on for positive CV, and off for negative */
+        hw.SetLed(value > 0.f);
     }
 }

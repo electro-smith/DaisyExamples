@@ -9,7 +9,8 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw; // Daisy patch sm object
+/** Daisy patch sm object */
+DaisyPatchSM hw; 
 
 /** Callback for processing and synthesizing audio
  *
@@ -34,18 +35,28 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 {
     for(size_t i = 0; i < size; i++)
     {
-        OUT_L[i] = IN_L[i]; // set the left output to the current left input
-        OUT_R[i] = IN_R[i]; // set the right output to the current right input
+        /** set the left output to the current left input */
+        OUT_L[i] = IN_L[i];
+
+        /** set the right output to the current right input */
+        OUT_R[i] = IN_R[i];
     }
 }
 
 int main(void)
 {
-    hw.Init(); // Initialize the patch_sm object
+    /** Initialize the patch_sm object */
+    hw.Init();
 
-    hw.SetAudioSampleRate(16000.f); // set the samplerate to 16kHz
-    hw.SetAudioBlockSize(4);        // Set the blocksize to 4 samples
+    /** Set the samplerate to 16kHz */
+    hw.SetAudioSampleRate(16000.f);
 
-    hw.StartAudio(AudioCallback); // Start the audio callback
+    /** Set the blocksize to 4 samples */
+    hw.SetAudioBlockSize(4);
+
+    /** Start the audio callback */
+    hw.StartAudio(AudioCallback);
+
+    /** Loop forever */
     while(1) {}
 }

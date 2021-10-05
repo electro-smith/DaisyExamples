@@ -9,25 +9,34 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw; // hardware object for the patch_sm
+/** Hardware object for the patch_sm */
+DaisyPatchSM hw;
 
 int main(void)
 {
-    hw.Init(); // initialize the patch_sm hardware object
+    /** Initialize the patch_sm hardware object */
+    hw.Init();
 
-    float signal = 0.f; // create signal variable
+    /** Create signal variable */
+    float signal = 0.f;
+
+    /** Loop forever */
     while(1)
-    {                   // loop forever
-        signal += .01f; // increment the signal
+    {
+        /** Increment the signal */
+        signal += .01f;
 
-        // if the signal gets too large...
+        /** If the signal gets too large... */
         if(signal >= 5.f)
         {
-            signal = signal - 5.f; // wrap around back to 0
+            /** Wrap around back to 0 */
+            signal = signal - 5.f;
         }
 
-        hw.WriteCvOut(1, signal); // write to CV_OUT_1
+        /** Write to CV_OUT_1 */
+        hw.WriteCvOut(1, signal);
 
+        /** Wait for 1 ms */
         hw.Delay(1);
     }
 }

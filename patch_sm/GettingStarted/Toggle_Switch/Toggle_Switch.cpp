@@ -9,12 +9,16 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw;     // hardware object for the patch_sm
-Switch       toggle; // switch object
+/** Hardware object for the patch_sm */
+DaisyPatchSM hw;    
+
+/** Switch object */
+Switch       toggle;
 
 int main(void)
 {
-    hw.Init(); // initialize the patch_sm hardware object
+    /** Initialize the patch_sm hardware object */
+    hw.Init(); 
 
     /* initialize the switch
 	 - We'll read the switch on pin B8
@@ -29,11 +33,19 @@ int main(void)
                 Switch::Polarity::POLARITY_INVERTED,
                 Switch::Pull::PULL_UP);
 
+    /** Loop forever */
     while(1)
-    {                                  // loop forever
-        toggle.Debounce();             // debounce the switch
-        bool state = toggle.Pressed(); // get the current toggle state
-        hw.SetLed(state); // set the onboard led to the current state
-        hw.Delay(1); // delay 1 millisecond to achieve the 1000 hz update rate
+    {                                 
+        /** Debounce the switch */
+        toggle.Debounce();           
+    
+        /** Get the current toggle state */
+        bool state = toggle.Pressed(); 
+    
+        /** Set the onboard led to the current state */
+        hw.SetLed(state);
+        
+        /** Delay 1 ms to achieve the 1000 hz update rate */
+        hw.Delay(1);
     }
 }

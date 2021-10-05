@@ -9,17 +9,24 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw; // hardware object for the patch_sm
+/** Hardware object for the patch_sm */
+DaisyPatchSM hw;
 
 int main(void)
 {
-    hw.Init(); // initialize the patch_sm hardware object
+    /** Initialize the patch_sm hardware object */
+    hw.Init();
 
+    /** Loop forever */
     while(1)
-    {                            // loop forever
-        hw.ProcessAllControls(); // update all cv inputs
+    {
+        /** Update all cv inputs */
+        hw.ProcessAllControls();
 
-        bool state = hw.gate_in_1.State(); // get the current gate in state
-        hw.SetLed(state);                  // set the led to the gate state
+        /** Get the current gate in state */
+        bool state = hw.gate_in_1.State();
+
+        /** Set the led to the gate state */
+        hw.SetLed(state);
     }
 }
