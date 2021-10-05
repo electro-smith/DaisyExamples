@@ -6,7 +6,7 @@ beserge
 
 ## Description
 
-Set a sine wave oscillator's pitch with a knob.
+Set the onboard led's brightness with a potentiometer.
 
 ## Controls
 
