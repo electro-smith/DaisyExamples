@@ -13,7 +13,7 @@ using namespace daisysp;
 DaisyPatchSM hw;
 
 /** Switch object */
-Switch       momentary;
+Switch momentary;
 
 int main(void)
 {

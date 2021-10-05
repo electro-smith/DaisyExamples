@@ -13,7 +13,7 @@ using namespace daisysp;
 DaisyPatchSM hw;
 
 /** Oscillator object */
-Oscillator   osc;
+Oscillator osc;
 
 /** Callback for processing and synthesizing audio
  *
@@ -43,7 +43,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     float pitch = hw.GetAdcValue(0);
 
     /** Scale to hz (0, 1) -> (0, 1000) */
-    pitch       = pitch * 1000.f;
+    pitch = pitch * 1000.f;
 
     /** Set osc frequency to pitch variable value */
     osc.SetFreq(pitch);
@@ -51,13 +51,12 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     /** Loop over the whole audio buffer */
     for(size_t i = 0; i < size; i++)
     {
-
         /** Get the next sample from the oscillator */
         float signal = osc.Process();
 
         /** Set the left output to the signal value */
         OUT_L[i] = signal;
-    
+
         /** Set the right output to the signal value */
         OUT_R[i] = signal;
     }
@@ -67,7 +66,7 @@ int main(void)
 {
     /** Initialize the patch_sm hardware object */
     hw.Init();
-    
+
     /** Audio engine speed in samples / second */
     float sample_rate = hw.AudioSampleRate();
 

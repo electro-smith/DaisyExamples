@@ -10,7 +10,7 @@ using namespace patch_sm;
 using namespace daisysp;
 
 /** Daisy patch sm object */
-DaisyPatchSM hw; 
+DaisyPatchSM hw;
 
 /** Callback for processing and synthesizing audio
  *
