@@ -1,12 +1,12 @@
 # Project Name
-TARGET = Toggle_Switch
+TARGET = CV_Input
 
 # Sources
-CPP_SOURCES = Toggle_Switch.cpp
+CPP_SOURCES = CV_Input.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy/
-DAISYSP_DIR = ../../DaisySP/
+LIBDAISY_DIR = ../../../libdaisy/
+DAISYSP_DIR = ../../../DaisySP/
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core

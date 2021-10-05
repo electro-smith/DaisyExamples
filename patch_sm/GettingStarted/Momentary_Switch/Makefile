@@ -1,12 +1,12 @@
 # Project Name
-TARGET = Gate_Output
+TARGET = Momentary_Switch
 
 # Sources
-CPP_SOURCES = Gate_Output.cpp
+CPP_SOURCES = Momentary_Switch.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy/
-DAISYSP_DIR = ../../DaisySP/
+LIBDAISY_DIR = ../../../libdaisy/
+DAISYSP_DIR = ../../../DaisySP/
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
