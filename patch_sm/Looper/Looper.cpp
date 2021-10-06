@@ -12,7 +12,6 @@ DaisyPatchSM                              hw;
 static Looper<float, MAX_LOOP_LEN> DSY_SDRAM_BSS looper;
 Switch                                    sw;
 
-bool writeOn;
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
@@ -20,23 +19,15 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     sw.Debounce();
 
     if(sw.RisingEdge()){
-    	writeOn = !writeOn;
-        looper.Reset();
-    }
-
-    if(looper.EndOfLoop()){
-        writeOn = false;
+        looper.ToggleLoop();
     }
 
     for(size_t i = 0; i < size; i++)
     {
         float in_mixed = (IN_L[i] + IN_R[i]) * .5f;
+        float loop_sig = looper.Process(in_mixed);
 
-        if(writeOn){
-        	looper.Write(in_mixed);
-        }
-
-        OUT_L[i] = OUT_R[i] = (looper.Read() + in_mixed) * .5f;
+        OUT_L[i] = OUT_R[i] = (loop_sig + in_mixed) * .5f;
     }
 }
 
@@ -45,8 +36,6 @@ int main(void)
     hw.Init();
     int   cbrate     = hw.AudioCallbackRate();
     float samplerate = hw.AudioSampleRate();
-
-    writeOn = false;
 
     /* initialize the switch
 	 - We'll read the switch on pin B7
@@ -64,8 +53,5 @@ int main(void)
     looper.Init(samplerate);
 
     hw.StartAudio(AudioCallback);
-    while(1)
-    {
-        hw.SetLed(writeOn);
-    }
+    while(1) {}
 }
