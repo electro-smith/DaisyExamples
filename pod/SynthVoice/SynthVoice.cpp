@@ -117,7 +117,7 @@ void ConditionalParameter(float  oldVal,
                           float &param,
                           float  update)
 {
-    if(abs(oldVal - newVal) > 0.0005)
+    if(abs(oldVal - newVal) > 0.00005)
     {
         param = update;
     }
