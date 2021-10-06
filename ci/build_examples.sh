@@ -11,6 +11,20 @@ for e in ${example_dirs[@]}; do
         case $d in
             *"experimental"*)
                 ;;
+            *"GettingStarted"*)
+                for f in $e/GettingStarted/*; do
+                    echo "building $f"
+                    cd $f
+                    make -s clean;
+                    make -s
+                    if [ $? -ne 0 ]; then
+                        echo "Failed to compile $f"
+                        exit 1
+                    fi
+                    cd "$start_dir"
+                    echo "done"
+
+                done ;;
             *)
                 echo "building $d"
                 cd $d
