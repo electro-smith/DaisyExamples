@@ -22,8 +22,8 @@ class Looper
         Reset();
         looplen_   = max_size;
         idx_       = 0;
-        increment_ = 1;
         sr_        = sr;
+        eol_ = false;
     }
 
     void Reset()
@@ -35,23 +35,35 @@ class Looper
         }
     }
 
-    float Read()
+    T Read()
     {
-        idx_ += increment_;
-        idx_ %= looplen_;
+        idx_++;
+        if(idx_ >= looplen_){
+            idx_ = 0;
+            eol_ = true; // set the flag
+        }
         return buff[idx_];
     }
 
-    void Write(float input) { buff[idx_] = input; }
+    void Write(T input) { buff[idx_] = input; }
 
     void Setlooplen_gthMs(float length) { looplen_ = length * .001f * sr_; }
 
+    bool EndOfLoop(){
+        if(eol_){
+            eol_ = false; //unset the flag
+            return true;
+        }
+
+        return false;
+    }
+
   private:
-    float  buff[max_size];
+    T  buff[max_size];
     size_t looplen_;
     size_t idx_;
-    size_t increment_;
     float  sr_;
+    bool eol_;
 };
 } // namespace daisysp
 #endif

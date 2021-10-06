@@ -6,8 +6,10 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
+#define MAX_LOOP_LEN 48000 * 10
+
 DaisyPatchSM                              hw;
-static Looper<float, 48000> DSY_SDRAM_BSS looper;
+static Looper<float, MAX_LOOP_LEN> DSY_SDRAM_BSS looper;
 Switch                                    sw;
 
 bool writeOn;
@@ -15,24 +17,26 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
-    // sw.Debounce();
+    sw.Debounce();
 
-    // if(sw.RisingEdge()){
-    // 	writeOn = !writeOn;
-    // }
+    if(sw.RisingEdge()){
+    	writeOn = !writeOn;
+        looper.Reset();
+    }
 
-    // if(sw.TimeHeldMs() > 1000.f){
-    // 	// looper.Reset();
-    // 	writeOn = false;
-    // }
+    if(looper.EndOfLoop()){
+        writeOn = false;
+    }
 
     for(size_t i = 0; i < size; i++)
     {
-        // if(writeOn){
-        // 	looper.Write(IN_L[i]);
-        // }
+        float in_mixed = (IN_L[i] + IN_R[i]) * .5f;
 
-        OUT_L[i] = looper.Read();
+        if(writeOn){
+        	looper.Write(in_mixed);
+        }
+
+        OUT_L[i] = OUT_R[i] = (looper.Read() + in_mixed) * .5f;
     }
 }
 
@@ -51,17 +55,17 @@ int main(void)
 	 - We'll need to invert the signal
 	 - We'll use the internal pullup
 	*/
-    // sw.Init(hw.B7,
-    // 		cbrate,
-    // 		Switch::Type::TYPE_MOMENTARY,
-    // 		Switch::Polarity::POLARITY_INVERTED,
-    // 		Switch::Pull::PULL_UP);
+    sw.Init(hw.B7,
+    		cbrate,
+    		Switch::Type::TYPE_MOMENTARY,
+    		Switch::Polarity::POLARITY_INVERTED,
+    		Switch::Pull::PULL_UP);
 
     looper.Init(samplerate);
 
     hw.StartAudio(AudioCallback);
     while(1)
     {
-        // hw.SetLed(writeOn);
+        hw.SetLed(writeOn);
     }
 }
