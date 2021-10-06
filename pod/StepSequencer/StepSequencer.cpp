@@ -108,7 +108,7 @@ int main(void)
 
 void ConditionalParameter(float o, float n, float &param, float update)
 {
-    if(abs(o - n) > 0.0005)
+    if(abs(o - n) > 0.00005)
     {
         param = update;
     }
