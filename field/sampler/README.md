@@ -20,6 +20,6 @@ Sampler example for Daisy field.
 
 ## Display
 
-Displays shows the numbers 1 - 8  on the top row for each sample slot.
+The display shows the numbers 1 - 8  on the top row for each sample slot.
 On the second row a `+` will be shown under each number when that slot is recording.
 On the third row a `>` will be shown under each number when that slot is playing.

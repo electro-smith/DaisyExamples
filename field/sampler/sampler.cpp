@@ -9,7 +9,7 @@ using namespace daisysp;
 #define NUM_BUFFERS 8
 #define KEYBOARD_WIDTH 8
 // 5 second sample buffers at 48kHz
-#define BUFFER_SIZE (48000 * 2)
+#define BUFFER_SIZE (48000 * 5)
 
 DaisyField hw;
 
