@@ -71,6 +71,7 @@ int main(void)
 
     //Init everything
     pod.Init();
+    pod.SetAudioBlockSize(4);
     sample_rate = pod.AudioSampleRate();
     osc.Init(sample_rate);
     flt.Init(sample_rate);

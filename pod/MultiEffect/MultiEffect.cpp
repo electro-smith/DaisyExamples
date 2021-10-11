@@ -73,6 +73,7 @@ int main(void)
 
     //Inits and sample rate
     pod.Init();
+    pod.SetAudioBlockSize(4);
     sample_rate = pod.AudioSampleRate();
     rev.Init(sample_rate);
     dell.Init();

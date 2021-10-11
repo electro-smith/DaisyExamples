@@ -48,6 +48,7 @@ int main(void)
     // initialize pod hardware and oscillator daisysp module
 
     pod.Init();
+    pod.SetAudioBlockSize(4);
     ResetBuffer();
 
     // start callback

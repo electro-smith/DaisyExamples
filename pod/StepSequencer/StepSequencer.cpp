@@ -55,6 +55,7 @@ int main(void)
 {
     float sample_rate;
     pod.Init();
+    pod.SetAudioBlockSize(4);
     sample_rate     = pod.AudioSampleRate();
     tickFrequency   = 3.f;
     filterFrequency = 20000.f;
