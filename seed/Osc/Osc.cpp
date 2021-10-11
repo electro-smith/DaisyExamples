@@ -56,7 +56,7 @@ int main(void)
     // components before initialization.
     hardware.Configure();
     hardware.Init();
-    ;
+    hardware.SetAudioBlockSize(4);
 
     //How many samples we'll output per second
     float samplerate = hardware.AudioSampleRate();

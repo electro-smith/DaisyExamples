@@ -44,6 +44,7 @@ int main(void)
     depth = 1;
     seed.Configure();
     seed.Init();
+    seed.SetAudioBlockSize(4);
     sample_rate = seed.AudioSampleRate();
     osc.Init(sample_rate);
     bitcrush.Init(sample_rate);

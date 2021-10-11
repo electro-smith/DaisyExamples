@@ -206,6 +206,7 @@ void AudioTest(AudioHandle::InterleavingInputBuffer in, AudioHandle::Interleavin
 int main(void)
 {
     hw.Init();
+    hw.SetAudioBlockSize(4);
 
     osc.Init(DSY_AUDIO_SAMPLE_RATE);
     osc.SetAmp(0.75f);

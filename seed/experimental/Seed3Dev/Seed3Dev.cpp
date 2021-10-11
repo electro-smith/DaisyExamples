@@ -208,6 +208,7 @@ int   main(void)
     uint32_t tick, now;
     uint8_t  active_led;
     hw.Init();
+    hw.SetAudioBlockSize(4);
     dsy_gpio p;
     p.pin = {DSY_GPIOC, 0};
     p.mode = DSY_GPIO_MODE_INPUT;

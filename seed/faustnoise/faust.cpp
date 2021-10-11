@@ -253,6 +253,7 @@ int main(void)
     float sample_rate;
     seed.Configure();
     seed.Init();
+    seed.SetAudioBlockSize(4);
     sample_rate = seed.AudioSampleRate();
 
     // set buffer-size

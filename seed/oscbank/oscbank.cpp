@@ -40,6 +40,7 @@ int main(void)
 {
     hw.Configure();
     hw.Init();
+    hw.SetAudioBlockSize(4);
     float sample_rate = hw.AudioSampleRate();
 
     float amp[7] = {.15f, 0.15f, 0.0f, 0.33f, 0.0f, 0.15f, 0.15f};
