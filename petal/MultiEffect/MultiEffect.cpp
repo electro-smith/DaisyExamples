@@ -101,6 +101,7 @@ int main(void)
 
     //Inits and sample rate
     petal.Init();
+    petal.SetAudioBlockSize(4);
     sample_rate = petal.AudioSampleRate();
     rev.Init(sample_rate);
     dell.Init();

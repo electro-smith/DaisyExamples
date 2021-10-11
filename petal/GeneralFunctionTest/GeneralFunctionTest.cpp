@@ -68,6 +68,7 @@ int main(void)
     usb_period = 100;
 
     hw.Init();
+    hw.SetAudioBlockSize(4);
 
     last_led_update = last_usb_update = now = System::GetNow();
 

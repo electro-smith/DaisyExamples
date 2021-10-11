@@ -48,6 +48,7 @@ int main(void)
     // initialize petal hardware and oscillator daisysp module
 
     petal.Init();
+    petal.SetAudioBlockSize(4);
     ResetBuffer();
 
     // start callback
