@@ -6,6 +6,7 @@
  * referencing modules, and functions within the daisy libraries.
  */
 using namespace daisy;
+using namespace patch_sm;
 using namespace daisysp;
 
 /** Our hardware board class handles the interface to the actual DaisyPatchSM
