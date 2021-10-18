@@ -12,19 +12,10 @@ using namespace daisysp;
 /** Hardware object for the patch_sm */
 DaisyPatchSM patch;
 
-/** Object to do PWM brightness on the onboard led */
-Led led;
-
 int main(void)
 {
     /** Initialize the patch_sm hardware object */
     patch.Init();
-
-    /** Initialize led object
-    - Led will be on the onboard_led pin
-    - Won't need to invert the signal
-    */
-    led.Init(patch.user_led.pin, false);
 
     /** Loop forever */
     while(1)
@@ -33,12 +24,24 @@ int main(void)
         patch.ProcessAllControls();
 
         /** Get CV_1 Input (0, 1) */
-        float val = patch.GetAdcValue(0);
+        float value = patch.GetAdcValue(CV_1);
 
-        /** Set led brightness */
-        led.Set(val);
+        /** Here the pot is wired to GND and 5V
+          * So 2.5V is the pot's halfway point.
+          * 
+          * If the Adc value is greater than .5 (2.5V)... 
+        */
+        if(value > .5)
+        {
+            /** Turn the led on */
+            patch.SetLed(true);
+        }
 
-        /** Update led pwm */
-        led.Update();
+        /** Otherwise... */
+        else
+        {
+            /** Turn the led off */
+            patch.SetLed(false);
+        }
     }
 }

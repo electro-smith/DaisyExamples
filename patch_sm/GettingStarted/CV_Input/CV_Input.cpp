@@ -24,9 +24,20 @@ int main(void)
         patch.ProcessAllControls();
 
         /** Read from CV_1 (-1, 1) */
-        float value = patch.GetAdcValue(0);
+        float value = patch.GetAdcValue(CV_5);
 
-        /** Turn the onboard led on for positive CV, and off for negative */
-        patch.SetLed(value > 0);
+        /** If the Adc value is greater than 0V... */
+        if(value > 0)
+        {
+            /** Turn the led on */
+            patch.SetLed(true);
+        }
+
+        /** Otherwise... */
+        else
+        {
+            /** Turn the led off */
+            patch.SetLed(false);
+        }
     }
 }
