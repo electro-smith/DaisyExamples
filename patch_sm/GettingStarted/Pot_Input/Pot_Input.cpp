@@ -36,11 +36,9 @@ int main(void)
             /** Turn the led on */
             patch.SetLed(true);
         }
-
-        /** Otherwise... */
         else
         {
-            /** Turn the led off */
+            /** Otherwise, turn the led off */
             patch.SetLed(false);
         }
     }
