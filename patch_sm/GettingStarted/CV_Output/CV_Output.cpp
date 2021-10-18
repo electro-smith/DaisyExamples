@@ -17,19 +17,19 @@ int main(void)
     while(1)
     {
         /** Write 0V to CV_OUT_2 */
-        patch.WriteCvOut(DaisyPatchSM::CV_OUT_2, 0);
+        patch.WriteCvOut(CV_OUT_2, 0);
 
         /** Wait for 1000 ms (1 second) */
         patch.Delay(1000);
 
         /** Write 2.5V to CV_OUT_2 */
-        patch.WriteCvOut(DaisyPatchSM::CV_OUT_2, 2.5);
+        patch.WriteCvOut(CV_OUT_2, 2.5);
 
         /** Wait for 1000 ms (1 second) */
         patch.Delay(1000);
 
         /** Write 5V to CV_OUT_2 */
-        patch.WriteCvOut(DaisyPatchSM::CV_OUT_2, 5);
+        patch.WriteCvOut(CV_OUT_2, 5);
 
         /** Wait for 1000 ms (1 second) */
         patch.Delay(1000);
