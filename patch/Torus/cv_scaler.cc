@@ -26,15 +26,15 @@
 //
 // Filtering and scaling of ADC values + input calibration.
 
-#include "torus/cv_scaler.h"
+#include "cv_scaler.h"
 
 #include <algorithm>
 
 #include "stmlib/dsp/dsp.h"
 #include "stmlib/utils/random.h"
 
-#include "torus/dsp/part.h"
-#include "torus/dsp/patch.h"
+#include "dsp/part.h"
+#include "dsp/patch.h"
 
 #include "daisy.h"
 #include "daisy_patch.h"

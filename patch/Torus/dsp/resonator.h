@@ -33,7 +33,7 @@
 
 #include <algorithm>
 
-#include "torus/dsp/dsp.h"
+#include "dsp/dsp.h"
 #include "stmlib/dsp/filter.h"
 #include "stmlib/dsp/delay_line.h"
 

@@ -26,13 +26,13 @@
 //
 // Resonator.
 
-#include "torus/dsp/resonator.h"
+#include "dsp/resonator.h"
 
 #include "stmlib/dsp/dsp.h"
 #include "stmlib/dsp/cosine_oscillator.h"
 #include "stmlib/dsp/parameter_interpolator.h"
 
-#include "torus/resources.h"
+#include "resources.h"
 
 namespace torus {
 

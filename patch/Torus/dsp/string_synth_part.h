@@ -33,16 +33,16 @@
 
 #include "stmlib/dsp/filter.h"
 
-#include "torus/dsp/dsp.h"
-#include "torus/dsp/fx/chorus.h"
-#include "torus/dsp/fx/ensemble.h"
-#include "torus/dsp/fx/reverb.h"
-#include "torus/dsp/limiter.h"
-#include "torus/dsp/note_filter.h"
-#include "torus/dsp/patch.h"
-#include "torus/dsp/performance_state.h"
-#include "torus/dsp/string_synth_envelope.h"
-#include "torus/dsp/string_synth_voice.h"
+#include "dsp/dsp.h"
+#include "dsp/fx/chorus.h"
+#include "dsp/fx/ensemble.h"
+#include "dsp/fx/reverb.h"
+#include "dsp/limiter.h"
+#include "dsp/note_filter.h"
+#include "dsp/patch.h"
+#include "dsp/performance_state.h"
+#include "dsp/string_synth_envelope.h"
+#include "dsp/string_synth_voice.h"
 
 namespace torus {
 

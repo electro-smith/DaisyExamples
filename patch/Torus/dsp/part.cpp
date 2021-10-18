@@ -26,11 +26,11 @@
 //
 // Group of voices.
 
-#include "torus/dsp/part.h"
+#include "dsp/part.h"
 
 #include "stmlib/dsp/units.h"
 
-#include "torus/resources.h"
+#include "resources.h"
 
 namespace torus {
 

@@ -31,7 +31,7 @@
 
 #include "stmlib/stmlib.h"
 
-#include "torus/dsp/string_synth_oscillator.h"
+#include "dsp/string_synth_oscillator.h"
 
 namespace torus {
 

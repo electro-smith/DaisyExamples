@@ -33,8 +33,8 @@
 
 #include "stmlib/dsp/dsp.h"
 
-#include "torus/dsp/fx/fx_engine.h"
-#include "torus/resources.h"
+#include "dsp/fx/fx_engine.h"
+#include "resources.h"
 
 namespace torus {
 

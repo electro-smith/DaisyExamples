@@ -26,9 +26,9 @@
 //
 // String synth part.
 
-#include "torus/dsp/string_synth_part.h"
+#include "dsp/string_synth_part.h"
 
-#include "torus/dsp/dsp.h"
+#include "dsp/dsp.h"
 
 namespace torus {
 

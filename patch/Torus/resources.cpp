@@ -30,7 +30,7 @@
 // make resources
 
 
-#include "torus/resources.h"
+#include "resources.h"
 
 namespace torus {
 

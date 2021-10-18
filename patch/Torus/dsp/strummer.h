@@ -31,8 +31,8 @@
 
 #include "stmlib/stmlib.h"
 
-#include "torus/dsp/onset_detector.h"
-#include "torus/dsp/part.h"
+#include "dsp/onset_detector.h"
+#include "dsp/part.h"
 
 namespace torus {
 

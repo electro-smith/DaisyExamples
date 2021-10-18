@@ -35,16 +35,16 @@
 #include "stmlib/dsp/cosine_oscillator.h"
 #include "stmlib/dsp/delay_line.h"
 
-#include "torus/dsp/dsp.h"
-#include "torus/dsp/fm_voice.h"
-#include "torus/dsp/fx/reverb.h"
-#include "torus/dsp/limiter.h"
-#include "torus/dsp/note_filter.h"
-#include "torus/dsp/patch.h"
-#include "torus/dsp/performance_state.h"
-#include "torus/dsp/plucker.h"
-#include "torus/dsp/resonator.h"
-#include "torus/dsp/string.h"
+#include "dsp/dsp.h"
+#include "dsp/fm_voice.h"
+#include "dsp/fx/reverb.h"
+#include "dsp/limiter.h"
+#include "dsp/note_filter.h"
+#include "dsp/patch.h"
+#include "dsp/performance_state.h"
+#include "dsp/plucker.h"
+#include "dsp/resonator.h"
+#include "dsp/string.h"
 
 namespace torus {
 

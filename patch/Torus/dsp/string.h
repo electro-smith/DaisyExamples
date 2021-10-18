@@ -36,7 +36,7 @@
 #include "stmlib/dsp/delay_line.h"
 #include "stmlib/dsp/filter.h"
 
-#include "torus/dsp/dsp.h"
+#include "dsp/dsp.h"
 
 namespace torus {
 

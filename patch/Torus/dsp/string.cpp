@@ -26,7 +26,7 @@
 //
 // Comb filter / KS string.
 
-#include "torus/dsp/string.h"
+#include "dsp/string.h"
 
 #include <cmath>
 
@@ -35,7 +35,7 @@
 #include "stmlib/dsp/units.h"
 #include "stmlib/utils/random.h"
 
-#include "torus/resources.h"
+#include "resources.h"
 
 namespace torus {
   

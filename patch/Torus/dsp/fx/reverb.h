@@ -31,7 +31,7 @@
 
 #include "stmlib/stmlib.h"
 
-#include "torus/dsp/fx/fx_engine.h"
+#include "dsp/fx/fx_engine.h"
 
 namespace torus {
 
