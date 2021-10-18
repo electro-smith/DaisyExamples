@@ -49,7 +49,7 @@ int main(void)
     patch.Init();
 
     /** Set the samplerate to 16kHz */
-    patch.SetAudioSampleRate(16000.f);
+    patch.SetAudioSampleRate(16000);
 
     /** Set the blocksize to 4 samples */
     patch.SetAudioBlockSize(4);
