@@ -1,8 +1,8 @@
 # Project Name
-TARGET = Gate_In
+TARGET = Gate_Input
 
 # Sources
-CPP_SOURCES = Gate_In.cpp
+CPP_SOURCES = Gate_Input.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../../libdaisy/
