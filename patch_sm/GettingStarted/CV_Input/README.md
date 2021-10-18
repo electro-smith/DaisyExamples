@@ -12,5 +12,5 @@ If the CV input is negative, the LED is off. Uses CV_1.
 ## Controls
 
 | Pin Name | Pin Location | Function |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | CV 1 | C5 | CV In |
