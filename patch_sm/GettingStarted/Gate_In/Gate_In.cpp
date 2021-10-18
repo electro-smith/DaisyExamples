@@ -20,9 +20,6 @@ int main(void)
     /** Loop forever */
     while(1)
     {
-        /** Update all cv inputs */
-        patch.ProcessAllControls();
-
         /** Get the current gate in state */
         bool state = patch.gate_in_1.State();
 
