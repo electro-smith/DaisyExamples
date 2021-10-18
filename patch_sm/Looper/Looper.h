@@ -28,12 +28,12 @@ class Looper
     void Init(float sr)
     {
         Reset();
-        
-        looplen_   = max_size;
+
+        looplen_     = max_size;
         max_size_ms_ = max_size / sr * 1000.f;
-        
-        idx_       = 0;
-        sr_        = sr;
+
+        idx_ = 0;
+        sr_  = sr;
 
         rec_arm_ = false;
     }
@@ -52,8 +52,10 @@ class Looper
     T Read()
     {
         idx_++;
-        if(idx_ >= looplen_ || idx_ >= max_size){
-            if(rec_arm_){
+        if(idx_ >= looplen_ || idx_ >= max_size)
+        {
+            if(rec_arm_)
+            {
                 EndLoop();
             }
 
@@ -70,8 +72,10 @@ class Looper
     /** Read and write in one function. Obeys the Start/EndLoop functions
         \param input Sample to write (only written if we're creating a new loop via StartLoop)
     */
-    float Process(float input){
-        if(rec_arm_){
+    float Process(float input)
+    {
+        if(rec_arm_)
+        {
             Write(input);
         }
         return Read();
@@ -80,42 +84,48 @@ class Looper
     /** Set the loop length manually
         \param length Loop length in ms
     */
-    void SetLoopLengthMs(float length) { 
-        length = fclamp(length, 1.f, max_size_ms_);
-        looplen_ = length * .001f * sr_; 
+    void SetLoopLengthMs(float length)
+    {
+        length   = fclamp(length, 1.f, max_size_ms_);
+        looplen_ = length * .001f * sr_;
     }
 
     /** Start recording a new loop. Calling this means Process() will start recording inputs. */
-    void StartLoop(){
+    void StartLoop()
+    {
         Reset();
         rec_arm_ = true;
         looplen_ = max_size;
     }
 
     /** End the loop, setting the length. Calling this means Process() will stop recording inputs. */
-    void EndLoop(){
+    void EndLoop()
+    {
         rec_arm_ = false;
         looplen_ = std::min(max_size, idx_);
     }
 
     /** Automatically call either StartLoop() or EndLoop() as needed */
-    void ToggleLoop(){
-        if(rec_arm_){
+    void ToggleLoop()
+    {
+        if(rec_arm_)
+        {
             EndLoop();
         }
-        else{   
+        else
+        {
             StartLoop();
         }
     }
 
   private:
-    T  buff[max_size];
+    T      buff[max_size];
     size_t looplen_;
-    float max_size_ms_;
+    float  max_size_ms_;
     size_t idx_;
     float  sr_;
-    bool _;
-    bool rec_arm_;
+    bool   _;
+    bool   rec_arm_;
 };
 } // namespace daisysp
 #endif
