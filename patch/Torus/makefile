@@ -2,8 +2,8 @@
 TARGET = torus
 
 # Library Locations
-LIBDAISY_DIR = ../libdaisy
-STMLIB_DIR = ../stmlib
+LIBDAISY_DIR = ../../libdaisy
+STMLIB_DIR = ../../stmlib
 
 # Sources
 CPP_SOURCES = torus.cpp \
@@ -13,17 +13,6 @@ dsp/resonator.cpp \
 dsp/string.cpp \
 dsp/string_synth_part.cpp \
 resources.cpp \
-# ui.cpp \
-$(LIBDAISY_DIR)/src/UI/AbstractMenu.cpp \
-#bootloader/bootloader.cpp \
-#drivers/adc.cpp \
-#drivers/codec.cpp \
-#drivers/debug_port.cpp \
-#drivers/leds.cpp \
-#drivers/switches.cpp \
-#drivers/system.cpp \
-#drivers/trigger_input.cpp \
-#settings.cpp \
 
 CC_SOURCES = $(STMLIB_DIR)/dsp/units.cc \
 $(STMLIB_DIR)/utils/random.cc \
@@ -36,7 +25,7 @@ C_INCLUDES += \
 -Idrivers \
 -Ibootloader \
 -Iresources \
--I../ \
+-I../../ \
 
 OPT = -Os
 
