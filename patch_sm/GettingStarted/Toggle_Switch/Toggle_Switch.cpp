@@ -22,9 +22,8 @@ int main(void)
 
     /* Initialize the switch
 	 - We'll read the switch on pin B8
-	 - The switch will be read at a rate of 1 kHz. (Achieved with delay in loop)
 	*/
-    toggle.Init(patch.B8, 1000);
+    toggle.Init(patch.B8);
 
     /** Loop forever */
     while(1)
@@ -37,8 +36,5 @@ int main(void)
 
         /** Set the onboard led to the current state */
         patch.SetLed(state);
-
-        /** Delay 1 ms to achieve the 1000 hz update rate */
-        patch.Delay(1);
     }
 }

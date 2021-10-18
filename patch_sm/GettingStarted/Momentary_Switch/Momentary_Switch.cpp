@@ -36,8 +36,5 @@ int main(void)
 
         /** Set the onboard led to the current state */
         patch.SetLed(state);
-
-        /** Delay 1 ms to achieve the 1000 hz update rate */
-        patch.Delay(1);
     }
 }
