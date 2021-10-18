@@ -8,10 +8,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // See http://creativecommons.org/licenses/MIT/ for more information.
 //
 // -----------------------------------------------------------------------------
@@ -29,22 +29,23 @@
 #ifndef TORUS_DSP_PERFORMANCE_STATE_H_
 #define TORUS_DSP_PERFORMANCE_STATE_H_
 
-namespace torus {
-
+namespace torus
+{
 const int32_t kNumChords = 11;
 
-struct PerformanceState {
-  bool strum;
-  bool internal_exciter;
-  bool internal_strum;
-  bool internal_note;
+struct PerformanceState
+{
+    bool strum;
+    bool internal_exciter;
+    bool internal_strum;
+    bool internal_note;
 
-  float tonic;
-  float note;
-  float fm;
-  int32_t chord;
+    float   tonic;
+    float   note;
+    float   fm;
+    int32_t chord;
 };
 
-}  // namespace torus
+} // namespace torus
 
-#endif  // TORUS_DSP_PERFORMANCE_STATE_H_
+#endif // TORUS_DSP_PERFORMANCE_STATE_H_

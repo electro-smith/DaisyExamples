@@ -8,10 +8,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // See http://creativecommons.org/licenses/MIT/ for more information.
 //
 // -----------------------------------------------------------------------------
@@ -36,8 +36,8 @@
 
 #include "stmlib/stmlib.h"
 
-namespace torus {
-
+namespace torus
+{
 #define LUT_SINE 0
 #define LUT_SINE_SIZE 5121
 #define LUT_4_DECADES 1
@@ -57,7 +57,7 @@ extern const uint32_t* lookup_table_uint32_table[];
 
 extern const float* lookup_table_table[];
 
-extern float lut_sine[LUT_SINE_SIZE];
+extern float       lut_sine[LUT_SINE_SIZE];
 extern const float lut_4_decades[];
 extern const float lut_svf_shift[];
 extern const float lut_stiffness[];
@@ -65,6 +65,6 @@ extern const float lut_fm_frequency_quantizer[];
 
 void InitResources();
 
-}  // namespace torus
+} // namespace torus
 
-#endif  // TORUS_RESOURCES_H_
+#endif // TORUS_RESOURCES_H_
