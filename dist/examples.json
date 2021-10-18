@@ -798,6 +798,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Noise/README.md"
     },
     {
+        "name": "Torus",
+        "platform": "patch",
+        "filepath": "./dist/patch/Torus.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Torus/README.md"
+    },
+    {
         "name": "EnvelopeOscillator",
         "platform": "patch",
         "filepath": "./dist/patch/EnvelopeOscillator.bin",
