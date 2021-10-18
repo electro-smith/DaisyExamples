@@ -61,7 +61,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     for(size_t i = 0; i < size; i++)
     {
         /** Mix the two inputs into a single signal */
-        float in_mixed = (IN_L[i] + IN_R[i]) * .5f;
+        float in_mixed = (IN_L[i] + IN_R[i]) * .5;
 
         /** Write the current input, and get the current looper output 
         * Process will only actually write the input if we're recording a new loop
@@ -69,7 +69,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
         float loop_sig = looper.Process(in_mixed);
 
         /** Mix the looper signal and the input signals */
-        float output_sig = (loop_sig + in_mixed) * .5f;
+        float output_sig = (loop_sig + in_mixed) * .5;
 
         /** Send that signal to both audio outs */
         OUT_L[i] = OUT_R[i] = output_sig;

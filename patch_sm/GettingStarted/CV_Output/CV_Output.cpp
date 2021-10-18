@@ -18,19 +18,19 @@ int main(void)
     patch.Init();
 
     /** Create signal variable */
-    float signal = 0.f;
+    float signal = 0;
 
     /** Loop forever */
     while(1)
     {
         /** Increment the signal */
-        signal += .01f;
+        signal += .01;
 
         /** If the signal gets too large... */
-        if(signal >= 5.f)
+        if(signal >= 5)
         {
             /** Wrap around back to 0 */
-            signal = signal - 5.f;
+            signal = signal - 5;
         }
 
         /** Write to CV_OUT_1 */

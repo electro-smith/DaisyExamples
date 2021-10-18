@@ -27,6 +27,6 @@ int main(void)
         float value = patch.GetAdcValue(0);
 
         /** Turn the onboard led on for positive CV, and off for negative */
-        patch.SetLed(value > 0.f);
+        patch.SetLed(value > 0);
     }
 }
