@@ -7,6 +7,7 @@ beserge
 ## Description
 
 Set the onboard led based on a toggle switch.
+For help connecting the toggle switch, refer to figure 1.6 in the [Patch SM Datasheet](https://github.com/electro-smith/DaisyPatchSM/blob/main/doc/datasheet/ES_Patch_SM_datasheet_v1.0.pdf).  
 
 ## Controls
 

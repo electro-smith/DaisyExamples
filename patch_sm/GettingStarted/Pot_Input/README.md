@@ -7,6 +7,7 @@ beserge
 ## Description
 
 Set the onboard led's brightness with a potentiometer.
+For help connecting the potentiometer, refer to figure 1.2 in the [Patch SM Datasheet](https://github.com/electro-smith/DaisyPatchSM/blob/main/doc/datasheet/ES_Patch_SM_datasheet_v1.0.pdf).  
 
 ## Controls
 
