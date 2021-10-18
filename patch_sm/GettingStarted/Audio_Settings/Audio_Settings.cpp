@@ -28,6 +28,9 @@ DaisyPatchSM patch;
  * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
  * efficient to do the processing on larger chunks at a time.
  *
+ * OUT_L and OUT_R are macros, which take the place of out[0] and out[1] respectively.
+ * IN_L and IN_R are macros, which take the place of in[0] and in[1] respectively.
+ *
  */
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
@@ -48,8 +51,8 @@ int main(void)
     /** Initialize the patch_sm object */
     patch.Init();
 
-    /** Set the samplerate to 16kHz */
-    patch.SetAudioSampleRate(16000);
+    /** Set the samplerate to 96kHz */
+    patch.SetAudioSampleRate(96000);
 
     /** Set the blocksize to 4 samples */
     patch.SetAudioBlockSize(4);
