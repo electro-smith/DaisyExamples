@@ -84,8 +84,8 @@ int main(void)
     /** Get the rate at which we'll call the audio callback function
     * At 48khz with a blocksize of 48 samples this is 48000 / 48 = 1000khz
     */
-    int   cbrate     = patch.AudioCallbackRate();
- 
+    int cbrate = patch.AudioCallbackRate();
+
     /** Get the rate at which we'll output samples */
     float samplerate = patch.AudioSampleRate();
 
