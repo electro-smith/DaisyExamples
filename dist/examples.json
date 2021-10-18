@@ -945,6 +945,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch_sm/EnvelopeExample/README.md"
     },
     {
+        "name": "PassthruExample",
+        "platform": "patch_sm",
+        "filepath": "./dist/patch_sm/PassthruExample.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch_sm/PassthruExample/README.md"
+    },
+    {
         "name": "TripleSaw",
         "platform": "patch_sm",
         "filepath": "./dist/patch_sm/TripleSaw.bin",
@@ -964,12 +971,5 @@
         "filepath": "./dist/patch_sm/HardwareTest.bin",
         "description": "no desc available yet",
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch_sm/HardwareTest/README.md"
-    },
-    {
-        "name": "Looper",
-        "platform": "patch_sm",
-        "filepath": "./dist/patch_sm/Looper.bin",
-        "description": "no desc available yet",
-        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch_sm/Looper/README.md"
     }
 ]
