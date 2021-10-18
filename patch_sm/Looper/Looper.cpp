@@ -16,7 +16,7 @@ using namespace daisysp;
 #define MAX_LOOP_LEN 48000 * 10
 
 /** Daisy Patch SM hardware object */
-DaisyPatchSM hw;
+DaisyPatchSM patch;
 
 /** Looper object to handle looping for us */
 static Looper<float, MAX_LOOP_LEN> DSY_SDRAM_BSS looper;
@@ -37,7 +37,7 @@ Switch sw;
  *
  *  This size is acceptable for many applications, and provides an extremely low
  * latency from input to output. However, you can change this size by calling
- * hw.SetAudioBlockSize(desired_size). When running complex DSP it can be more
+ * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
  * efficient to do the processing on larger chunks at a time.
  *
  */
@@ -79,27 +79,27 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     /** Initialize the patch_sm hardware */
-    hw.Init();
+    patch.Init();
 
     /** Get the rate at which we'll call the audio callback function
     * At 48khz with a blocksize of 48 samples this is 48000 / 48 = 1000khz
     */
-    int   cbrate     = hw.AudioCallbackRate();
+    int   cbrate     = patch.AudioCallbackRate();
  
     /** Get the rate at which we'll output samples */
-    float samplerate = hw.AudioSampleRate();
+    float samplerate = patch.AudioSampleRate();
 
     /* initialize the switch
 	 - We'll read the switch on pin B7
 	 - The switch will be read at the callback rate
 	*/
-    sw.Init(hw.B7, cbrate);
+    sw.Init(patch.B7, cbrate);
 
     /** Initilize the looper. It'll run at the samplerate */
     looper.Init(samplerate);
 
     /** Start the audio callback */
-    hw.StartAudio(AudioCallback);
+    patch.StartAudio(AudioCallback);
 
     /** Loop forever */
     while(1) {}

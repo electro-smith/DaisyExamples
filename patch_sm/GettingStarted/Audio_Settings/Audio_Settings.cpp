@@ -10,7 +10,7 @@ using namespace patch_sm;
 using namespace daisysp;
 
 /** Daisy patch sm object */
-DaisyPatchSM hw;
+DaisyPatchSM patch;
 
 /** Callback for processing and synthesizing audio
  *
@@ -25,7 +25,7 @@ DaisyPatchSM hw;
  *
  *  This size is acceptable for many applications, and provides an extremely low
  * latency from input to output. However, you can change this size by calling
- * hw.SetAudioBlockSize(desired_size). When running complex DSP it can be more
+ * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
  * efficient to do the processing on larger chunks at a time.
  *
  */
@@ -46,16 +46,16 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     /** Initialize the patch_sm object */
-    hw.Init();
+    patch.Init();
 
     /** Set the samplerate to 16kHz */
-    hw.SetAudioSampleRate(16000.f);
+    patch.SetAudioSampleRate(16000.f);
 
     /** Set the blocksize to 4 samples */
-    hw.SetAudioBlockSize(4);
+    patch.SetAudioBlockSize(4);
 
     /** Start the audio callback */
-    hw.StartAudio(AudioCallback);
+    patch.StartAudio(AudioCallback);
 
     /** Loop forever */
     while(1) {}

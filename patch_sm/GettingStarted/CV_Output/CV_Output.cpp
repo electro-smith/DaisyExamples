@@ -10,12 +10,12 @@ using namespace patch_sm;
 using namespace daisysp;
 
 /** Hardware object for the patch_sm */
-DaisyPatchSM hw;
+DaisyPatchSM patch;
 
 int main(void)
 {
     /** Initialize the patch_sm hardware object */
-    hw.Init();
+    patch.Init();
 
     /** Create signal variable */
     float signal = 0.f;
@@ -34,9 +34,9 @@ int main(void)
         }
 
         /** Write to CV_OUT_1 */
-        hw.WriteCvOut(1, signal);
+        patch.WriteCvOut(1, signal);
 
         /** Wait for 1 ms */
-        hw.Delay(1);
+        patch.Delay(1);
     }
 }

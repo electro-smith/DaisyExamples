@@ -10,7 +10,7 @@ using namespace patch_sm;
 using namespace daisysp;
 
 /** Hardware object for the patch_sm */
-DaisyPatchSM hw;
+DaisyPatchSM patch;
 
 /** Switch object */
 Switch momentary;
@@ -18,13 +18,13 @@ Switch momentary;
 int main(void)
 {
     /** Initialize the patch_sm hardware object */
-    hw.Init();
+    patch.Init();
 
     /* Initialize the switch
 	 - We'll read the switch on pin B7
 	 - The switch will be read at a rate of 1 kHz (Achieved with delay in loop)
 	*/
-    momentary.Init(hw.B7, 1000);
+    momentary.Init(patch.B7, 1000);
 
     /** loop forever */
     while(1)
@@ -36,9 +36,9 @@ int main(void)
         bool state = momentary.Pressed();
 
         /** Set the onboard led to the current state */
-        hw.SetLed(state);
+        patch.SetLed(state);
 
         /** Delay 1 ms to achieve the 1000 hz update rate */
-        hw.Delay(1);
+        patch.Delay(1);
     }
 }
