@@ -11,7 +11,7 @@
       ],
       "includePath": [
         "${workspaceFolder}/**",
-        "../../libDaisy/**",
+        "../../libdaisy/**",
         "../../DaisySP/**"
       ],
       "name": "Win32",
@@ -28,7 +28,7 @@
       ],
       "includePath": [
         "${workspaceFolder}/**",
-        "../../libDaisy/**",
+        "../../libdaisy/**",
         "../../DaisySP/**"
       ],
       "name": "macOS"
