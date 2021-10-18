@@ -6,11 +6,11 @@
  * referencing modules, and functions within the daisy libraries.
  */
 using namespace daisy;
+using namespace patch_sm;
 using namespace daisysp;
 
-/** Our hardware board class handles the interface to the actual DaisyPatchSM
- * hardware. */
-DaisyPatchSM hw;
+/** Daisy patch sm object */
+DaisyPatchSM patch;
 
 /** Callback for processing and synthesizing audio
  *
@@ -25,36 +25,41 @@ DaisyPatchSM hw;
  *
  *  This size is acceptable for many applications, and provides an extremely low
  * latency from input to output. However, you can change this size by calling
- * hw.SetAudioBlockSize(desired_size). When running complex DSP it can be more
+ * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
  * efficient to do the processing on larger chunks at a time.
+ *
+ * OUT_L and OUT_R are macros, which take the place of out[0] and out[1] respectively.
+ * IN_L and IN_R are macros, which take the place of in[0] and in[1] respectively.
  *
  */
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
-    /** The easiest way to do pass thru is to simply copy the input to the output
-   * In C++ the standard way of doing this is with std::copy. However, those
-   * familliar with C can use memcpy. A simple loop is also a good way to do
-   * this.
-   *
-   * Since you'll most likely want to be doing something between the input,
-   *  and the output, and not just passing it through we'll demonstrate doing
-   *  so with a for loop.
-   */
     for(size_t i = 0; i < size; i++)
     {
-        out[0][i] = in[0][i]; /**< Copy the left input to the left output */
-        out[1][i] = in[1][i]; /**< Copy the right input to the right output */
+        /** set the left output to the current left input */
+        OUT_L[i] = IN_L[i];
+
+        /** set the right output to the current right input */
+        OUT_R[i] = IN_R[i];
     }
 }
 
 int main(void)
 {
-    /** Initialize the hardware */
-    hw.Init();
+    /** Initialize the patch_sm object */
+    patch.Init();
 
-    /** Start Processing the audio */
-    hw.StartAudio(AudioCallback);
+    /** Set the samplerate to 96kHz */
+    patch.SetAudioSampleRate(96000);
+
+    /** Set the blocksize to 4 samples */
+    patch.SetAudioBlockSize(4);
+
+    /** Start the audio callback */
+    patch.StartAudio(AudioCallback);
+
+    /** Loop forever */
     while(1) {}
 }
