@@ -11,8 +11,8 @@
       ],
       "includePath": [
         "${workspaceFolder}/**",
-        "../../../libdaisy/**",
-        "../../../DaisySP/**"
+        "../../libdaisy/**",
+        "../../DaisySP/**"
       ],
       "name": "Win32",
       "windowsSdkVersion": "10.0.17763.0"
@@ -28,8 +28,8 @@
       ],
       "includePath": [
         "${workspaceFolder}/**",
-        "../../../libdaisy/**",
-        "../../../DaisySP/**"
+        "../../libdaisy/**",
+        "../../DaisySP/**"
       ],
       "name": "macOS"
     }
