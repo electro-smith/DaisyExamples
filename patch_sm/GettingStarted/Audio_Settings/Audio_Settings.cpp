@@ -39,7 +39,10 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
 int main(void)
 {
-    /** Initialize the patch_sm object */
+    /** Initialize the patch_sm object 
+    * This sets the blocksize to its default of 4 samples.
+    * This sets the samplerate to its default of 48kHz.
+    */
     patch.Init();
 
     /** Set the samplerate to 96kHz */
