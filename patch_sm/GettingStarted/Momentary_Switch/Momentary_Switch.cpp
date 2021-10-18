@@ -13,7 +13,7 @@ using namespace daisysp;
 DaisyPatchSM patch;
 
 /** Switch object */
-Switch momentary;
+Switch button;
 
 int main(void)
 {
@@ -24,16 +24,16 @@ int main(void)
 	 - We'll read the switch on pin B7
 	 - The switch will be read at a rate of 1 kHz (Achieved with delay in loop)
 	*/
-    momentary.Init(patch.B7, 1000);
+    button.Init(patch.B7, 1000);
 
     /** loop forever */
     while(1)
     {
         /** Debounce the switch */
-        momentary.Debounce();
+        button.Debounce();
 
-        /** Get the current momentary state */
-        bool state = momentary.Pressed();
+        /** Get the current button state */
+        bool state = button.Pressed();
 
         /** Set the onboard led to the current state */
         patch.SetLed(state);
