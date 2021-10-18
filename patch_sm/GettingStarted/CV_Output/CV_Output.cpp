@@ -26,26 +26,8 @@ int main(void)
         /** Wait for 1000 ms (1 second) */
         patch.Delay(1000);
 
-        /** Write 1V to CV_OUT_2 */
-        patch.WriteCvOut(DaisyPatchSM::CV_OUT_2, 1);
-
-        /** Wait for 1000 ms (1 second) */
-        patch.Delay(1000);
-
         /** Write 2V to CV_OUT_2 */
         patch.WriteCvOut(DaisyPatchSM::CV_OUT_2, 2);
-
-        /** Wait for 1000 ms (1 second) */
-        patch.Delay(1000);
-
-        /** Write 3V to CV_OUT_2 */
-        patch.WriteCvOut(DaisyPatchSM::CV_OUT_2, 3);
-
-        /** Wait for 1000 ms (1 second) */
-        patch.Delay(1000);
-
-        /** Write 4V to CV_OUT_2 */
-        patch.WriteCvOut(DaisyPatchSM::CV_OUT_2, 4);
 
         /** Wait for 1000 ms (1 second) */
         patch.Delay(1000);
