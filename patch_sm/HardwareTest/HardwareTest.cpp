@@ -96,7 +96,7 @@ int main(void)
         // 500Hz samplerate for DAC output test
         if(now - dact > 2)
         {
-            hw.WriteCvOut(DaisyPatchSM::CV_OUT_BOTH, dacphs.Process() * 5.f);
+            hw.WriteCvOut(CV_OUT_BOTH, dacphs.Process() * 5.f);
             dact = now;
         }
 
