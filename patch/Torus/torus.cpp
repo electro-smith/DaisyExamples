@@ -291,6 +291,7 @@ int main(void) {
 
   InitUi();
   InitUiPages();
+  InitResources();
   ui.OpenPage(mainMenu);
 
   strummer.Init(0.01f, samplerate / blocksize);
