@@ -22,9 +22,8 @@ int main(void)
 
     /* Initialize the switch
 	 - We'll read the switch on pin B7
-	 - The switch will be read at a rate of 1 kHz (Achieved with delay in loop)
 	*/
-    button.Init(patch.B7, 1000);
+    button.Init(patch.B7);
 
     /** loop forever */
     while(1)
