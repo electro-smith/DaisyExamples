@@ -8,10 +8,10 @@ using namespace daisysp;
 DaisyPatchSM patch;
 Switch       button;
 
-Looper<48000 * 10>               looper_l;
-Looper<48000 * 10>               looper_r;
-Buffer<48000 * 10> DSY_SDRAM_BSS buffer_l;
-Buffer<48000 * 10> DSY_SDRAM_BSS buffer_r;
+Looper<48000 * 60>               looper_l;
+Looper<48000 * 60>               looper_r;
+Buffer<48000 * 60> DSY_SDRAM_BSS buffer_l;
+Buffer<48000 * 60> DSY_SDRAM_BSS buffer_r;
 
 float loop_level, in_level;
 
