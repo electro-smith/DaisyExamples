@@ -8,6 +8,7 @@ using namespace daisysp;
 DaisyPatchSM patch;
 Switch       button;
 
+<<<<<<< HEAD
 Looper<48000 * 10>               looper_l;
 Looper<48000 * 10>               looper_r;
 Buffer<48000 * 10> DSY_SDRAM_BSS buffer_l;
@@ -15,6 +16,8 @@ Buffer<48000 * 10> DSY_SDRAM_BSS buffer_r;
 
 float loop_level, in_level;
 
+=======
+>>>>>>> ae5759d495237e1cf835a6c332a779b8c8b99899
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
