@@ -5,8 +5,8 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM patch;
-Switch       button;
+DaisyPatchSM                     patch;
+Switch                           button;
 
 Looper<48000 * 10>               looper_l;
 Looper<48000 * 10>               looper_r;
