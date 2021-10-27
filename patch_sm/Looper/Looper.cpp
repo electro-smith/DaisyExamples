@@ -5,8 +5,8 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM                     patch;
-Switch                           button;
+DaisyPatchSM patch;
+Switch       button;
 
 Looper<48000 * 10>               looper_l;
 Looper<48000 * 10>               looper_r;
@@ -37,7 +37,7 @@ int main(void)
 {
     patch.Init();
 
-    looper_r.Init(&buffer_l);
+    looper_l.Init(&buffer_l);
     looper_r.Init(&buffer_r);
 
     button.Init(patch.B7);
@@ -57,9 +57,12 @@ int main(void)
             looper_r.TrigRecord();
         }
 
-		if(button.TimeHeldMs() >= 1000.f){
-			looper_l.Clear();
-			looper_r.Clear();
-		}
+        if(button.TimeHeldMs() >= 1000.f)
+        {
+            looper_l.Clear();
+            looper_r.Clear();
+        }
+
+        patch.SetLed(looper_l.Recording());
     }
 }
