@@ -5,8 +5,8 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM patch;
-Switch       button;
+DaisyPatchSM                     patch;
+Switch                           button;
 
 <<<<<<< HEAD
 Looper<48000 * 10>               looper_l;
@@ -18,9 +18,9 @@ float loop_level, in_level;
 
 =======
 >>>>>>> ae5759d495237e1cf835a6c332a779b8c8b99899
-void AudioCallback(AudioHandle::InputBuffer  in,
-                   AudioHandle::OutputBuffer out,
-                   size_t                    size)
+void  AudioCallback(AudioHandle::InputBuffer  in,
+                    AudioHandle::OutputBuffer out,
+                    size_t                    size)
 {
     patch.ProcessAllControls();
     for(size_t i = 0; i < size; i++)
