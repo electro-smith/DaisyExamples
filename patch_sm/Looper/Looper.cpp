@@ -10,10 +10,10 @@ Switch       button;
 
 #define kBuffSize 48000 * 60 // 60 seconds at 48kHz
 
-Looper  looper_l;
-Looper  looper_r;
+Looper              looper_l;
+Looper              looper_r;
 float DSY_SDRAM_BSS buffer_l[kBuffSize];
-float  DSY_SDRAM_BSS buffer_r[kBuffSize];
+float DSY_SDRAM_BSS buffer_r[kBuffSize];
 
 float loop_level, in_level;
 
