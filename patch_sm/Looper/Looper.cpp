@@ -19,7 +19,31 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
+    // Process the controls
     patch.ProcessAllControls();
+    button.Debounce();
+
+    // Set in and loop gain from CV_1 and CV_2 respectively
+    in_level   = patch.GetAdcValue(0);
+    loop_level = patch.GetAdcValue(1);
+
+    //if you press the button, toggle the record state
+    if(button.RisingEdge())
+    {
+        looper_l.TrigRecord();
+        looper_r.TrigRecord();
+    }
+
+    // if you hold the button longer than 1000 ms (1 sec), clear the loop
+    if(button.TimeHeldMs() >= 1000.f)
+    {
+        looper_l.Clear();
+        looper_r.Clear();
+    }
+
+    // Set the led to 5V if the looper is recording
+    patch.WriteCvOut(2, 5.f * looper_l.Recording());
+
     for(size_t i = 0; i < size; i++)
     {
         float in_l = IN_L[i] * in_level;
@@ -43,26 +67,5 @@ int main(void)
     button.Init(patch.B7);
 
     patch.StartAudio(AudioCallback);
-    while(1)
-    {
-        patch.ProcessAllControls();
-        button.Debounce();
-
-        in_level   = patch.controls[0].Value();
-        loop_level = patch.controls[1].Value();
-
-        if(button.RisingEdge())
-        {
-            looper_l.TrigRecord();
-            looper_r.TrigRecord();
-        }
-
-        if(button.TimeHeldMs() >= 1000.f)
-        {
-            looper_l.Clear();
-            looper_r.Clear();
-        }
-
-        patch.SetLed(looper_l.Recording());
-    }
+    while(1) {}
 }
