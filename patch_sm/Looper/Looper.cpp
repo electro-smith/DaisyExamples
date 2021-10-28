@@ -8,10 +8,12 @@ using namespace daisysp;
 DaisyPatchSM patch;
 Switch       button;
 
-Looper<48000 * 60>               looper_l;
-Looper<48000 * 60>               looper_r;
-Buffer<48000 * 60> DSY_SDRAM_BSS buffer_l;
-Buffer<48000 * 60> DSY_SDRAM_BSS buffer_r;
+#define kBuffSize 48000 * 60 // 60 seconds at 48kHz
+
+Looper  looper_l;
+Looper  looper_r;
+float DSY_SDRAM_BSS buffer_l[kBuffSize];
+float  DSY_SDRAM_BSS buffer_r[kBuffSize];
 
 float loop_level, in_level;
 
@@ -61,8 +63,8 @@ int main(void)
 {
     patch.Init();
 
-    looper_l.Init(&buffer_l);
-    looper_r.Init(&buffer_r);
+    looper_l.Init(buffer_l, kBuffSize);
+    looper_r.Init(buffer_r, kBuffSize);
 
     button.Init(patch.B7);
 
