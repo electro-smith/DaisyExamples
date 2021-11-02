@@ -10,11 +10,13 @@ Switch       button;
 
 #define kBuffSize 48000 * 60 // 60 seconds at 48kHz
 
+// Loopers and the buffers they'll use
 Looper              looper_l;
 Looper              looper_r;
 float DSY_SDRAM_BSS buffer_l[kBuffSize];
 float DSY_SDRAM_BSS buffer_r[kBuffSize];
 
+// gain factors for input and looper
 float loop_level, in_level;
 
 void AudioCallback(AudioHandle::InputBuffer  in,
@@ -46,14 +48,18 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     // Set the led to 5V if the looper is recording
     patch.WriteCvOut(2, 5.f * looper_l.Recording());
 
+    // Process audio
     for(size_t i = 0; i < size; i++)
     {
+        // store the inputs * the input gain factor
         float in_l = IN_L[i] * in_level;
         float in_r = IN_R[i] * in_level;
 
+        // store signal = loop signal * loop gain + in * in_gain
         float sig_l = looper_l.Process(in_l) * loop_level + in_l;
         float sig_r = looper_r.Process(in_r) * loop_level + in_r;
 
+        // send that signal to the outputs
         OUT_L[i] = sig_l;
         OUT_R[i] = sig_r;
     }
@@ -61,13 +67,19 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
 int main(void)
 {
+    // Initialize the hardware
     patch.Init();
 
+    // Init the loopers
     looper_l.Init(buffer_l, kBuffSize);
     looper_r.Init(buffer_r, kBuffSize);
 
+    // Init the button
     button.Init(patch.B7);
 
+    // Start the audio callback
     patch.StartAudio(AudioCallback);
+
+    // loop forever
     while(1) {}
 }
