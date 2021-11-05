@@ -16,9 +16,6 @@ Looper              looper_r;
 float DSY_SDRAM_BSS buffer_l[kBuffSize];
 float DSY_SDRAM_BSS buffer_r[kBuffSize];
 
-// gain factors for input and looper
-float loop_level, in_level;
-
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
@@ -28,8 +25,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     button.Debounce();
 
     // Set in and loop gain from CV_1 and CV_2 respectively
-    in_level   = patch.GetAdcValue(0);
-    loop_level = patch.GetAdcValue(1);
+    float in_level   = patch.GetAdcValue(CV_1);
+    float loop_level = patch.GetAdcValue(CV_2);
 
     //if you press the button, toggle the record state
     if(button.RisingEdge())
