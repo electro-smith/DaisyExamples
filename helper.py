@@ -20,9 +20,9 @@ supported_boards= ['seed', 'pod', 'patch', 'field', 'petal', 'versio', 'patch_sm
 # Helper functions
 ################################################################
 
-# Opens file at filepath, 
+# Opens file at filepath,
 # creates a temp file where all instances of string "a"
-# are replaced with "b", and then 
+# are replaced with "b", and then
 # removes the original file, and renames the temp file.
 def rewrite_replace(filepath, a, b):
     try:
@@ -102,8 +102,8 @@ def  update_project(destination, libs):
 
 
 # Called via the 'copy' operation
-# copies _all_ files from source directory, 
-# deletes old build directories. 
+# copies _all_ files from source directory,
+# deletes old build directories.
 def copy_project(destination, source):
     print('copying {} to new project: {}'.format(source, destination))
     srcAbs = os.path.abspath(source)
@@ -156,7 +156,7 @@ def create_from_template(destination, board, libs):
     libdaisy_dir = libs + "/libdaisy/"
     rec_rewrite_replace(destination, "@LIBDAISY_DIR@", libdaisy_dir)
 
-    daisysp_dir = libs + "/daisysp/"
+    daisysp_dir = libs + "/DaisySP/"
     rec_rewrite_replace(destination, "@DAISYSP_DIR@", daisysp_dir)
 
     src_file = pathlib.Path(destination + os.path.sep + os.path.basename(destination) + '.cpp')
@@ -237,7 +237,7 @@ def rebuild(destination):
         print("rebuild all coming soon")
         # The below does not work as expected on windows.
         # Seems to use wsl's bash, and the default arm-none-eabi in that location
-        # I'll look into solutions for Windows, though the below may work on other 
+        # I'll look into solutions for Windows, though the below may work on other
         # platforms already.
         # -----------------
         # proc = subprocess.Popen(['bash', '-c', './ci/build_libs.sh'],
