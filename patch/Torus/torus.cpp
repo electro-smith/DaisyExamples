@@ -101,10 +101,11 @@ void InitUi()
     // This is the canvas for the OLED display.
     UiCanvasDescriptor oledDisplayDescriptor;
     oledDisplayDescriptor.id_     = canvasOledDisplay; // the unique ID
-    oledDisplayDescriptor.handle_ = &hw.display; // a pointer to the display
-    oledDisplayDescriptor.updateRateMs_  = 50;   // 50ms == 20Hz
-    oledDisplayDescriptor.clearFunction_ = &ClearCanvas;
-    oledDisplayDescriptor.flushFunction_ = &FlushCanvas;
+    oledDisplayDescriptor.handle_ = &hw.display;   // a pointer to the display
+    oledDisplayDescriptor.updateRateMs_      = 50; // 50ms == 20Hz
+    oledDisplayDescriptor.screenSaverTimeOut = 0;  // display always on
+    oledDisplayDescriptor.clearFunction_     = &ClearCanvas;
+    oledDisplayDescriptor.flushFunction_     = &FlushCanvas;
 
     ui.Init(eventQueue,
             specialControlIds,
