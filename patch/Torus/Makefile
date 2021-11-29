@@ -14,18 +14,14 @@ dsp/string.cpp \
 dsp/string_synth_part.cpp \
 resources.cpp \
 
-CC_SOURCES = $(STMLIB_DIR)/dsp/units.cc \
+CC_SOURCES += $(STMLIB_DIR)/dsp/units.cc \
 $(STMLIB_DIR)/utils/random.cc \
 cv_scaler.cc \
 
 C_INCLUDES += \
 -I. \
--Idsp \
--Idsp/fx \
--Idrivers \
--Ibootloader \
 -Iresources \
--I../../ \
+-I../..
 
 # Can't actually add to CFLAGS.. due to libDaisy stuff
 # silences warning from stmlib JOIN macros
