@@ -910,6 +910,13 @@
         "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/chorus/README.md"
     },
     {
+        "name": "sampler",
+        "platform": "field",
+        "filepath": "./dist/field/sampler.bin",
+        "description": "no desc available yet",
+        "url": "https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/field/sampler/README.md"
+    },
+    {
         "name": "modalvoice",
         "platform": "field",
         "filepath": "./dist/field/modalvoice.bin",
