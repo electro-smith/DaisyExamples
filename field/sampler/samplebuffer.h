@@ -8,25 +8,25 @@
 
 By: Alex Virgona
 */
-template<size_t kBufferSize>
+template <size_t kBufferSize>
 class SampleBuffer
 {
   public:
-    SampleBuffer(){}
-    ~SampleBuffer(){}
+    SampleBuffer() {}
+    ~SampleBuffer() {}
 
     void Init()
     {
         Clear();
         recording_ = false;
         write_ptr_ = 0;
-        playing_ = false;
-        read_ptr_ = 0;
+        playing_   = false;
+        read_ptr_  = 0;
     }
 
     void Clear()
     {
-        for (size_t i = 0; i < kBufferSize; i++)
+        for(size_t i = 0; i < kBufferSize; i++)
         {
             buffer_[i] = 0.f;
         }
@@ -34,7 +34,8 @@ class SampleBuffer
 
     void Record(bool start = true)
     {
-        if (start) {
+        if(start)
+        {
             Clear();
         }
         recording_ = start;
@@ -43,7 +44,7 @@ class SampleBuffer
 
     void Play(bool start = true)
     {
-        playing_ = start;
+        playing_  = start;
         read_ptr_ = 0;
     }
 
@@ -55,10 +56,12 @@ class SampleBuffer
 
     void Write(const float sample)
     {
-        if (recording_) {
+        if(recording_)
+        {
             buffer_[write_ptr_] = sample;
             write_ptr_++;
-            if (write_ptr_ >= kBufferSize) {
+            if(write_ptr_ >= kBufferSize)
+            {
                 recording_ = false;
                 write_ptr_ = 0;
             }
@@ -67,28 +70,32 @@ class SampleBuffer
 
     float Read()
     {
-        if (playing_) {
+        if(playing_)
+        {
             float out = buffer_[read_ptr_];
             read_ptr_++;
-            if (read_ptr_ >= kBufferSize) {
-                playing_ = false;
+            if(read_ptr_ >= kBufferSize)
+            {
+                playing_  = false;
                 read_ptr_ = 0;
             }
             return out;
-        } else {
+        }
+        else
+        {
             return 0.f;
         }
     }
 
-    bool IsPlaying() const {return playing_;}
-    bool IsRecording() const {return recording_;}
+    bool IsPlaying() const { return playing_; }
+    bool IsRecording() const { return recording_; }
 
   private:
     size_t write_ptr_;
     size_t read_ptr_;
-    bool playing_;
-    bool recording_;
-    float buffer_[kBufferSize];
+    bool   playing_;
+    bool   recording_;
+    float  buffer_[kBufferSize];
 };
 
 #endif // SAMPLEBUFFER_H

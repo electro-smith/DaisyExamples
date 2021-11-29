@@ -20,24 +20,24 @@ std::array<SampleBuffer<BUFFER_SIZE>, NUM_BUFFERS> DSY_SDRAM_BSS buffers;
 void Controls()
 {
     hw.ProcessAllControls();
-    for (size_t i = 0; i < buffers.size(); i++)
+    for(size_t i = 0; i < buffers.size(); i++)
     {
-        // Handle lower key row as play buttons 
-        if (hw.KeyboardRisingEdge(i))
+        // Handle lower key row as play buttons
+        if(hw.KeyboardRisingEdge(i))
         {
             buffers[i].Play();
         }
-        else if (hw.KeyboardFallingEdge(i))
+        else if(hw.KeyboardFallingEdge(i))
         {
             // Remove this line to keep playing after key is released
             buffers[i].Play(false);
         }
-        // Handle upper key row as record buttons 
-        if (hw.KeyboardRisingEdge(i + KEYBOARD_WIDTH))
+        // Handle upper key row as record buttons
+        if(hw.KeyboardRisingEdge(i + KEYBOARD_WIDTH))
         {
             buffers[i].Record();
         }
-        else if (hw.KeyboardFallingEdge(i + KEYBOARD_WIDTH))
+        else if(hw.KeyboardFallingEdge(i + KEYBOARD_WIDTH))
         {
             // Remove this line to keep recording after key is released
             buffers[i].Record(false);
@@ -55,7 +55,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
         // Zero samples prior to summing
         out[0][i] = 0.f;
         out[1][i] = 0.f;
-        for (auto &buffer : buffers)
+        for(auto &buffer : buffers)
         {
             // Record in mono
             float sample = buffer.Process((0.5 * in[0][i] + 0.5 * in[1][i]));
@@ -71,7 +71,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
 void InitSamplers()
 {
-    for (auto &buffer : buffers)
+    for(auto &buffer : buffers)
     {
         buffer.Init();
     }
@@ -80,16 +80,16 @@ void InitSamplers()
 void UpdateDisplay()
 {
     static const char number_row[17] = " 1 2 3 4 5 6 7 8";
-    static const char blank_row[17] = "                ";
-    char recording_row[17];
-    char playing_row[17];
+    static const char blank_row[17]  = "                ";
+    char              recording_row[17];
+    char              playing_row[17];
     strcpy(recording_row, blank_row);
     strcpy(playing_row, blank_row);
 
-    for (size_t b = 0; b < buffers.size(); b++)
+    for(size_t b = 0; b < buffers.size(); b++)
     {
         recording_row[2 * b + 1] = buffers[b].IsRecording() ? '+' : ' ';
-        playing_row[2 * b + 1] = buffers[b].IsPlaying() ? '>' : ' ';
+        playing_row[2 * b + 1]   = buffers[b].IsPlaying() ? '>' : ' ';
     }
     hw.display.Fill(false);
     hw.display.SetCursor(0, 0);
