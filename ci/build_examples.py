@@ -26,7 +26,6 @@ dirs_to_search = list(
 # recursively go through each directory in dirs_to_search
 # and attempt to compile each example
 for dir in dirs_to_search:
-    # dts = list(filter(lambda x: 'Makefile' in x ,os.walk(dir)))
     example_dirs = []
     for root, dirs, files in os.walk(dir):
         if 'Makefile' in files:
