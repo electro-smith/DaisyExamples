@@ -30,6 +30,7 @@ int main(void)
     // initialize seed hardware and WhiteNoise daisysp module
     seed.Configure();
     seed.Init();
+    seed.SetAudioBlockSize(4);
     nse.Init();
 
     // start callback

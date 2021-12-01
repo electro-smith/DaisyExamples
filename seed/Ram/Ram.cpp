@@ -43,6 +43,7 @@ int main(void)
 {
     // Initialize Hardware
     hw.Init();
+    hw.SetAudioBlockSize(4);
     for(uint32_t i = 0; i < TEST_BUFF_SIZE; i++)
     {
         test_buff[i] = i;

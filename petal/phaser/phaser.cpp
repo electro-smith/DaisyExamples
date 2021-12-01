@@ -66,6 +66,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     hw.Init();
+    hw.SetAudioBlockSize(4);
     float sample_rate = hw.AudioSampleRate();
 
     phaser.Init(sample_rate);

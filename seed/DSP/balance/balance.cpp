@@ -35,6 +35,7 @@ int main(void)
     float sample_rate;
     seed.Configure();
     seed.Init();
+    seed.SetAudioBlockSize(4);
     sample_rate = seed.AudioSampleRate();
     osc1.Init(sample_rate);
     osc2.Init(sample_rate);

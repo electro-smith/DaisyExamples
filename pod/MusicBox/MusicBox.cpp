@@ -92,6 +92,7 @@ int main(void)
     float samplerate;
     // Init
     hw.Init();
+    hw.SetAudioBlockSize(4);
     samplerate = hw.AudioSampleRate();
     InitSynth(samplerate);
     // Start Callbacks

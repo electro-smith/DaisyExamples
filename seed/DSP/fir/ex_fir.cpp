@@ -105,6 +105,7 @@ int main(void)
     /* initialize seed hardware and daisysp modules */
     seed.Configure();
     seed.Init();
+    seed.SetAudioBlockSize(4);
     seed.StartLog(false);
 
     /* calculate callback and update rates */
