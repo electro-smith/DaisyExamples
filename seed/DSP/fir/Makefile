@@ -2,8 +2,8 @@
 TARGET = fir
 
 # Library Locations
-LIBDAISY_DIR ?= ../../libdaisy
-DAISYSP_DIR ?= ../../DaisySP
+LIBDAISY_DIR ?= ../../../libdaisy
+DAISYSP_DIR ?= ../../../DaisySP
 CMSIS_DIR ?= $(LIBDAISY_DIR)/Drivers/CMSIS
 
 
