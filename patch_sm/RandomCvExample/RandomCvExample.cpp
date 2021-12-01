@@ -16,6 +16,6 @@ int main(void)
         /** Get a truly random float from the hardware */
         float voltage = patch.GetRandomFloat(0.0, 5.0);
         /** Write it to both CV Outputs */
-        patch.WriteCvOut(patch.CV_OUT_BOTH, voltage);
+        patch.WriteCvOut(CV_OUT_BOTH, voltage);
     }
 }

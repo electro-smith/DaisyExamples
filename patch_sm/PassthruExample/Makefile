@@ -2,7 +2,7 @@
 TARGET = PassthruExample
 
 # Sources
-CPP_SOURCES = PassthruExample.cpp \
+CPP_SOURCES = PassthruExample.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libdaisy/
