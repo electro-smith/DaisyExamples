@@ -26,7 +26,7 @@ jobs:
     - name: Build Examples
       run: python ./ci/build_examples.py
     - name: Create Distributable Binaries
-      run: python ./ci/build_dist.py -ru seed pod petal patch field versio patch_sm
+      run: python ./ci/build_dist.py -ru
     - name: Deploy Dist
       uses: EndBug/add-and-commit@v4
       with:
