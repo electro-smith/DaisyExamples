@@ -34,7 +34,7 @@ for dir in dirs_to_search:
     for ex in example_dirs:
         dest = os.path.join(cwd, ex)
         os.chdir(dest)
-        print("Building: {}".format(ex))
+        os.system("echo Building: {}".format(ex))
         exit_code = os.system('make -s clean')
         exit_code = os.system('make -s')
         if exit_code != 0:
