@@ -84,7 +84,8 @@ void UpdateOled();
 int main(void)
 {
     float samplerate;
-    petal.Init(); // Initialize hardware (daisy seed, and petal)
+    petal.Init();
+    petal.SetAudioBlockSize(4); // Initialize hardware (daisy seed, and petal)
     samplerate = petal.AudioSampleRate();
 
     InitDelays(samplerate);

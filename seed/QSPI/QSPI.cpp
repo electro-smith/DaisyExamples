@@ -33,6 +33,7 @@ int main(void)
 {
     hw.Configure();
     hw.Init();
+    hw.SetAudioBlockSize(4);
 
     phs.Init(hw.AudioSampleRate());
     phs.SetFreq(440.f);

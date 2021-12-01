@@ -33,6 +33,7 @@ int main(void)
 {
     hw.Configure();
     hw.Init();
+    hw.SetAudioBlockSize(4);
     float sample_rate = hw.AudioSampleRate();
 
     phaser.Init(sample_rate);

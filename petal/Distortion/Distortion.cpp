@@ -65,6 +65,7 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     petal.Init();
+    petal.SetAudioBlockSize(4);
 
     bypassHard = bypassSoft = false;
 

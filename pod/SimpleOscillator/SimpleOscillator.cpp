@@ -70,6 +70,7 @@ int main(void)
 
     // Init everything
     hw.Init();
+    hw.SetAudioBlockSize(4);
     samplerate = hw.AudioSampleRate();
     InitSynth(samplerate);
 

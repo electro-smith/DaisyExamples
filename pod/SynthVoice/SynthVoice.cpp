@@ -71,6 +71,7 @@ int main(void)
 
     //Init everything
     pod.Init();
+    pod.SetAudioBlockSize(4);
     sample_rate = pod.AudioSampleRate();
     osc.Init(sample_rate);
     flt.Init(sample_rate);
@@ -117,7 +118,7 @@ void ConditionalParameter(float  oldVal,
                           float &param,
                           float  update)
 {
-    if(abs(oldVal - newVal) > 0.0005)
+    if(abs(oldVal - newVal) > 0.00005)
     {
         param = update;
     }

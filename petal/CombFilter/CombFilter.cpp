@@ -42,6 +42,7 @@ int main(void)
 {
     float samplerate;
     petal.Init();
+    petal.SetAudioBlockSize(4);
     samplerate = petal.AudioSampleRate();
 
     lfoFreqParam.Init(petal.knob[0], 0, 2, Parameter::LINEAR);

@@ -49,6 +49,7 @@ int main(void)
     float samplerate;
 
     hw.Init();
+    hw.SetAudioBlockSize(4);
     samplerate = hw.AudioSampleRate();
 
     vtime.Init(hw.knob[hw.KNOB_1], 0.6f, 0.999f, Parameter::LOGARITHMIC);

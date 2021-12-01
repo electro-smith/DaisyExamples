@@ -36,6 +36,7 @@ int main(void)
     float sample_rate;
     seed.Configure();
     seed.Init();
+    seed.SetAudioBlockSize(4);
     sample_rate = seed.AudioSampleRate();
     // Initialize Oscillator, and set parameters.
     osc.Init(sample_rate);

@@ -74,6 +74,7 @@ int main(void)
     // components before initialization.
     hardware.Configure();
     hardware.Init();
+    hardware.SetAudioBlockSize(4);
     float samplerate = hardware.AudioSampleRate();
 
     //Initialize oscillator for kickdrum

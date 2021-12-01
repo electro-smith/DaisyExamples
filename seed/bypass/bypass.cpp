@@ -16,6 +16,7 @@ int main(void)
 {
     seed.Configure();
     seed.Init();
+    seed.SetAudioBlockSize(4);
     seed.StartAudio(Callback);
     while(1) {}
 }

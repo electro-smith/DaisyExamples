@@ -72,6 +72,7 @@ int main(void)
     // Init hardware
     size_t blocksize = 48;
     hw.Init();
+    hw.SetAudioBlockSize(4);
     //    hw.ClearLeds();
     SdmmcHandler::Config sd_cfg;
     sd_cfg.Defaults();

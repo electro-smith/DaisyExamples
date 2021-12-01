@@ -35,6 +35,7 @@ int main(void)
 {
     hw.Configure();
     hw.Init();
+    hw.SetAudioBlockSize(4);
     float sample_rate = hw.AudioSampleRate();
 
     res.Init(.015, 24, sample_rate);

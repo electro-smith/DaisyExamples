@@ -75,6 +75,7 @@ int main(void)
     // Init
     float samplerate;
     hw.Init();
+    hw.SetAudioBlockSize(4);
     hw.seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
     System::Delay(250);
 
