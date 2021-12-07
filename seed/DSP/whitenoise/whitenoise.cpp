@@ -4,7 +4,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed  seed;
+static DaisySeed  hw;
 static WhiteNoise nse;
 
 static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
@@ -28,13 +28,13 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 int main(void)
 {
     // initialize seed hardware and WhiteNoise daisysp module
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
     nse.Init();
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
     while(1) {}
 }

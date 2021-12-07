@@ -4,7 +4,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed  seed;
+static DaisySeed  hw;
 static CrossFade  cfade;
 static Oscillator osc_sine, osc_saw, lfo;
 
@@ -39,10 +39,10 @@ int main(void)
 {
     // initialize seed hardware and daisysp modules
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
 
     // set params for CrossFade object
     cfade.Init();
@@ -68,7 +68,7 @@ int main(void)
 
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
     while(1) {}

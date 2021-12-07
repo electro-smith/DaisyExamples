@@ -4,7 +4,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed seed;
+static DaisySeed hw;
 
 ReverbSc   verb;
 Oscillator osc;
@@ -31,10 +31,10 @@ int main(void)
 {
     // initialize seed hardware and whitenoise daisysp module
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
 
     //setup reverb
     verb.Init(sample_rate);
@@ -58,6 +58,6 @@ int main(void)
     osc.SetWaveform(Oscillator::WAVE_TRI);
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
     while(1) {}
 }

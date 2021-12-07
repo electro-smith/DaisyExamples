@@ -3,7 +3,7 @@
 
 using namespace daisy;
 
-DaisySeed seed;
+DaisySeed hw;
 
 static void Callback(AudioHandle::InterleavingInputBuffer  in,
                      AudioHandle::InterleavingOutputBuffer out,
@@ -14,9 +14,8 @@ static void Callback(AudioHandle::InterleavingInputBuffer  in,
 
 int main(void)
 {
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    seed.StartAudio(Callback);
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    hw.StartAudio(Callback);
     while(1) {}
 }

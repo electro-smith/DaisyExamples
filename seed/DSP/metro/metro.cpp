@@ -4,7 +4,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed  seed;
+static DaisySeed  hw;
 static Metro      clock;
 static Oscillator osc_sine;
 
@@ -37,10 +37,10 @@ int main(void)
 {
     // initialize seed hardware and daisysp modules
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
 
     // initialize Metro object at 2 hz
     clock.Init(2, sample_rate);
@@ -53,7 +53,7 @@ int main(void)
 
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
     while(1) {}

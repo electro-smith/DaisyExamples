@@ -4,7 +4,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed  seed;
+static DaisySeed  hw;
 static Oscillator osc1, osc2, lfo;
 static Balance    bal;
 
@@ -33,10 +33,10 @@ int main(void)
 {
     // initialize seed hardware and oscillator daisysp module
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
     osc1.Init(sample_rate);
     osc2.Init(sample_rate);
     lfo.Init(sample_rate);
@@ -60,7 +60,7 @@ int main(void)
 
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
     while(1) {}

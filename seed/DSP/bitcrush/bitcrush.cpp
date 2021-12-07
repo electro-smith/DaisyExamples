@@ -4,7 +4,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed  seed;
+static DaisySeed  hw;
 static Oscillator osc, lfo;
 static Bitcrush   bitcrush;
 static Metro      metro;
@@ -42,10 +42,10 @@ int main(void)
     // initialize seed hardware and oscillator daisysp module
     float sample_rate;
     depth = 1;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
     osc.Init(sample_rate);
     bitcrush.Init(sample_rate);
     metro.Init(1.0f, sample_rate);
@@ -61,7 +61,7 @@ int main(void)
     bitcrush.SetCrushRate(10000);
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
     while(1) {}

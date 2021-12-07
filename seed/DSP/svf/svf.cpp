@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed seed;
+static DaisySeed hw;
 
 Oscillator osc;
 Svf        filt;
@@ -34,10 +34,10 @@ int main(void)
 {
     // initialize seed hardware and Svf daisysp module
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
     // Initialize Oscillator, and set parameters.
     osc.Init(sample_rate);
     osc.SetWaveform(osc.WAVE_POLYBLEP_SAW);
@@ -50,7 +50,7 @@ int main(void)
     filt.SetDrive(0.8);
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
     while(1) {}
 }

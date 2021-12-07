@@ -4,7 +4,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed         seed;
+static DaisySeed         hw;
 static FormantOscillator form[2];
 static Metro             tick;
 static Oscillator        lfo;
@@ -37,10 +37,10 @@ int main(void)
 {
     // initialize seed hardware and oscillator daisysp module
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
 
     form[0].Init(sample_rate);
     form[0].SetCarrierFreq(200.f);
@@ -55,7 +55,7 @@ int main(void)
     tick.Init(1.f, sample_rate);
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
     while(1) {}
 }
