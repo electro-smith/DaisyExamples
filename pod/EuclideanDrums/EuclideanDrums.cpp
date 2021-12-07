@@ -92,6 +92,7 @@ void SetSeq(bool* seq, bool in)
 int main(void)
 {
     hardware.Init();
+    hardware.SetAudioBlockSize(4);
     float samplerate   = hardware.AudioSampleRate();
     float callbackrate = hardware.AudioCallbackRate();
 
@@ -223,7 +224,7 @@ void    UpdateEncoder()
 
 void ConditionalParameter(float o, float n, float& param, float update)
 {
-    if(abs(o - n) > 0.0005)
+    if(abs(o - n) > 0.00005)
     {
         param = update;
     }
@@ -256,12 +257,12 @@ void  UpdateButtons()
 {
     if(hardware.button2.Pressed())
     {
-        tempo += .003;
+        tempo += .0015;
     }
 
     else if(hardware.button1.Pressed())
     {
-        tempo -= .003;
+        tempo -= .0015;
     }
 
     tempo = std::fminf(tempo, 10.f);

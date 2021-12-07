@@ -6,3 +6,6 @@
 	path = DaisySP
 	url = https://github.com/electro-smith/DaisySP
 	branch = master
+[submodule "stmlib"]
+	path = stmlib
+	url = https://github.com/pichenettes/stmlib
