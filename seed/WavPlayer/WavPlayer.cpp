@@ -15,6 +15,7 @@ using namespace daisy;
 //DaisyPatch   hw;
 DaisyPod     hw;
 SdmmcHandler sdcard;
+FatFSInterface fsi;
 WavPlayer    sampler;
 
 void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
@@ -77,7 +78,8 @@ int main(void)
     SdmmcHandler::Config sd_cfg;
     sd_cfg.Defaults();
     sdcard.Init(sd_cfg);
-    sampler.Init();
+    fsi.Init(FatFSInterface::Config::MEDIA_SD);
+    sampler.Init(fsi.GetSDPath());
     sampler.SetLooping(true);
 
     // SET LED to indicate Looping status.
