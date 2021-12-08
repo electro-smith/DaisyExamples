@@ -115,7 +115,7 @@ int TestSdCard()
     int      sta;
     char     inbuff[2048];
     char     refbuff[2048];
-    char    *buff;
+    char *   buff;
     uint32_t len, bytesread;
 
     memset(inbuff, 0, 2048);
