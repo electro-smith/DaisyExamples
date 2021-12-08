@@ -13,10 +13,10 @@
 using namespace daisy;
 
 //DaisyPatch   hw;
-DaisyPod     hw;
-SdmmcHandler sdcard;
+DaisyPod       hw;
+SdmmcHandler   sdcard;
 FatFSInterface fsi;
-WavPlayer    sampler;
+WavPlayer      sampler;
 
 void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                    AudioHandle::InterleavingOutputBuffer out,
