@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-import argparse, glob, os, shutil, codecs, pathlib
+import argparse
+import glob
+import os
+import shutil
+import codecs
+import pathlib
 import subprocess
 
 ################################################################
@@ -12,9 +17,25 @@ usage = {
     'destination': 'Second positional argument to set where the action should be applied. This is the final destination of the project.',
     'source': 'optional argument for selecting the project to copy from. required for the copy operation.',
     'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio, patch_sm',
-    'libs': 'optional argument for specifying the path containing libDaisy and DaisySP. Used with create and update. Default is ./ .'
+    'libs': 'optional argument for specifying the path containing libDaisy and DaisySP. Used with create and update. Default is ./ .',
+    'include_vgdb': 'optional flag for including debug files for Visual Studio and the VisualGDB extension. These are not included by default.'
 }
-supported_boards= ['seed', 'pod', 'patch', 'field', 'petal', 'versio', 'patch_sm']
+supported_boards = ['seed', 'pod', 'patch',
+    'field', 'petal', 'versio', 'patch_sm']
+
+# Dirs to be ignored by update, and other global commands
+global_filter_dirs = ["libDaisy",
+                      "DaisySP",
+                      ".github",
+                      ".vscode",
+                      ".git",
+                      "ci",
+                      "cube",
+                      "dist",
+                      "utils",
+                      "stmlib",
+                      "libdaisy",
+                      "MyProjects"]
 
 ################################################################
 # Helper functions
@@ -63,10 +84,10 @@ def has_extension(fname, ext_list):
 # Called via the 'update' operation
 # Removes old, copies new from template, processes for string replacement
 # only affects .vscode/, vs/ and .sln files.
-def  update_project(destination, libs):
+def update_project(destination, libs, include_vs=False):
     basedir = os.path.abspath(destination)
     root = os.path.dirname(os.path.realpath(__file__))
-    tdir = os.path.sep.join((root,'utils','Template'))
+    tdir = os.path.sep.join((root, 'utils', 'Template'))
     if not os.path.isdir(basedir):
         print('destination should be a directory')
         return
@@ -83,7 +104,9 @@ def  update_project(destination, libs):
             os.remove(f)
     # Copying
     libs = pathlib.Path(libs).as_posix()
-    cp_patts = ['*.sln', '*.vgdbsettings', '.vscode/*', 'vs/*']
+    cp_patts = ['.vscode/*']
+    if include_vs:
+        cp_patts.append('*.sln', '*.vgdbsettings', 'vs/*')
     cplists = list(glob.glob(tdir+os.path.sep+pat) for pat in cp_patts)
     f_to_cp = list(item for sublist in cplists for item in sublist)
     libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
@@ -93,7 +116,8 @@ def  update_project(destination, libs):
         dir_path = os.path.dirname(dname)
         if not os.path.isdir(dir_path):
             os.mkdir(dir_path)
-        print('copying: {} to {}'.format(os.path.relpath(sname), os.path.relpath(dname)))
+        print('copying: {} to {}'.format(
+            os.path.relpath(sname), os.path.relpath(dname)))
         shutil.copyfile(sname, dname)
         rewrite_replace(dname, 'Template', proj_name)
 
@@ -104,7 +128,7 @@ def  update_project(destination, libs):
 # Called via the 'copy' operation
 # copies _all_ files from source directory,
 # deletes old build directories.
-def copy_project(destination, source):
+def copy_project(destination, source, include_vs=False):
     print('copying {} to new project: {}'.format(source, destination))
     srcAbs = os.path.abspath(source)
     srcBase = os.path.basename(srcAbs)
@@ -113,27 +137,34 @@ def copy_project(destination, source):
     # First check if src is valid directory.
     if os.path.isdir(srcAbs):
         # Then make a copy of the folder renaming it to be the same
-        shutil.copytree(srcAbs, destAbs)
+        if include_vs:
+            shutil.copytree(srcAbs, destAbs)
+        else:
+            shutil.copytree(
+                srcAbs, destAbs, ignore = shutil.ignore_patterns('vs', 'Template.sln'))
         # remove build/ and VisualGDB/ if necessary.
-        exclude_dirs = ['build', 'vs/VisualGDB', 'VisualGDB']
-        bdirs =  list(os.path.sep.join((destAbs, exclusion)) for exclusion in exclude_dirs)
+        exclude_dirs=['build', 'vs/VisualGDB', 'VisualGDB']
+        bdirs=list(os.path.sep.join((destAbs, exclusion))
+                   for exclusion in exclude_dirs)
         for d in bdirs:
             if os.path.isdir(d):
                 print('deleting build files: {}', d)
                 shutil.rmtree(d)
         # Go through and rename all the files first.
-        found = glob.glob(destAbs+ os.path.sep + '*' + os.path.sep + srcBase + '*', recursive=True)
-        found += glob.glob(destAbs+ os.path.sep + '*' + srcBase + '*', recursive=True)
+        found=glob.glob(destAbs + os.path.sep + '*' + \
+                        os.path.sep + srcBase + '*', recursive = True)
+        found += glob.glob(destAbs + os.path.sep + '*' + \
+                           srcBase + '*', recursive = True)
         for f in found:
-            s = os.path.abspath(f)
-            d = os.path.abspath(f.replace(srcBase, destBase))
+            s=os.path.abspath(f)
+            d=os.path.abspath(f.replace(srcBase, destBase))
             os.rename(s, d)
-        allFiles = glob.glob(destAbs + os.path.sep + '*', recursive=True)
+        allFiles=glob.glob(destAbs + os.path.sep + '*', recursive = True)
         allFiles += glob.glob(destAbs + os.path.sep + '**' + os.path.sep + '*')
         allFiles += glob.glob(os.path.sep.join((destAbs, '.vscode', '*')))
         # remove unacceptable extensions
-        avoid_exts = ['.ai', '.png']
-        procFiles = list(f for f in allFiles if not has_extension(f, avoid_exts))
+        avoid_exts=['.ai', '.png']
+        procFiles=list(f for f in allFiles if not has_extension(f, avoid_exts))
         # process files with internal text replacement
         for f in procFiles:
             if not os.path.isdir(f) and os.path.exists(f):
@@ -142,34 +173,36 @@ def copy_project(destination, source):
         print("source directory is not valid.")
 
 # Called via the 'create' operation
-def create_from_template(destination, board, libs):
+def create_from_template(destination, board, libs, include_vs = False):
     print("creating new project: {} for platform: {}".format(destination, board))
     # Essentially need to:
     # * run copy_project on template and then rewrite the cpp file..
 
-    libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
-    file_path = pathlib.Path(__file__).as_posix().replace('helper.py', '')
+    libs=pathlib.Path(os.path.relpath(libs, destination)).as_posix()
+    file_path=pathlib.Path(__file__).as_posix().replace('helper.py', '')
 
-    template_dir = os.path.join(file_path, 'utils', 'Template')
-    copy_project(destination, template_dir)
+    template_dir=os.path.join(file_path, 'utils', 'Template')
+    copy_project(destination, template_dir, include_vs)
 
-    libdaisy_dir = libs + "/libdaisy/"
+    libdaisy_dir=libs + "/libdaisy/"
     rec_rewrite_replace(destination, "@LIBDAISY_DIR@", libdaisy_dir)
 
-    daisysp_dir = libs + "/DaisySP/"
+    daisysp_dir=libs + "/DaisySP/"
     rec_rewrite_replace(destination, "@DAISYSP_DIR@", daisysp_dir)
 
-    src_file = pathlib.Path(destination + os.path.sep + os.path.basename(destination) + '.cpp')
+    src_file=pathlib.Path(destination + os.path.sep + \
+                          os.path.basename(destination) + '.cpp')
     # Copy resources/diagram files (if available)
-    dfiles = glob.glob(os.path.sep.join(('resources', '*')))
+    dfiles=glob.glob(os.path.sep.join(('resources', '*')))
     dfiles += glob.glob(os.path.sep.join(('resources', '**', '*')))
-    dfiles = list(f for f in dfiles if board in f)
+    dfiles=list(f for f in dfiles if board in f)
     if len(dfiles) > 0:
-        dsrc = list(os.path.abspath(f) for f in dfiles)
-        ddest = list(os.path.abspath(os.path.sep.join((destination,f))) for f in dfiles)
+        dsrc=list(os.path.abspath(f) for f in dfiles)
+        ddest=list(os.path.abspath(os.path.sep.join((destination, f)))
+                   for f in dfiles)
         # Make resources/ and resources/png/
-        os.mkdir(os.path.sep.join((destination,'resources')))
-        os.mkdir(os.path.sep.join((destination,'resources', 'png')))
+        os.mkdir(os.path.sep.join((destination, 'resources')))
+        os.mkdir(os.path.sep.join((destination, 'resources', 'png')))
         for s, d in zip(dsrc, ddest):
             shutil.copy(s, d)
 
@@ -177,17 +210,15 @@ def create_from_template(destination, board, libs):
     # - seed: needs hw.Configure() before init. No hw.UpdateAllControls()
     # - patch: four channels instead of two in audio callback.
     if board == 'seed':
-        need_configure = True
-        controls = False
+        controls=False
     else:
-        need_configure = False
-        controls = True
+        controls=True
     if board == 'patch':
-        audio_channels = 4
+        audio_channels=4
     else:
-        audio_channels  = 2
+        audio_channels=2
 
-    board_class_names = {
+    board_class_names={
         'seed': "DaisySeed",
         'field': "DaisyField",
         'pod': "DaisyPod",
@@ -221,8 +252,6 @@ def create_from_template(destination, board, libs):
         f.write('}\n\n') # extra line  before main
         f.write('int main(void)\n')
         f.write('{\n')
-        if need_configure:
-            f.write('\thw.Configure();\n')
         f.write('\thw.Init();\n')
         if board != "seed" and board != "patch_sm":
             f.write('\thw.StartAdc();\n')
@@ -264,6 +293,7 @@ def run():
     parser.add_argument('-s', '--source', help=usage.get('source'))
     parser.add_argument('-b', '--board', help=usage.get('board'), default='seed', choices=supported_boards)
     parser.add_argument('-l', '--libs', help=usage.get('libs'), default='.')
+    parser.add_argument('--include_vgdb', help=usage.get('include_vgdb'),  action='store_true')
     args = parser.parse_args()
     op = args.operation.casefold()
     if op == 'create':
@@ -271,24 +301,28 @@ def run():
         brd = args.board
         dest = args.destination
         libs = args.libs
-        create_from_template(dest, brd, libs)
+        create_from_template(dest, brd, libs, args.include_vgdb)
     elif op == 'copy':
         # copy from source to dest
         src = args.source
         dest = args.destination
-        copy_project(dest, src)
+        copy_project(dest, src, args.include_vgdb)
     elif op == 'update':
         if args.destination:
             dest = args.destination
             libs = args.libs
-            update_project(dest, libs)
+            update_project(dest, libs, args.include_vgdb)
         else:
-            for brd_dir in supported_boards:
-                brd_ex = list(os.path.sep.join((brd_dir, d)) for d in os.listdir(brd_dir) if 'experimental' not in d.casefold())
-                brd_ex = list(d for d in brd_ex if os.path.isdir(d))
-                for ex in brd_ex:
+            dirs_to_search = list(
+                filter(lambda x: x not in global_filter_dirs and os.path.isdir(x), os.listdir('.')))
+            for dir in dirs_to_search: 
+                example_dirs = []
+                for root, dirs, files in os.walk(dir):
+                    if 'Makefile' in files:
+                        example_dirs.append(root)
+                for ex in example_dirs:
                     try:
-                        update_project(ex)
+                        update_project(ex, args.libs, args.include_vgdb)
                     except Exception as e:
                         print('Unable to update example: {}'.format(ex))
                         print(e)
