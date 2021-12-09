@@ -8,7 +8,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed  seed;
+static DaisySeed  hw;
 static AdEnv      env;
 static Oscillator osc;
 static Maytrig    maytrig;
@@ -45,10 +45,10 @@ int main(void)
 {
     // initialize seed hardware and daisysp modules
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
     env.Init(sample_rate);
     osc.Init(sample_rate);
     tick.Init(1, sample_rate);
@@ -66,7 +66,7 @@ int main(void)
     osc.SetAmp(0.25);
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
     while(1) {}

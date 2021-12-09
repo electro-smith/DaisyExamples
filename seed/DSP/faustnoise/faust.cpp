@@ -223,7 +223,7 @@ mydsp DSP;
 
 #define MY_BUFFER_SIZE 8
 
-static daisy::DaisySeed seed;
+static daisy::DaisySeed hw;
 
 static void AudioCallback(daisy::AudioHandle::InterleavingInputBuffer  in,
                           daisy::AudioHandle::InterleavingOutputBuffer out,
@@ -251,13 +251,13 @@ int main(void)
 {
     // initialize seed hardware and daisysp modules
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
 
     // set buffer-size
-    seed.SetAudioBlockSize(MY_BUFFER_SIZE);
+    hw.SetAudioBlockSize(MY_BUFFER_SIZE);
 
     // allocate deinterleaved buffers
     finputs[0] = new FAUSTFLOAT[MY_BUFFER_SIZE];
@@ -275,7 +275,7 @@ int main(void)
 
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
 #ifdef MIDICTRL

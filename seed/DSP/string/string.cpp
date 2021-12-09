@@ -5,7 +5,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed seed;
+static DaisySeed hw;
 
 // Helper Modules
 static Metro      tick;
@@ -51,10 +51,10 @@ int main(void)
 {
     // initialize seed hardware and daisysp modules
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
 
     // Set up Metro to pulse every second
     tick.Init(2.0f, sample_rate);
@@ -73,7 +73,7 @@ int main(void)
     arp_idx = 0;
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
     while(1) {}

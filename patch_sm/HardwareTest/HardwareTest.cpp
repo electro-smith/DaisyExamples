@@ -5,9 +5,10 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM hw;
-Switch       button, toggle;
-FIL          file; /**< Can't be made on the stack (DTCMRAM) */
+DaisyPatchSM   hw;
+Switch         button, toggle;
+FIL            file; /**< Can't be made on the stack (DTCMRAM) */
+FatFSInterface fsi;
 
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
@@ -40,13 +41,15 @@ int main(void)
     SdmmcHandler         sdcard;
     sd_config.Defaults();
     sdcard.Init(sd_config);
-    dsy_fatfs_init();
+
+    fsi.Init(FatFSInterface::Config::MEDIA_SD);
+
 
     /** Write/Read text file */
     const char *test_string = "Testing Daisy Patch SM";
     const char *test_fname  = "DaisyPatchSM-Test.txt";
     FRESULT     fres = FR_DENIED; /**< Unlikely to actually experience this */
-    if(f_mount(&SDFatFS, "/", 0) == FR_OK)
+    if(f_mount(&fsi.GetSDFileSystem(), "/", 0) == FR_OK)
     {
         /** Write Test */
         if(f_open(&file, test_fname, (FA_CREATE_ALWAYS | FA_WRITE)) == FR_OK)

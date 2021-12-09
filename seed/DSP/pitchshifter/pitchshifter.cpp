@@ -13,7 +13,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-DaisySeed    seed;
+DaisySeed    hw;
 PitchShifter ps;
 Oscillator   osc;
 
@@ -35,10 +35,10 @@ int main(void)
 {
     // initialize seed hardware and daisysp modules
     float sample_rate;
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    sample_rate = seed.AudioSampleRate();
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    sample_rate = hw.AudioSampleRate();
 
     ps.Init(sample_rate);
     // set transposition 1 octave up (12 semitones)
@@ -50,7 +50,7 @@ int main(void)
     osc.SetWaveform(Oscillator::WAVE_TRI);
 
     // start callback
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
 
     while(1) {}

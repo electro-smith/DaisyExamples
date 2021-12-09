@@ -9,7 +9,7 @@
 using namespace daisysp;
 using namespace daisy;
 
-static DaisySeed                  seed;
+static DaisySeed                  hw;
 static Oscillator                 lfo;
 static WhiteNoise                 osc;
 static FIR<FIRFILTER_USER_MEMORY> flt;
@@ -103,14 +103,14 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 int main(void)
 {
     /* initialize seed hardware and daisysp modules */
-    seed.Configure();
-    seed.Init();
-    seed.SetAudioBlockSize(4);
-    seed.StartLog(false);
+    hw.Configure();
+    hw.Init();
+    hw.SetAudioBlockSize(4);
+    hw.StartLog(false);
 
     /* calculate callback and update rates */
-    const int      callback_rate = (int)seed.AudioCallbackRate();
-    const uint32_t tick_rate     = seed.system.GetPClk1Freq() * 2;
+    const int      callback_rate = (int)hw.AudioCallbackRate();
+    const uint32_t tick_rate     = hw.system.GetPClk1Freq() * 2;
     const uint32_t update_period = tick_rate / upd_rate_hz;
 
     /** initialize FIR filter and set parameters 
@@ -134,9 +134,9 @@ int main(void)
     osc.SetAmp(0.5f);
 
     /* start audio callback */
-    seed.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
-    uint32_t next_update = seed.system.GetTick();
+    uint32_t next_update = hw.system.GetTick();
     while(1)
     {
         /* cut-off frequency oscillates between 0.01f and 0.31f */
@@ -149,14 +149,14 @@ int main(void)
         {
             const float rate
                 = (float)update_count * callback_rate / callback_count;
-            seed.PrintLine("Average = " FLT_FMT3 "upd/sec", FLT_VAR3(rate));
+            hw.PrintLine("Average = " FLT_FMT3 "upd/sec", FLT_VAR3(rate));
         }
 
         /** delay to roughly maintain the requested update rate 
          * Note: this is better than using Delay* functions, 
          * because the error doesn't accumulate 
          */
-        while(next_update - seed.system.GetTick() < update_period) {}
+        while(next_update - hw.system.GetTick() < update_period) {}
         next_update += update_period;
     }
 }
