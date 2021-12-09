@@ -322,7 +322,7 @@ def run():
                         example_dirs.append(root)
                 for ex in example_dirs:
                     try:
-                        update_project(ex, args.include_vgdb)
+                        update_project(ex, include_vs=args.include_vgdb)
                     except Exception as e:
                         print('Unable to update example: {}'.format(ex))
                         print(e)
