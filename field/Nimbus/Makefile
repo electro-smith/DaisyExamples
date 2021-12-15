@@ -12,7 +12,7 @@ dsp/pvoc/stft.cpp \
 resources.cpp \
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 #C_SOURCES += \

@@ -5,7 +5,7 @@ TARGET = tone
 CPP_SOURCES = tone.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
+LIBDAISY_DIR ?= ../../../libDaisy
 DAISYSP_DIR ?= ../../../DaisySP
 
 # Core location, and generic Makefile.

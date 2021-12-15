@@ -5,7 +5,7 @@ TARGET = WavPlayer
 CPP_SOURCES = WavPlayer.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 # Includes FatFS source files within project.

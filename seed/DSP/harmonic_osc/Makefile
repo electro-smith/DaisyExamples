@@ -5,7 +5,7 @@ TARGET = harmonic_osc
 CPP_SOURCES = harmonic_osc.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../libdaisy
+LIBDAISY_DIR = ../../../libDaisy
 DAISYSP_DIR = ../../../DaisySP
 
 # Core location, and generic Makefile.

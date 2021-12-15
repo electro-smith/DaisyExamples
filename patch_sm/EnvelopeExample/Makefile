@@ -5,7 +5,7 @@ TARGET = EnvelopeExample
 CPP_SOURCES = EnvelopeExample.cpp \
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy/
+LIBDAISY_DIR = ../../libDaisy/
 DAISYSP_DIR = ../../DaisySP/
 
 # Core location, and generic Makefile.

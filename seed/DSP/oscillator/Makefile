@@ -5,7 +5,7 @@ TARGET = oscillator
 CPP_SOURCES = oscillator.cpp
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
+LIBDAISY_DIR ?= ../../../libDaisy
 DAISYSP_DIR ?= ../../../DaisySP
 
 # Core location, and generic Makefile.

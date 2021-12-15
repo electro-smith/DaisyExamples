@@ -5,7 +5,7 @@ TARGET = GeneralFunctionTest
 CPP_SOURCES = GeneralFunctionTest.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 # Includes FatFS source files within project.

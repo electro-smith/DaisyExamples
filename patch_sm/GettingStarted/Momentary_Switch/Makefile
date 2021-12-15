@@ -5,7 +5,7 @@ TARGET = Momentary_Switch
 CPP_SOURCES = Momentary_Switch.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../libdaisy/
+LIBDAISY_DIR = ../../../libDaisy/
 DAISYSP_DIR = ../../../DaisySP/
 
 # Core location, and generic Makefile.

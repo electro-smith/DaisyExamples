@@ -7,7 +7,7 @@ CPP_SOURCES = Decimator.cpp
 #DEBUG=1
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 # Core location, and generic Makefile.

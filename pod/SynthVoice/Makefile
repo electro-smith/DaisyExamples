@@ -5,7 +5,7 @@ TARGET = ex_SynthVoice
 CPP_SOURCES = SynthVoice.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 # Core location, and generic makefile.

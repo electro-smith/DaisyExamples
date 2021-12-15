@@ -2,7 +2,7 @@
 TARGET = fir
 
 # Library Locations
-LIBDAISY_DIR ?= ../../../libdaisy
+LIBDAISY_DIR ?= ../../../libDaisy
 DAISYSP_DIR ?= ../../../DaisySP
 CMSIS_DIR ?= $(LIBDAISY_DIR)/Drivers/CMSIS
 

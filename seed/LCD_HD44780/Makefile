@@ -5,7 +5,7 @@ TARGET = lcd_hd44780
 CPP_SOURCES = lcd_hd44780.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 # Core location, and generic makefile.

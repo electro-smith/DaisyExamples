@@ -5,7 +5,7 @@ TARGET = Logger
 CPP_SOURCES = Logger.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 # Linker flags
