@@ -1,7 +1,7 @@
 #!/bin/bash
 
 START_DIR=$PWD
-LIBDAISY_DIR=$PWD/libdaisy
+LIBDAISY_DIR=$PWD/libDaisy
 DAISYSP_DIR=$PWD/DaisySP
 
 echo "building libDaisy . . ."

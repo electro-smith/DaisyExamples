@@ -5,7 +5,7 @@ TARGET = modalvoice
 CPP_SOURCES = modalvoice.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../libdaisy
+LIBDAISY_DIR = ../../../libDaisy
 DAISYSP_DIR = ../../../DaisySP
 
 # Core location, and generic Makefile.

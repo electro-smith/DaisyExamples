@@ -5,7 +5,7 @@ TARGET = Gate_Output
 CPP_SOURCES = Gate_Output.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../libdaisy/
+LIBDAISY_DIR = ../../../libDaisy/
 DAISYSP_DIR = ../../../DaisySP/
 
 # Core location, and generic Makefile.

@@ -5,7 +5,7 @@ TARGET = Knob
 CPP_SOURCES = Knob.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
 
 # Core location, and generic makefile.

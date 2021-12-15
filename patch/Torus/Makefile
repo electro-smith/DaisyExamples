@@ -2,7 +2,7 @@
 TARGET = torus
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy
+LIBDAISY_DIR = ../../libDaisy
 STMLIB_DIR = ../../stmlib
 
 # Sources

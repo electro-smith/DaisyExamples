@@ -5,7 +5,7 @@ TARGET = ReverbExample
 CPP_SOURCES = ReverbExample.cpp \
 
 # Library Locations
-LIBDAISY_DIR = ../../libdaisy/
+LIBDAISY_DIR = ../../libDaisy/
 DAISYSP_DIR = ../../DaisySP/
 
 

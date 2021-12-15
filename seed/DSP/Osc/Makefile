@@ -5,7 +5,7 @@ TARGET = Osc
 CPP_SOURCES = Osc.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../libdaisy
+LIBDAISY_DIR = ../../../libDaisy
 DAISYSP_DIR = ../../../DaisySP
 
 # Core location, and generic makefile.
