@@ -106,7 +106,7 @@ def update_project(destination, libs, include_vs=False):
     libs = pathlib.Path(libs).as_posix()
     cp_patts = ['.vscode/*']
     if include_vs:
-        cp_patts.append('*.sln', '*.vgdbsettings', 'vs/*')
+        cp_patts.extend(['*.sln', '*.vgdbsettings', 'vs/*'])
     cplists = list(glob.glob(tdir+os.path.sep+pat) for pat in cp_patts)
     f_to_cp = list(item for sublist in cplists for item in sublist)
     libs = pathlib.Path(os.path.relpath(libs, destination)).as_posix()
@@ -114,11 +114,14 @@ def update_project(destination, libs, include_vs=False):
         sname = os.path.abspath(f)
         dname = os.path.abspath(sname.replace(tdir, basedir)).replace('Template', proj_name)
         dir_path = os.path.dirname(dname)
-        if not os.path.isdir(dir_path):
-            os.mkdir(dir_path)
         print('copying: {} to {}'.format(
             os.path.relpath(sname), os.path.relpath(dname)))
-        shutil.copyfile(sname, dname)
+        if not os.path.isdir(dir_path):
+            os.mkdir(dir_path)
+        if os.path.isdir(sname):
+            shutil.copytree(sname, dname)
+        else:
+            shutil.copyfile(sname, dname)
         rewrite_replace(dname, 'Template', proj_name)
 
         rewrite_replace(dname, '@LIBDAISY_DIR@', libs + '/libDaisy')
