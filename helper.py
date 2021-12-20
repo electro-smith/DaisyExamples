@@ -143,7 +143,7 @@ def copy_project(destination, source, include_vs=False):
     if os.path.isdir(srcAbs):
         # Then make a copy of the folder renaming it to be the same
         if include_vs:
-            shutil.copytree(srcAbs, destAbs)
+            shutil.copytree(srcAbs, destAbs, ignore = shutil.ignore_patterns('VisualGDB'))
         else:
             shutil.copytree(
                 srcAbs, destAbs, ignore = shutil.ignore_patterns('vs', 'Template.sln'))
