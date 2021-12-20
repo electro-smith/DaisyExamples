@@ -101,7 +101,10 @@ def update_project(destination, libs, include_vs=False):
     if len(f_to_rm) > 0:
         for f in f_to_rm:
             print('deleting: {}'.format(os.path.relpath(f)))
-            os.remove(f)
+            if os.path.isdir(f):
+                shutil.rmtree(f)
+            else:
+                os.remove(f)
     # Copying
     libs = pathlib.Path(libs).as_posix()
     cp_patts = ['.vscode/*']
@@ -122,10 +125,9 @@ def update_project(destination, libs, include_vs=False):
             shutil.copytree(sname, dname)
         else:
             shutil.copyfile(sname, dname)
-        rewrite_replace(dname, 'Template', proj_name)
-
-        rewrite_replace(dname, '@LIBDAISY_DIR@', libs + '/libDaisy')
-        rewrite_replace(dname, '@DAISYSP_DIR@', libs + '/DaisySP')
+            rewrite_replace(dname, 'Template', proj_name)
+            rewrite_replace(dname, '@LIBDAISY_DIR@', libs + '/libDaisy')
+            rewrite_replace(dname, '@DAISYSP_DIR@', libs + '/DaisySP')
 
 
 # Called via the 'copy' operation
