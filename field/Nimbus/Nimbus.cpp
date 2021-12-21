@@ -227,7 +227,7 @@ class ParamControl
         }
         else
         {
-            //Ignore the knob setting if parameter is mapped to a CV since param_val will be set by the CV 
+            //Ignore the knob setting if parameter is mapped to a CV since param_val will be set by the CV
             //TODO: Use the knob as an offset to the incoming CV value
             val = param_val_;
         }
@@ -889,8 +889,10 @@ void ProcessParams(bool auto_page_change = true)
 {
     for(int i = NUM_PARAMS - 1; i >= 0; i--)
     {
-        if((is_shifted && (param_controls[i].IsShifted() || !param_controls[i].HasAlternate())) ||
-           (!is_shifted && !param_controls[i].IsShifted()))
+        if((is_shifted
+            && (param_controls[i].IsShifted()
+                || !param_controls[i].HasAlternate()))
+           || (!is_shifted && !param_controls[i].IsShifted()))
         {
             ProcessParam(param_controls[i], auto_page_change);
         }
