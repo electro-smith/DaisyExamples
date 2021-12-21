@@ -16,7 +16,8 @@
 #define NUM_PARAMS 9
 #define NUM_PAGES 10
 
-#define KNOB_TOLERANCE .001f
+#define KNOB_CHANGE_TOLERANCE .001f
+#define KNOB_CATCH_TOLERANCE .075f
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 60
@@ -54,9 +55,9 @@ enum DISPLAY_PAGE
     PARAMETERS7TO9,
     BUTTONS1,
     BUTTONS2,
-    CVMAPPINGS2,
-    CVMAPPINGS3,
-    CVMAPPINGS4,
+    CV_MAPPINGS2,
+    CV_MAPPINGS3,
+    CV_MAPPINGS4,
     SCOPE,
 };
 
@@ -122,6 +123,19 @@ enum MAPPABLE_CVS
     CV4,
 };
 
+inline float Constrain(float var, float min, float max)
+{
+    if(var < min)
+    {
+        var = min;
+    }
+    else if(var > max)
+    {
+        var = max;
+    }
+    return var;
+}
+
 class ParamControl
 {
   public:
@@ -133,6 +147,7 @@ class ParamControl
               AnalogControl* knob,
               int            led,
               bool           shifted,
+              bool           has_alternate,
               Parameters*    params,
               int            param_num,
               DISPLAY_PAGE   display_page,
@@ -143,9 +158,10 @@ class ParamControl
         knob_             = knob;
         led_              = led;
         shifted_          = shifted;
+        has_alternate_    = has_alternate;
         params_           = params;
         param_num_        = param_num;
-        param_val_        = ControlChange(0.f);
+        param_val_        = 0.5f;
         display_page_     = display_page;
         mapped_cv_        = mapped_cv;
         knob_val_         = 0.f;
@@ -154,13 +170,17 @@ class ParamControl
 
     bool HasParamChanged() { return param_val_changed_; }
     bool HasKnobChanged() { return knob_val_changed_; }
+    bool HasAlternate() { return has_alternate_; }
 
-    bool ControlChange(float newval)
+    bool ControlChange(float newval, bool catch_val = true)
     {
-        bool ret   = fabsf(newval - param_val_) > KNOB_TOLERANCE;
-        param_val_ = newval;
+        auto delta = fabsf(newval - param_val_);
+        auto ret
+            = delta > KNOB_CHANGE_TOLERANCE && delta < KNOB_CATCH_TOLERANCE;
+
         if(ret)
         {
+            param_val_         = newval;
             param_val_changed_ = true;
 
 #ifdef SHOW_KNOB_VALUES
@@ -191,9 +211,10 @@ class ParamControl
     {
         float val;
 
-        float new_knob_val = knob_->Process();
-        knob_val_changed_  = fabsf(new_knob_val - knob_val_) > KNOB_TOLERANCE;
-        knob_val_          = new_knob_val;
+        auto new_knob_val = knob_->Process();
+        knob_val_changed_
+            = fabsf(new_knob_val - knob_val_) > KNOB_CHANGE_TOLERANCE;
+        knob_val_ = new_knob_val;
 
         if(mapped_cv_ == NONE)
         {
@@ -206,7 +227,8 @@ class ParamControl
         }
         else
         {
-            //Ignore the knob setting if parameter is mapped to a CV since param_val will be set by the CV
+            //Ignore the knob setting if parameter is mapped to a CV since param_val will be set by the CV 
+            //TODO: Use the knob as an offset to the incoming CV value
             val = param_val_;
         }
 
@@ -233,6 +255,7 @@ class ParamControl
     AnalogControl* knob_;
     int            led_;
     bool           shifted_;
+    bool           has_alternate_;
     Parameters*    params_;
     int            param_num_;
     float          param_val_;
@@ -268,8 +291,8 @@ float scope_buffer[AUDIO_BLOCK_SIZE] = {0.f};
 uint32_t last_freeze_cv_update;
 
 void Controls();
-void UpdateLeds();
-void UpdateOled();
+void UpdateLEDs();
+void UpdateOLED();
 void ProcessButtons();
 
 int Mod(int n, int m)
@@ -314,6 +337,7 @@ void InitParams()
                            &field.knob[0],
                            DaisyField::LED_KNOB_1,
                            false,
+                           false,
                            parameters,
                            0,
                            DISPLAY_PAGE::PARAMETERS1TO3);
@@ -322,6 +346,7 @@ void InitParams()
                            "Sz",
                            &field.knob[1],
                            DaisyField::LED_KNOB_2,
+                           false,
                            false,
                            parameters,
                            1,
@@ -332,6 +357,7 @@ void InitParams()
                            &field.knob[2],
                            DaisyField::LED_KNOB_3,
                            false,
+                           false,
                            parameters,
                            2,
                            DISPLAY_PAGE::PARAMETERS1TO3);
@@ -340,6 +366,7 @@ void InitParams()
                            "Dn",
                            &field.knob[3],
                            DaisyField::LED_KNOB_4,
+                           false,
                            false,
                            parameters,
                            3,
@@ -350,6 +377,7 @@ void InitParams()
                            &field.knob[4],
                            DaisyField::LED_KNOB_5,
                            false,
+                           false,
                            parameters,
                            4,
                            DISPLAY_PAGE::PARAMETERS4TO6);
@@ -358,6 +386,7 @@ void InitParams()
                            "DW",
                            &field.knob[5],
                            DaisyField::LED_KNOB_6,
+                           false,
                            false,
                            parameters,
                            5,
@@ -368,6 +397,7 @@ void InitParams()
                            &field.knob[6],
                            DaisyField::LED_KNOB_7,
                            false,
+                           false,
                            parameters,
                            6,
                            DISPLAY_PAGE::PARAMETERS7TO9);
@@ -377,6 +407,7 @@ void InitParams()
                            &field.knob[7],
                            DaisyField::LED_KNOB_8,
                            false,
+                           true,
                            parameters,
                            7,
                            DISPLAY_PAGE::PARAMETERS7TO9);
@@ -385,6 +416,7 @@ void InitParams()
                            "Rv",
                            &field.knob[7],
                            DaisyField::LED_KNOB_8,
+                           true,
                            true,
                            parameters,
                            8,
@@ -420,7 +452,7 @@ int main(void)
     }
 
     current_display_page = SPLASH;
-    UpdateOled();
+    UpdateOLED();
 
     //Delay for a second to show the splash screen
     System::Delay(1000);
@@ -437,8 +469,8 @@ int main(void)
             = Mod(oled_led_update_gate + 1, OLED_LED_UPDATE_DELAY);
         if(oled_led_update_gate == OLED_LED_UPDATE_DELAY - 1)
         {
-            UpdateLeds();
-            UpdateOled();
+            UpdateLEDs();
+            UpdateOLED();
         }
 
         //And we probably dont need to call Prepare so often so we can sleep a bit
@@ -671,7 +703,7 @@ inline void RenderScope()
     }
 }
 
-void UpdateOled()
+void UpdateOLED()
 {
     field.display.Fill(false);
 
@@ -711,17 +743,17 @@ void UpdateOled()
             RenderButtons2();
             break;
 
-        case CVMAPPINGS2:
+        case CV_MAPPINGS2:
             field.display.WriteString("CV2 Mappings", DEFAULT_FONT, true);
             RenderCVMappings(CV2);
             break;
 
-        case CVMAPPINGS3:
+        case CV_MAPPINGS3:
             field.display.WriteString("CV3 Mappings", DEFAULT_FONT, true);
             RenderCVMappings(CV3);
             break;
 
-        case CVMAPPINGS4:
+        case CV_MAPPINGS4:
             field.display.WriteString("CV4 Mappings", DEFAULT_FONT, true);
             RenderCVMappings(CV4);
             break;
@@ -738,7 +770,7 @@ void UpdateOled()
     field.display.Update();
 }
 
-void UpdateLeds()
+void UpdateLEDs()
 {
     for(int i = 0; i < 8; i++)
     {
@@ -815,7 +847,7 @@ void ProcessParam(ParamControl& pc, bool auto_page_change)
     switch(current_device_state)
     {
         case RUNNING:
-            if(pc.HasParamChanged())
+            if(pc.HasKnobChanged())
             {
                 //If control is mapped to CV then don't change the page when its value is changed
                 if(pc.GetMappedCV() == NONE && auto_page_change)
@@ -857,8 +889,8 @@ void ProcessParams(bool auto_page_change = true)
 {
     for(int i = NUM_PARAMS - 1; i >= 0; i--)
     {
-        if((is_shifted && param_controls[i].IsShifted())
-           || (!is_shifted && !param_controls[i].IsShifted()))
+        if((is_shifted && (param_controls[i].IsShifted() || !param_controls[i].HasAlternate())) ||
+           (!is_shifted && !param_controls[i].IsShifted()))
         {
             ProcessParam(param_controls[i], auto_page_change);
         }
@@ -919,27 +951,27 @@ void ProcessButtons()
     {
         is_frozen_by_button = !is_frozen_by_button;
         processor.ToggleFreeze();
-        current_display_page = BUTTONS2;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.KeyboardRisingEdge(BUTTON_SILENCE))
     {
         is_silenced = !is_silenced;
         processor.set_silence(is_silenced);
-        current_display_page = BUTTONS2;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.KeyboardRisingEdge(BUTTON_BYPASS))
     {
         is_bypassed = !is_bypassed;
         processor.set_bypass(is_bypassed);
-        current_display_page = BUTTONS2;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.KeyboardRisingEdge(BUTTON_SHIFT))
     {
-        is_shifted           = !is_shifted;
-        current_display_page = BUTTONS2;
+        is_shifted = !is_shifted;
+        //current_display_page = BUTTONS2;
     }
 
     if(field.sw[0].RisingEdge())
@@ -959,7 +991,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV2;
         can_map[CV2]         = true;
-        current_display_page = CVMAPPINGS2;
+        current_display_page = CV_MAPPINGS2;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_2))
@@ -973,7 +1005,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV3;
         can_map[CV3]         = true;
-        current_display_page = CVMAPPINGS3;
+        current_display_page = CV_MAPPINGS3;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_3))
@@ -987,7 +1019,7 @@ void ProcessButtons()
         current_device_state = CV_MAPPING;
         currently_mapping_cv = CV4;
         can_map[CV4]         = true;
-        current_display_page = CVMAPPINGS4;
+        current_display_page = CV_MAPPINGS4;
     }
 
     if(field.KeyboardFallingEdge(BUTTON_MAP_CV_4))
@@ -1044,7 +1076,8 @@ void ProcessGatesTriggersCv()
         if(param_controls[i].GetMappedCV() != NONE)
         {
             float cv_value = field.GetCvValue(param_controls[i].GetMappedCV());
-            param_controls[i].ControlChange(cv_value);
+            float clamped_cv_value = Constrain(cv_value, 0.0f, 1.0f);
+            param_controls[i].ControlChange(clamped_cv_value);
             param_controls[i].Process();
         }
     }
