@@ -22,5 +22,5 @@ Of course, you can also use the knobs to set the inputs high or low without CV.
 | Encoder | Menu Navigation | Turn to navigate, press to invert or enter submenus. |
 | CV Out 1 - 2 | Logic Outs | Output of logic gates 1 and 2 respectively |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/logic/resources/logic.png" alt="logic.png" style="width: 100%;"/>
+
+

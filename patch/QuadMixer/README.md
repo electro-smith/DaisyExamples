@@ -18,5 +18,5 @@ Simple Four Channel Audio Mixer.
 | Ins | Audio Inputs | Audio inputs are normalled In1 > In2 > In3 > In4 |
 | Outs | Audio Outputs | The mixed signal is available on all 4 outputs |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadMixer/resources/QuadMixer.png" alt="QuadMixer.png" style="width: 100%;"/>
+
+

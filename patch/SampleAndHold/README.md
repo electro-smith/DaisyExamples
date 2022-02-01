@@ -20,5 +20,5 @@ Track and Hold will continue tracking, or updating, as long as the gate is held 
 | Encoder | Menu Control | Turn to cycle through menu, click to change modes. |
 | CV Outs | S&H / T&H Out | Also also coorespond to circuits one and two |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SampleAndHold/resources/SampleAndHold.png" alt="SampleAndHold.png" style="width: 100%;"/>
+
+

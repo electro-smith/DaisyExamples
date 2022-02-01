@@ -25,9 +25,9 @@ Simple effects for incoming audio. Includes reverb, delay, downsampling, and aut
 | Audio In | Effects In | |
 | Audio Out | Effects Out | |
 
-## Diagram
 
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/MultiEffect/resources/Petal_MultiEffect_Diagram.png" alt="MultiDelay.png" style="width: 100%;"/>
+
+
 
 
 ## Sound Demo

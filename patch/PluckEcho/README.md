@@ -20,5 +20,5 @@ Really easy to create unique sonic spaces!
 | Gate In 1 | Trigger In | Plucks the string |
 | Outs 1-2 | Stereo Outputs | Out 1:L, Out 2: R |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/PluckEcho/resources/PluckEcho.png" alt="PluckEcho.png" style="width: 100%;"/>
+
+

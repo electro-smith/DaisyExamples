@@ -46,8 +46,8 @@ When a step is activated, its envelope will cycle. Listen for pitch and envelope
 | Knob 1 | Tempo | |
 | Knob 2 | Filter cutoff |  |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/StepSequencer/resources/StepSequencer.png" alt="StepSequencer.png" style="width: 100%;"/>
+
+
 
 
 

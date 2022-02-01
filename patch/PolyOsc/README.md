@@ -19,5 +19,5 @@ Three oscillators in one package! Make evolving chords, and shift them around!
 | Audio Out 1 - 3 | Oscillator Input | Outputs for individual oscillators |
 | Audio Out 4 | Mix output | Listen to all 3 oscillators | 
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/PolyOsc/resources/PolyOsc.png" alt="PolyOsc.png" style="width: 100%;"/>
+
+

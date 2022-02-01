@@ -21,8 +21,8 @@ State variable filter with simultaneous low pass, high pass, band pass, and notc
 | Audio Out 3 | Band Pass Out | Passes frequencies in a band, centered around cutoff |
 | Audio Out 4 | Notch Out | Rejects a band of frequencies, centered around cutoff |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Svf/resources/Svf.png" alt="Svf.png" style="width: 100%;"/>
+
+
 
 
 

@@ -23,8 +23,8 @@ Simple effects for incoming audio. Includes reverb, delay, and downsampling.
 | Knob 1 | Dry/wet | Delay time | LPF cutoff |
 | Knob 2 | Reverb time | Feedback | Downsample |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/MultiEffect/resources/MultiEffect.png" alt="MultiEffect.png" style="width: 100%;"/>
+
+
 
 
 

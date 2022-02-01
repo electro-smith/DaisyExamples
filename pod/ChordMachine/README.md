@@ -31,6 +31,6 @@ A simple sine wave chord machine. Cycle through different chord types and invers
   9. Diminished seven, Pink
   10. Half diminished seven, Light green
   
-## Diagram
 
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/ChordMachine/resources/ChordMachine.png" alt="ChordMachine.png" style="width: 100%;"/>
+
+

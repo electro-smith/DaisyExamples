@@ -21,9 +21,6 @@ All controls have some effect on the LEDs
 | Knob 2 | Bitcrush factor (right) |
 | Knob 3 | Downsample factor (right) |
 
-## Diagram
-
-TODO: Add Diagram
 
 ## Demo 
 

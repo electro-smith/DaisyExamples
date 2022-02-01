@@ -22,6 +22,6 @@ Both standard and bandlimited waveforms are accessible.
 | Ctrl4 | Amplitude |  |
 | Audio Outs | Oscillator Out | Available on all outputs |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/vco/resources/vco.png" alt="vco.png" style="width: 100%;"/>
+
+
 
