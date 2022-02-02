@@ -23,7 +23,7 @@ Set the dry/wet amount of this final mix with the encoder.
 | Audio In 1 | Audio input | |
 | Audio Out 1 - 2 | Mix Out | |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/MultiDelay/resources/MultiDelay.png" alt="MultiDelay.png" style="width: 100%;"/>
+
+
 
 

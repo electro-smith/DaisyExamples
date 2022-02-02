@@ -19,6 +19,6 @@ Simple Stereo Reverb for Daisy Petal
 | Knob 3 | Send Amount | Controls amount of dry signal sent to reverb |
 | Switch 1 | Pass Thru | Disables the wet signal, passing the input directly to the output when LED is illuminated |
 
-## Diagram
 
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/petal/Verb/resources/Verb.png" alt="Verb.png" style="width: 100%;"/>
+
+

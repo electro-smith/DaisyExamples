@@ -20,5 +20,5 @@ There are two banks of four filters to control.
 | Audio Out 1-2 | Filter Bank Output | |
 | Leds | Brightness 1-8 shows amplitude per filter | Whichever side is purple is the side being controlled |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/FilterBank/resources/FilterBank.png" alt="FilterBank.png" style="width: 100%;"/>
+
+

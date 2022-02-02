@@ -20,5 +20,5 @@ White noise with two resonant filters.
 | Ctrl 4 | Highpass Resonance|
 | Audio Outs | Filtered Noise Out |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Noise/resources/Noise.png" alt="Noise.png" style="width: 100%;"/>
+
+

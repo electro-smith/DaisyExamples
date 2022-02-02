@@ -21,5 +21,5 @@ Turn the encoder to select which LFO to edit. Click the encoder to edit that wav
 | Encoder | Waveform | Turn to select wave or lfo, click to change selection. |
 | CV Outputs | LFO outs. | | 
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/lfo/resources/lfo.png" alt="lfo.png" style="width: 100%;"/>
+
+

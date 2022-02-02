@@ -22,5 +22,5 @@ Set the dry/wet amount of this final mix with the encoder.
 | Audio Out 1 - 3 | Individual Delay Outs | Outputs for delays 1 - 3. Dry/wet works here. |  
 | Audio Out 4 | Mix Out | A mix of all three delays. Dry/wet works here as well. |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/MultiDelay/resources/MultiDelay.png" alt="MultiDelay.png" style="width: 100%;"/>
+
+

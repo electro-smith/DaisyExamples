@@ -18,5 +18,5 @@ Fixed resonant peak filterbank with amplitude control per filter. Try running it
 | Audio In 1 | Filter bank Input | |
 | Audio Out 1-4 | Filter Bank Output | |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/FilterBank/resources/FilterBank.png" alt="FilterBank.png" style="width: 100%;"/>
+
+

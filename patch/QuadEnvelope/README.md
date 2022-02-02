@@ -26,6 +26,6 @@ The envelope curves and attack/decay times ae controllable as well.
 | Audio Outs | Audio post VCA | Each output goes with its respective input |
 | CV Outs | Envelope CV | Goes with envelopes one and two respectively |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/QuadEnvelope/resources/QuadEnvelope.png" alt="QuadEnvelope.png" style="width: 100%;"/>
+
+
 

@@ -20,7 +20,7 @@ Since the two sequencers run independently, they can have different lengths lead
 | Buttons | Global Tempo | Hold button one to increase tempo, and hold button two to decrease. |
 | Led 1 | Tempo indicator | Red led. Brighter is faster |
 
-## Diagram
 
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/pod/EuclideanDrums/resources/EuclideanDrums.png" alt="EuclideanDrums.png" style="width: 100%;"/>
+
+
 

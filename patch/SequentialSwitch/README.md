@@ -24,5 +24,5 @@ Selectable one to many, or many to one modes.
 | Audio Ins | Multi / Single In | |
 | Audio Outs | Multi / Single Out | |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/SequentialSwitch/resources/SequentialSwitch.png" alt="SequentialSwitch.png" style="width: 100%;"/>
+
+

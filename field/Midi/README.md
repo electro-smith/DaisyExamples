@@ -19,7 +19,3 @@ Polyphonic MIDI Synth
 | Knob 1 | Filter Cutoff |
 | MIDI Input | Note In/Note Off messages with Simple Polyphony (no voice stealing) |
 
-## Diagram
-
-TODO: Add Diagram
-

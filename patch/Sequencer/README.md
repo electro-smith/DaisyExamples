@@ -18,5 +18,5 @@ Ben Sergentanis
 | CV Outs | Step Out | OLED value is in terms of percent. So 35 indicates .35 * 5 = 1.75 Volts |
 | Encoder | Navigate Menu | Turn to move through steps. Press to enter/leave submenu (values), or activate/deactive step |
 
-## Diagram
-<img src="https://raw.githubusercontent.com/electro-smith/DaisyExamples/master/patch/Sequencer/resources/Sequencer.png" alt="Sequencer.png" style="width: 100%;"/>
+
+
