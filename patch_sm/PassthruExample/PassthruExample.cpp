@@ -21,13 +21,11 @@ DaisyPatchSM patch;
  *  where n is the specific sample.
  *  There are "size" samples in each array.
  *
- *  The default size is very small (just 4 samples per channel). This means the
- * callback is being called at 16kHz.
+ *  The default size is 48 samples per channel. This means the
+ * callback is being called at 1kHz.
  *
- *  This size is acceptable for many applications, and provides an extremely low
- * latency from input to output. However, you can change this size by calling
- * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
- * efficient to do the processing on larger chunks at a time.
+ *   You can change this size by calling patch.SetAudioBlockSize(desired_size). 
+ *  When running complex DSP it is more efficient to do the processing on larger chunks at a time.
  *
  */
 void AudioCallback(AudioHandle::InputBuffer  in,
