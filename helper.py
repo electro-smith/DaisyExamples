@@ -259,7 +259,8 @@ def create_from_template(destination, board, libs, include_vs = False):
         f.write('{\n')
         f.write('\thw.Init();\n')
         # Include Audio Setting Options
-        f.write('\thw.SetAudioBlockSize(4); // number of samples handled per callback\n')
+        if board != 'patch_sm':
+            f.write('\thw.SetAudioBlockSize(4); // number of samples handled per callback\n')
         f.write('\thw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);\n')
         if board != "seed" and board != "patch_sm":
             f.write('\thw.StartAdc();\n')
