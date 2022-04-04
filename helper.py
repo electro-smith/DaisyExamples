@@ -189,7 +189,7 @@ def create_from_template(destination, board, libs, include_vs = False):
     template_dir=os.path.join(file_path, 'utils', 'Template')
     copy_project(destination, template_dir, include_vs)
 
-    libdaisy_dir=libs + "/libdaisy/"
+    libdaisy_dir=libs + "/libDaisy/"
     rec_rewrite_replace(destination, "@LIBDAISY_DIR@", libdaisy_dir)
 
     daisysp_dir=libs + "/DaisySP/"
@@ -323,7 +323,7 @@ def run():
         else:
             dirs_to_search = list(
                 filter(lambda x: x not in global_filter_dirs and os.path.isdir(x), os.listdir('.')))
-            for dir in dirs_to_search: 
+            for dir in dirs_to_search:
                 example_dirs = []
                 for root, dirs, files in os.walk(dir):
                     if 'Makefile' in files:
