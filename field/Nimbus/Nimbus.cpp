@@ -520,14 +520,8 @@ void RenderParams(DISPLAY_PAGE page)
 
 inline void RenderSplash()
 {
-    field.display.SetCursor(17, 2);
+    field.display.SetCursor(17, 20);
     field.display.WriteString("NIMBUS", Font_16x26, true);
-    field.display.SetCursor(20, 28);
-    field.display.WriteString("based on Clouds", SMALL_FONT, true);
-    field.display.SetCursor(32, 38);
-    field.display.WriteString("by Mutable", SMALL_FONT, true);
-    field.display.SetCursor(29, 48);
-    field.display.WriteString("Instruments", SMALL_FONT, true);
 }
 
 inline void RenderCpuUsage()
