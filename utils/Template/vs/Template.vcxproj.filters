@@ -36,7 +36,7 @@
     <None Include="stm32.xml">
       <Filter>VisualGDB settings</Filter>
     </None>
-    <ClCompile Include="@LIBDAISY_DIR@\core\startup_stm32h750xx.c">
+    <ClCompile Include="..\@LIBDAISY_DIR@\core\startup_stm32h750xx.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
   </ItemGroup>
