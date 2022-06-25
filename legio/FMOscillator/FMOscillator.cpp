@@ -9,7 +9,7 @@ DaisyLegio hw;
 
 Oscillator modulator;
 Oscillator carrier;
-AdEnv env;
+AdEnv      env;
 
 float carrierBaseFreq;
 float modAmount;
@@ -26,16 +26,17 @@ void callback(AudioHandle::InterleavingInputBuffer  in,
     // Audio is interleaved stereo by default
     for(size_t i = 0; i < size; i += 2)
     {
-        envVal = env.Process();
-        inLedVal = abs((in[i] + in[i+1])/2.0);
+        envVal   = env.Process();
+        inLedVal = abs((in[i] + in[i + 1]) / 2.0);
 
-        float modA = modulator.Process()*modAmount*(envVal+1);
-        float modB = (in[i] + in[i+1])*modAmount*hw.sw[DaisyLegio::SW_LEFT].Read()/2.0;
+        float modA = modulator.Process() * modAmount * (envVal + 1);
+        float modB = (in[i] + in[i + 1]) * modAmount
+                     * hw.sw[DaisyLegio::SW_LEFT].Read() / 2.0;
 
         carrier.SetFreq(carrierBaseFreq + modA + modB);
 
         float output = carrier.Process();
-        outLedVal = abs(output);
+        outLedVal    = abs(output);
         // left out
         out[i] = output;
         // right out
@@ -56,7 +57,7 @@ int main(void)
 
     env.Init(hw.AudioSampleRate());
     env.SetTime(ADENV_SEG_ATTACK, 0.001);
-    env.SetTime(ADENV_SEG_DECAY, 0.25*hw.sw[DaisyLegio::SW_LEFT].Read());
+    env.SetTime(ADENV_SEG_DECAY, 0.25 * hw.sw[DaisyLegio::SW_LEFT].Read());
 
     hw.StartAudio(callback);
     hw.StartAdc();
@@ -67,24 +68,29 @@ int main(void)
         hw.ProcessDigitalControls();
 
         float encInc = hw.encoder.Increment();
+        
         pitchOffset += hw.encoder.Pressed() ? encInc/12 : (encInc/12)*0.05;
 
-        carrierBaseFreq = pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_PITCH)*8 + hw.sw[DaisyLegio::SW_RIGHT].Read() + pitchOffset)*8;
+        carrierBaseFreq = pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_PITCH)*8 + \
+                                 hw.sw[DaisyLegio::SW_RIGHT].Read() + \
+                                 pitchOffset)*8;
+
         modAmount = pow(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP),2)*10000;
-        float modFreq = carrierBaseFreq*pow(2,hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM)*5);
+
+        float modFreq = carrierBaseFreq * pow(2,hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM)*5);
+
         modulator.SetFreq(modFreq);
 
-        if(hw.gate.Trig()) {
+        if(hw.gate.Trig())
+        {
             env.Trigger();
         }
 
         hw.SetLed(DaisyLegio::LED_LEFT, envVal, inLedVal, outLedVal);
-        hw.SetLed(
-            DaisyLegio::LED_RIGHT,
-            hw.GetKnobValue(DaisyLegio::CONTROL_PITCH),
-            hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP),
-            hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM)
-		);
+        hw.SetLed(DaisyLegio::LED_RIGHT,
+                  hw.GetKnobValue(DaisyLegio::CONTROL_PITCH),
+                  hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP),
+                  hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM));
         hw.UpdateLeds();
     }
 }
