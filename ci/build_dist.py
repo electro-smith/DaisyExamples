@@ -96,7 +96,7 @@ def run():
 
     # Prior to novemenber 2021 this would be a default-list, and was required.
     if not args.directory_list:
-        # directories = [ 'seed', 'pod', 'patch', 'field', 'petal', 'versio', 'patch_sm' ]
+        # directories = [ 'seed', 'pod', 'patch', 'field', 'petal', 'versio', 'legio', 'patch_sm' ]
         directories = list(
             filter(lambda x: x not in filter_dirs and os.path.isdir(x), os.listdir('.')))
     else:
