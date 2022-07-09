@@ -1,5 +1,20 @@
 # Nimbus
 
+**Note**: This is a bootloader app. In order to run this on the daisy you first need to install the Daisy bootloader. 
+
+To install the bootloader on the Daisy: 
+
+1. Connect to the Daisy as usual via the Web Programmer
+2. Click the advanced button in the Programming Section 
+3. Click "Flash Bootloader Image"
+
+Once the bootloader has been programmed. You can load this program to the daisy by following the following steps:
+
+1. Press reset on the daisy, the USR LED will briefly pulse
+2. While the LED is pulsing, press boot to force the daisy to stay in the bootloader. The LED will blink rapidly to indicate you are staying in the bootloader.
+3. The Daisy will now appear in the list of USB devices available (As either STM32 Firmware Update, or Daisy Bootloader) 
+4. Once connected, you can click program as usual.
+
 ## Author
 
 Ported by Gregor Noriskin to the Field from the port by Ben Sergentanis
