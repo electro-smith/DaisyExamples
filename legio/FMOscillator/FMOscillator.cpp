@@ -23,6 +23,8 @@ void callback(AudioHandle::InterleavingInputBuffer  in,
               AudioHandle::InterleavingOutputBuffer out,
               size_t                                size)
 {
+    hw.ProcessAllControls();
+
     // Audio is interleaved stereo by default
     for(size_t i = 0; i < size; i += 2)
     {
@@ -64,14 +66,11 @@ int main(void)
 
     while(1)
     {
-        hw.ProcessAnalogControls(); // Normalize CV inputs
-        hw.ProcessDigitalControls();
-
         float encInc = hw.encoder.Increment();
         
         pitchOffset += hw.encoder.Pressed() ? encInc/12 : (encInc/12)*0.05;
 
-        carrierBaseFreq = pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_PITCH)*8 + \
+        carrierBaseFreq = pow(2, hw.GetPitch()*8 + \
                                  hw.sw[DaisyLegio::SW_RIGHT].Read() + \
                                  pitchOffset)*8;
 
@@ -88,7 +87,7 @@ int main(void)
 
         hw.SetLed(DaisyLegio::LED_LEFT, envVal, inLedVal, outLedVal);
         hw.SetLed(DaisyLegio::LED_RIGHT,
-                  hw.GetKnobValue(DaisyLegio::CONTROL_PITCH),
+                  hw.GetPitch(),
                   hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP),
                   hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM));
         hw.UpdateLeds();
