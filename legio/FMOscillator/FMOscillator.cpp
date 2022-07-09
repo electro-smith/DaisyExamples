@@ -70,7 +70,7 @@ int main(void)
         
         pitchOffset += hw.encoder.Pressed() ? encInc/12 : (encInc/12)*0.05;
 
-        carrierBaseFreq = pow(2, hw.GetPitch()*8 + \
+        carrierBaseFreq = pow(2, hw.controls[DaisyLegio::CONTROL_PITCH].Value()*8 + \
                                  hw.sw[DaisyLegio::SW_RIGHT].Read() + \
                                  pitchOffset)*8;
 
@@ -87,7 +87,7 @@ int main(void)
 
         hw.SetLed(DaisyLegio::LED_LEFT, envVal, inLedVal, outLedVal);
         hw.SetLed(DaisyLegio::LED_RIGHT,
-                  hw.GetPitch(),
+                  hw.controls[DaisyLegio::CONTROL_PITCH].Value(),
                   hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP),
                   hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM));
         hw.UpdateLeds();
