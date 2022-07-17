@@ -12,6 +12,9 @@ const size_t BLOCK_SIZE = 16;
 using FloatBlock = float[BLOCK_SIZE];
 
 DaisyPatch patch;
+Parameter ctrls[4];
+
+float wet_dry_mix;
 
 void AudioCallback(AudioHandle::InputBuffer in, 
 				   AudioHandle::OutputBuffer out, 
@@ -26,6 +29,13 @@ void AudioCallback(AudioHandle::InputBuffer in,
 void UpdateControls() {
 	patch.ProcessAllControls();
 	
+	wet_dry_mix = ctrls[0].Process();
+	if (wet_dry_mix < 0.02) {
+		wet_dry_mix = 0;
+	} else if (wet_dry_mix > 0.98) {
+		wet_dry_mix = 1;
+	}
+
 	if (patch.encoder.RisingEdge()) {
 		// reset loops!
   	}
@@ -44,14 +54,23 @@ void DisplayLines(const vector<string> &strs) {
 void UpdateDisplay() {
 	patch.display.Fill(false);
 	vector<string> strs;
-	strs.push_back("foo");
-	strs.push_back("bar");
+
+	FixedCapStr<20> str("");
+	str.AppendFloat(wet_dry_mix, 2);
+	strs.push_back("wet/dry " + string(str));
+
 	DisplayLines(strs);
 	patch.display.Update();
 }
 
 int main(void) {
 	patch.Init();
+
+	// ctrl 0 is wet / dry mix
+	ctrls[0].Init(patch.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
+
+
+
 	patch.SetAudioBlockSize(BLOCK_SIZE);
 	patch.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
 	patch.StartAdc();
