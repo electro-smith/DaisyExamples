@@ -11,48 +11,59 @@ const size_t BLOCK_SIZE = 16;
 
 using FloatBlock = float[BLOCK_SIZE];
 
-const size_t LOOP_BLOCKS = 800;
+const size_t LOOP_BLOCKS = 10000;
 using LoopBuffer = FloatBlock[LOOP_BLOCKS];
 static LoopBuffer DSY_SDRAM_BSS loop_1_buffer;
 
 DaisyPatch patch;
 Parameter ctrls[4];
 
-float wet_dry_mix;
+// CONTROL 0
+// how much of input signal to record to loops
+// 0 -> no recording
+// 1 -> full mix
+float record_amount;
 
 class Loop {
 
 	public:
 		Loop() : idx_(0) {}
 
-		void Process(const float* input) {
-			for (size_t b=0; b<BLOCK_SIZE; b++) {
-				if (input[b] > max_v_) {
-					max_v_ = input[b];
-				} else if (input[b] < min_v_) {
-					min_v_ = input[b];
+		void Process(const float* input, float* output) {
+			
+			// integrate input to loop buffer
+			if (record_amount > 0) {
+				for (size_t b=0; b<BLOCK_SIZE; b++) {
+					(*buffer_)[idx_][b] += record_amount * input[b];
+				}
+			}
+
+			// and mirror to output
+			copy_n((*buffer_)[idx_], BLOCK_SIZE, output);
+
+			// step forward in loop
+			idx_++;
+			if (idx_ == LOOP_BLOCKS) {
+				idx_ = 0;
+			}
+
+		}
+
+		void Reset() {
+			for (size_t l=0; l<LOOP_BLOCKS; l++) {
+				for (size_t b=0; b<BLOCK_SIZE; b++) {
+					(*buffer_)[l][b] = 0.;
 				}
 			}
 		}
 
-		void Reset() {
-			min_v_ = 10;
-			max_v_ = -10;
-		}
-
 		string State() {
-			FixedCapStr<20> str("min_max ");
-			str.AppendFloat(min_v_, 2);
-			str.Append(" ");
-			str.AppendFloat(max_v_, 2);
-			return string(str);
+			return to_string(static_cast<uint32_t>(idx_));
 		}
 
 		inline void SetBuffer(LoopBuffer* buffer) { buffer_ = buffer; }
 
 	private:
-		float min_v_;
-		float max_v_;
 		size_t idx_;
 		LoopBuffer* buffer_;
 };
@@ -65,25 +76,20 @@ void AudioCallback(AudioHandle::InputBuffer in,
 
 	// monitor in 0 from out 0
 	copy_n(in[0], size, out[0]);
+	
+	// process in0 to loop1, output to out1
+	loop1.Process(in[0], out[1]);
 
-	loop1.Process(in[0]);
-
-	// for (size_t i = 0; i < size; i++) {
-	// 	out[0][i] = in[09][i];
-	// 	for (size_t c = 0; c < 4; c++) {
-	// 		out[c][i] = in[c][i];
-	// 	}
-	// }
 }
 
 void UpdateControls() {
 	patch.ProcessAllControls();
 	
-	wet_dry_mix = ctrls[0].Process();
-	if (wet_dry_mix < 0.02) {
-		wet_dry_mix = 0;
-	} else if (wet_dry_mix > 0.98) {
-		wet_dry_mix = 1;
+	record_amount = ctrls[0].Process();
+	if (record_amount < 0.02) {
+		record_amount = 0;
+	} else if (record_amount > 0.98) {
+		record_amount = 1;
 	}
 
 	if (patch.encoder.RisingEdge()) {
@@ -106,8 +112,8 @@ void UpdateDisplay() {
 	vector<string> strs;
 
 	FixedCapStr<20> str("");
-	str.AppendFloat(wet_dry_mix, 2);
-	strs.push_back("wet/dry " + string(str));
+	str.AppendFloat(record_amount, 2);
+	strs.push_back("rec " + string(str));
 
 	strs.push_back(loop1.State());
 
@@ -118,6 +124,7 @@ void UpdateDisplay() {
 int main(void) {
 
 	loop1.SetBuffer(&loop_1_buffer);
+	loop1.Reset();
 
 	patch.Init();
 
