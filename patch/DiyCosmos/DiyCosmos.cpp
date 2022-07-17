@@ -24,6 +24,13 @@ Parameter ctrls[4];
 // 1 -> full mix
 float record_amount = 0;
 
+// CONTROL 1
+// feedback amount; how much, if anything, loop decays over time
+// 0 -> instant decay; no loop
+// 1 -> loop stays
+// 1.2 -> feedback
+float feedback_amount = 0;
+
 class Loop {
 
 	public:
@@ -31,6 +38,13 @@ class Loop {
 
 		void Process(const float* input, float* output) {
 			
+			// process feedback
+			if (feedback_amount != 1.0) {
+				for (size_t b=0; b<BLOCK_SIZE; b++) {
+					(*buffer_)[idx_][b] *= feedback_amount;
+				}
+			}
+
 			// integrate input to loop buffer
 			if (record_amount > 0) {
 				for (size_t b=0; b<BLOCK_SIZE; b++) {
@@ -38,7 +52,7 @@ class Loop {
 				}
 			}
 
-			// and mirror to output
+			// write to output
 			copy_n((*buffer_)[idx_], BLOCK_SIZE, output);
 
 			// step forward in loop
@@ -92,6 +106,15 @@ void AudioCallback(AudioHandle::InputBuffer in,
  		record_amount = 1;
  	}
 
+	feedback_amount = ctrls[1].Process();
+	if (feedback_amount < 0.02) {
+		feedback_amount = 0;
+	} else if (feedback_amount > 0.98 && feedback_amount < 1.02) {
+		feedback_amount = 1;
+	} else if (feedback_amount > 1.18) {
+		feedback_amount = 1.2;
+	}
+
  	if (patch.encoder.RisingEdge()) {
  		loop1.Reset();
    	}
@@ -107,13 +130,18 @@ void DisplayLines(const vector<string> &strs) {
 	}
 }
 
+string TwoDecimalPoints(float f) {
+	FixedCapStr<10> str("");
+	str.AppendFloat(f, 2);
+	return string(str);
+}
+
 void UpdateDisplay() {
 	patch.display.Fill(false);
 	vector<string> strs;
 
-	FixedCapStr<20> str("");
-	str.AppendFloat(record_amount, 2);
-	strs.push_back("rec4 " + string(str));
+	strs.push_back("rec " + TwoDecimalPoints(record_amount));
+	strs.push_back("fb  " + TwoDecimalPoints(feedback_amount));
 	
 	strs.push_back(loop1.State());
 
@@ -128,8 +156,8 @@ int main(void) {
 	loop1.SetBuffer(&loop_1_buffer);
 	loop1.Reset();
 
-	// ctrl 0 is wet / dry mix
-	ctrls[0].Init(patch.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
+	ctrls[0].Init(patch.controls[0], 0.0f, 1.0f, Parameter::LINEAR);  // record_amount
+	ctrls[1].Init(patch.controls[1], 0.0f, 1.2f, Parameter::LINEAR);  // feedback_amount
 
 	patch.SetAudioBlockSize(BLOCK_SIZE);
 	patch.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
