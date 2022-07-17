@@ -1,6 +1,13 @@
 # Project Name
 TARGET = Nimbus
 
+# Use the Daisy Bootloader instead of system bootloader
+APP_TYPE=BOOT_SRAM
+
+# Custom linker script to adjust the amount of executable SRAM to fit existing SRAM usage.
+LDSCRIPT=nimbus.lds
+
+
 # Sources
 CPP_SOURCES += \
 Nimbus.cpp \
