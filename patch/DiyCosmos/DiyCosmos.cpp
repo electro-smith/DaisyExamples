@@ -22,7 +22,7 @@ Parameter ctrls[4];
 // how much of input signal to record to loops
 // 0 -> no recording
 // 1 -> full mix
-float record_amount;
+float record_amount = 0;
 
 class Loop {
 
@@ -50,7 +50,7 @@ class Loop {
 		}
 
 		void Reset() {
-			for (size_t l=0; l<LOOP_BLOCKS; l++) {
+		 	for (size_t l=0; l<LOOP_BLOCKS; l++) {
 				for (size_t b=0; b<BLOCK_SIZE; b++) {
 					(*buffer_)[l][b] = 0.;
 				}
@@ -82,20 +82,20 @@ void AudioCallback(AudioHandle::InputBuffer in,
 
 }
 
-void UpdateControls() {
-	patch.ProcessAllControls();
+ void UpdateControls() {
+ 	patch.ProcessAllControls();
 	
-	record_amount = ctrls[0].Process();
-	if (record_amount < 0.02) {
-		record_amount = 0;
-	} else if (record_amount > 0.98) {
-		record_amount = 1;
-	}
+ 	record_amount = ctrls[0].Process();
+ 	if (record_amount < 0.02) {
+ 		record_amount = 0;
+ 	} else if (record_amount > 0.98) {
+ 		record_amount = 1;
+ 	}
 
-	if (patch.encoder.RisingEdge()) {
-		loop1.Reset();
-  	}
-}
+ 	if (patch.encoder.RisingEdge()) {
+ 		loop1.Reset();
+   	}
+ }
 
 void DisplayLines(const vector<string> &strs) {
 	int line_num = 0;
@@ -113,8 +113,8 @@ void UpdateDisplay() {
 
 	FixedCapStr<20> str("");
 	str.AppendFloat(record_amount, 2);
-	strs.push_back("rec " + string(str));
-
+	strs.push_back("rec4 " + string(str));
+	
 	strs.push_back(loop1.State());
 
 	DisplayLines(strs);
@@ -123,20 +123,19 @@ void UpdateDisplay() {
 
 int main(void) {
 
+	patch.Init();
+
 	loop1.SetBuffer(&loop_1_buffer);
 	loop1.Reset();
 
-	patch.Init();
-
 	// ctrl 0 is wet / dry mix
 	ctrls[0].Init(patch.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
-
-
 
 	patch.SetAudioBlockSize(BLOCK_SIZE);
 	patch.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
 	patch.StartAdc();
 	patch.StartAudio(AudioCallback);
+
 	while(true) {
 		for (size_t i = 0; i < 100; i++) {
 			UpdateControls();
