@@ -31,13 +31,21 @@ float record_amount = 0;
 // 1.2 -> feedback
 float feedback_amount = 0;
 
+float inp_min_v, inp_max_v;
+
+string FewDecimalPoints(float f) {
+	FixedCapStr<10> str("");
+	str.AppendFloat(f, 3);
+	return string(str);
+}
+
 class Loop {
 
 	public:
-		Loop() : idx_(0) {}
+		Loop() : idx_(0), min_v_(100), max_v_(-100) {}
 
 		void Process(const float* input, float* output) {
-			
+
 			// process feedback
 			if (feedback_amount != 1.0) {
 				for (size_t b=0; b<BLOCK_SIZE; b++) {
@@ -49,6 +57,16 @@ class Loop {
 			if (record_amount > 0) {
 				for (size_t b=0; b<BLOCK_SIZE; b++) {
 					(*buffer_)[idx_][b] += record_amount * input[b];
+				}
+			}
+
+			// debug loop min max values
+			for (size_t b=0; b<BLOCK_SIZE; b++) {
+				const float f = (*buffer_)[idx_][b];
+				if (f < min_v_) {
+					min_v_ = f;
+				} else if (f > max_v_) {
+					max_v_ = f;
 				}
 			}
 
@@ -64,15 +82,21 @@ class Loop {
 		}
 
 		void Reset() {
+			// zero entire loop buffer
 		 	for (size_t l=0; l<LOOP_BLOCKS; l++) {
 				for (size_t b=0; b<BLOCK_SIZE; b++) {
 					(*buffer_)[l][b] = 0.;
 				}
 			}
+			// reset debugging min/max values
+			min_v_ = 100;
+			max_v_ = -100;
 		}
 
 		string State() {
-			return to_string(static_cast<uint32_t>(idx_));
+			return to_string(static_cast<uint32_t>(idx_)) +
+				" " + FewDecimalPoints(min_v_) +
+				" " + FewDecimalPoints(max_v_);
 		}
 
 		inline void SetBuffer(LoopBuffer* buffer) { buffer_ = buffer; }
@@ -80,6 +104,8 @@ class Loop {
 	private:
 		size_t idx_;
 		LoopBuffer* buffer_;
+		float min_v_;
+		float max_v_;
 };
 
 Loop loop1;
@@ -87,6 +113,16 @@ Loop loop1;
 void AudioCallback(AudioHandle::InputBuffer in, 
 				   AudioHandle::OutputBuffer out, 
 				   size_t size) {	
+
+	// debug capture min max values for input since last reset
+	for (size_t b=0; b<size; b++) {
+		const float f = in[0][b];
+		if (f < inp_min_v) {
+			inp_min_v = f;
+		} else if (f > inp_max_v) {
+			inp_max_v = f;
+		}
+	}
 
 	// monitor in 0 from out 0
 	copy_n(in[0], size, out[0]);
@@ -130,19 +166,15 @@ void DisplayLines(const vector<string> &strs) {
 	}
 }
 
-string TwoDecimalPoints(float f) {
-	FixedCapStr<10> str("");
-	str.AppendFloat(f, 2);
-	return string(str);
-}
+
 
 void UpdateDisplay() {
 	patch.display.Fill(false);
 	vector<string> strs;
 
-	strs.push_back("rec " + TwoDecimalPoints(record_amount));
-	strs.push_back("fb  " + TwoDecimalPoints(feedback_amount));
-	
+	strs.push_back("rec " + FewDecimalPoints(record_amount));
+	strs.push_back("fb  " + FewDecimalPoints(feedback_amount));
+	strs.push_back("mm " + FewDecimalPoints(inp_min_v) + " " + FewDecimalPoints(inp_max_v));
 	strs.push_back(loop1.State());
 
 	DisplayLines(strs);
