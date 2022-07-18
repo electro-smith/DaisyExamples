@@ -7,13 +7,15 @@ using namespace daisy;
 using namespace daisysp;
 using namespace std;
 
-const size_t BLOCK_SIZE = 16;
+const size_t BLOCK_SIZE = 32;
 
 using FloatBlock = float[BLOCK_SIZE];
 
-const size_t MAX_LOOP_BLOCKS = 30000;
+const size_t MAX_LOOP_BLOCKS = 33000;
 using LoopBuffer = FloatBlock[MAX_LOOP_BLOCKS];
-static LoopBuffer DSY_SDRAM_BSS loop_buffer[2];
+
+const size_t N_LOOPS = 3;
+static LoopBuffer DSY_SDRAM_BSS loop_buffer[N_LOOPS];
 
 DaisyPatch patch;
 Parameter ctrls[4];
@@ -31,8 +33,6 @@ float record_amount = 0;
 // 1.2 -> feedback
 float feedback_amount = 0;
 
-float inp_min_v, inp_max_v;
-
 string FewDecimalPoints(float f) {
 	FixedCapStr<10> str("");
 	str.AppendFloat(f, 2);
@@ -42,7 +42,7 @@ string FewDecimalPoints(float f) {
 class Loop {
 
 	public:
-		Loop() : len_(0), idx_(0), min_v_(100), max_v_(-100) {}
+		Loop() : len_(0), idx_(0) {}
 
 		void Process(const float* input, float* output) {
 
@@ -51,27 +51,32 @@ class Loop {
 
 			// process feedback
 			if (feedback_amount != 1.0) {
-				for (size_t b=0; b<BLOCK_SIZE; b++) {
+				for (size_t b = 0; b < BLOCK_SIZE; b++) {
 					(*current)[b] *= feedback_amount;
 				}
 			}
 
 			// integrate input to loop buffer
 			if (record_amount > 0) {
-				for (size_t b=0; b<BLOCK_SIZE; b++) {
+				for (size_t b = 0; b < BLOCK_SIZE; b++) {
 					(*current)[b] += record_amount * input[b];
 				}
 			}
 
-			// debug loop min max values
-			// for (size_t b=0; b<BLOCK_SIZE; b++) {
-			// 	const float f = (*current)[b];
-			// 	if (f < min_v_) {
-			// 		min_v_ = f;
-			// 	} else if (f > max_v_) {
-			// 		max_v_ = f;
-			// 	}
-			// }
+			// for first block use linear envelope to ramp up from 0.
+			if (idx_ == 0) {
+				for (size_t b = 0 ; b < BLOCK_SIZE; b++) {
+					const float proportion = static_cast<float>(b) / (BLOCK_SIZE-1);
+					(*current][b] *= proportion;
+				}
+			}
+			// for last block use linear envelope to ramp down to 0.
+			else if (idx_ == len_-1) {
+				for (size_t b = 0 ; b < BLOCK_SIZE; b++) {
+					const float proportion = static_cast<float>(b) / (BLOCK_SIZE-1);
+					(*current)[b] *= 1.0 - proportion;
+				}
+			}
 
 			// write to output
 			copy_n(*current, BLOCK_SIZE, output);
@@ -88,33 +93,17 @@ class Loop {
 			if (len_ > MAX_LOOP_BLOCKS) {
 				len_ = MAX_LOOP_BLOCKS;
 			}
+
 			// zero entire loop buffer
-		 	for (size_t l=0; l<len_; l++) {
-				for (size_t b=0; b<BLOCK_SIZE; b++) {
+			for (size_t l = 0; l < len_; l++) {
+				for (size_t b = 0; b < BLOCK_SIZE; b++) {
 					(*buffer_)[l][b] = 0.;
 				}
 			}
-
-			// reset debugging min/max values
-			min_v_ = 100;
-			max_v_ = -100;
 		}
 
 		string State() {
-			float block_min_v = 100;
-			float block_max_v = -100;			
-			for (size_t b=0; b<BLOCK_SIZE; b++) {
-				const float v = (*buffer_)[idx_][b];
-				if (v < block_min_v) {
-					block_min_v = v;
-				} else if (v > block_max_v) {
-					block_max_v = v;
-				}
-			}
-
-			return " " + FewDecimalPoints(block_min_v) +
-				" " + FewDecimalPoints(block_max_v) + 
-				" " + to_string(static_cast<uint32_t>(idx_));
+			return to_string(static_cast<uint32_t>(idx_));
 		}
 
 		inline void SetLength(size_t len) { len_ = len; }
@@ -124,31 +113,21 @@ class Loop {
 		size_t len_;
 		size_t idx_;
 		LoopBuffer* buffer_;		
-		float min_v_;
-		float max_v_;
 };
 
-Loop loop1;
+Loop loop[N_LOOPS];
 
 void AudioCallback(AudioHandle::InputBuffer in, 
 				   AudioHandle::OutputBuffer out, 
 				   size_t size) {	
 
-	// debug capture min max values for input since last reset
-	for (size_t b=0; b<size; b++) {
-		const float f = in[0][b];
-		if (f < inp_min_v) {
-			inp_min_v = f;
-		} else if (f > inp_max_v) {
-			inp_max_v = f;
-		}
-	}
-
 	// monitor in 0 from out 0
 	copy_n(in[0], size, out[0]);
 	
 	// process in0 to loop1, output to out1
-	loop1.Process(in[0], out[1]);
+	for (size_t l = 0; l < N_LOOPS; l++) {
+		loop[l].Process(in[0], out[l+1]);
+	}
 
 }
 
@@ -172,7 +151,9 @@ void AudioCallback(AudioHandle::InputBuffer in,
 	}
 
  	if (patch.encoder.RisingEdge()) {
- 		loop1.Reset();
+		for (size_t l = 0; l < N_LOOPS; l++) {
+			loop[l].Reset();
+		}
    	}
  }
 
@@ -193,10 +174,11 @@ void UpdateDisplay() {
 	vector<string> strs;
 
 	strs.push_back("rec " + FewDecimalPoints(record_amount));
-	strs.push_back("fb  " + FewDecimalPoints(feedback_amount));
-	//strs.push_back("mm " + FewDecimalPoints(inp_min_v) + " " + FewDecimalPoints(inp_max_v));
-	
-	strs.push_back(loop1.State());	
+	strs.push_back("fb  " + FewDecimalPoints(feedback_amount));	
+
+	for (size_t l = 0; l < N_LOOPS; l++) {
+		strs.push_back(loop[l].State());
+	}
 
 	DisplayLines(strs);
 	patch.display.Update();
@@ -206,9 +188,17 @@ int main(void) {
 
 	patch.Init();
 
-	loop1.SetBuffer(&loop_buffer[0]);
-	loop1.SetLength(15000);
-	loop1.Reset();
+	for (size_t l = 0; l < N_LOOPS; l++) {
+		loop[l].SetBuffer(&loop_buffer[l]);
+	}
+
+	loop[0].SetLength(15000);  // 5 * 3000
+	loop[1].SetLength(21000);  // 7 * 3000
+	loop[2].SetLength(33000);  // 11 * 3000
+
+	for (size_t l = 0; l < N_LOOPS; l++) {
+		loop[l].Reset();
+	}
 
 	ctrls[0].Init(patch.controls[0], 0.0f, 1.0f, Parameter::LINEAR);  // record_amount
 	ctrls[1].Init(patch.controls[1], 0.0f, 1.2f, Parameter::LINEAR);  // feedback_amount
@@ -225,3 +215,4 @@ int main(void) {
 		UpdateDisplay();
 	}
 }
+
