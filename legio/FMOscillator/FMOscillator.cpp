@@ -67,16 +67,22 @@ int main(void)
     while(1)
     {
         float encInc = hw.encoder.Increment();
-        
-        pitchOffset += hw.encoder.Pressed() ? encInc/12 : (encInc/12)*0.05;
 
-        carrierBaseFreq = pow(2, hw.controls[DaisyLegio::CONTROL_PITCH].Value()*8 + \
-                                 hw.sw[DaisyLegio::SW_RIGHT].Read() + \
-                                 pitchOffset)*8;
+        pitchOffset
+            += hw.encoder.Pressed() ? encInc / 12 : (encInc / 12) * 0.05;
 
-        modAmount = pow(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP),2)*10000;
+        carrierBaseFreq
+            = pow(2,
+                  hw.controls[DaisyLegio::CONTROL_PITCH].Value() * 8
+                      + hw.sw[DaisyLegio::SW_RIGHT].Read() + pitchOffset)
+              * 8;
 
-        float modFreq = carrierBaseFreq * pow(2,hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM)*5);
+        modAmount
+            = pow(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP), 2) * 10000;
+
+        float modFreq
+            = carrierBaseFreq
+              * pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM) * 5);
 
         modulator.SetFreq(modFreq);
 
