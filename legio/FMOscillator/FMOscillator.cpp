@@ -25,6 +25,33 @@ void callback(AudioHandle::InterleavingInputBuffer  in,
 {
     hw.ProcessAllControls();
 
+    float encInc = hw.encoder.Increment();
+
+    pitchOffset
+        += hw.encoder.Pressed() ? encInc / 12 : (encInc / 12) * 0.05;
+
+    carrierBaseFreq
+        = pow(2,
+                hw.controls[DaisyLegio::CONTROL_PITCH].Value() * 8
+                    + hw.sw[DaisyLegio::SW_RIGHT].Read() + pitchOffset)
+            * 8;
+
+    modAmount
+        = pow(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP), 2) * 10000;
+
+    float modFreq
+        = carrierBaseFreq
+            * pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM) * 5);
+
+    modulator.SetFreq(modFreq);
+
+    if(hw.gate.Trig())
+    {
+        env.SetTime(ADENV_SEG_ATTACK, 0.005);
+        env.SetTime(ADENV_SEG_DECAY, 0.25 * (hw.sw[DaisyLegio::SW_LEFT].Read()+1));
+        env.Trigger();
+    }
+
     // Audio is interleaved stereo by default
     for(size_t i = 0; i < size; i += 2)
     {
@@ -58,39 +85,12 @@ int main(void)
     carrier.SetFreq(0);
 
     env.Init(hw.AudioSampleRate());
-    env.SetTime(ADENV_SEG_ATTACK, 0.001);
-    env.SetTime(ADENV_SEG_DECAY, 0.25 * hw.sw[DaisyLegio::SW_LEFT].Read());
 
     hw.StartAudio(callback);
     hw.StartAdc();
 
     while(1)
     {
-        float encInc = hw.encoder.Increment();
-
-        pitchOffset
-            += hw.encoder.Pressed() ? encInc / 12 : (encInc / 12) * 0.05;
-
-        carrierBaseFreq
-            = pow(2,
-                  hw.controls[DaisyLegio::CONTROL_PITCH].Value() * 8
-                      + hw.sw[DaisyLegio::SW_RIGHT].Read() + pitchOffset)
-              * 8;
-
-        modAmount
-            = pow(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP), 2) * 10000;
-
-        float modFreq
-            = carrierBaseFreq
-              * pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM) * 5);
-
-        modulator.SetFreq(modFreq);
-
-        if(hw.gate.Trig())
-        {
-            env.Trigger();
-        }
-
         hw.SetLed(DaisyLegio::LED_LEFT, envVal, inLedVal, outLedVal);
         hw.SetLed(DaisyLegio::LED_RIGHT,
                   hw.controls[DaisyLegio::CONTROL_PITCH].Value(),
