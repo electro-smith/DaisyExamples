@@ -27,28 +27,27 @@ void callback(AudioHandle::InterleavingInputBuffer  in,
 
     float encInc = hw.encoder.Increment();
 
-    pitchOffset
-        += hw.encoder.Pressed() ? encInc / 12 : (encInc / 12) * 0.05;
+    pitchOffset += hw.encoder.Pressed() ? encInc / 12 : (encInc / 12) * 0.05;
 
     carrierBaseFreq
         = pow(2,
-                hw.controls[DaisyLegio::CONTROL_PITCH].Value() * 8
-                    + hw.sw[DaisyLegio::SW_RIGHT].Read() + pitchOffset)
-            * 8;
+              hw.controls[DaisyLegio::CONTROL_PITCH].Value() * 8
+                  + hw.sw[DaisyLegio::SW_RIGHT].Read() + pitchOffset)
+          * 8;
 
-    modAmount
-        = pow(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP), 2) * 10000;
+    modAmount = pow(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP), 2) * 10000;
 
     float modFreq
         = carrierBaseFreq
-            * pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM) * 5);
+          * pow(2, hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_BOTTOM) * 5);
 
     modulator.SetFreq(modFreq);
 
     if(hw.gate.Trig())
     {
         env.SetTime(ADENV_SEG_ATTACK, 0.005);
-        env.SetTime(ADENV_SEG_DECAY, 0.25 * (hw.sw[DaisyLegio::SW_LEFT].Read()+1));
+        env.SetTime(ADENV_SEG_DECAY,
+                    0.25 * (hw.sw[DaisyLegio::SW_LEFT].Read() + 1));
         env.Trigger();
     }
 
