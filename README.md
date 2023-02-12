@@ -87,7 +87,7 @@ done.
 
 Similarly, all of the examples can be bulit by running:
 
-`./ci/build_examples.sh`
+`./ci/build_examples.py`
 
 However, this may also take a few minutes. An individual example can be compiled by navigating to that directory, and running Make. For example to build the Blink example:
 
