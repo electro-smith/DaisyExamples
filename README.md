@@ -1,3 +1,8 @@
+<h1> Sunchimes fork </h1>
+
+## Flash Daisy Seed command
+`$ make clean; make; make program-dfu`
+
 <h1 align="center">Daisy Examples</h1>
 
 
