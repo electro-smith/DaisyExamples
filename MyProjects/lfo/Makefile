@@ -1,8 +1,8 @@
 # Project Name
-TARGET = gain
+TARGET = lfo
 
 # Sources
-CPP_SOURCES = gain.cpp
+CPP_SOURCES = lfo.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libDaisy/
