@@ -13,7 +13,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           size_t                                size)
 {
     float saw, freq, output;
-    float lfo_freq = mtof(hardware.adc.GetFloat(0) * 127) / 127.0;
+    float lfo_freq = mtof(hardware.adc.GetFloat(0) * 127) / 627.1925; // this makes the maximum lfo frequency 20hz
     lfo.SetFreq(lfo_freq);
 
     for(size_t i = 0; i < size; i += 2)
