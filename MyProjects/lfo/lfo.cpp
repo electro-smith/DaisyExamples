@@ -13,14 +13,17 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           size_t                                size)
 {
     float saw, freq, output;
+    float lfo_freq = mtof(hardware.adc.GetFloat(0) * 127) / 127.0;
+    lfo.SetFreq(lfo_freq);
+
     for(size_t i = 0; i < size; i += 2)
     {
-        // freq = 5000 + (lfo.Process() * 5000);
+        freq = 5000 + (lfo.Process() * 5000);
+
+        osc.SetFreq(freq);
         saw  = osc.Process();
 
-        freq = mtof(hardware.adc.GetFloat(0) * 127);
-
-        flt.SetFreq(freq);
+        //flt.SetFreq(freq); // uncomment to modulate filter cutoff with lfo
         output = flt.Process(saw);
 
         // left out
@@ -46,7 +49,7 @@ int main(void)
 
     // set parameters for sine oscillator object
     lfo.Init(sample_rate);
-    lfo.SetWaveform(Oscillator::WAVE_TRI);
+    lfo.SetWaveform(Oscillator::WAVE_SIN);
     lfo.SetAmp(1);
     lfo.SetFreq(.4);
 
