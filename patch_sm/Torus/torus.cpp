@@ -122,8 +122,6 @@ void ProcessControls(Patch* patch, PerformanceState* state)
             // Light up the LED to indicate that releasing the button will enter
             // the calibration state.
             led_brightness = 1.f;
-            // Holding the button passes through the normalize mode so we need
-            // to clear that state.
             if(settings_state != CALIBRATE)
             {
                 // Holding the mode button while in shift mode enters the calibration
