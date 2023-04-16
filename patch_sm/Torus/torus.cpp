@@ -112,11 +112,6 @@ void ProcessControls(Patch* patch, PerformanceState* state)
     shift = shift_switch.Pressed();
     float led_brightness{0.f};
 
-    if(mode_button.RisingEdge())
-    {
-        trigger_save = true;
-    }
-
     if(shift)
     {
         // In shift mode the first knob controls the frequency.
