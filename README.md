@@ -1,11 +1,29 @@
 <h1 align="center">Daisy Examples</h1>
 
+
+<!--CI Badges-->
 <p align="center">
-    <a href="https://github.com/electro-smith/DaisyExamples/actions/workflows/build.yml">
-      <img src="https://github.com/electro-smith/DaisyExamples/workflows/Build%20All/badge.svg">
+    <a href="https://github.com/electro-smith/libDaisy/actions/workflows/build.yml">
+      <img src="https://github.com/electro-smith/libDaisy/workflows/Build/badge.svg">
     </a>
-    <a href="https://github.com/electro-smith/DaisyExamples/actions/workflows/fix_style.yml">
-      <img src="https://github.com/electro-smith/DaisyExamples/workflows/Fix%20Style/badge.svg">
+    <a href="https://github.com/electro-smith/libDaisy/actions/workflows/style.yml">
+      <img src="https://github.com/electro-smith/libDaisy/workflows/Style/badge.svg">
+    </a>
+    <a href="https://electro-smith.github.io/libDaisy/index.html">
+      <img src="https://github.com/electro-smith/libDaisy/workflows/Documentation/badge.svg">
+    </a>
+</p>
+
+<!-- Non-CI Badges -->
+<p align="center">
+    <a href="https://opensource.org/licenses/MIT">
+      <img src="https://img.shields.io/badge/license-MIT-yellow">
+    </a>
+    <a href="https://discord.gg/ByHBnMtQTR">
+        <img src="https://img.shields.io/badge/join-us%20on%20discord-gray.svg?longCache=true&logo=discord&colorB=purple">
+    </a>
+    <a href="https://forum.electro-smith.com/">
+        <img src="https://img.shields.io/badge/chat-daisy%20forum-orange">
     </a>
 </p>
 
@@ -69,7 +87,7 @@ done.
 
 Similarly, all of the examples can be bulit by running:
 
-`./ci/build_examples.sh`
+`./ci/build_examples.py`
 
 However, this may also take a few minutes. An individual example can be compiled by navigating to that directory, and running Make. For example to build the Blink example:
 

@@ -1,12 +1,12 @@
 # Project Name
-TARGET = Osc
+TARGET = Drum
 
 # Sources
-CPP_SOURCES = Osc.cpp
+CPP_SOURCES = Drum.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../../../libDaisy
-DAISYSP_DIR = ../../../DaisySP
+LIBDAISY_DIR = ../../libDaisy
+DAISYSP_DIR = ../../DaisySP
 
 # Core location, and generic makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
