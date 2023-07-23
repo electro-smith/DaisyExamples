@@ -67,7 +67,7 @@ class Loop {
 			if (idx_ == 0) {
 				for (size_t b = 0 ; b < BLOCK_SIZE; b++) {
 					const float proportion = static_cast<float>(b) / (BLOCK_SIZE-1);
-					(*current][b] *= proportion;
+					(*current)[b] *= proportion;
 				}
 			}
 			// for last block use linear envelope to ramp down to 0.
@@ -112,18 +112,18 @@ class Loop {
 	private:
 		size_t len_;
 		size_t idx_;
-		LoopBuffer* buffer_;		
+		LoopBuffer* buffer_;
 };
 
 Loop loop[N_LOOPS];
 
-void AudioCallback(AudioHandle::InputBuffer in, 
-				   AudioHandle::OutputBuffer out, 
-				   size_t size) {	
+void AudioCallback(AudioHandle::InputBuffer in,
+				   AudioHandle::OutputBuffer out,
+				   size_t size) {
 
 	// monitor in 0 from out 0
 	copy_n(in[0], size, out[0]);
-	
+
 	// process in0 to loop1, output to out1
 	for (size_t l = 0; l < N_LOOPS; l++) {
 		loop[l].Process(in[0], out[l+1]);
@@ -133,7 +133,7 @@ void AudioCallback(AudioHandle::InputBuffer in,
 
  void UpdateControls() {
  	patch.ProcessAllControls();
-	
+
  	record_amount = ctrls[0].Process();
  	if (record_amount < 0.02) {
  		record_amount = 0;
@@ -174,7 +174,7 @@ void UpdateDisplay() {
 	vector<string> strs;
 
 	strs.push_back("rec " + FewDecimalPoints(record_amount));
-	strs.push_back("fb  " + FewDecimalPoints(feedback_amount));	
+	strs.push_back("fb  " + FewDecimalPoints(feedback_amount));
 
 	for (size_t l = 0; l < N_LOOPS; l++) {
 		strs.push_back(loop[l].State());
