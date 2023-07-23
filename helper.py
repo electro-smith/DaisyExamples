@@ -16,12 +16,12 @@ usage = {
     'operation': 'Keyword argument for the desired helper action. Can be any of the following: create, copy, update, rebuild_all.',
     'destination': 'Second positional argument to set where the action should be applied. This is the final destination of the project.',
     'source': 'optional argument for selecting the project to copy from. required for the copy operation.',
-    'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio, patch_sm',
+    'board': 'optional argument for selecting the template when using the create operation. Default is seed. Options are: seed, field, patch, petal, pod, versio, legio, patch_sm',
     'libs': 'optional argument for specifying the path containing libDaisy and DaisySP. Used with create and update. Default is ./ .',
     'include_vgdb': 'optional flag for including debug files for Visual Studio and the VisualGDB extension. These are not included by default.'
 }
 supported_boards = ['seed', 'pod', 'patch',
-    'field', 'petal', 'versio', 'patch_sm']
+    'field', 'petal', 'versio', 'legio', 'patch_sm']
 
 # Dirs to be ignored by update, and other global commands
 global_filter_dirs = ["libDaisy",
@@ -230,7 +230,8 @@ def create_from_template(destination, board, libs, include_vs = False):
         'patch': "DaisyPatch",
         'patch_sm': "DaisyPatchSM",
         'petal': "DaisyPetal",
-        'versio': 'DaisyVersio'
+        'versio': "DaisyVersio",
+        'legio': "DaisyLegio"
     }
     # Rewrite  Source file
     with open(src_file, 'w') as f:
