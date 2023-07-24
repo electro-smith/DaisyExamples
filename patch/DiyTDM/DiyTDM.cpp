@@ -7,54 +7,79 @@ using namespace std;
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch hw;
+#define BIT_SET(a,b) ((a) |= (1ULL<<(b)))
+#define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
+#define BIT_FLIP(a,b) ((a) ^= (1ULL<<(b)))
+#define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b))))        // '!!' to make sure this returns 0 or 1
 
-const int BIT_RATE = pow(2, 8);
+DaisyPatch hw;
+Parameter ctrl1;
+
+const int NUM_BITS = 8;
+const int MAX_VALUE = pow(2, NUM_BITS) - 1;
+
+int bit_to_flip = 0;
+float bit_to_flip_f = 0;
+
+// float sig_min_v = 0;
+// float sig_max_v = 0;
+
+inline float clip(const float v) {
+	if (v < -1.0) {
+		return -1.0;
+	} else if (v > 1.0) {
+		return 1.0;
+	} else {
+		return v;
+	}
+}
 
 inline int to_int(float in_v) {
-  // scale from (-1, 1) to (0, bitrate) and cast to int
-  return (int)((in_v + 1) / 2 * BIT_RATE);
+	// map from (-1, 1) to (0, bitrate) as int
+	in_v = clip(in_v);
+	return (int)((in_v + 1) / 2 * MAX_VALUE);
 }
 
-inline float to_float(int in_v) {
-  // cast to float and rescale back to (-1, 1)
-  return ((float)(in_v) / BIT_RATE * 2) - 1;
+inline float to_float(const int in_v) {
+	// cast to float
+	float val_f = (float)in_v;
+	// and rescale back to (-1, 1)
+	val_f = (val_f / MAX_VALUE * 2) - 1;
+	//assert val_f >= -1.0;
+	//assert val_f <= 1.0;
+	return val_f;
 }
 
-float bitflip(float in_v, int bit) {
+inline float bitflip(float in_v, int bit) {
 	// cast to int
 	int int_v = to_int(in_v);
-	// create mask to flip bit
-	int mask = 0;
-	mask |= 1 << bit;
-	// flip bits
-	int_v ^= mask;
+	// flip bit
+	BIT_FLIP(int_v, bit);
 	// return as float
 	return to_float(int_v);
 }
 
-inline float bit_crush(float in_v, int rate) {
-	const int bit_rate = pow(2, rate);
-    // scale from (-1, 1) to (0, bitrate)
-    in_v = (in_v + 1) / 2 * bit_rate;
-    // cast to int to float
-    in_v = (float)((int)(in_v));
-    // rescale back to (-1, 1)
-    return (in_v / bit_rate * 2) - 1;
-}
-
 
 void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size) {
-	hw.ProcessAllControls();
 	for (size_t i = 0; i < size; i++) {
-		out[0][i] = bitflip(in[0][i], 0);
-		out[1][i] = bitflip(in[0][i], 2);
-		out[2][i] = bitflip(in[0][i], 4);
-		out[3][i] = bitflip(in[0][i], 6);
+		const float in_v = in[0][i];
+		// if (in_v < sig_min_v) { sig_min_v = in_v; }
+		// if (in_v > sig_max_v) { sig_max_v = in_v; }
+		out[0][i] = bitflip(in_v, 0);
+		out[1][i] = bitflip(in_v, 2);
+		out[2][i] = bitflip(in_v, 4);
+		out[3][i] = bitflip(in_v, bit_to_flip);
 	}
 }
 
 void UpdateControls() {
+	hw.ProcessAllControls();
+
+	// process ctrl1, value 0 to 1
+	bit_to_flip_f = ctrl1.Process();
+
+	// map to (0, NUM_BITS) for bit to flip
+	bit_to_flip = (int)(bit_to_flip_f*NUM_BITS);
 }
 
 void DisplayLines(const vector<string> &strs) {
@@ -67,11 +92,27 @@ void DisplayLines(const vector<string> &strs) {
 	}
 }
 
+inline string int_to_string(const int v) {
+	FixedCapStr<5> str("");
+	str.AppendInt(v);
+	return string(str);
+}
+
+inline string float_to_string(const float v) {
+	FixedCapStr<5> str("");
+	str.AppendFloat(v, 2);
+	return string(str);
+}
+
 void UpdateDisplay() {
 	hw.display.Fill(false);
 	vector<string> strs;
 
-	strs.push_back("flip_some_bits");
+	strs.push_back("flip bit v7");
+	strs.push_back(int_to_string(bit_to_flip));
+	// strs.push_back(float_to_string(sig_min_v));
+	// strs.push_back(float_to_string(sig_max_v));
+	// sig_min_v = sig_max_v = 0;
 
 	DisplayLines(strs);
 	hw.display.Update();
@@ -83,6 +124,8 @@ int main(void) {
 	hw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
+
+	ctrl1.Init(hw.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
 
 	while(true) {
 		for (size_t i = 0; i < 100; i++) {
