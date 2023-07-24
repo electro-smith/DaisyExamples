@@ -208,9 +208,9 @@ void UpdateDisplay() {
 	FixedCapStr<10> mask_str("");
 	for (int i=0; i<NUM_BITS; i++) {
 		if (BIT_CHECK(flip_mask, i)) {
-			mask_str.Append("1");
+			mask_str.Append("*");
 		} else {
-			mask_str.Append("0");
+			mask_str.Append(".");
 		}
 	}
 	strs.push_back(string(mask_str));
