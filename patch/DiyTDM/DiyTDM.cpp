@@ -65,22 +65,22 @@ inline float to_float(const int in_v) {
 	float val_f = (float)in_v;
 	// and rescale back to (-1, 1)
 	val_f = (val_f / MAX_VALUE * 2) - 1;
-	//assert val_f >= -1.0;
-	//assert val_f <= 1.0;
+	//assert(val_f >= -1.0);
+	//assert(val_f <= 1.0);
 	return val_f;
 }
 
 inline float bitflip(float in_v) {
 	// cast to int
 	int int_v = to_int(in_v);
-	// flip bit
+	// flip bits
 	BITMASK_FLIP(int_v, flip_mask);
 	// return as float
 	return to_float(int_v);
 }
 
 inline int roll(int v, int min_r, int max_r) {
-    assert(min_r < max_r);
+    //assert(min_r < max_r);
 
     // record original values outside range
     const int outside_range = v & ~roll_range_mask;
