@@ -13,7 +13,8 @@ using namespace daisysp;
 #define BITMASK_FLIP(x, mask) ((x) ^= (mask))
 
 DaisyPatch hw;
-//Parameter ctrl1;
+// Parameter range_lhs;
+// Parameter range_rhs;
 
 const int NUM_BITS = 8;
 const int MAX_VALUE = pow(2, NUM_BITS) - 1;
@@ -56,6 +57,14 @@ inline float bitflip(float in_v) {
 	return to_float(int_v);
 }
 
+inline int roll(int v) {
+    const bool left_most_bit_set = BIT_CHECK(v, 0);
+    v >>= 1;
+    if (left_most_bit_set) {
+        BIT_SET(v, 7);
+    }
+    return v;
+}
 
 void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size) {
 	for (size_t i = 0; i < size; i++) {
@@ -69,6 +78,7 @@ void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, s
 void UpdateControls() {
 	hw.ProcessAllControls();
 
+	// moving encoder moves cursor for mask bit flipping
 	cursor += hw.encoder.Increment();
 	if (cursor < 0) {
 		cursor = 0;
@@ -76,8 +86,14 @@ void UpdateControls() {
 		cursor = NUM_BITS-1;
 	}
 
+	// clicking encoder toggles mask bit state
 	if (hw.encoder.RisingEdge()) {
 		BIT_FLIP(flip_mask, cursor);
+	}
+
+	// gate1 trigger rolls flip mask left
+	if (hw.gate_input[0].Trig()) {
+		flip_mask = roll(flip_mask);
 	}
 }
 
@@ -142,7 +158,8 @@ int main(void) {
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
 
-	//ctrl1.Init(hw.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
+	// range_lhs.Init(hw.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
+	// range_rhs.Init(hw.controls[1], 0.0f, 1.0f, Parameter::LINEAR);
 
 	while(true) {
 		for (size_t i = 0; i < 100; i++) {
