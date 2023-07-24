@@ -8,21 +8,18 @@ using namespace daisy;
 using namespace daisysp;
 
 #define BIT_SET(a,b) ((a) |= (1ULL<<(b)))
-#define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
 #define BIT_FLIP(a,b) ((a) ^= (1ULL<<(b)))
 #define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b))))        // '!!' to make sure this returns 0 or 1
+#define BITMASK_FLIP(x, mask) ((x) ^= (mask))
 
 DaisyPatch hw;
-Parameter ctrl1;
+//Parameter ctrl1;
 
 const int NUM_BITS = 8;
 const int MAX_VALUE = pow(2, NUM_BITS) - 1;
 
-int bit_to_flip = 0;
-float bit_to_flip_f = 0;
-
-// float sig_min_v = 0;
-// float sig_max_v = 0;
+int cursor = 0;     // which bit is the cursor controlled by the encoder above?
+int flip_mask = 0;
 
 inline float clip(const float v) {
 	if (v < -1.0) {
@@ -50,11 +47,11 @@ inline float to_float(const int in_v) {
 	return val_f;
 }
 
-inline float bitflip(float in_v, int bit) {
+inline float bitflip(float in_v) {
 	// cast to int
 	int int_v = to_int(in_v);
 	// flip bit
-	BIT_FLIP(int_v, bit);
+	BITMASK_FLIP(int_v, flip_mask);
 	// return as float
 	return to_float(int_v);
 }
@@ -62,24 +59,26 @@ inline float bitflip(float in_v, int bit) {
 
 void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size) {
 	for (size_t i = 0; i < size; i++) {
-		const float in_v = in[0][i];
-		// if (in_v < sig_min_v) { sig_min_v = in_v; }
-		// if (in_v > sig_max_v) { sig_max_v = in_v; }
-		out[0][i] = bitflip(in_v, 0);
-		out[1][i] = bitflip(in_v, 2);
-		out[2][i] = bitflip(in_v, 4);
-		out[3][i] = bitflip(in_v, bit_to_flip);
+		out[0][i] = bitflip(in[0][i]);
+		out[1][i] = in[1][i];
+		out[2][i] = in[2][i];
+		out[3][i] = in[3][i];
 	}
 }
 
 void UpdateControls() {
 	hw.ProcessAllControls();
 
-	// process ctrl1, value 0 to 1
-	bit_to_flip_f = ctrl1.Process();
+	cursor += hw.encoder.Increment();
+	if (cursor < 0) {
+		cursor = 0;
+	} else if (cursor > NUM_BITS-1) {
+		cursor = NUM_BITS-1;
+	}
 
-	// map to (0, NUM_BITS) for bit to flip
-	bit_to_flip = (int)(bit_to_flip_f*NUM_BITS);
+	if (hw.encoder.RisingEdge()) {
+		BIT_FLIP(flip_mask, cursor);
+	}
 }
 
 void DisplayLines(const vector<string> &strs) {
@@ -92,27 +91,45 @@ void DisplayLines(const vector<string> &strs) {
 	}
 }
 
-inline string int_to_string(const int v) {
-	FixedCapStr<5> str("");
-	str.AppendInt(v);
-	return string(str);
-}
+// inline string int_to_string(const int v) {
+// 	FixedCapStr<5> str("");
+// 	str.AppendInt(v);
+// 	return string(str);
+// }
 
-inline string float_to_string(const float v) {
-	FixedCapStr<5> str("");
-	str.AppendFloat(v, 2);
-	return string(str);
-}
+// inline string float_to_string(const float v) {
+// 	FixedCapStr<5> str("");
+// 	str.AppendFloat(v, 2);
+// 	return string(str);
+// }
 
 void UpdateDisplay() {
 	hw.display.Fill(false);
 	vector<string> strs;
 
 	strs.push_back("flip bit v7");
-	strs.push_back(int_to_string(bit_to_flip));
-	// strs.push_back(float_to_string(sig_min_v));
-	// strs.push_back(float_to_string(sig_max_v));
-	// sig_min_v = sig_max_v = 0;
+
+	// bits of mask
+	FixedCapStr<10> mask_str("");
+	for (int i=0; i<NUM_BITS; i++) {
+		if (BIT_CHECK(flip_mask, i)) {
+			mask_str.Append("1");
+		} else {
+			mask_str.Append("0");
+		}
+	}
+	strs.push_back(string(mask_str));
+
+	// create a string with ^ for cursor position
+	FixedCapStr<10> cursor_str("");
+	for (int i=0; i<NUM_BITS; i++) {
+		if (i==cursor) {
+			cursor_str.Append("^");
+		} else {
+			cursor_str.Append(" ");
+		}
+	}
+	strs.push_back(string(cursor_str));
 
 	DisplayLines(strs);
 	hw.display.Update();
@@ -125,7 +142,7 @@ int main(void) {
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
 
-	ctrl1.Init(hw.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
+	//ctrl1.Init(hw.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
 
 	while(true) {
 		for (size_t i = 0; i < 100; i++) {
