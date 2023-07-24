@@ -12,14 +12,21 @@ using namespace daisysp;
 #define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b))))        // '!!' to make sure this returns 0 or 1
 #define BITMASK_FLIP(x, mask) ((x) ^= (mask))
 
-DaisyPatch hw;
-// Parameter range_lhs;
-// Parameter range_rhs;
-
 const int NUM_BITS = 8;
 const int MAX_VALUE = pow(2, NUM_BITS) - 1;
 
-int cursor = 0;     // which bit is the cursor controlled by the encoder above?
+DaisyPatch hw;
+
+// min and max of the roll range
+Parameter roll_min_param;
+Parameter roll_max_param;
+int roll_min_v = 0;
+int roll_max_v = NUM_BITS-1;
+
+// which bit is the cursor controlled by the encoder pointing at?
+int cursor = 0;
+
+// flip mask for audio
 int flip_mask = 0;
 
 inline float clip(const float v) {
@@ -95,6 +102,20 @@ void UpdateControls() {
 	if (hw.gate_input[0].Trig()) {
 		flip_mask = roll(flip_mask);
 	}
+
+	// set min and max of the roll range. don't left them cross
+	float ctrl_v = roll_min_param.Process();
+	roll_min_v = (int)(ctrl_v * NUM_BITS);
+	if (roll_min_v >= roll_max_v) {
+		roll_min_v = roll_max_v-1;
+	}
+	ctrl_v = roll_max_param.Process();
+	roll_max_v = (int)(ctrl_v * NUM_BITS);
+	if (roll_max_v <= roll_min_v) {
+		roll_max_v = roll_min_v+1;
+	} else if (roll_max_v > NUM_BITS-1) {
+		roll_max_v = NUM_BITS-1;
+	}
 }
 
 void DisplayLines(const vector<string> &strs) {
@@ -107,17 +128,6 @@ void DisplayLines(const vector<string> &strs) {
 	}
 }
 
-// inline string int_to_string(const int v) {
-// 	FixedCapStr<5> str("");
-// 	str.AppendInt(v);
-// 	return string(str);
-// }
-
-// inline string float_to_string(const float v) {
-// 	FixedCapStr<5> str("");
-// 	str.AppendFloat(v, 2);
-// 	return string(str);
-// }
 
 void UpdateDisplay() {
 	hw.display.Fill(false);
@@ -147,6 +157,19 @@ void UpdateDisplay() {
 	}
 	strs.push_back(string(cursor_str));
 
+	// show the roll range with < for min and > for max
+	FixedCapStr<10> roll_range_str("");
+	for (int i=0; i<NUM_BITS; i++) {
+		if (i==roll_min_v) {
+			roll_range_str.Append(">");
+		} else if (i==roll_max_v) {
+			roll_range_str.Append("<");
+		} else {
+			roll_range_str.Append(" ");
+		}
+	}
+	strs.push_back(string(roll_range_str));
+
 	DisplayLines(strs);
 	hw.display.Update();
 }
@@ -158,8 +181,8 @@ int main(void) {
 	hw.StartAdc();
 	hw.StartAudio(AudioCallback);
 
-	// range_lhs.Init(hw.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
-	// range_rhs.Init(hw.controls[1], 0.0f, 1.0f, Parameter::LINEAR);
+	roll_min_param.Init(hw.controls[0], 0.0f, 1.0f, Parameter::LINEAR);
+	roll_max_param.Init(hw.controls[1], 0.0f, 1.0f, Parameter::LINEAR);
 
 	while(true) {
 		for (size_t i = 0; i < 100; i++) {
