@@ -1,7 +1,8 @@
+#include <string>
+#include <cassert>
+
 #include "daisy_patch.h"
 #include "daisysp.h"
-
-#include <string>
 
 using namespace std;
 using namespace daisy;
@@ -10,6 +11,7 @@ using namespace daisysp;
 #define BIT_SET(a,b) ((a) |= (1ULL<<(b)))
 #define BIT_FLIP(a,b) ((a) ^= (1ULL<<(b)))
 #define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b))))        // '!!' to make sure this returns 0 or 1
+#define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
 #define BITMASK_FLIP(x, mask) ((x) ^= (mask))
 
 const int NUM_BITS = 8;
@@ -64,13 +66,30 @@ inline float bitflip(float in_v) {
 	return to_float(int_v);
 }
 
-inline int roll(int v) {
-    const bool left_most_bit_set = BIT_CHECK(v, 0);
+inline int roll(int v, int min_r, int max_r) {
+    assert(min_r < max_r);
+
+    // create range mask
+    int range_mask = 0;
+    for (int i=min_r; i<=max_r; i++) {
+        BIT_SET(range_mask, i);
+    }
+
+    // record original values outside range
+    const int outside_range = v & ~range_mask;
+
+    // rotate values in range, roll left most value over to right most
+    const bool left_most_bit_set = BIT_CHECK(v, min_r);
     v >>= 1;
     if (left_most_bit_set) {
-        BIT_SET(v, 7);
+        BIT_SET(v, max_r);
+    } else {
+        BIT_CLEAR(v, max_r);
     }
-    return v;
+
+    // combined rolled values with the original
+	// values from outside the range
+    return (v & range_mask) | outside_range;
 }
 
 void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size) {
@@ -100,7 +119,7 @@ void UpdateControls() {
 
 	// gate1 trigger rolls flip mask left
 	if (hw.gate_input[0].Trig()) {
-		flip_mask = roll(flip_mask);
+		flip_mask = roll(flip_mask, roll_min_v, roll_max_v);
 	}
 
 	// set min and max of the roll range. don't left them cross
@@ -133,7 +152,7 @@ void UpdateDisplay() {
 	hw.display.Fill(false);
 	vector<string> strs;
 
-	strs.push_back("flip bit v7");
+	strs.push_back("turing drezno machine");
 
 	// bits of mask
 	FixedCapStr<10> mask_str("");
