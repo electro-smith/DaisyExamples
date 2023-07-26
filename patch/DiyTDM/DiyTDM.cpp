@@ -39,7 +39,7 @@ int flip_mask = 0;
 int roll_range_mask = 0;
 
 // latch to set initial values on first call
-bool first_update_call = false;
+bool first_update_call = true;
 
 
 const inline float random_01() {
@@ -197,7 +197,7 @@ void UpdateDisplay() {
 
     strs.push_back("turindrezmachine");
 
-    // TODO: these first three would be much faster just setting chars
+    // TODO: these first three would be faster just setting chars
     //       in an char[], there's no float parsing or anything.
 
     // show the encoder cursor position with a 'v'
