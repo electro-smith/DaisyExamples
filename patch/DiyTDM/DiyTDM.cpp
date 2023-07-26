@@ -1,5 +1,5 @@
 #include <string>
-#include <cassert>
+//#include <cassert>
 
 #include "daisy_patch.h"
 #include "daisysp.h"
@@ -14,7 +14,7 @@ using namespace daisysp;
 #define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
 #define BITMASK_FLIP(x, mask) ((x) ^= (mask))
 
-const int NUM_BITS = 8;
+const int NUM_BITS = 12;
 const int MAX_VALUE = pow(2, NUM_BITS) - 1;
 
 DaisyPatch hw;
@@ -36,8 +36,11 @@ int cursor = 0;
 int flip_mask = 0;
 
 // mask for the roll range
-bool roll_range_mask_calculated = false;
 int roll_range_mask = 0;
+
+// latch to set initial values on first call
+bool first_update_call = false;
+
 
 const inline float random_01() {
     // TODO use daisy::Random::GetFloat(); // which defaults to (0, 1)
@@ -82,10 +85,10 @@ inline float bitflip(float in_v) {
 inline int roll(int v, int min_r, int max_r) {
     //assert(min_r < max_r);
 
-    // record original values outside range
+    // record original values of mask that are outside the roll range
     const int outside_range = v & ~roll_range_mask;
 
-    // rotate values in range, roll left most value over to right most
+    // rotate values in roll range, roll left most value over to right most
     const bool left_most_bit_set = BIT_CHECK(v, min_r);
     v >>= 1;
     if (left_most_bit_set) {
@@ -95,14 +98,14 @@ inline int roll(int v, int min_r, int max_r) {
     }
 
     // potentially flip rolled bit
-    if (flip_on_roll_prob > 0) {
-        if (flip_on_roll_prob==1 || (random_01() < flip_on_roll_prob)) {
+    // avoid slow random_01() call for boundary cases of never and always
+    if (flip_on_roll_prob != 0) {
+        if (flip_on_roll_prob == 1 || (random_01() < flip_on_roll_prob)) {
             BIT_FLIP(v, max_r);
         }
     }
 
-    // combined rolled values with the original
-    // values from outside the range
+    // combined rolled values with the original unrolled values
     return (v & roll_range_mask) | outside_range;
 }
 
@@ -133,7 +136,8 @@ void UpdateControls() {
         BIT_FLIP(flip_mask, cursor);
     }
 
-    // set min and max of the roll range. don't left them cross (ctrls 1 and 2)
+    // set min and max of the roll range from ctrls 1 and 2
+    // ensure that min < max
     const int initial_roll_min_v = roll_min_v;
     const int initial_roll_max_v = roll_max_v;
     ctrl_v = roll_min_param.Process();
@@ -148,23 +152,23 @@ void UpdateControls() {
     } else if (roll_max_v > NUM_BITS-1) {
         roll_max_v = NUM_BITS-1;
     }
-    // if min or max changed (or it's first call) then update roll range mask
-    if (!roll_range_mask_calculated || roll_min_v != initial_roll_min_v || roll_max_v != initial_roll_max_v) {
+    // if min or max changed (or it's the first call) then update roll range mask
+    if (first_update_call || roll_min_v != initial_roll_min_v || roll_max_v != initial_roll_max_v) {
         // create range mask
         int mask = 0;
         for (int i=roll_min_v; i<=roll_max_v; i++) {
             BIT_SET(mask, i);
         }
         roll_range_mask = mask;
-        roll_range_mask_calculated = true;
+        first_update_call = false;
     }
 
     // update flip on roll probability (ctrl3)
     // snap at ends to clean {0, 1}
     ctrl_v = flip_on_roll_param.Process();
-    if (ctrl_v < 0.05) {
+    if (ctrl_v < 0.02) {
         flip_on_roll_prob = 0.0;
-    } else if (ctrl_v > 0.95) {
+    } else if (ctrl_v > 0.98) {
         flip_on_roll_prob = 1.0;
     } else {
         flip_on_roll_prob = ctrl_v;
@@ -193,45 +197,49 @@ void UpdateDisplay() {
 
     strs.push_back("turindrezmachine");
 
-    // create a string with v for cursor position
-    FixedCapStr<10> cursor_str("");
+    // TODO: these first three would be much faster just setting chars
+    //       in an char[], there's no float parsing or anything.
+
+    // show the encoder cursor position with a 'v'
+    FixedCapStr<18> str("");
     for (int i=0; i<NUM_BITS; i++) {
         if (i==cursor) {
-            cursor_str.Append("v");
+            str.Append("v");
         } else {
-            cursor_str.Append(" ");
+            str.Append(" ");
         }
     }
-    strs.push_back(string(cursor_str));
+    strs.push_back(string(str));
 
-    // show bits of mask
-    FixedCapStr<10> mask_str("");
+    // show bits of mask, '*' for set, '.' for unset
+    str.Clear();
     for (int i=0; i<NUM_BITS; i++) {
         if (BIT_CHECK(flip_mask, i)) {
-            mask_str.Append("*");
+            str.Append("*");
         } else {
-            mask_str.Append(".");
+            str.Append(".");
         }
     }
-    strs.push_back(string(mask_str));
+    strs.push_back(string(str));
 
-    // show the roll range with < for min and > for max
-    FixedCapStr<10> roll_range_str("");
+    // show the roll range using '<' for min and '>' for max
+    str.Clear();
     for (int i=0; i<NUM_BITS; i++) {
         if (i==roll_min_v) {
-            roll_range_str.Append(">");
+            str.Append(">");
         } else if (i==roll_max_v) {
-            roll_range_str.Append("<");
+            str.Append("<");
         } else {
-            roll_range_str.Append(" ");
+            str.Append(" ");
         }
     }
-    strs.push_back(string(roll_range_str));
+    strs.push_back(string(str));
 
-    FixedCapStr<18> forp_str("");
-    forp_str.Append("flip prob ");
-    forp_str.AppendFloat(flip_on_roll_prob, 2);
-    strs.push_back(string(forp_str));
+    // display the flip probability
+    str.Clear();
+    str.Append("flip prob ");
+    str.AppendFloat(flip_on_roll_prob, 2);
+    strs.push_back(string(str));
 
     DisplayLines(strs);
     hw.display.Update();
@@ -249,7 +257,7 @@ int main(void) {
     flip_on_roll_param.Init(hw.controls[2], 0.0f, 1.0f, Parameter::LINEAR);
 
     while(true) {
-        for (size_t i = 0; i < 100; i++) {
+        for (size_t i = 0; i < 1000; i++) {
             UpdateControls();
         }
         UpdateDisplay();
