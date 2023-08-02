@@ -13,28 +13,11 @@ DaisyPatch hw;
 const size_t BUFFER_SIZE = 60 * 48000;  // max of 60sec
 float DSY_SDRAM_BSS buffer[BUFFER_SIZE];
 
-// where in the sample we are playing/recording
-size_t sample_offset;
-
-// starting position dictated by ctrl2.
-float last_ctrl2_val;
-size_t sample_start;
-
-// effective sample start; first +ve zero crossing after sample_start
-size_t sample_effective_start;
-
-// effective sample end; last +ve zero crossing before sample_end
-size_t sample_effective_end;
-
-// sample end dictated by ctrl3 (for length) + sample_start ( from ctrl2 )
-float last_ctrl3_val;
-size_t sample_end;
+// record head position
+size_t record_head;
 
 // actual recorded loop
 size_t sample_length;
-
-// 0 < sample_start < sample_effective_start < sample_effective_end < sample_end < sample_length
-// sample_effective_start < sample_offset < sample_effective_end
 
 enum State {
   WAITING,
@@ -43,53 +26,129 @@ enum State {
 };
 State state = State::WAITING;
 
-void SetEffectiveSampleStart() {
-  // decide effective sample start by seeking forward
-  // from start of buffer to first positive crossing
-  float last_val = buffer[sample_start];
-  for (size_t b = sample_start+1; b < sample_length; b++) {
-    float value = buffer[b];
-    if (last_val < 0 && value > 0) {
-      sample_effective_start = b;
-      return;
-    }
-    last_val = value;
-  }
-  // failed to find a crossing :()
-  sample_effective_start = sample_start;
-}
+class Grain {
+  public:
 
-void SetEffectiveSampleEnd() {
-  // decide effective sample end by seeking backwards
-  // from the end of the buffer to find the last
-  // positive crossing
-  float last_val = buffer[sample_end-1];
-  for (size_t b = sample_end-2; b > sample_effective_start; b--) {
-    float value = buffer[b];
-    if (last_val > 0 && value < 0) {
-      sample_effective_end = b;
-      return;
-    }
-    last_val = value;
-  }
-  // failed to find a crossing :()
-  sample_effective_end = sample_end-1;
-}
+    Grain() {}
 
-void UpdateSampleStartEnd() {
-  sample_start = static_cast<size_t>(last_ctrl2_val * sample_length);
-  SetEffectiveSampleStart();
-  sample_end = sample_start + static_cast<size_t>(last_ctrl3_val * sample_length);
-  if (sample_end >= sample_length) {
-    sample_end = sample_length-1;
-  }
-  SetEffectiveSampleEnd();
-}
+    void SetControlIndexs(size_t a, size_t b) {
+      control_a_idx_ = a;
+      control_b_idx_ = b;
+    }
+
+    void UpdateSampleStartEnd() {
+      start_ = static_cast<size_t>(last_ctrl_a_val_ * sample_length);
+      SetEffectiveSampleStart();
+      end_ = start_ + static_cast<size_t>(last_ctrl_b_val_ * sample_length);
+      if (end_ >= sample_length) {
+        end_ = sample_length-1;
+      }
+      SetEffectiveSampleEnd();
+    }
+
+    void ResetPlaybackHead() {
+      playback_head_ = effective_start_;
+    }
+
+    float Playback() {
+      if (playback_head_ >= effective_end_) {
+        playback_head_ = effective_start_;
+      }
+      const float to_return = buffer[playback_head_];
+      playback_head_++;
+      return to_return;
+    }
+
+    void CheckControlsAndUpdateEndsIfRequired() {
+      // check if ctrl2 ( sample start ) or ctrl3 ( sample length ) have changed
+      bool changed = false;
+      float val = hw.controls[control_a_idx_].Value();
+      if (abs(last_ctrl_a_val_ - val) > 0.001) {
+        changed = true;
+        last_ctrl_a_val_ = val;
+      }
+      val = hw.controls[control_b_idx_].Value();
+      if (abs(last_ctrl_b_val_ - val) > 0.001) {
+        changed = true;
+        last_ctrl_b_val_ = val;
+      }
+      // if either have changed we need to update the sample
+      // start/end BUT we only do this dynamically during playback
+      if (changed && state == PLAYING) {
+        UpdateSampleStartEnd();
+      }
+    }
+
+    inline float GetStartP() const {
+      return float(effective_start_) / sample_length;
+    }
+
+    inline float GetEndP() {
+      return float(effective_end_) / sample_length;
+    }
+
+  private:
+
+    void SetEffectiveSampleStart() {
+      // decide effective sample start by seeking forward
+      // from start of buffer to first positive crossing
+      float last_val = buffer[start_];
+      for (size_t b = start_+1; b < sample_length; b++) {
+        float value = buffer[b];
+        if (last_val < 0 && value > 0) {
+          effective_start_ = b;
+          return;
+        }
+        last_val = value;
+      }
+      // failed to find a crossing :()
+      effective_start_ = start_;
+    }
+
+    void SetEffectiveSampleEnd() {
+      // decide effective sample end by seeking backwards
+      // from the end of the buffer to find the last
+      // positive crossing
+      float last_val = buffer[end_-1];
+      for (size_t b = end_-2; b > effective_start_; b--) {
+        float value = buffer[b];
+        if (last_val > 0 && value < 0) {
+          effective_end_ = b;
+          return;
+        }
+        last_val = value;
+      }
+      // failed to find a crossing :()
+      effective_end_ = end_-1;
+    }
+
+    size_t control_a_idx_;
+    size_t control_b_idx_;
+
+    // playback head position
+    size_t playback_head_;
+
+    // starting position dictated by ctrl2.
+    float last_ctrl_a_val_;
+    size_t start_;
+
+    // effective sample start; first +ve zero crossing after sample_start
+    size_t effective_start_;
+
+    // effective sample end; last +ve zero crossing before sample_end
+    size_t effective_end_;
+
+    // sample end dictated by ctrl3 (for length) + sample_start ( from ctrl2 )
+    float last_ctrl_b_val_;
+    size_t end_;
+};
+
+Grain grain;
 
 void StopRecording() {
-  sample_length = sample_offset-1;
-  UpdateSampleStartEnd();
-  sample_offset = sample_effective_start;
+  sample_length = record_head-1;
+  grain.UpdateSampleStartEnd();
+  grain.ResetPlaybackHead();
   state = PLAYING;
 }
 
@@ -106,24 +165,20 @@ void AudioCallback(AudioHandle::InputBuffer in,
 
       case RECORDING:
         out[0][b] = in[0][b];
-        buffer[sample_offset] = in[0][b];
-        sample_offset++;
-        if (sample_offset == BUFFER_SIZE) {
+        buffer[record_head] = in[0][b];
+        record_head++;
+        if (record_head == BUFFER_SIZE) {
           StopRecording();
         }
         break;
 
       case PLAYING:
-        if (sample_offset >= sample_effective_end) {
-          sample_offset = sample_effective_start;
-        }
-        out[0][b] = buffer[sample_offset];
-        sample_offset++;
+        out[0][b] = grain.Playback();
 
-        // core wave based on proportion we are through effective sample
-        float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
-        out[1][b] = core;
-        break;
+        // // core wave based on proportion we are through effective sample
+        // float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
+        // out[1][b] = core;
+        // break;
     }
 
   }
@@ -133,24 +188,7 @@ void AudioCallback(AudioHandle::InputBuffer in,
 void UpdateControls() {
   hw.ProcessAllControls();
 
-  // check if ctrl2 ( sample start ) or ctrl3 ( sample length ) have changed
-  bool changed = false;
-  float val = hw.controls[1].Value();
-  if (val<0) { val=}
-  if (abs(last_ctrl2_val - val) > 0.001) {
-    changed = true;
-    last_ctrl2_val = val;
-  }
-  val = hw.controls[2].Value();
-  if (abs(last_ctrl3_val - val) > 0.001) {
-    changed = true;
-    last_ctrl3_val = val;
-  }
-  // if either have changed we need to update the sample
-  // start/end BUT we only do this dynamically during playback
-  if (changed && state == PLAYING) {
-    UpdateSampleStartEnd();
-  }
+  grain.CheckControlsAndUpdateEndsIfRequired();
 
   // click on encoder or trig at gate1 toggles recording
   if (hw.encoder.RisingEdge() || hw.gate_input[0].Trig()) {
@@ -158,7 +196,7 @@ void UpdateControls() {
       StopRecording();
     } else {
       state = RECORDING;
-      sample_offset = 0;
+      record_head = 0;
     }
   }
 
@@ -194,35 +232,16 @@ void UpdateDisplay() {
   }
   strs.push_back(string(str));
 
-  str.Clear();
-  str.Append("offset  ");
-  str.AppendInt(sample_offset);
-  strs.push_back(string(str));
-
-  str.Clear();
-  str.Append("start   ");
-  str.AppendInt(sample_start);
-  strs.push_back(string(str));
-
-  str.Clear();
-  str.Append("e_start ");
-  str.AppendInt(sample_effective_start);
-  strs.push_back(string(str));
-
-  str.Clear();
-  str.Append("e_end   ");
-  str.AppendInt(sample_effective_end);
-  strs.push_back(string(str));
-
-  str.Clear();
-  str.Append("end     ");
-  str.AppendInt(sample_end);
-  strs.push_back(string(str));
-
-  str.Clear();
-  str.Append("length  ");
-  str.AppendInt(sample_length);
-  strs.push_back(string(str));
+//  for (size_t g=0; g<2; g++) {
+    str.Clear();
+    str.Append("g");
+//    str.AppendInt(g);
+    str.Append(" ");
+    str.AppendFloat(grain.GetStartP(), 3);
+    str.Append(" ");
+    str.AppendFloat(grain.GetEndP(), 3);
+    strs.push_back(string(str));
+//  }
 
   DisplayLines(strs);
   hw.display.Update();
@@ -236,6 +255,8 @@ int main(void) {
   hw.StartAdc();
   hw.StartAudio(AudioCallback);
 
+  grain.SetControlIndexs(0, 1);
+
   while(true) {
     for (size_t i = 0; i < 100; i++) {
       UpdateControls();
@@ -244,5 +265,3 @@ int main(void) {
   }
 
 }
-
-
