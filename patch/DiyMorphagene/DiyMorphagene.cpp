@@ -10,22 +10,13 @@ using namespace daisysp;
 
 DaisyPatch hw;
 
-// the fundamental unit of a grain is a block of audio
-// corresponding to the block size of the audio callback
-const size_t BLOCK_SIZE = 64;
+const size_t BUFFER_SIZE = 48000;
+float DSY_SDRAM_BSS buffer[BUFFER_SIZE];
 
-// a float block represents a block of floats for one callback
-using FloatBlock = float[BLOCK_SIZE];
-
-// max sample length
-const size_t MAX_SAMPLE_LEN = 5000;
-using SampleBuffer = FloatBlock[MAX_SAMPLE_LEN];
-
-// SDRAM assigned sample buffer
-SampleBuffer DSY_SDRAM_BSS buffer;
-
-size_t sample_offset;
-size_t sample_length;
+size_t sample_offset;   // where in the sample we are playing/recording
+size_t sample_start;    // effective sample start; first +ve zero crossing
+size_t sample_end;      // effective sample start; last +ve zero crossing
+size_t sample_length;   // actual recorded sample length
 
 enum State {
   WAITING,
@@ -35,71 +26,87 @@ enum State {
 State state = State::WAITING;
 
 bool looping;
-
 bool have_recording = false;
 
-CrossFade fader;
+void SetSampleStart() {
+  // decide effective sample start by seeking forward
+  // from 0 to first positive crossing
+  float last_val = buffer[0];
+  for (size_t b = 1; b < BUFFER_SIZE; b++) {
+    float value = buffer[b];
+    if (last_val < 0 && value > 0) {
+      sample_start = b;
+      return;
+    }
+    last_val = value;
+  }
+  // failed to find a crossing :()
+  sample_start = 0;
+}
+
+void SetSampleEnd() {
+  // decide effective sample end by seeking backwards
+  // from end to find "first" positive crossing
+  float last_val = buffer[sample_length-1];
+  for (size_t b = sample_length-2; b > 0; b--) {
+    float value = buffer[b];
+    if (last_val > 0 && value < 0) {
+      sample_end = b;
+      return;
+    }
+    last_val = value;
+  }
+  // failed to find a crossing :()
+  sample_end = sample_length-1;
+}
 
 void StopRecording() {
   sample_length = sample_offset-1;
-  sample_offset = 0;
+  SetSampleStart();
+  SetSampleEnd();
+  sample_offset = sample_start;
   state = looping ? PLAYING : WAITING;
   have_recording = true;
-
-  // rewrite last block as linear interp to sample start
-  float from_val = buffer[sample_length-1][0];
-  float to_val = buffer[0][0];
-  for (size_t b = 0; b < BLOCK_SIZE; b++) {
-    fader.SetPos(float(b) / BLOCK_SIZE);
-    buffer[sample_length-1][b] = fader.Process(from_val, to_val);
-  }
-
 }
-
 
 void AudioCallback(AudioHandle::InputBuffer in,
                    AudioHandle::OutputBuffer out,
                    size_t size) {
 
-  switch(state) {
+  for (size_t b = 0; b < size; b++) {
+    switch(state) {
 
-    case WAITING:
-      for (size_t b = 0; b < BLOCK_SIZE; b++) {
+      case WAITING:
         out[0][b] = in[0][b];
-      }
-      break;
+        break;
 
-    case RECORDING:
-      for (size_t b = 0; b < BLOCK_SIZE; b++) {
+      case RECORDING:
         out[0][b] = in[0][b];
-        buffer[sample_offset][b] = in[0][b];
-      }
-      sample_offset++;
-      if (sample_offset == MAX_SAMPLE_LEN) {
-        StopRecording();
-      }
-      break;
+        buffer[sample_offset] = in[0][b];
+        sample_offset++;
+        if (sample_offset == BUFFER_SIZE) {
+          StopRecording();
+        }
+        break;
 
-    case PLAYING:
-      for (size_t b = 0; b < BLOCK_SIZE; b++) {
-        out[0][b] = buffer[sample_offset][b];
-      }
-      sample_offset++;
-      if (sample_offset == sample_length) {
-        state = looping ? PLAYING : WAITING;
-        sample_offset = 0;
-      }
-      break;
-  }
+      case PLAYING:
+        // TODO: when ramping up first playing (i.e. not looping etc)
+        //   we should cross fade in from whatever other signal e.g. in[0]
+        out[0][b] = buffer[sample_offset];
+        sample_offset++;
+        if (sample_offset == sample_end) {
+          state = looping ? PLAYING : WAITING;
+          sample_offset = sample_start;
+        }
+        break;
+    }
 
-  // core wave based on sample length
-  float core = float(sample_offset) / sample_length;
-  for (size_t b = 0; b < BLOCK_SIZE; b++) {
+    // core wave based on effective sample length
+    float core = float(sample_offset) / (sample_end-sample_start);
     out[1][b] = core;
   }
 
 }
-
 
 void UpdateControls() {
   hw.ProcessAllControls();
@@ -165,6 +172,16 @@ void UpdateDisplay() {
   strs.push_back(string(str));
 
   str.Clear();
+  str.Append("start  ");
+  str.AppendInt(sample_start);
+  strs.push_back(string(str));
+
+  str.Clear();
+  str.Append("end    ");
+  str.AppendInt(sample_end);
+  strs.push_back(string(str));
+
+  str.Clear();
   str.Append("length ");
   str.AppendInt(sample_length);
   strs.push_back(string(str));
@@ -176,13 +193,10 @@ void UpdateDisplay() {
 int main(void) {
   hw.Init();
 
-  hw.SetAudioBlockSize(BLOCK_SIZE); // number of samples handled per callback
+  hw.SetAudioBlockSize(64); // number of samples handled per callback
   hw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
   hw.StartAdc();
   hw.StartAudio(AudioCallback);
-
-  fader.Init();
-  fader.SetCurve(CROSSFADE_CPOW);
 
   while(true) {
     for (size_t i = 0; i < 100; i++) {
