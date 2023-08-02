@@ -10,13 +10,31 @@ using namespace daisysp;
 
 DaisyPatch hw;
 
-const size_t BUFFER_SIZE = 48000;
+const size_t BUFFER_SIZE = 60 * 48000;  // max of 60sec
 float DSY_SDRAM_BSS buffer[BUFFER_SIZE];
 
-size_t sample_offset;   // where in the sample we are playing/recording
-size_t sample_start;    // effective sample start; first +ve zero crossing
-size_t sample_end;      // effective sample start; last +ve zero crossing
-size_t sample_length;   // actual recorded sample length
+// where in the sample we are playing/recording
+size_t sample_offset;
+
+// starting position dictated by ctrl2.
+float last_ctrl2_val;
+size_t sample_start;
+
+// effective sample start; first +ve zero crossing after sample_start
+size_t sample_effective_start;
+
+// effective sample end; last +ve zero crossing before sample_end
+size_t sample_effective_end;
+
+// sample end dictated by ctrl3 (for length) + sample_start ( from ctrl2 )
+float last_ctrl3_val;
+size_t sample_end;
+
+// actual recorded loop
+size_t sample_length;
+
+// 0 < sample_start < sample_effective_start < sample_effective_end < sample_end < sample_length
+// sample_effective_start < sample_offset < sample_effective_end
 
 enum State {
   WAITING,
@@ -28,43 +46,53 @@ State state = State::WAITING;
 bool looping;
 bool have_recording = false;
 
-void SetSampleStart() {
+void SetEffectiveSampleStart() {
   // decide effective sample start by seeking forward
-  // from 0 to first positive crossing
-  float last_val = buffer[0];
-  for (size_t b = 1; b < BUFFER_SIZE; b++) {
+  // from start of buffer to first positive crossing
+  float last_val = buffer[sample_start];
+  for (size_t b = sample_start+1; b < sample_length; b++) {
     float value = buffer[b];
     if (last_val < 0 && value > 0) {
-      sample_start = b;
+      sample_effective_start = b;
       return;
     }
     last_val = value;
   }
   // failed to find a crossing :()
-  sample_start = 0;
+  sample_effective_start = 0;
 }
 
-void SetSampleEnd() {
+void SetEffectiveSampleEnd() {
   // decide effective sample end by seeking backwards
-  // from end to find "first" positive crossing
-  float last_val = buffer[sample_length-1];
-  for (size_t b = sample_length-2; b > 0; b--) {
+  // from the end of the buffer to find the last
+  // positive crossing
+  float last_val = buffer[sample_end-1];
+  for (size_t b = sample_end-2; b > sample_effective_start; b--) {
     float value = buffer[b];
     if (last_val > 0 && value < 0) {
-      sample_end = b;
+      sample_effective_end = b;
       return;
     }
     last_val = value;
   }
   // failed to find a crossing :()
-  sample_end = sample_length-1;
+  sample_effective_end = sample_end-1;
+}
+
+void UpdateSampleStartEnd() {
+  sample_start = static_cast<size_t>(last_ctrl2_val * sample_length);
+  SetEffectiveSampleStart();
+  sample_end = sample_start + static_cast<size_t>(last_ctrl3_val * sample_length);
+  if (sample_end >= sample_length) {
+    sample_end = sample_length-1;
+  }
+  SetEffectiveSampleEnd();
 }
 
 void StopRecording() {
   sample_length = sample_offset-1;
-  SetSampleStart();
-  SetSampleEnd();
-  sample_offset = sample_start;
+  UpdateSampleStartEnd();
+  sample_offset = sample_effective_start;
   state = looping ? PLAYING : WAITING;
   have_recording = true;
 }
@@ -94,16 +122,16 @@ void AudioCallback(AudioHandle::InputBuffer in,
         //   we should cross fade in from whatever other signal e.g. in[0]
         out[0][b] = buffer[sample_offset];
         sample_offset++;
-        if (sample_offset == sample_end) {
+        if (sample_offset >= sample_effective_end) {
           state = looping ? PLAYING : WAITING;
-          sample_offset = sample_start;
+          sample_offset = sample_effective_start;
         }
+        // core wave based on proportion we are through effective sample
+        float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
+        out[1][b] = core;
         break;
     }
 
-    // core wave based on effective sample length
-    float core = float(sample_offset) / (sample_end-sample_start);
-    out[1][b] = core;
   }
 
 }
@@ -118,6 +146,24 @@ void UpdateControls() {
   }
   looping = new_looping;
 
+  // check if ctrl2 ( sample start ) or ctrl3 ( sample length ) have changed
+  bool changed = false;
+  float val = hw.controls[1].Value();
+  if (abs(last_ctrl2_val - val) > 0.001) {
+    changed = true;
+    last_ctrl2_val = val;
+  }
+  val = hw.controls[2].Value();
+  if (abs(last_ctrl3_val - val) > 0.001) {
+    changed = true;
+    last_ctrl3_val = val;
+  }
+  // if either have changed we need to update the sample
+  // start/end BUT we only do this dynamically during playback
+  if (changed && state == PLAYING) {
+    UpdateSampleStartEnd();
+  }
+
   // click on encoder
   if (hw.encoder.RisingEdge()) {
     if (state == RECORDING) {
@@ -126,7 +172,6 @@ void UpdateControls() {
       state = RECORDING;
       sample_offset = 0;
     }
-
   }
 
 }
@@ -161,28 +206,33 @@ void UpdateDisplay() {
   }
   strs.push_back(string(str));
 
-  str.Clear();
-  str.Append("looping ");
-  str.Append(looping ? "T" : "F");
-  strs.push_back(string(str));
+  // str.Clear();
+  // str.Append("looping  ");
+  // str.Append(looping ? "T" : "F");
+  // strs.push_back(string(str));
 
   str.Clear();
-  str.Append("offset ");
-  str.AppendInt(sample_offset);
-  strs.push_back(string(str));
-
-  str.Clear();
-  str.Append("start  ");
+  str.Append("start   ");
   str.AppendInt(sample_start);
   strs.push_back(string(str));
 
   str.Clear();
-  str.Append("end    ");
+  str.Append("e_start ");
+  str.AppendInt(sample_effective_start);
+  strs.push_back(string(str));
+
+  str.Clear();
+  str.Append("e_end   ");
+  str.AppendInt(sample_effective_end);
+  strs.push_back(string(str));
+
+  str.Clear();
+  str.Append("end     ");
   str.AppendInt(sample_end);
   strs.push_back(string(str));
 
   str.Clear();
-  str.Append("length ");
+  str.Append("length  ");
   str.AppendInt(sample_length);
   strs.push_back(string(str));
 
