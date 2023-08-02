@@ -114,14 +114,12 @@ void AudioCallback(AudioHandle::InputBuffer in,
         break;
 
       case PLAYING:
-        // TODO: when ramping up first playing (i.e. not looping etc)
-        //   we should cross fade in from whatever other signal e.g. in[0]
-        out[0][b] = buffer[sample_offset];
-        sample_offset++;
         if (sample_offset >= sample_effective_end) {
-          state = PLAYING;
           sample_offset = sample_effective_start;
         }
+        out[0][b] = buffer[sample_offset];
+        sample_offset++;
+
         // core wave based on proportion we are through effective sample
         float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
         out[1][b] = core;
@@ -138,6 +136,7 @@ void UpdateControls() {
   // check if ctrl2 ( sample start ) or ctrl3 ( sample length ) have changed
   bool changed = false;
   float val = hw.controls[1].Value();
+  if (val<0) { val=}
   if (abs(last_ctrl2_val - val) > 0.001) {
     changed = true;
     last_ctrl2_val = val;
