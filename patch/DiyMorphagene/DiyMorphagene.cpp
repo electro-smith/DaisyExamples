@@ -143,12 +143,14 @@ class Grain {
     size_t end_;
 };
 
-Grain grain;
+Grain grains[2];
 
 void StopRecording() {
   sample_length = record_head-1;
-  grain.UpdateSampleStartEnd();
-  grain.ResetPlaybackHead();
+  for (auto& grain : grains) {
+    grain.UpdateSampleStartEnd();
+    grain.ResetPlaybackHead();
+  }
   state = PLAYING;
 }
 
@@ -161,10 +163,12 @@ void AudioCallback(AudioHandle::InputBuffer in,
 
       case WAITING:
         out[0][b] = in[0][b];
+        out[1][b] = in[0][b];
         break;
 
       case RECORDING:
         out[0][b] = in[0][b];
+        out[1][b] = in[0][b];
         buffer[record_head] = in[0][b];
         record_head++;
         if (record_head == BUFFER_SIZE) {
@@ -173,7 +177,8 @@ void AudioCallback(AudioHandle::InputBuffer in,
         break;
 
       case PLAYING:
-        out[0][b] = grain.Playback();
+        out[0][b] = grains[0].Playback();
+        out[1][b] = grains[1].Playback();
 
         // // core wave based on proportion we are through effective sample
         // float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
@@ -188,7 +193,9 @@ void AudioCallback(AudioHandle::InputBuffer in,
 void UpdateControls() {
   hw.ProcessAllControls();
 
-  grain.CheckControlsAndUpdateEndsIfRequired();
+  for (auto& grain : grains) {
+    grain.CheckControlsAndUpdateEndsIfRequired();
+  }
 
   // click on encoder or trig at gate1 toggles recording
   if (hw.encoder.RisingEdge() || hw.gate_input[0].Trig()) {
@@ -232,16 +239,17 @@ void UpdateDisplay() {
   }
   strs.push_back(string(str));
 
-//  for (size_t g=0; g<2; g++) {
+  for (size_t g=0; g<2; g++) {
+    auto& grain = grains[g];
     str.Clear();
     str.Append("g");
-//    str.AppendInt(g);
+    str.AppendInt(g);
     str.Append(" ");
     str.AppendFloat(grain.GetStartP(), 3);
     str.Append(" ");
     str.AppendFloat(grain.GetEndP(), 3);
     strs.push_back(string(str));
-//  }
+  }
 
   DisplayLines(strs);
   hw.display.Update();
@@ -255,7 +263,8 @@ int main(void) {
   hw.StartAdc();
   hw.StartAudio(AudioCallback);
 
-  grain.SetControlIndexs(0, 1);
+  grains[0].SetControlIndexs(0, 1);
+  grains[1].SetControlIndexs(2, 3);
 
   while(true) {
     for (size_t i = 0; i < 100; i++) {
