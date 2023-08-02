@@ -43,9 +43,6 @@ enum State {
 };
 State state = State::WAITING;
 
-bool looping;
-bool have_recording = false;
-
 void SetEffectiveSampleStart() {
   // decide effective sample start by seeking forward
   // from start of buffer to first positive crossing
@@ -59,7 +56,7 @@ void SetEffectiveSampleStart() {
     last_val = value;
   }
   // failed to find a crossing :()
-  sample_effective_start = 0;
+  sample_effective_start = sample_start;
 }
 
 void SetEffectiveSampleEnd() {
@@ -93,8 +90,7 @@ void StopRecording() {
   sample_length = sample_offset-1;
   UpdateSampleStartEnd();
   sample_offset = sample_effective_start;
-  state = looping ? PLAYING : WAITING;
-  have_recording = true;
+  state = PLAYING;
 }
 
 void AudioCallback(AudioHandle::InputBuffer in,
@@ -123,7 +119,7 @@ void AudioCallback(AudioHandle::InputBuffer in,
         out[0][b] = buffer[sample_offset];
         sample_offset++;
         if (sample_offset >= sample_effective_end) {
-          state = looping ? PLAYING : WAITING;
+          state = PLAYING;
           sample_offset = sample_effective_start;
         }
         // core wave based on proportion we are through effective sample
@@ -138,13 +134,6 @@ void AudioCallback(AudioHandle::InputBuffer in,
 
 void UpdateControls() {
   hw.ProcessAllControls();
-
-  // ctrl1 decides whether we loop sample or not
-  bool new_looping = hw.controls[0].Value() > 0.5;
-  if (!looping && new_looping && state==WAITING && have_recording) {
-    state = PLAYING;
-  }
-  looping = new_looping;
 
   // check if ctrl2 ( sample start ) or ctrl3 ( sample length ) have changed
   bool changed = false;
@@ -164,8 +153,8 @@ void UpdateControls() {
     UpdateSampleStartEnd();
   }
 
-  // click on encoder
-  if (hw.encoder.RisingEdge()) {
+  // click on encoder or trig at gate1 toggles recording
+  if (hw.encoder.RisingEdge() || hw.gate_input[0].Trig()) {
     if (state == RECORDING) {
       StopRecording();
     } else {
@@ -206,10 +195,10 @@ void UpdateDisplay() {
   }
   strs.push_back(string(str));
 
-  // str.Clear();
-  // str.Append("looping  ");
-  // str.Append(looping ? "T" : "F");
-  // strs.push_back(string(str));
+  str.Clear();
+  str.Append("offset  ");
+  str.AppendInt(sample_offset);
+  strs.push_back(string(str));
 
   str.Clear();
   str.Append("start   ");
