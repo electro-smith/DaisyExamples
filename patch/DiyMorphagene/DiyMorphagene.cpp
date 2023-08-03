@@ -34,7 +34,7 @@ enum CtrlMode {
   S3_L1,     // 3 grains, 3 start ctrls, 1 len ctrl    S1 s2 S3 L*
 };
 const CtrlMode LAST_CTRL_MODE = S3_L1;
-CtrlMode mode = TWO_GRAINS;
+CtrlMode ctrl_mode = TWO_GRAINS;
 
 enum State {
   WAITING,    // initial powered up
@@ -51,9 +51,11 @@ class Grain {
     void SetControlIndexs(size_t a, size_t b) {
       control_a_idx_ = a;
       control_b_idx_ = b;
+      UpdateSampleStartEnd();
     }
 
     void UpdateSampleStartEnd() {
+      if (state!=PLAYING) return;
       const float ctrl_a_value = stable_ctrl_values[control_a_idx_];
       const float ctrl_b_value = stable_ctrl_values[control_b_idx_];
       start_ = static_cast<size_t>(ctrl_a_value * sample_length);
@@ -141,7 +143,7 @@ class Grain {
     size_t end_;
 };
 
-// we need three grains, though for mode==TWO_GRAINS we won't use
+// we need three grains, though for ctrl_mode==TWO_GRAINS we won't use
 // the third.
 Grain grains[3];
 
@@ -159,11 +161,31 @@ bool CheckCtrlValues() {
 
 void StopRecording() {
   sample_length = record_head-1;
+  state = PLAYING;
   for (auto& grain : grains) {
     grain.UpdateSampleStartEnd();
     grain.ResetPlaybackHead();
   }
-  state = PLAYING;
+}
+
+void ProcessModeChange() {
+  switch (ctrl_mode) {
+    case TWO_GRAINS:
+      grains[0].SetControlIndexs(0, 1);
+      grains[1].SetControlIndexs(2, 3);
+      // ignore how grain[2] is configured
+      break;
+    case S1_L3:
+      grains[0].SetControlIndexs(0, 1);
+      grains[1].SetControlIndexs(0, 2);
+      grains[2].SetControlIndexs(0, 3);
+      break;
+    case S3_L1:
+      grains[0].SetControlIndexs(0, 3);
+      grains[1].SetControlIndexs(1, 3);
+      grains[2].SetControlIndexs(2, 3);
+      break;
+  }
 }
 
 void AudioCallback(AudioHandle::InputBuffer in,
@@ -176,11 +198,13 @@ void AudioCallback(AudioHandle::InputBuffer in,
       case WAITING:
         out[0][b] = in[0][b];
         out[1][b] = in[0][b];
+        out[2][b] = in[0][b];
         break;
 
       case RECORDING:
         out[0][b] = in[0][b];
         out[1][b] = in[0][b];
+        out[2][b] = in[0][b];
         buffer[record_head] = in[0][b];
         record_head++;
         if (record_head == BUFFER_SIZE) {
@@ -191,7 +215,7 @@ void AudioCallback(AudioHandle::InputBuffer in,
       case PLAYING:
         out[0][b] = grains[0].Playback();
         out[1][b] = grains[1].Playback();
-
+        out[2][b] = (ctrl_mode==TWO_GRAINS) ? 0 : grains[2].Playback();
         // // core wave based on proportion we are through effective sample
         // float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
         // out[1][b] = core;
@@ -201,6 +225,8 @@ void AudioCallback(AudioHandle::InputBuffer in,
   }
 
 }
+
+size_t n = 0;
 
 void UpdateControls() {
   hw.ProcessAllControls();
@@ -226,25 +252,30 @@ void UpdateControls() {
 
   // turning encoder cycles through control modes
   const int enc_increment = hw.encoder.Increment();
+  bool ctrl_mode_changed = false;
   if (enc_increment > 0) {
-    if (mode == LAST_CTRL_MODE) {
-      mode = static_cast<CtrlMode>(0);
+    if (ctrl_mode == LAST_CTRL_MODE) {
+      ctrl_mode = static_cast<CtrlMode>(0);
     } else {
       // clumsy :/
-      int mode_i = static_cast<int>(mode);
-      mode_i++;
-      mode = static_cast<CtrlMode>(mode_i);
+      int ctrl_mode_i = static_cast<int>(ctrl_mode);
+      ctrl_mode_i++;
+      ctrl_mode = static_cast<CtrlMode>(ctrl_mode_i);
     }
+    ctrl_mode_changed = true;
   } else if (enc_increment < 0) {
-    int mode_i = static_cast<int>(mode);
-    if (mode_i == 0) {
-      mode = LAST_CTRL_MODE;
+    int ctrl_mode_i = static_cast<int>(ctrl_mode);
+    if (ctrl_mode_i == 0) {
+      ctrl_mode = LAST_CTRL_MODE;
     } else {
-      mode_i--;
-      mode = static_cast<CtrlMode>(mode_i);
+      ctrl_mode_i--;
+      ctrl_mode = static_cast<CtrlMode>(ctrl_mode_i);
     }
+    ctrl_mode_changed = true;
   }
-
+  if (ctrl_mode_changed) {
+    ProcessModeChange();
+  }
 }
 
 void DisplayLines(const vector<string> &strs) {
@@ -263,7 +294,7 @@ void UpdateDisplay() {
 
   FixedCapStr<18> str("");
 
-  switch(mode) {
+  switch(ctrl_mode) {
     case TWO_GRAINS:
       strs.push_back("S1 L1 S2 L2");
       break;
@@ -290,8 +321,14 @@ void UpdateDisplay() {
   }
   strs.push_back(string(str));
 
+  // for (size_t c=0; c<4; c++) {
+  //   str.Clear();
+  //   str.AppendFloat(stable_ctrl_values[c], 3);
+  //   strs.push_back(string(str));
+  // }
+
   for (size_t g=0; g<3; g++) {
-    if (g==2 && mode == TWO_GRAINS) {
+    if (g==2 && ctrl_mode == TWO_GRAINS) {
       strs.push_back("");
     } else {
       auto& grain = grains[g];
@@ -318,10 +355,9 @@ int main(void) {
   hw.StartAdc();
   hw.StartAudio(AudioCallback);
 
-  grains[0].SetControlIndexs(0, 1);
-  grains[1].SetControlIndexs(2, 3);
-  grains[2].SetControlIndexs(0, 1);
-
+  grains[2].SetControlIndexs(0, 1);  // ensure grain[2] always in valid state
+  ctrl_mode = TWO_GRAINS;
+  ProcessModeChange();
 
   while(true) {
     for (size_t i = 0; i < 100; i++) {
