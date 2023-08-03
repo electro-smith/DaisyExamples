@@ -19,12 +19,29 @@ size_t record_head;
 // actual recorded loop
 size_t sample_length;
 
-enum State {
-  WAITING,
-  RECORDING,
-  PLAYING,
+// minimum amount required for raw control to change
+// to trigger updating stable_ctrl_values and
+// recalulating sample start and ends
+const float CTRL_TOLERANCE = 0.01;
+
+// stable values from control
+// updated if read raw value is within CTRL_TOLERANCE
+float stable_ctrl_values[4];
+
+enum CtrlMode {
+  TWO_GRAINS,  // 2 grains, 2 start ctrls, 2 len ctrls   S1 L1 S2 L2
+  S1_L3,       // 3 grains, 1 start ctrl, 3 len ctrls    S* L1 L2 L3
+  S3_L1,     // 3 grains, 3 start ctrls, 1 len ctrl    S1 s2 S3 L*
 };
-State state = State::WAITING;
+const CtrlMode LAST_CTRL_MODE = S3_L1;
+CtrlMode mode = TWO_GRAINS;
+
+enum State {
+  WAITING,    // initial powered up
+  RECORDING,  // recording sample
+  PLAYING,    // looping playback
+};
+State state = WAITING;
 
 class Grain {
   public:
@@ -37,9 +54,11 @@ class Grain {
     }
 
     void UpdateSampleStartEnd() {
-      start_ = static_cast<size_t>(last_ctrl_a_val_ * sample_length);
+      const float ctrl_a_value = stable_ctrl_values[control_a_idx_];
+      const float ctrl_b_value = stable_ctrl_values[control_b_idx_];
+      start_ = static_cast<size_t>(ctrl_a_value * sample_length);
       SetEffectiveSampleStart();
-      end_ = start_ + static_cast<size_t>(last_ctrl_b_val_ * sample_length);
+      end_ = start_ + static_cast<size_t>(ctrl_b_value * sample_length);
       if (end_ >= sample_length) {
         end_ = sample_length-1;
       }
@@ -57,26 +76,6 @@ class Grain {
       const float to_return = buffer[playback_head_];
       playback_head_++;
       return to_return;
-    }
-
-    void CheckControlsAndUpdateEndsIfRequired() {
-      // check if ctrl2 ( sample start ) or ctrl3 ( sample length ) have changed
-      bool changed = false;
-      float val = hw.controls[control_a_idx_].Value();
-      if (abs(last_ctrl_a_val_ - val) > 0.001) {
-        changed = true;
-        last_ctrl_a_val_ = val;
-      }
-      val = hw.controls[control_b_idx_].Value();
-      if (abs(last_ctrl_b_val_ - val) > 0.001) {
-        changed = true;
-        last_ctrl_b_val_ = val;
-      }
-      // if either have changed we need to update the sample
-      // start/end BUT we only do this dynamically during playback
-      if (changed && state == PLAYING) {
-        UpdateSampleStartEnd();
-      }
     }
 
     inline float GetStartP() const {
@@ -122,6 +121,7 @@ class Grain {
       effective_end_ = end_-1;
     }
 
+    // indexes of the two controls for this grain
     size_t control_a_idx_;
     size_t control_b_idx_;
 
@@ -129,7 +129,6 @@ class Grain {
     size_t playback_head_;
 
     // starting position dictated by ctrl2.
-    float last_ctrl_a_val_;
     size_t start_;
 
     // effective sample start; first +ve zero crossing after sample_start
@@ -139,11 +138,24 @@ class Grain {
     size_t effective_end_;
 
     // sample end dictated by ctrl3 (for length) + sample_start ( from ctrl2 )
-    float last_ctrl_b_val_;
     size_t end_;
 };
 
-Grain grains[2];
+// we need three grains, though for mode==TWO_GRAINS we won't use
+// the third.
+Grain grains[3];
+
+bool CheckCtrlValues() {
+  bool at_least_one_changed = false;
+  for (size_t c=0; c<4; c++) {
+    const float val = hw.controls[c].Value();
+    if (abs(stable_ctrl_values[c] - val) > CTRL_TOLERANCE) {
+      stable_ctrl_values[c] = val;
+      at_least_one_changed = true;
+    }
+  }
+  return at_least_one_changed;
+}
 
 void StopRecording() {
   sample_length = record_head-1;
@@ -193,8 +205,13 @@ void AudioCallback(AudioHandle::InputBuffer in,
 void UpdateControls() {
   hw.ProcessAllControls();
 
-  for (auto& grain : grains) {
-    grain.CheckControlsAndUpdateEndsIfRequired();
+  // if any control has changed update sample start / end for
+  // all grains
+  const bool at_least_one_control_changed = CheckCtrlValues();
+  if (at_least_one_control_changed && state==PLAYING) {
+    for (auto& grain : grains) {
+      grain.UpdateSampleStartEnd();
+    }
   }
 
   // click on encoder or trig at gate1 toggles recording
@@ -204,6 +221,27 @@ void UpdateControls() {
     } else {
       state = RECORDING;
       record_head = 0;
+    }
+  }
+
+  // turning encoder cycles through control modes
+  const int enc_increment = hw.encoder.Increment();
+  if (enc_increment > 0) {
+    if (mode == LAST_CTRL_MODE) {
+      mode = static_cast<CtrlMode>(0);
+    } else {
+      // clumsy :/
+      int mode_i = static_cast<int>(mode);
+      mode_i++;
+      mode = static_cast<CtrlMode>(mode_i);
+    }
+  } else if (enc_increment < 0) {
+    int mode_i = static_cast<int>(mode);
+    if (mode_i == 0) {
+      mode = LAST_CTRL_MODE;
+    } else {
+      mode_i--;
+      mode = static_cast<CtrlMode>(mode_i);
     }
   }
 
@@ -225,6 +263,19 @@ void UpdateDisplay() {
 
   FixedCapStr<18> str("");
 
+  switch(mode) {
+    case TWO_GRAINS:
+      strs.push_back("S1 L1 S2 L2");
+      break;
+    case S1_L3:
+      strs.push_back("S* L1 L2 L3");
+      break;
+    case S3_L1:
+      strs.push_back("S1 S2 S3 L*");
+      break;
+  }
+
+  str.Clear();
   str.Append("state ");
   switch (state) {
     case WAITING:
