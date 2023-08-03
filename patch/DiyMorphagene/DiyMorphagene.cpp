@@ -290,16 +290,20 @@ void UpdateDisplay() {
   }
   strs.push_back(string(str));
 
-  for (size_t g=0; g<2; g++) {
-    auto& grain = grains[g];
-    str.Clear();
-    str.Append("g");
-    str.AppendInt(g);
-    str.Append(" ");
-    str.AppendFloat(grain.GetStartP(), 3);
-    str.Append(" ");
-    str.AppendFloat(grain.GetEndP(), 3);
-    strs.push_back(string(str));
+  for (size_t g=0; g<3; g++) {
+    if (g==2 && mode == TWO_GRAINS) {
+      strs.push_back("");
+    } else {
+      auto& grain = grains[g];
+      str.Clear();
+      str.Append("g");
+      str.AppendInt(g);
+      str.Append(" ");
+      str.AppendFloat(grain.GetStartP(), 3);
+      str.Append(" ");
+      str.AppendFloat(grain.GetEndP(), 3);
+      strs.push_back(string(str));
+    }
   }
 
   DisplayLines(strs);
@@ -316,6 +320,8 @@ int main(void) {
 
   grains[0].SetControlIndexs(0, 1);
   grains[1].SetControlIndexs(2, 3);
+  grains[2].SetControlIndexs(0, 1);
+
 
   while(true) {
     for (size_t i = 0; i < 100; i++) {
