@@ -24,9 +24,15 @@ size_t sample_length;
 // recalulating sample start and ends
 const float CTRL_TOLERANCE = 0.01;
 
+// use Parameter for controls, rather than direct values
+// since we want non linear for length.
+Parameter ctrls[4];
+
 // stable values from control
 // updated if read raw value is within CTRL_TOLERANCE
 float stable_ctrl_values[4];
+
+CrossFade output_mixer;
 
 enum State {
   WAITING,    // initial powered up
@@ -40,7 +46,7 @@ class Grain {
 
     Grain() {}
 
-    void SetStartEnd(const float ctrl_a_value, const float ctrl_b_value) {
+    void SetStartEnd(const float ctrl_a_value, float ctrl_b_value) {
       if (state!=PLAYING) return;
       start_ = static_cast<size_t>(ctrl_a_value * sample_length);
       SetEffectiveSampleStart();
@@ -76,15 +82,15 @@ class Grain {
 
     void SetEffectiveSampleStart() {
       // decide effective sample start by seeking forward
-      // from start of buffer to first positive crossing
-      float last_val = buffer[start_];
+      // from start of grain buffer to first positive crossing
+      bool last_val_lt_zero = buffer[start_] < 0;
       for (size_t b = start_+1; b < sample_length; b++) {
         float value = buffer[b];
-        if (last_val < 0 && value > 0) {
+        if (last_val_lt_zero && value > 0) {
           effective_start_ = b;
           return;
         }
-        last_val = value;
+        last_val_lt_zero = value < 0;
       }
       // failed to find a crossing :()
       effective_start_ = start_;
@@ -92,16 +98,16 @@ class Grain {
 
     void SetEffectiveSampleEnd() {
       // decide effective sample end by seeking backwards
-      // from the end of the buffer to find the last
+      // from the end of grain buffer to find the last
       // positive crossing
-      float last_val = buffer[end_-1];
+      bool last_val_gt_zero = buffer[end_-1] > 0;
       for (size_t b = end_-2; b > effective_start_; b--) {
         float value = buffer[b];
-        if (last_val > 0 && value < 0) {
+        if (last_val_gt_zero && value < 0) {
           effective_end_ = b;
           return;
         }
-        last_val = value;
+        last_val_gt_zero = value > 0;
       }
       // failed to find a crossing :()
       effective_end_ = end_-1;
@@ -128,12 +134,15 @@ Grain grains[4];
 bool CheckCtrlValues() {
   bool at_least_one_changed = false;
   for (size_t c=0; c<4; c++) {
-    float val = hw.controls[c].Value();
+    float val = ctrls[c].Process();
     if (abs(stable_ctrl_values[c] - val) > CTRL_TOLERANCE) {
-      if (val < 0.01) {
-        val = 0;
-      } else if (val > 0.98) {
-        val = 1.0;
+      // snap everything EXCEPT sample length to (0, 1)
+      if (c != 2) {
+        if (val < 0.01) {
+          val = 0;
+        } else if (val > 0.98) {
+          val = 1.0;
+        }
       }
       stable_ctrl_values[c] = val;
       at_least_one_changed = true;
@@ -192,9 +201,16 @@ void AudioCallback(AudioHandle::InputBuffer in,
         break;
 
       case PLAYING:
-        for (size_t c = 0; c < 4; c++) {
-          out[c][b] = grains[c].Playback();
+        float g[4];
+        for (size_t i = 0; i < 4; i++) {
+          g[i] = grains[i].Playback();
         }
+        float g02 = output_mixer.Process(g[0], g[2]);
+        float g13 = output_mixer.Process(g[1], g[3]);
+        out[0][b] = in[0][b];
+        out[1][b] = g02;
+        out[2][b] = g13;
+        out[3][b] = output_mixer.Process(g02, g13);
         break;
 
         // DEBUG
@@ -228,6 +244,14 @@ void UpdateControls() {
       record_head = 0;
     }
   }
+
+  // trig to gate 2 restarts all playbacks
+  if (hw.gate_input[1].Trig() && state == PLAYING) {
+    for (auto& grain : grains) {
+      grain.ResetPlaybackHead();
+    }
+  }
+
 
 }
 
@@ -290,6 +314,20 @@ int main(void) {
   hw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
   hw.StartAdc();
   hw.StartAudio(AudioCallback);
+
+  // sample start
+  ctrls[0].Init(hw.controls[0], 0.f, 1.0f, Parameter::LINEAR);
+  // sample start spread
+  ctrls[1].Init(hw.controls[1], 0.f, 1.0f, Parameter::LINEAR);
+  // sample length
+  ctrls[2].Init(hw.controls[2], 0.f, 1.0f, Parameter::EXPONENTIAL);
+  // sample length spread
+  ctrls[3].Init(hw.controls[3], 0.f, 1.0f, Parameter::LINEAR);
+
+
+  output_mixer.Init();
+  output_mixer.SetCurve(CROSSFADE_CPOW);
+  output_mixer.SetPos(0.5);
 
   while(true) {
     for (size_t i = 0; i < 100; i++) {
