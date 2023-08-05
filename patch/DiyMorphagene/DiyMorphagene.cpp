@@ -46,11 +46,18 @@ class Grain {
 
     Grain() {}
 
-    void SetStartEnd(const float ctrl_a_value, float ctrl_b_value) {
+    void SetStartEnd(float start_f, float length_f) {
       if (state!=PLAYING) return;
-      start_ = static_cast<size_t>(ctrl_a_value * sample_length);
+      start_f = fclamp(start_f, 0.0f, 1.0f);
+      length_f = fclamp(length_f, 0.0f, 1.0f);
+
+      start_ = static_cast<size_t>(start_f * sample_length);
+      if (start_ >= sample_length) {
+        start_ = sample_length-1;
+      }
       SetEffectiveSampleStart();
-      end_ = start_ + static_cast<size_t>(ctrl_b_value * sample_length);
+
+      end_ = start_ + static_cast<size_t>(length_f * sample_length);
       if (end_ >= sample_length) {
         end_ = sample_length-1;
       }
@@ -127,8 +134,8 @@ class Grain {
 
     // sample end dictated by ctrl3 (for length) + sample_start ( from ctrl2 )
     size_t end_;
-};
 
+};
 Grain grains[4];
 
 bool CheckCtrlValues() {
@@ -337,3 +344,4 @@ int main(void) {
   }
 
 }
+
