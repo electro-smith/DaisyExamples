@@ -81,6 +81,10 @@ class Grain {
       return float(effective_start_) / sample_length;
     }
 
+    inline float GetCurrentP() const {
+      return float(playback_head_) / sample_length;
+    }
+
     inline float GetEndP() {
       return float(effective_end_) / sample_length;
     }
@@ -276,21 +280,32 @@ void UpdateDisplay() {
   hw.display.Fill(false);
   vector<string> strs;
 
-  FixedCapStr<18> str("");
 
-  str.Append("state ");
-  switch (state) {
-    case WAITING:
-      str.Append("WAITING ");
-      break;
-    case RECORDING:
-      str.Append("RECORDING ");
-      break;
-    case PLAYING:
-      str.Append("PLAYING ");
-      break;
+  if (state == WAITING) {
+    strs.push_back("WAITING");
+
+  } else if (state == RECORDING) {
+    strs.push_back("RECORDING");
+    float percentage_buffer_filled = static_cast<float>(record_head) / BUFFER_SIZE;
+    FixedCapStr<18> str("");
+    str.AppendFloat(percentage_buffer_filled, 4);
+    strs.push_back(string(str));
+
+  } else { // PLAYING
+    strs.push_back("PLAYING");
+    FixedCapStr<18> str("");
+    for (size_t g=0; g<4; g++) {
+      auto& grain = grains[g];
+      str.Clear();
+      str.AppendFloat(grain.GetStartP(), 3);
+      str.Append(" ");
+      str.AppendFloat(grain.GetCurrentP(), 3);
+      str.Append(" ");
+      str.AppendFloat(grain.GetEndP(), 3);
+      strs.push_back(string(str));
+    }
+
   }
-  strs.push_back(string(str));
 
   // for (size_t c=0; c<4; c++) {
   //   str.Clear();
@@ -298,17 +313,6 @@ void UpdateDisplay() {
   //   strs.push_back(string(str));
   // }
 
-  for (size_t g=0; g<4; g++) {
-    auto& grain = grains[g];
-    str.Clear();
-    str.Append("g");
-    str.AppendInt(g);
-    str.Append(" ");
-    str.AppendFloat(grain.GetStartP(), 3);
-    str.Append(" ");
-    str.AppendFloat(grain.GetEndP(), 3);
-    strs.push_back(string(str));
-  }
 
   DisplayLines(strs);
   hw.display.Update();
