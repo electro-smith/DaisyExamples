@@ -149,7 +149,8 @@ class Grain {
     size_t end_;
 
 };
-Grain grains[4];
+const size_t NUM_GRAINS = 16; // MUST be a power of two based on how folding over output is done...
+Grain grains[NUM_GRAINS];
 
 bool CheckCtrlValues() {
   bool at_least_one_changed = false;
@@ -178,8 +179,8 @@ void UpdateAllSampleStartEnds() {
   const float length_base = stable_ctrl_values[2];
   const float length_spread = stable_ctrl_values[3];
 
-  for (size_t i=0; i<4; i++) {
-    const float p = float(i) / 3;  // [0, 1/3, 2/3, 1]
+  for (size_t i=0; i<NUM_GRAINS; i++) {
+    const float p = float(i) / (NUM_GRAINS-1);  // [0, 1/3, 2/3, 1]
     grains[i].SetStartEnd(start_base + (p * start_spread),
                           length_base + (p * length_spread));
   }
@@ -212,16 +213,28 @@ void AudioCallback(AudioHandle::InputBuffer in,
   for (size_t b = 0; b < size; b++) {
 
     if (have_recording) {
-      float g[4];
-      for (size_t i = 0; i < 4; i++) {
+      // collect array of all grains
+      float g[NUM_GRAINS];
+      for (size_t i = 0; i < NUM_GRAINS; i++) {
         g[i] = grains[i].Playback();
       }
-      float g02 = output_mixer.Process(g[0], g[2]);
-      float g13 = output_mixer.Process(g[1], g[3]);
+      // fold together until it's two single values in g[0] and g[1]
+      size_t size = NUM_GRAINS;
+      while (size > 2) {
+        size_t in1 = 0;
+        size_t in2 = size/2;
+        const size_t new_size = size/2;
+        while (in1 < new_size) {
+          g[in1] = output_mixer.Process(g[in1], g[in2]);
+          in1++;
+          in2++;
+        }
+        size = new_size;
+      }
       out[0][b] = in[0][b];
-      out[1][b] = g02;
-      out[2][b] = g13;
-      out[3][b] = output_mixer.Process(g02, g13);
+      out[1][b] = g[0];
+      out[2][b] = g[1];
+      out[3][b] = output_mixer.Process(g[0], g[1]);  // final mix
     } else {
       // just monitor input directly
       for (size_t c = 0; c < 4; c++) {
@@ -299,15 +312,17 @@ void UpdateDisplay() {
 
   } else if (state == RECORDING) {
     strs.push_back("RECORDING");
-    float percentage_buffer_filled = static_cast<float>(record_head) / BUFFER_SIZE;
+    float proportion_buffer_filled = static_cast<float>(record_head) / BUFFER_SIZE;
     FixedCapStr<18> str("");
-    str.AppendFloat(percentage_buffer_filled, 4);
+    str.AppendFloat(proportion_buffer_filled, 4);
     strs.push_back(string(str));
 
   } else { // PLAYING
     strs.push_back("PLAYING");
     FixedCapStr<18> str("");
-    for (size_t g=0; g<4; g++) {
+    // show params for 4 of the NUM_GRAINS grains
+    for (size_t line=0; line<4; line++) {
+      size_t g = (size_t)((NUM_GRAINS-1) * ((float)line/3));  // ( 0, 1/3, 2/3,.. NUM_GRAINS-1)
       auto& grain = grains[g];
       str.Clear();
       str.AppendFloat(grain.GetStartP(), 3);
