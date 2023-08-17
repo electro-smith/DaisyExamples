@@ -218,7 +218,12 @@ void AudioCallback(AudioHandle::InputBuffer in,
       for (size_t i = 0; i < NUM_GRAINS; i++) {
         g[i] = grains[i].Playback();
       }
+
+      // for some stability have out0 be the first grain
+      out[0][b] = g[0];
+
       // fold together until it's two single values in g[0] and g[1]
+      /*  this is sparta mode
       size_t size = NUM_GRAINS;
       while (size > 2) {
         size_t in1 = 0;
@@ -231,9 +236,22 @@ void AudioCallback(AudioHandle::InputBuffer in,
         }
         size = new_size;
       }
-      out[0][b] = in[0][b];
+      */
+      size_t size = NUM_GRAINS;
+      while (size > 2) {
+        size_t in = 0;
+        while (in < size) {
+          g[in/2] = output_mixer.Process(g[in], g[in+1]);
+          in += 2;
+        }
+        size /= 2;
+      }
+
+      // have out2 and out3 be the last two folded values
       out[1][b] = g[0];
       out[2][b] = g[1];
+
+      // and out4 be the very final
       out[3][b] = output_mixer.Process(g[0], g[1]);  // final mix
     } else {
       // just monitor input directly
