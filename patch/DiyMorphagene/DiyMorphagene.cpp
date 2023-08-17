@@ -10,8 +10,17 @@ using namespace daisysp;
 
 DaisyPatch hw;
 
+// keep a playback vs record buffer
 const size_t BUFFER_SIZE = 60 * 48000;  // max of 60sec
-float DSY_SDRAM_BSS buffer[BUFFER_SIZE];
+using Buffer = float[BUFFER_SIZE];
+Buffer DSY_SDRAM_BSS global_buffer[2];
+
+Buffer* playback_buffer = &(global_buffer[0]);
+Buffer* record_buffer = &(global_buffer[1]);
+
+// set to true after first recording; until then
+// playback input directly
+bool have_recording = false;
 
 // record head position
 size_t record_head;
@@ -72,7 +81,7 @@ class Grain {
       if (playback_head_ >= effective_end_) {
         ResetPlaybackHead();
       }
-      const float to_return = buffer[playback_head_];
+      const float to_return = (*playback_buffer)[playback_head_];
       playback_head_++;
       return to_return;
     }
@@ -94,9 +103,9 @@ class Grain {
     void SetEffectiveSampleStart() {
       // decide effective sample start by seeking forward
       // from start of grain buffer to first positive crossing
-      bool last_val_lt_zero = buffer[start_] < 0;
+      bool last_val_lt_zero = (*playback_buffer)[start_] < 0;
       for (size_t b = start_+1; b < sample_length; b++) {
-        float value = buffer[b];
+        float value = (*playback_buffer)[b];
         if (last_val_lt_zero && value > 0) {
           effective_start_ = b;
           return;
@@ -111,9 +120,9 @@ class Grain {
       // decide effective sample end by seeking backwards
       // from the end of grain buffer to find the last
       // positive crossing
-      bool last_val_gt_zero = buffer[end_-1] > 0;
+      bool last_val_gt_zero = (*playback_buffer)[end_-1] > 0;
       for (size_t b = end_-2; b > effective_start_; b--) {
-        float value = buffer[b];
+        float value = (*playback_buffer)[b];
         if (last_val_gt_zero && value < 0) {
           effective_end_ = b;
           return;
@@ -145,6 +154,7 @@ Grain grains[4];
 bool CheckCtrlValues() {
   bool at_least_one_changed = false;
   for (size_t c=0; c<4; c++) {
+    // TODO: .Debounce() instead of CTRL_TOL?
     float val = ctrls[c].Process();
     if (abs(stable_ctrl_values[c] - val) > CTRL_TOLERANCE) {
       // snap everything EXCEPT sample length to (0, 1)
@@ -179,6 +189,12 @@ void UpdateAllSampleStartEnds() {
 void StopRecording() {
   // snap shot new sample length
   sample_length = record_head-1;
+  // swap playback and recording buffer
+  Buffer* tmp = playback_buffer;
+  playback_buffer = record_buffer;
+  record_buffer = tmp;
+  // we have a recording now!
+  have_recording = true;
   // reset all grains back to PLAYING
   state = PLAYING;
   UpdateAllSampleStartEnds();
@@ -191,45 +207,42 @@ void AudioCallback(AudioHandle::InputBuffer in,
                    AudioHandle::OutputBuffer out,
                    size_t size) {
 
+  // TODO(mat) move b to inner loop
+
   for (size_t b = 0; b < size; b++) {
-    switch(state) {
 
-      case WAITING:
-        for (size_t c = 0; c < 4; c++) {
-          out[c][b] = in[c][b];
-        }
-        break;
-
-      case RECORDING:
-        for (size_t c = 0; c < 4; c++) {
-          out[c][b] = in[c][b];
-        }
-        buffer[record_head] = in[0][b];
-        record_head++;
-        if (record_head == BUFFER_SIZE) {
-          StopRecording();
-        }
-        break;
-
-      case PLAYING:
-        float g[4];
-        for (size_t i = 0; i < 4; i++) {
-          g[i] = grains[i].Playback();
-        }
-        float g02 = output_mixer.Process(g[0], g[2]);
-        float g13 = output_mixer.Process(g[1], g[3]);
-        out[0][b] = in[0][b];
-        out[1][b] = g02;
-        out[2][b] = g13;
-        out[3][b] = output_mixer.Process(g02, g13);
-        break;
-
-        // DEBUG
-        // // core wave based on proportion we are through effective sample
-        // float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
-        // out[1][b] = core;
-        // break;
+    if (have_recording) {
+      float g[4];
+      for (size_t i = 0; i < 4; i++) {
+        g[i] = grains[i].Playback();
+      }
+      float g02 = output_mixer.Process(g[0], g[2]);
+      float g13 = output_mixer.Process(g[1], g[3]);
+      out[0][b] = in[0][b];
+      out[1][b] = g02;
+      out[2][b] = g13;
+      out[3][b] = output_mixer.Process(g02, g13);
+    } else {
+      // just monitor input directly
+      for (size_t c = 0; c < 4; c++) {
+        out[c][b] = in[c][b];
+      }
     }
+
+    // only record in explicitly in that state
+    if (state==RECORDING) {
+      (*record_buffer)[record_head] = in[0][b];
+      record_head++;
+      if (record_head == BUFFER_SIZE) {
+        StopRecording();
+      }
+    }
+
+    // DEBUG for mordax sync
+    // // core wave based on proportion we are through effective sample
+    // float core = float(sample_offset - sample_effective_start) / (sample_effective_end - sample_effective_start);
+    // out[1][b] = core;
+    // break;
 
   }
 
