@@ -2,9 +2,11 @@
 ASM_SOURCES = \
 $(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/TransformFunctions/arm_bitreversal2.s
 
-C_SOURCES = \
-$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/MatrixFunctions/arm_mat_mult_f32.c \
-$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/MatrixFunctions/arm_mat_init_f32.c
+# for arm_math.h
+C_SOURCES = $(wildcard ../../libDaisy/Drivers/CMSIS/DSP/Source/*/*.c)
+
+CFLAGS += -Wall  # Include all warnings
+CFLAGS += -Os    #  Optimize for size
 
 C_INCLUDES += \
 -I$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Include
