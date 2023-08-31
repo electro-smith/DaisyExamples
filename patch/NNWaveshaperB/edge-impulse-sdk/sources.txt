@@ -1,0 +1,7 @@
+tensorflow and third_party folders based on: https://github.com/tensorflow/tensorflow/#c903b4607821a03c36c17b0befa2535c7dd0e066
+TensorFlow source was prepared using `make -f tensorflow/lite/micro/tools/make/Makefile generate_projects`
+The folders were taken from `tensorflow/lite/micro/tools/make/gen/osx_x86_64/prj/hello_world/make`
+These files and directories were then deleted:
+ - `tensorflow/lite/micro/debug_log.cc`
+ - `tensorflow/lite/micro/examples/hello_world`
+CMSIS-DSP based on: https://github.com/ARM-software/CMSIS_5/tree/4d378e81968c6bec5441a42885b24db7cf189bca
