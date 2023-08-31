@@ -1,4 +1,5 @@
 
+# for arm_math.h
 ASM_SOURCES = \
 $(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Source/TransformFunctions/arm_bitreversal2.s
 
@@ -8,6 +9,7 @@ C_SOURCES = $(wildcard ../../libDaisy/Drivers/CMSIS/DSP/Source/*/*.c)
 CFLAGS += -Wall  # Include all warnings
 CFLAGS += -Os    #  Optimize for size
 
+# for arm_math.h
 C_INCLUDES += \
 -I$(LIBDAISY_DIR)/Drivers/CMSIS/DSP/Include
 
