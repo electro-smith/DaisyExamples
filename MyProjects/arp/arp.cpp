@@ -48,33 +48,25 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         buttons[i].Debounce();
     }
 
-    /*
-    //If you push the button,...
-    if(button1.RisingEdge())
-    {
-        env.Trigger(); //Trigger the envelope!
-    }
-    */
-
     // Set frequency based on which button pressed
     for (int i = 0; i < NUM_BUTTONS; i++) {
         if(buttons[i].RisingEdge()) {
             osc.SetFreq(pitches[i]);
-            env.Trigger(); //Trigger the envelope!
+            env.Trigger(); // Trigger the envelope!
         }
     }
 
-    //Fill the block with samples
+    // Fill the block with samples
     for(size_t i = 0; i < size; i += 2)
     {
-        //Get the next envelope value
+        // Get the next envelope value
         env_out = env.Process();
-        //Set the oscillator volume to the latest env value
+        // Set the oscillator volume to the latest env value
         osc.SetAmp(env_out);
-        //get the next oscillator sample
+        // get the next oscillator sample
         osc_out = osc.Process();
 
-        //Set the left and right outputs
+        // Set the left and right outputs
         out[i]     = osc_out;
         out[i + 1] = osc_out;
     }
@@ -90,14 +82,8 @@ int main(void)
     hardware.Init();
     hardware.SetAudioBlockSize(4);
 
-    //How many samples we'll output per second
+    // How many samples we'll output per second
     float samplerate = hardware.AudioSampleRate();
-
-    //Create an ADC configuration
-    //AdcChannelConfig adcConfig;
-
-    //Add pin 21 as an analog input in this config. We'll use this to read the knob
-    //adcConfig.InitSingle(hardware.GetPin(21));
 
     // Set button to pin 28, to be updated at a 1kHz  samplerate
     int pin = 28;
@@ -106,29 +92,22 @@ int main(void)
         pin--;
     }
 
-    //Set the ADC to use our configuration
-    //hardware.adc.Init(&adcConfig, 1);
-
-    //Set up oscillator
+    // Set up oscillator
     osc.Init(samplerate);
     osc.SetWaveform(osc.WAVE_SIN);
     osc.SetAmp(1.f);
-    //osc.SetFreq(1000);
 
-    //Set up volume envelope
+    // Set up volume envelope
     env.Init(samplerate);
-    //Envelope attack and decay times
+    // Envelope attack and decay times
     env.SetTime(ADENV_SEG_ATTACK, .01);
     env.SetTime(ADENV_SEG_DECAY, .4);
-    //minimum and maximum envelope values
+    // Minimum and maximum envelope values
     env.SetMin(0.0);
     env.SetMax(1.f);
     env.SetCurve(0); // linear
 
-    //Start the adc
-    //hardware.adc.Start();
-
-    //Start calling the audio callback
+    // Start calling the audio callback
     hardware.StartAudio(AudioCallback);
 
     // Loop forever
