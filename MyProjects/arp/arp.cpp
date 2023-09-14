@@ -35,25 +35,74 @@ Switch buttons[] = {
     button5
 };
 
+// TODO: Reformat variable case to camel case consistently 
+
 static int NUM_BUTTONS = 5; // TODO: figure out how to get the length of the array lol
+
+// TODO: Use hardware to set these globals
+static bool arp_mode = true;
+static float arp_speed = 1000; // ms 
+
+static int counter = 0;
+static int current_pitch_index = 0;
+
+// TODO: initalize based on NUM_BUTTONS OR refactor to a queue <3 
+static int buttonsPressed[] = {
+    false,
+    false,
+    false,
+    false,
+    false,
+};
+
+// Replace with std::queue
+static float currentPitches[] = {
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0,
+};
 
 void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         AudioHandle::InterleavingOutputBuffer out,
         size_t                                size)
 {
     float osc_out, env_out;
-
-    // Debounce the buttons
+    
+    // Reset current pitches T_T
     for (int i = 0; i < NUM_BUTTONS; i++) {
+        currentPitches[i] = -1.0;
+    }
+
+    for (int i = 0; i < NUM_BUTTONS; i++) {
+        // buttonsPressed[i] = buttons[i].Pressed();
+
+        if(buttons[i].Pressed()) {
+            currentPitches[i] = pitches[i];
+        } else {
+            currentPitches[i] = -1;
+        }
+
         buttons[i].Debounce();
     }
 
-    // Set frequency based on which button pressed
-    for (int i = 0; i < NUM_BUTTONS; i++) {
-        if(buttons[i].RisingEdge()) {
-            osc.SetFreq(pitches[i]);
-            env.Trigger(); // Trigger the envelope!
+    counter++;
+    if(counter > arp_speed) {
+        counter = 0;
+
+        if(currentPitches[current_pitch_index] == -1) {
+            current_pitch_index++;
         }
+
+        if(current_pitch_index > NUM_BUTTONS) {
+            current_pitch_index = 0;
+        }
+
+        osc.SetFreq(currentPitches[current_pitch_index]);
+        env.Trigger();
+
+        current_pitch_index++;
     }
 
     // Fill the block with samples
