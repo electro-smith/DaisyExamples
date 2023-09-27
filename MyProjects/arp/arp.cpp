@@ -37,16 +37,12 @@ static std::vector<Switch> buttons = {
     button5
 };
 
-// TODO: Reformat variable case to camel case consistently 
-
-static int NUM_BUTTONS = 5; // TODO: figure out how to get the length of the array lol
-
 // TODO: Use hardware to set these globals
-static bool arp_mode = true;
-static float arp_speed = 1000; // ms 
+static bool arpMode = true;
+static float arpSpeed = 1000; // ms 
 
 static int counter = 0;
-static int current_pitch_index = 0;
+static size_t currentPitchIndex = 0;
 
 // Replace with std::queue
 static std::vector<float> currentPitches = {
@@ -61,15 +57,15 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         AudioHandle::InterleavingOutputBuffer out,
         size_t                                size)
 {
-    float osc_out, env_out;
+    float oscOut, envOut;
     
     // TODO: Refactor playback logic 
     // Reset current pitches T_T
-    for (int i = 0; i < NUM_BUTTONS; i++) {
+    for (size_t i = 0; i < buttons.size(); i++) {
         currentPitches[i] = -1.0;
     }
 
-    for (int i = 0; i < NUM_BUTTONS; i++) {
+    for (size_t i = 0; i < buttons.size(); i++) {
 
         if(buttons[i].Pressed()) {
             currentPitches[i] = pitches[i];
@@ -81,36 +77,36 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
     }
 
     counter++;
-    if(counter > arp_speed) {
+    if(counter > arpSpeed) {
         counter = 0;
 
-        if(currentPitches[current_pitch_index] == -1) {
-            current_pitch_index++;
+        if(currentPitches[currentPitchIndex] == -1) {
+            currentPitchIndex++;
         }
 
-        if(current_pitch_index > NUM_BUTTONS) {
-            current_pitch_index = 0;
+        if(currentPitchIndex > buttons.size()) {
+            currentPitchIndex = 0;
         }
 
-        osc.SetFreq(currentPitches[current_pitch_index]);
+        osc.SetFreq(currentPitches[currentPitchIndex]);
         env.Trigger();
 
-        current_pitch_index++;
+        currentPitchIndex++;
     }
 
     // Fill the block with samples
     for(size_t i = 0; i < size; i += 2)
     {
         // Get the next envelope value
-        env_out = env.Process();
+        envOut = env.Process();
         // Set the oscillator volume to the latest env value
-        osc.SetAmp(env_out);
+        osc.SetAmp(envOut);
         // get the next oscillator sample
-        osc_out = osc.Process();
+        oscOut = osc.Process();
 
         // Set the left and right outputs
-        out[i]     = osc_out;
-        out[i + 1] = osc_out;
+        out[i]     = oscOut;
+        out[i + 1] = oscOut;
     }
 }
 
@@ -125,22 +121,22 @@ int main(void)
     hardware.SetAudioBlockSize(4);
 
     // How many samples we'll output per second
-    float samplerate = hardware.AudioSampleRate();
+    float sampleRate = hardware.AudioSampleRate();
 
-    // Set button to pin 28, to be updated at a 1kHz  samplerate
+    // Set button to pin 28, to be updated at a 1kHz  sampleRate
     int pin = 28;
-    for (int i = 0; i < NUM_BUTTONS; i++) {
-        buttons[i].Init(hardware.GetPin(pin), samplerate / 48.f);
+    for (size_t i = 0; i < buttons.size(); i++) {
+        buttons[i].Init(hardware.GetPin(pin), sampleRate / 48.f);
         pin--;
     }
 
     // Set up oscillator
-    osc.Init(samplerate);
+    osc.Init(sampleRate);
     osc.SetWaveform(osc.WAVE_SIN);
     osc.SetAmp(1.f);
 
     // Set up volume envelope
-    env.Init(samplerate);
+    env.Init(sampleRate);
     // Envelope attack and decay times
     env.SetTime(ADENV_SEG_ATTACK, .01);
     env.SetTime(ADENV_SEG_DECAY, .4);
