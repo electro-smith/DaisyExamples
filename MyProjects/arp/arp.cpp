@@ -101,7 +101,7 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         envOut = env.Process();
         // Set the oscillator volume to the latest env value
         osc.SetAmp(envOut);
-        // get the next oscillator sample
+        // Get the next oscillator sample
         oscOut = osc.Process();
 
         // Set the left and right outputs
