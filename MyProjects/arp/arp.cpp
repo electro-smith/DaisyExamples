@@ -1,6 +1,9 @@
 #include "daisy_seed.h"
 #include "daisysp.h"
 
+#include <deque>
+#include <vector>
+
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
 using namespace daisy;
@@ -12,7 +15,7 @@ Oscillator osc;
 AdEnv      env;
 
 // Set pitches for each button
-float pitches[] = {
+static std::vector<float> pitches = {
     466.164,
     415.305,
     369.994,
@@ -27,7 +30,7 @@ Switch button3;
 Switch button4;
 Switch button5;
 
-Switch buttons[] = {
+static std::vector<Switch> buttons = {
     button1,
     button2,
     button3,
@@ -76,7 +79,6 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
     }
 
     for (int i = 0; i < NUM_BUTTONS; i++) {
-        // buttonsPressed[i] = buttons[i].Pressed();
 
         if(buttons[i].Pressed()) {
             currentPitches[i] = pitches[i];
