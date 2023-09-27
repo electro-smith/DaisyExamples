@@ -1,7 +1,6 @@
 #include "daisy_seed.h"
 #include "daisysp.h"
 
-#include <deque>
 #include <vector>
 
 // Use the daisy namespace to prevent having to type
@@ -49,17 +48,8 @@ static float arp_speed = 1000; // ms
 static int counter = 0;
 static int current_pitch_index = 0;
 
-// TODO: initalize based on NUM_BUTTONS OR refactor to a queue <3 
-static int buttonsPressed[] = {
-    false,
-    false,
-    false,
-    false,
-    false,
-};
-
 // Replace with std::queue
-static float currentPitches[] = {
+static std::vector<float> currentPitches = {
     -1.0,
     -1.0,
     -1.0,
@@ -73,6 +63,7 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 {
     float osc_out, env_out;
     
+    // TODO: Refactor playback logic 
     // Reset current pitches T_T
     for (int i = 0; i < NUM_BUTTONS; i++) {
         currentPitches[i] = -1.0;
