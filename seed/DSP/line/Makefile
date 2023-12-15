@@ -1,6 +1,8 @@
 # Project Name
 TARGET = line
 
+USE_DAISYSP_LGPL = 1
+
 # Sources
 CPP_SOURCES = line.cpp
 

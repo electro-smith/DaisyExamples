@@ -1,6 +1,8 @@
 # Project Name
 TARGET = StepSequencer
 
+USE_DAISYSP_LGPL = 1
+
 # Sources
 CPP_SOURCES = StepSequencer.cpp
 

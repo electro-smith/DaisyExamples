@@ -1,6 +1,8 @@
 # Project Name
 TARGET = ex_field_keyboard_test
 
+USE_DAISYSP_LGPL = 1
+
 # Sources
 CPP_SOURCES = KeyboardTest.cpp
 

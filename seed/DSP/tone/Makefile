@@ -1,6 +1,8 @@
 # Project Name
 TARGET = tone
 
+USE_DAISYSP_LGPL = 1
+
 # Sources
 CPP_SOURCES = tone.cpp
 
