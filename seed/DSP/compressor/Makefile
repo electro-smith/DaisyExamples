@@ -1,6 +1,8 @@
 # Project Name
 TARGET = compressor
 
+USE_DAISYSP_LGPL=1
+
 # Sources
 CPP_SOURCES = compressor.cpp
 
