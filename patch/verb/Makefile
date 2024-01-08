@@ -1,6 +1,8 @@
 # Project Name
 TARGET = ex_verb
 
+USE_DAISYSP_LGPL = 1
+
 # Sources
 CPP_SOURCES = ex_verb.cpp
 

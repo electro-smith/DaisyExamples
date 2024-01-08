@@ -1,6 +1,8 @@
 # Project Name
 TARGET = ReverbExample
 
+USE_DAISYSP_LGPL = 1
+
 # Sources
 CPP_SOURCES = ReverbExample.cpp \
 
