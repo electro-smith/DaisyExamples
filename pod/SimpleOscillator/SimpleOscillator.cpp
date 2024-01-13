@@ -9,6 +9,7 @@ using namespace daisysp;
 DaisyPod   hw;
 Oscillator osc;
 Parameter  p_freq;
+Parameter  p_amp;
 
 uint8_t waveforms[NUM_WAVEFORMS] = {
     Oscillator::WAVE_SIN,
@@ -18,8 +19,10 @@ uint8_t waveforms[NUM_WAVEFORMS] = {
 };
 
 static float freq;
+static float amp;
 float        sig;
-static int   waveform, octave;
+static int   waveform, octave, ampVal;
+Color my_colors[5];
 
 static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
@@ -39,7 +42,9 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
     // convert MIDI to frequency and multiply by octave size
     freq = mtof(p_freq.Process() + (octave * 12));
+    amp = mtof(p_amp.Process() + (ampVal * 12));
     osc.SetFreq(freq);
+    osc.SetAmp(amp);
 
     // Audio Loop
     for(size_t i = 0; i < size; i += 2)
@@ -48,6 +53,9 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         sig        = osc.Process();
         out[i]     = sig;
         out[i + 1] = sig;
+        hw.led1.SetColor(my_colors[octave]);
+        hw.led2.SetColor(my_colors[waveform]);
+        hw.UpdateLeds();
     }
 }
 
@@ -56,6 +64,9 @@ void InitSynth(float samplerate)
     // Init freq Parameter to knob1 using MIDI note numbers
     // min 10, max 127, curve linear
     p_freq.Init(hw.knob1, 0, 127, Parameter::LINEAR);
+    // Init amp Parameter to knob2 using MIDI note numbers
+    // min 10, max 127, curve linear
+    p_amp.Init(hw.knob2, 0, 127, Parameter::LINEAR);
 
     osc.Init(samplerate);
     osc.SetAmp(1.f);
@@ -73,6 +84,12 @@ int main(void)
     hw.SetAudioBlockSize(4);
     samplerate = hw.AudioSampleRate();
     InitSynth(samplerate);
+
+    my_colors[0].Init(Color::PresetColor::RED);
+    my_colors[1].Init(Color::PresetColor::GREEN);
+    my_colors[2].Init(Color::PresetColor::BLUE);
+    my_colors[3].Init(Color::PresetColor::WHITE);
+    my_colors[4].Init(Color::PresetColor::PURPLE);
 
     // start callbacks
     hw.StartAdc();
