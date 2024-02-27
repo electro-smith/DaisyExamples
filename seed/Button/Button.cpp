@@ -18,7 +18,7 @@ int main(void)
     //Configure and initialize button
     Switch button1;
     //Set button to pin 28, to be updated at a 1kHz  samplerate
-    button1.Init(hw.GetPin(28), 1000);
+    button1.Init(hw.GetPin(28), 1000.f);
 
     // Loop forever
     for(;;)
