@@ -7,24 +7,24 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 Oscillator   osc_a, osc_b, osc_c;
 
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
-    patch.ProcessAllControls();
+    hw.ProcessAllControls();
 
     /** Get Coarse, Fine, and V/OCT inputs from hardware 
      *  MIDI Note number are easy to use for defining ranges */
-    float knob_coarse = patch.GetAdcValue(CV_1);
+    float knob_coarse = hw.GetAdcValue(CV_1);
     float coarse_tune = fmap(knob_coarse, 12, 84);
 
-    float knob_fine = patch.GetAdcValue(CV_2);
+    float knob_fine = hw.GetAdcValue(CV_2);
     float fine_tune = fmap(knob_fine, 0, 10);
 
-    float cv_voct = patch.GetAdcValue(CV_5);
+    float cv_voct = hw.GetAdcValue(CV_5);
     float voct    = fmap(cv_voct, 0, 60);
 
     /** Convert from MIDI note number to frequency */
@@ -32,7 +32,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     float freq_a  = mtof(midi_nn);
 
     /** Calculate a detune amount */
-    float detune_amt = patch.GetAdcValue(CV_3);
+    float detune_amt = hw.GetAdcValue(CV_3);
     float freq_b     = freq_a + (0.05 * freq_a * detune_amt);
     float freq_c     = freq_a - (0.05 * freq_a * detune_amt);
 
@@ -52,16 +52,16 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
 int main(void)
 {
-    patch.Init();
+    hw.Init();
 
-    osc_a.Init(patch.AudioSampleRate());
-    osc_b.Init(patch.AudioSampleRate());
-    osc_c.Init(patch.AudioSampleRate());
+    osc_a.Init(hw.AudioSampleRate());
+    osc_b.Init(hw.AudioSampleRate());
+    osc_c.Init(hw.AudioSampleRate());
 
     osc_a.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
     osc_b.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
     osc_c.SetWaveform(Oscillator::WAVE_POLYBLEP_SAW);
 
-    patch.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
     while(1) {}
 }

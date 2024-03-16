@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 Compressor comp;
 
 bool isSideChained;
@@ -44,47 +44,47 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     float samplerate;
-    patch.Init(); // Initialize hardware
-    samplerate = patch.AudioSampleRate();
+    hw.Init(); // Initialize hardware
+    samplerate = hw.AudioSampleRate();
 
     comp.Init(samplerate);
 
     isSideChained = false;
 
     //parameter parameters
-    threshParam.Init(patch.controls[0], -80.0f, 0.f, Parameter::LINEAR);
-    ratioParam.Init(patch.controls[1], 1.2f, 40.f, Parameter::LINEAR);
-    attackParam.Init(patch.controls[2], 0.01f, 1.f, Parameter::EXPONENTIAL);
-    releaseParam.Init(patch.controls[3], 0.01f, 1.f, Parameter::EXPONENTIAL);
+    threshParam.Init(hw.controls[0], -80.0f, 0.f, Parameter::LINEAR);
+    ratioParam.Init(hw.controls[1], 1.2f, 40.f, Parameter::LINEAR);
+    attackParam.Init(hw.controls[2], 0.01f, 1.f, Parameter::EXPONENTIAL);
+    releaseParam.Init(hw.controls[3], 0.01f, 1.f, Parameter::EXPONENTIAL);
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
     while(1)
     {
         //update the oled
-        patch.display.Fill(false);
+        hw.display.Fill(false);
 
-        patch.display.SetCursor(0, 0);
+        hw.display.SetCursor(0, 0);
         std::string str  = "Compressor";
         char*       cstr = &str[0];
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.WriteString(cstr, Font_7x10, true);
 
-        patch.display.SetCursor(0, 25);
+        hw.display.SetCursor(0, 25);
         str = "Sidechain: ";
         str += isSideChained ? "On" : "Off";
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.WriteString(cstr, Font_7x10, true);
 
-        patch.display.Update();
+        hw.display.Update();
     }
 }
 
 void UpdateControls()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     //encoder click
-    isSideChained = patch.encoder.RisingEdge() ? !isSideChained : isSideChained;
+    isSideChained = hw.encoder.RisingEdge() ? !isSideChained : isSideChained;
 
     //controls
     comp.SetThreshold(threshParam.Process());

@@ -5,25 +5,25 @@ using namespace daisy;
 using namespace daisysp;
 using namespace patch_sm;
 
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 ReverbSc     reverb;
 
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
-    patch.ProcessAnalogControls();
+    hw.ProcessAnalogControls();
 
     /** Update Params with the four knobs */
-    float time_knob = patch.GetAdcValue(CV_1);
+    float time_knob = hw.GetAdcValue(CV_1);
     float time      = fmap(time_knob, 0.3f, 0.99f);
 
-    float damp_knob = patch.GetAdcValue(CV_2);
+    float damp_knob = hw.GetAdcValue(CV_2);
     float damp      = fmap(damp_knob, 1000.f, 19000.f, Mapping::LOG);
 
-    float in_level = patch.GetAdcValue(CV_3);
+    float in_level = hw.GetAdcValue(CV_3);
 
-    float send_level = patch.GetAdcValue(CV_4);
+    float send_level = hw.GetAdcValue(CV_4);
 
     reverb.SetFeedback(time);
     reverb.SetLpFreq(damp);
@@ -43,8 +43,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
 int main(void)
 {
-    patch.Init();
-    reverb.Init(patch.AudioSampleRate());
-    patch.StartAudio(AudioCallback);
+    hw.Init();
+    reverb.Init(hw.AudioSampleRate());
+    hw.StartAudio(AudioCallback);
     while(1) {}
 }

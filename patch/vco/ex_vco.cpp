@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 Oscillator osc;
 Parameter  freqctrl, wavectrl, ampctrl, finectrl;
 
@@ -16,7 +16,7 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
     float  sig, freq, amp;
     size_t wave;
 
-    patch.ProcessAnalogControls();
+    hw.ProcessAnalogControls();
 
     for(size_t i = 0; i < size; i++)
     {
@@ -42,29 +42,29 @@ int main(void)
 {
     float samplerate;
     int   num_waves = Oscillator::WAVE_LAST - 1;
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
-    samplerate = patch.AudioSampleRate();
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
+    samplerate = hw.AudioSampleRate();
 
     osc.Init(samplerate); // Init oscillator
 
     freqctrl.Init(
-        patch.controls[patch.CTRL_1], 10.0, 110.0f, Parameter::LINEAR);
-    finectrl.Init(patch.controls[patch.CTRL_2], 0.f, 7.f, Parameter::LINEAR);
+        hw.controls[hw.CTRL_1], 10.0, 110.0f, Parameter::LINEAR);
+    finectrl.Init(hw.controls[hw.CTRL_2], 0.f, 7.f, Parameter::LINEAR);
     wavectrl.Init(
-        patch.controls[patch.CTRL_3], 0.0, num_waves, Parameter::LINEAR);
-    ampctrl.Init(patch.controls[patch.CTRL_4], 0.0, 0.5f, Parameter::LINEAR);
+        hw.controls[hw.CTRL_3], 0.0, num_waves, Parameter::LINEAR);
+    ampctrl.Init(hw.controls[hw.CTRL_4], 0.0, 0.5f, Parameter::LINEAR);
 
     //briefly display module name
     std::string str  = "VCO";
     char*       cstr = &str[0];
-    patch.display.WriteString(cstr, Font_7x10, true);
-    patch.display.Update();
-    patch.DelayMs(1000);
+    hw.display.WriteString(cstr, Font_7x10, true);
+    hw.display.Update();
+    hw.DelayMs(1000);
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
     while(1)
     {
-        patch.DisplayControls(false);
+        hw.DisplayControls(false);
     }
 }

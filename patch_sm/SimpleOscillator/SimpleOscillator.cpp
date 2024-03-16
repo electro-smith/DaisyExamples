@@ -7,19 +7,19 @@ using namespace daisysp;
 
 /** TODO: ADD CALIBRATION */
 
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 Oscillator   osc;
 
 void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
-    patch.ProcessAllControls();
+    hw.ProcessAllControls();
 
-    float coarse_knob = patch.GetAdcValue(CV_1);
+    float coarse_knob = hw.GetAdcValue(CV_1);
     float coarse      = fmap(coarse_knob, 36.f, 96.f);
 
-    float voct_cv = patch.GetAdcValue(CV_5);
+    float voct_cv = hw.GetAdcValue(CV_5);
     float voct    = fmap(voct_cv, 0.f, 60.f);
 
     float midi_nn = fclamp(coarse + voct, 0.f, 127.f);
@@ -37,8 +37,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
 int main(void)
 {
-    patch.Init();
-    osc.Init(patch.AudioSampleRate());
-    patch.StartAudio(AudioCallback);
+    hw.Init();
+    osc.Init(hw.AudioSampleRate());
+    hw.StartAudio(AudioCallback);
     while(1) {}
 }

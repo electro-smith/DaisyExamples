@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 int        freqs[16];
 
 int bank;
@@ -102,15 +102,15 @@ void UpdateControls();
 int main(void)
 {
     float samplerate;
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
-    samplerate = patch.AudioSampleRate();
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
+    samplerate = hw.AudioSampleRate();
 
     InitFreqs();
     InitFilters(samplerate);
     bank = 0;
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
     while(1)
     {
         UpdateOled();
@@ -120,12 +120,12 @@ int main(void)
 
 void UpdateOled()
 {
-    patch.display.Fill(false);
+    hw.display.Fill(false);
 
     std::string str  = "Filter Bank";
     char*       cstr = &str[0];
-    patch.display.SetCursor(0, 0);
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.SetCursor(0, 0);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
     str = "";
     for(int i = 0; i < 2; i++)
@@ -134,8 +134,8 @@ void UpdateOled()
         str += "  ";
     }
 
-    patch.display.SetCursor(0, 25);
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.SetCursor(0, 25);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
     str = "";
     for(int i = 2; i < 4; i++)
@@ -144,28 +144,28 @@ void UpdateOled()
         str += "  ";
     }
 
-    patch.display.SetCursor(0, 35);
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.SetCursor(0, 35);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
 
-    patch.display.Update();
+    hw.display.Update();
 }
 
 void UpdateControls()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     //encoder
-    bank += patch.encoder.Increment();
+    bank += hw.encoder.Increment();
     bank = (bank % 4 + 4) % 4;
 
-    bank = patch.encoder.RisingEdge() ? 0 : bank;
+    bank = hw.encoder.RisingEdge() ? 0 : bank;
 
     //controls
     for(int i = 0; i < 4; i++)
     {
-        float val = patch.controls[i].Process();
+        float val = hw.controls[i].Process();
         if(condUpdates[i].Process(val))
         {
             filters[i + bank * 4].amp = val;

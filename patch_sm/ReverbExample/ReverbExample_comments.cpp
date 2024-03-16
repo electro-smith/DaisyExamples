@@ -10,7 +10,7 @@ using namespace daisysp;
 
 /** Our hardware board class handles the interface to the actual DaisyPatchSM
  * hardware. */
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 
 ReverbSc reverb;
 
@@ -27,7 +27,7 @@ ReverbSc reverb;
  *
  *  This size is acceptable for many applications, and provides an extremely low
  * latency from input to output. However, you can change this size by calling
- * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
+ * hw.SetAudioBlockSize(desired_size). When running complex DSP it can be more
  * efficient to do the processing on larger chunks at a time.
  *
  */
@@ -36,10 +36,10 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    size_t                    size)
 {
     /** First we'll tell the hardware to process the 8 analog inputs */
-    patch.ProcessAnalogControls();
+    hw.ProcessAnalogControls();
 
     /** The first control will set the reverb time */
-    float rev_time = 0.3 + (0.67 * patch.GetAdcValue(patch.CV_1));
+    float rev_time = 0.3 + (0.67 * hw.GetAdcValue(hw.CV_1));
     reverb.SetFeedback(rev_time);
 
     /** The second control will be the dampening frequency of the reverb
@@ -48,7 +48,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
      */
     const float kDampFreqMin = log(1000.f);
     const float kDampFreqMax = log(19000.f);
-    float       damp_control = patch.GetAdcValue(patch.CV_2);
+    float       damp_control = hw.GetAdcValue(hw.CV_2);
     float       damping
         = exp(kDampFreqMin + (damp_control * (kDampFreqMax - kDampFreqMin)));
     reverb.SetLpFreq(damping);
@@ -58,11 +58,11 @@ void AudioCallback(AudioHandle::InputBuffer  in,
    * dry amount and the effects send amount. */
 
     /** The third control will be the dry level going to the output */
-    float inlevel = patch.GetAdcValue(patch.CV_3);
+    float inlevel = hw.GetAdcValue(hw.CV_3);
 
     /** The fourth controll will control how much of the input is sent to the
    * reverb */
-    float sendamt = patch.GetAdcValue(patch.CV_4);
+    float sendamt = hw.GetAdcValue(hw.CV_4);
 
 
     /** This loop will allow us to process the individual samples of audio */
@@ -86,12 +86,12 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     /** Initialize the hardware */
-    patch.Init();
+    hw.Init();
 
     /** Initialize the reverb module */
-    reverb.Init(patch.AudioSampleRate());
+    reverb.Init(hw.AudioSampleRate());
 
     /** Start Processing the audio */
-    patch.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
     while(1) {}
 }

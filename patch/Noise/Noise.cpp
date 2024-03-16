@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 
 WhiteNoise noise;
 
@@ -66,7 +66,7 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
                           AudioHandle::OutputBuffer out,
                           size_t                    size)
 {
-    patch.ProcessAnalogControls();
+    hw.ProcessAnalogControls();
 
     lowpass.UpdateControls();
     highpass.UpdateControls();
@@ -90,25 +90,25 @@ void UpdateOled();
 int main(void)
 {
     float samplerate;
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
-    samplerate = patch.AudioSampleRate();
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
+    samplerate = hw.AudioSampleRate();
 
     noise.Init();
     lowpass.Init(
-        samplerate, filter::mode::LOW, patch.controls[0], patch.controls[1]);
+        samplerate, filter::mode::LOW, hw.controls[0], hw.controls[1]);
     highpass.Init(
-        samplerate, filter::mode::HIGH, patch.controls[2], patch.controls[3]);
+        samplerate, filter::mode::HIGH, hw.controls[2], hw.controls[3]);
 
     std::string str  = "Noise";
     char*       cstr = &str[0];
-    patch.display.WriteString(cstr, Font_7x10, true);
-    patch.display.Update();
-    patch.DelayMs(1000);
+    hw.display.WriteString(cstr, Font_7x10, true);
+    hw.display.Update();
+    hw.DelayMs(1000);
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
     while(1)
     {
-        patch.DisplayControls(false);
+        hw.DisplayControls(false);
     }
 }

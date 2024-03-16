@@ -11,7 +11,7 @@ using namespace daisysp;
 
 /** Our hardware board class handles the interface to the actual DaisyPatchSM
  * hardware. */
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 
 /** Callback for processing and synthesizing audio
  *
@@ -26,7 +26,7 @@ DaisyPatchSM patch;
  *
  *  This size is acceptable for many applications, and provides an extremely low
  * latency from input to output. However, you can change this size by calling
- * patch.SetAudioBlockSize(desired_size). When running complex DSP it can be more
+ * hw.SetAudioBlockSize(desired_size). When running complex DSP it can be more
  * efficient to do the processing on larger chunks at a time.
  *
  */
@@ -53,9 +53,9 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     /** Initialize the hardware */
-    patch.Init();
+    hw.Init();
 
     /** Start Processing the audio */
-    patch.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
     while(1) {}
 }

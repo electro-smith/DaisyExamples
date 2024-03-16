@@ -315,10 +315,10 @@ void Part::RenderModalVoice(int32_t                 voice,
 
     Resonator& r = resonator_[voice];
     r.set_frequency(frequency);
-    r.set_structure(patch.structure);
-    r.set_brightness(patch.brightness * patch.brightness);
-    r.set_position(patch.position);
-    r.set_damping(patch.damping);
+    r.set_structure(hw.structure);
+    r.set_brightness(hw.brightness * patch.brightness);
+    r.set_position(hw.position);
+    r.set_damping(hw.damping);
     r.Process(resonator_input_, out_buffer_, aux_buffer_, size);
 }
 
@@ -337,11 +337,11 @@ void Part::RenderFMVoice(int32_t                 voice,
     }
 
     v.set_frequency(frequency);
-    v.set_ratio(patch.structure);
-    v.set_brightness(patch.brightness);
-    v.set_feedback_amount(patch.position);
+    v.set_ratio(hw.structure);
+    v.set_brightness(hw.brightness);
+    v.set_feedback_amount(hw.position);
     v.set_position(/*patch.position*/ 0.0f);
-    v.set_damping(patch.damping);
+    v.set_damping(hw.damping);
     v.Process(resonator_input_, out_buffer_, aux_buffer_, size);
 }
 
@@ -398,7 +398,7 @@ void Part::RenderStringVoice(int32_t                 voice,
         if(voice == active_voice_ && performance_state.strum)
         {
             plucker_[voice].Trigger(
-                frequency, filter_cutoff * 8.0f, patch.position);
+                frequency, filter_cutoff * 8.0f, hw.position);
         }
         plucker_[voice].Process(noise_burst_buffer_, size);
         for(size_t i = 0; i < size; ++i)
@@ -411,7 +411,7 @@ void Part::RenderStringVoice(int32_t                 voice,
     fill(&out_buffer_[0], &out_buffer_[size], 0.0f);
     fill(&aux_buffer_[0], &aux_buffer_[size], 0.0f);
 
-    float structure = patch.structure;
+    float structure = hw.structure;
     float dispersion
         = structure < 0.24f
               ? (structure - 0.24f) * 4.166f
@@ -423,9 +423,9 @@ void Part::RenderStringVoice(int32_t                 voice,
         String& s         = string_[i];
         float   lfo_value = lfo_[i].Next();
 
-        float brightness = patch.brightness;
-        float damping    = patch.damping;
-        float position   = patch.position;
+        float brightness = hw.brightness;
+        float damping    = hw.damping;
+        float position   = hw.position;
         float glide      = 1.0f;
         float string_index
             = static_cast<float>(string) / static_cast<float>(num_strings);
@@ -446,7 +446,7 @@ void Part::RenderStringVoice(int32_t                 voice,
             brightness *= (2.0f - brightness);
             damping      = 0.7f + patch.damping * 0.27f;
             float amount = (0.5f - fabs(0.5f - patch.position)) * 0.9f;
-            position     = patch.position + lfo_value * amount;
+            position     = hw.position + lfo_value * amount;
             glide        = SemitonesToRatio((brightness - 1.0f) * 36.0f);
             input        = sympathetic_resonator_input_;
         }
@@ -514,7 +514,7 @@ void Part::Process(const PerformanceState& performance_state,
     {
         // Compute MIDI note value, frequency, and cutoff frequency for excitation
         // filter.
-        float cutoff = patch.brightness * (2.0f - patch.brightness);
+        float cutoff = hw.brightness * (2.0f - patch.brightness);
         float note
             = note_[voice] + performance_state.tonic + performance_state.fm;
         float frequency = SemitonesToRatio(note - 69.0f) * a3;
