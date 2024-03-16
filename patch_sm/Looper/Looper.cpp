@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace patch_sm;
 using namespace daisysp;
 
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 Switch       button;
 
 #define kBuffSize 48000 * 60 // 60 seconds at 48kHz
@@ -21,12 +21,12 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    size_t                    size)
 {
     // Process the controls
-    patch.ProcessAllControls();
+    hw.ProcessAllControls();
     button.Debounce();
 
     // Set in and loop gain from CV_1 and CV_2 respectively
-    float in_level   = patch.GetAdcValue(CV_1);
-    float loop_level = patch.GetAdcValue(CV_2);
+    float in_level   = hw.GetAdcValue(CV_1);
+    float loop_level = hw.GetAdcValue(CV_2);
 
     //if you press the button, toggle the record state
     if(button.RisingEdge())
@@ -43,7 +43,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     }
 
     // Set the led to 5V if the looper is recording
-    patch.WriteCvOut(2, 5.f * looper_l.Recording());
+    hw.WriteCvOut(2, 5.f * looper_l.Recording());
 
     // Process audio
     for(size_t i = 0; i < size; i++)
@@ -65,17 +65,17 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     // Initialize the hardware
-    patch.Init();
+    hw.Init();
 
     // Init the loopers
     looper_l.Init(buffer_l, kBuffSize);
     looper_r.Init(buffer_r, kBuffSize);
 
     // Init the button
-    button.Init(patch.B7);
+    button.Init(hw.B7);
 
     // Start the audio callback
-    patch.StartAudio(AudioCallback);
+    hw.StartAudio(AudioCallback);
 
     // loop forever
     while(1) {}

@@ -6,21 +6,21 @@ using namespace patch_sm;
 using namespace daisysp;
 
 /** Hardware object for the patch_sm */
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 
 int main(void)
 {
     /** Initialize the patch_sm hardware object */
-    patch.Init();
+    hw.Init();
 
     /** Loop forever */
     while(1)
     {
         /** Update all cv inputs */
-        patch.ProcessAllControls();
+        hw.ProcessAllControls();
 
         /** Get CV_1 Input (0, 1) */
-        float value = patch.GetAdcValue(CV_1);
+        float value = hw.GetAdcValue(CV_1);
 
         /** Here the pot is wired to GND and 5V
           * So 2.5V is the pot's halfway point.
@@ -30,12 +30,12 @@ int main(void)
         if(value > .5)
         {
             /** Turn the led on */
-            patch.SetLed(true);
+            hw.SetLed(true);
         }
         else
         {
             /** Otherwise, turn the led off */
-            patch.SetLed(false);
+            hw.SetLed(false);
         }
     }
 }

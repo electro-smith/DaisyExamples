@@ -11,7 +11,7 @@ using namespace daisysp;
 
 /** Our hardware board class handles the interface to the actual DaisyPatchSM
  * hardware. */
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 
 /** Create ADSR envelope module */
 Adsr envelope;
@@ -25,12 +25,12 @@ Switch button;
 void EnvelopeCallback(uint16_t **output, size_t size)
 {
     /** Process the controls */
-    patch.ProcessAnalogControls();
+    hw.ProcessAnalogControls();
     button.Debounce();
 
     /** Set the input value of the ADSR */
     bool env_state;
-    if(button.Pressed() || patch.gate_in_1.State())
+    if(button.Pressed() || hw.gate_in_1.State())
         env_state = true;
     else
         env_state = false;
@@ -39,16 +39,16 @@ void EnvelopeCallback(uint16_t **output, size_t size)
      *  Attack, Decay, and Release will be set between instantaneous to 1 second
      *  Sustain will be set between 0 and 1 
      */
-    float knob_attack = patch.GetAdcValue(CV_1);
+    float knob_attack = hw.GetAdcValue(CV_1);
     envelope.SetAttackTime(knob_attack);
 
-    float knob_decay = patch.GetAdcValue(CV_2);
+    float knob_decay = hw.GetAdcValue(CV_2);
     envelope.SetDecayTime(knob_decay);
 
-    float knob_sustain = patch.GetAdcValue(CV_3);
+    float knob_sustain = hw.GetAdcValue(CV_3);
     envelope.SetSustainLevel(knob_sustain);
 
-    float knob_release = patch.GetAdcValue(CV_4);
+    float knob_release = hw.GetAdcValue(CV_4);
     envelope.SetReleaseTime(knob_release);
 
     for(size_t i = 0; i < size; i++)
@@ -63,16 +63,16 @@ void EnvelopeCallback(uint16_t **output, size_t size)
 int main(void)
 {
     /** Initialize the hardware */
-    patch.Init();
+    hw.Init();
 
     /** Initialize the button input to pin B7 (Button on the MicroPatch Eval board) */
-    button.Init(patch.B7, 1000);
+    button.Init(hw.B7, 1000);
 
     /** Initialize the ADSR */
     envelope.Init(48000);
 
     /** Configure the DAC to generate audio-rate signals in a callback */
-    patch.StartDac(EnvelopeCallback);
+    hw.StartDac(EnvelopeCallback);
 
     while(1) {}
 }
