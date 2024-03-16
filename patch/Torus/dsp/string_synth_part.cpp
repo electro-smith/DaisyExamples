@@ -343,13 +343,13 @@ void StringSynthPart::Process(const PerformanceState& performance_state,
     {
         group_[active_group_].tonic     = note_filter_.note();
         group_[active_group_].chord     = performance_state.chord;
-        group_[active_group_].structure = patch.structure;
+        group_[active_group_].structure = hw.structure;
         envelope_flags[active_group_] |= ENVELOPE_FLAG_GATE;
     }
 
     // Process envelopes.
     float envelope_values[kMaxStringSynthPolyphony];
-    ProcessEnvelopes(patch.damping, envelope_flags, envelope_values);
+    ProcessEnvelopes(hw.damping, envelope_flags, envelope_values);
 
     copy(&in[0], &in[size], &aux[0]);
     copy(&in[0], &in[size], &out[0]);
@@ -360,7 +360,7 @@ void StringSynthPart::Process(const PerformanceState& performance_state,
         float     harmonics[kNumHarmonics * 2];
 
         ComputeRegistration(
-            envelope_values[group] * 0.25f, patch.brightness, harmonics);
+            envelope_values[group] * 0.25f, hw.brightness, harmonics);
 
         // Note enough polyphony for smooth transition between chords.
         for(int32_t i = 0; i < chord_size; ++i)
@@ -415,7 +415,7 @@ void StringSynthPart::Process(const PerformanceState& performance_state,
     {
         case FX_FORMANT:
         case FX_FORMANT_2:
-            ProcessFormantFilter(patch.position,
+            ProcessFormantFilter(hw.position,
                                  fx_type_ == FX_FORMANT ? 1.0f : 1.1f,
                                  fx_type_ == FX_FORMANT ? 25.0f : 10.0f,
                                  out,
@@ -424,20 +424,20 @@ void StringSynthPart::Process(const PerformanceState& performance_state,
             break;
 
         case FX_CHORUS:
-            chorus_.set_amount(patch.position);
+            chorus_.set_amount(hw.position);
             chorus_.set_depth(0.15f + 0.5f * patch.position);
             chorus_.Process(out, aux, size);
             break;
 
         case FX_ENSEMBLE:
-            ensemble_.set_amount(patch.position * (2.0f - patch.position));
+            ensemble_.set_amount(hw.position * (2.0f - patch.position));
             ensemble_.set_depth(0.2f + 0.8f * patch.position * patch.position);
             ensemble_.Process(out, aux, size);
             break;
 
         case FX_REVERB:
         case FX_REVERB_2:
-            reverb_.set_amount(patch.position * 0.5f);
+            reverb_.set_amount(hw.position * 0.5f);
             reverb_.set_diffusion(0.625f);
             reverb_.set_time(fx_type_ == FX_REVERB
                                  ? (0.5f + 0.49f * patch.position)

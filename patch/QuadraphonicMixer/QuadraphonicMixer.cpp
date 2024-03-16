@@ -67,7 +67,7 @@ inline float Clamp(const float value, const float min, const float max)
 
 void UpdateParamState()
 {
-    if(patch.encoder.FallingEdge())
+    if(hw.encoder.FallingEdge())
     {
         switch(currState)
         {
@@ -78,7 +78,7 @@ void UpdateParamState()
         }
     }
 
-    const int32_t currInc = patch.encoder.Increment();
+    const int32_t currInc = hw.encoder.Increment();
     if(abs(currInc) > 0)
     {
         switch(currState)
@@ -144,21 +144,21 @@ void UpdateParamState()
 
 void UpdateControls()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     UpdateParamState();
 
     for(uint8_t n = 0; n < NUM_CTRL; n++)
     {
-        ctrl[n] = patch.GetKnobValue(static_cast<DaisyPatch::Ctrl>(n));
+        ctrl[n] = hw.GetKnobValue(static_cast<DaisyPatch::Ctrl>(n));
         stereoMixer.SetPan(n, ctrl[n]);
         quadMixer.SetAngle(n, ctrl[n]);
     }
 
     for(uint8_t n = 0; n < NUM_GATE; n++)
     {
-        gate[n] = patch.gate_input[n].Trig();
+        gate[n] = hw.gate_input[n].Trig();
     }
 
     for(uint8_t n = 0; n < NUM_VERB; n++)
@@ -228,7 +228,7 @@ void UpdateDisplay()
     uint32_t xOffset    = 9 * 7;
     uint32_t lineOffset = 8;
 
-    patch.display.Fill(false);
+    hw.display.Fill(false);
 
     bool highlightState[NUM_STATES]{false};
     highlightState[static_cast<uint8_t>(currState)] = true;
@@ -239,71 +239,71 @@ void UpdateDisplay()
 
     std::string str  = "QUADRAPHONIC MIXER";
     char*       cstr = &str[0];
-    patch.display.SetCursor(minX, minY);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, minY);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = stereo ? "STEREO" : "QUAD";
-    patch.display.SetCursor(minX, minY + lineOffset);
-    patch.display.WriteString(
+    hw.display.SetCursor(minX, minY + lineOffset);
+    hw.display.WriteString(
         cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::Stereo)]);
 
     str = "VERB:" + std::to_string(static_cast<uint32_t>(100 * wet));
-    patch.display.SetCursor(minX, minY + 2 * lineOffset);
-    patch.display.WriteString(
+    hw.display.SetCursor(minX, minY + 2 * lineOffset);
+    hw.display.WriteString(
         cstr,
         Font_6x8,
         !highlightState[static_cast<uint8_t>(State::ReverbWet)]);
 
     str = "FDBK:" + std::to_string(static_cast<uint32_t>(100 * feedback));
-    patch.display.SetCursor(minX, minY + 3 * lineOffset);
-    patch.display.WriteString(
+    hw.display.SetCursor(minX, minY + 3 * lineOffset);
+    hw.display.WriteString(
         cstr,
         Font_6x8,
         !highlightState[static_cast<uint8_t>(State::ReverbFeedback)]);
 
     str = "CH1:" + std::to_string(static_cast<uint32_t>(100 * ctrl[0]));
-    patch.display.SetCursor(minX, minY + 4 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, minY + 4 * lineOffset);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[0]));
-    patch.display.SetCursor(minX + xOffset, minY + 4 * lineOffset);
-    patch.display.WriteString(
+    hw.display.SetCursor(minX + xOffset, minY + 4 * lineOffset);
+    hw.display.WriteString(
         cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH1Gain)]);
 
     str = "CH2:" + std::to_string(static_cast<uint32_t>(100 * ctrl[1]));
-    patch.display.SetCursor(minX, minY + 5 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, minY + 5 * lineOffset);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[1]));
-    patch.display.SetCursor(minX + xOffset, minY + 5 * lineOffset);
-    patch.display.WriteString(
+    hw.display.SetCursor(minX + xOffset, minY + 5 * lineOffset);
+    hw.display.WriteString(
         cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH2Gain)]);
 
     str = "CH3:" + std::to_string(static_cast<uint32_t>(100 * ctrl[2]));
-    patch.display.SetCursor(minX, minY + 6 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, minY + 6 * lineOffset);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[2]));
-    patch.display.SetCursor(minX + xOffset, minY + 6 * lineOffset);
-    patch.display.WriteString(
+    hw.display.SetCursor(minX + xOffset, minY + 6 * lineOffset);
+    hw.display.WriteString(
         cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH3Gain)]);
 
     str = "CH4:" + std::to_string(static_cast<uint32_t>(100 * ctrl[3]));
-    patch.display.SetCursor(minX, minY + 7 * lineOffset);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, minY + 7 * lineOffset);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "GAIN:" + std::to_string(static_cast<uint32_t>(100 * gain[3]));
-    patch.display.SetCursor(minX + xOffset, minY + 7 * lineOffset);
-    patch.display.WriteString(
+    hw.display.SetCursor(minX + xOffset, minY + 7 * lineOffset);
+    hw.display.WriteString(
         cstr, Font_6x8, !highlightState[static_cast<uint8_t>(State::CH4Gain)]);
 
-    patch.display.Update();
+    hw.display.Update();
 }
 
 int main(void)
 {
-    patch.Init();
-    sampleRate = patch.AudioSampleRate();
+    hw.Init();
+    sampleRate = hw.AudioSampleRate();
 
     for(uint8_t n = 0; n < 2; n++)
     {
@@ -312,8 +312,8 @@ int main(void)
         verb[n].SetLpFreq(REVERB_LP_FREQ);
     }
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
 
     while(1)
     {

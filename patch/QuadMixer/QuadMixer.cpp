@@ -4,7 +4,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 
 static void AudioCallback(AudioHandle::InputBuffer  in,
                           AudioHandle::OutputBuffer out,
@@ -14,7 +14,7 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
     for(int i = 0; i < 4; i++)
     {
         //Get the four control values
-        ctrlVal[i] = patch.controls[i].Process();
+        ctrlVal[i] = hw.controls[i].Process();
     }
 
     for(size_t i = 0; i < size; i++)
@@ -39,16 +39,16 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
 
 int main(void)
 {
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
 
     //start audio
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
 
 
     while(1)
     {
         //display the four control levels
-        patch.DisplayControls(false);
+        hw.DisplayControls(false);
     }
 }

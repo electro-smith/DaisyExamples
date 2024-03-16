@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 Parameter  cutoff_ctrl, res_ctrl, drive_ctrl;
 Svf        svf;
 
@@ -39,29 +39,29 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
 int main(void)
 {
     float samplerate;
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
-    samplerate = patch.AudioSampleRate();
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
+    samplerate = hw.AudioSampleRate();
 
     //Initialize filter
     svf.Init(samplerate);
 
     //setup controls
-    cutoff_ctrl.Init(patch.controls[0], 20, 20000, Parameter::LOGARITHMIC);
-    res_ctrl.Init(patch.controls[1], .3, 1, Parameter::LINEAR);
-    drive_ctrl.Init(patch.controls[2], .3, 1, Parameter::LINEAR);
+    cutoff_ctrl.Init(hw.controls[0], 20, 20000, Parameter::LOGARITHMIC);
+    res_ctrl.Init(hw.controls[1], .3, 1, Parameter::LINEAR);
+    drive_ctrl.Init(hw.controls[2], .3, 1, Parameter::LINEAR);
 
     //Put controls onscreen
     std::string str  = "Cut  Res  Drive  ";
     char*       cstr = &str[0];
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
-    patch.display.SetCursor(0, 50);
+    hw.display.SetCursor(0, 50);
     str = "LP  HP  BP  Notch";
-    patch.display.WriteString(cstr, Font_7x10, true);
-    patch.display.Update();
+    hw.display.WriteString(cstr, Font_7x10, true);
+    hw.display.Update();
 
     //start audio
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
     while(1) {}
 }

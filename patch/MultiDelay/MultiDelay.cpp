@@ -7,7 +7,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 
 DelayLine<float, MAX_DELAY> DSY_SDRAM_BSS delMems[3];
 
@@ -72,14 +72,14 @@ void InitDelays(float samplerate)
         delMems[i].Init();
         delays[i].del = &delMems[i];
         //3 delay times
-        params[i].Init(patch.controls[i],
+        params[i].Init(hw.controls[i],
                        samplerate * .05,
                        MAX_DELAY,
                        Parameter::LOGARITHMIC);
     }
 
     //feedback
-    params[3].Init(patch.controls[3], 0, 1, Parameter::LINEAR);
+    params[3].Init(hw.controls[3], 0, 1, Parameter::LINEAR);
 }
 
 void UpdateOled();
@@ -87,15 +87,15 @@ void UpdateOled();
 int main(void)
 {
     float samplerate;
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
-    samplerate = patch.AudioSampleRate();
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
+    samplerate = hw.AudioSampleRate();
 
     InitDelays(samplerate);
 
     drywet = 50;
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
     while(1)
     {
         UpdateOled();
@@ -104,28 +104,28 @@ int main(void)
 
 void UpdateOled()
 {
-    patch.display.Fill(false);
+    hw.display.Fill(false);
 
-    patch.display.SetCursor(0, 0);
+    hw.display.SetCursor(0, 0);
     std::string str  = "Multi Delay";
     char *      cstr = &str[0];
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
-    patch.display.SetCursor(0, 30);
+    hw.display.SetCursor(0, 30);
     str = "Dry/Wet:  ";
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
-    patch.display.SetCursor(60, 30);
+    hw.display.SetCursor(60, 30);
     str = std::to_string(drywet);
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
-    patch.display.Update();
+    hw.display.Update();
 }
 
 void ProcessControls()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     //knobs
     for(int i = 0; i < 3; i++)
@@ -135,7 +135,7 @@ void ProcessControls()
     feedback = params[3].Process();
 
     //encoder
-    drywet += 5 * patch.encoder.Increment();
+    drywet += 5 * hw.encoder.Increment();
     drywet > 100 ? drywet = 100 : drywet = drywet;
     drywet < 0 ? drywet = 0 : drywet = drywet;
 }

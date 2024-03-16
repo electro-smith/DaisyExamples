@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 
 struct gate
 {
@@ -70,7 +70,7 @@ void InitCursorPos()
 
 int main(void)
 {
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
 
     InitGateNames();
     InitCursorPos();
@@ -82,7 +82,7 @@ int main(void)
     isInverted[0] = isInverted[1] = false;
     isInverted[2] = isInverted[3] = false;
 
-    patch.StartAdc();
+    hw.StartAdc();
     while(1)
     {
         ProcessControls();
@@ -135,9 +135,9 @@ void ProcessRisingEdge()
 
 void ProcessEncoder()
 {
-    ProcessIncrement(patch.encoder.Increment());
+    ProcessIncrement(hw.encoder.Increment());
 
-    if(patch.encoder.RisingEdge())
+    if(hw.encoder.RisingEdge())
     {
         ProcessRisingEdge();
     }
@@ -145,13 +145,13 @@ void ProcessEncoder()
 
 void ProcessControls()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     //inputs
     for(int i = 0; i < 4; i++)
     {
-        inputs[i] = CvToBool(patch.controls[i].Process());
+        inputs[i] = CvToBool(hw.controls[i].Process());
 
         //invert the input if isInverted says so
         inputs[i] = isInverted[i] ? !inputs[i] : inputs[i];
@@ -162,22 +162,22 @@ void ProcessControls()
 
 void ProcessOutputs()
 {
-    patch.seed.dac.WriteValue(DacHandle::Channel::ONE,
+    hw.seed.dac.WriteValue(DacHandle::Channel::ONE,
                               gates[0].Process(inputs[0], inputs[1]) * 4095);
-    patch.seed.dac.WriteValue(DacHandle::Channel::TWO,
+    hw.seed.dac.WriteValue(DacHandle::Channel::TWO,
                               gates[1].Process(inputs[2], inputs[3]) * 4095);
 }
 
 void ProcessOled()
 {
-    patch.display.Fill(false);
+    hw.display.Fill(false);
 
     std::string str;
     char*       cstr = &str[0];
 
-    patch.display.SetCursor(0, 0);
+    hw.display.SetCursor(0, 0);
     str = "Logic";
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
     //dashes or spaces, depending on negation
     std::string negStr[4];
@@ -187,18 +187,18 @@ void ProcessOled()
     }
 
     //gates and inputs, with negations
-    patch.display.SetCursor(0, 35);
+    hw.display.SetCursor(0, 35);
     str = negStr[0] + "1" + gateNames[gates[0].gateType] + negStr[1] + "2";
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
-    patch.display.SetCursor(70, 35);
+    hw.display.SetCursor(70, 35);
     str = negStr[2] + "3" + gateNames[gates[1].gateType] + negStr[3] + "4";
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     //Cursor
-    patch.display.SetCursor(cursorPos[menuPos], 25);
+    hw.display.SetCursor(cursorPos[menuPos], 25);
     str = inSubMenu ? "@" : "o";
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
-    patch.display.Update();
+    hw.display.Update();
 }
