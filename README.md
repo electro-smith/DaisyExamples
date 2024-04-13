@@ -104,6 +104,8 @@ arm-none-eabi-objcopy -O ihex build/Blink.elf build/Blink.hex
 arm-none-eabi-objcopy -O binary -S build/Blink.elf build/Blink.bin
 ```
 
+Just be certain to run `make` in both the DaisySP and libDaisy folders first to avoid any ld errors.
+
 ### Flashing an example to the Daisy
 
 The example can be programmed via the [Daisy Web Programmer](https://electro-smith.github.io/Programmer/)
@@ -115,6 +117,15 @@ make program-dfu
 # using JTAG/SWD adaptor (like STLink)
 make program
 ```
+
+Don't worry if you see an error like
+
+```sh
+dfu-util: Error during download get_status
+make: *** [program-dfu] Error 74
+```
+
+So long as you see `File downloaded successfully` you're good.
 
 ## Updating the submodules
 
