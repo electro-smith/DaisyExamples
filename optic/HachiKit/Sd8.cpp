@@ -4,7 +4,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-const std::string Sd8::paramNames[] = { "Freq",  "oDec", "nDec", "Mix", "oAtt", "nAtt" };
+const std::string Sd8::paramNames[]  = { "oFrq", "oDcy", "nDcy", "Mix", "oAtk", "nAtk" };
 
 
 void Sd8::Init(float sample_rate) {
@@ -15,7 +15,7 @@ void Sd8::Init(float sample_rate, float oscFrequency, float oscAttack, float osc
 
     // oscillator settings
     osc.Init(sample_rate);
-    SetParam(PARAM_OSC_FREQUENCY, oscFrequency, false);
+    SetParam(PARAM_OSC_FREQUENCY, oscFrequency);
     osc.SetWaveform(Oscillator::WAVE_SIN);
 
     // oscEnv settings
@@ -23,8 +23,8 @@ void Sd8::Init(float sample_rate, float oscFrequency, float oscAttack, float osc
     oscEnv.SetMax(1);
     oscEnv.SetMin(0);
     oscEnv.SetCurve(-20);
-    SetParam(PARAM_OSC_ATTACK, oscAttack, false);
-    SetParam(PARAM_OSC_DECAY, oscDecay, false);
+    SetParam(PARAM_OSC_ATTACK, oscAttack);
+    SetParam(PARAM_OSC_DECAY, oscDecay);
 
     // noise
     noise.Init();
@@ -34,14 +34,14 @@ void Sd8::Init(float sample_rate, float oscFrequency, float oscAttack, float osc
     noiseEnv.SetMax(1);
     noiseEnv.SetMin(0);
     noiseEnv.SetCurve(-20);
-    SetParam(PARAM_NOISE_ATTACK, noiseAttack, false);
-    SetParam(PARAM_NOISE_DECAY, noiseDecay, false);
-    SetParam(PARAM_MIX, mix, false);
+    SetParam(PARAM_NOISE_ATTACK, noiseAttack);
+    SetParam(PARAM_NOISE_DECAY, noiseDecay);
+    SetParam(PARAM_MIX, mix);
 }
 
 float Sd8::Process() {
-    float sig = (1 - params[PARAM_MIX]) * osc.Process() * oscEnv.Process();
-    sig += params[PARAM_MIX] * noise.Process() * noiseEnv.Process();
+    float sig = (1 - parameters[PARAM_MIX].GetScaledValue()) * osc.Process() * oscEnv.Process();
+    sig += parameters[PARAM_MIX].GetScaledValue() * noise.Process() * noiseEnv.Process();
     return velocity * sig; // / 2;
 }
 
@@ -54,7 +54,7 @@ void Sd8::Trigger(float velocity) {
 }
 
 float Sd8::GetParam(uint8_t param) {
-    return param < Sd8::PARAM_COUNT ? params[param] : 0.0f;
+    return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
 }
 
 std::string Sd8::GetParamString(uint8_t param) {
@@ -74,38 +74,47 @@ std::string Sd8::GetParamString(uint8_t param) {
    return "";
  }
 
-float Sd8::SetParam(uint8_t param, float value, bool scaled) {
+float Sd8::UpdateParam(uint8_t param, float raw) {
+    float scaled = raw;
     if (param < Sd8::PARAM_COUNT) {
-        if (scaled) {
-            switch (param) {
-                case PARAM_OSC_FREQUENCY: 
-                    params[param] = Utility::ScaleFloat(value, 20, 5000, Parameter::EXPONENTIAL);
-                    osc.SetFreq(params[param]);
-                    return params[param];
-                case PARAM_OSC_ATTACK: 
-                    params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                    oscEnv.SetTime(ADENV_SEG_ATTACK, params[param]);
-                    return params[param];
-                case PARAM_OSC_DECAY: 
-                    params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                    oscEnv.SetTime(ADENV_SEG_DECAY, params[param]);
-                    return params[param];
-                case PARAM_NOISE_ATTACK: 
-                    params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                    noiseEnv.SetTime(ADENV_SEG_ATTACK, params[param]);
-                    return params[param];
-                case PARAM_NOISE_DECAY: 
-                    params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                    noiseEnv.SetTime(ADENV_SEG_DECAY, params[param]);
-                    return params[param];
-                case PARAM_MIX: 
-                    params[param] = Utility::LimitFloat(value, 0, 1);
-                    return params[param];
-            }
-        } else {
-            params[param] = value;
+        switch (param) {
+            case PARAM_OSC_FREQUENCY: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 20, 5000, Parameter::EXPONENTIAL));
+                osc.SetFreq(scaled);
+                break;
+            case PARAM_OSC_ATTACK: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                oscEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_OSC_DECAY: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                oscEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_NOISE_ATTACK: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                noiseEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_NOISE_DECAY: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                noiseEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_MIX: 
+                scaled = parameters[param].Update(raw, Utility::LimitFloat(raw, 0, 1));
+                break;
         }
     }
 
-    return value;
+    return scaled;    
+}
+
+void Sd8::ResetParams() {
+    for (u8 param = 0; param < PARAM_COUNT; param++) {
+        parameters[param].Reset();
+    }
+}
+
+void Sd8::SetParam(uint8_t param, float value) {
+    if (param < PARAM_COUNT) {
+        parameters[param].SetScaledValue(value);
+    }
 }

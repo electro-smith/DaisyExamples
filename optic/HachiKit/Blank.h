@@ -6,6 +6,7 @@
 #include <string>
 #include "IDrum.h"
 #include "Utility.h"
+#include "Param.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -20,36 +21,17 @@ class Blank: public IDrum {
         static const uint8_t PARAM_ATTACK = 1;
         static const uint8_t PARAM_DECAY = 2;
 
-        /** Initialize model with default parameters.
-         * \param sample_rate audio sample rate.
-        */
         void Init(float sample_rate);
-
-        /** Initialize model with specified parameters.
-         * \param sample_rate audio sample rate.
-         * \param frequency oscillator frequency in hertz.
-        */
         void Init(float sample_rate, float frequency, float attack, float decay);
-
         float Process();
         void Trigger(float velocity);
 
-        /** Get the current value of a parameter.
-         * \param param index of the desired parameter (must be <PARAM_COUNT).
-        */
         float GetParam(uint8_t param);
-
-        /** Get the current value of a parameter as a readable string.
-         * \param param index of the desired parameter (must be <PARAM_COUNT).
-        */
         std::string GetParamString(uint8_t param);
-
-        /** Set the value of a parameter.
-         * \param param index of the desired parameter (must be <PARAM_COUNT).
-         * \param value
-         * \param scaled when true, value is in the range 0-1.
-        */
-        float SetParam(uint8_t param, float value, bool scaled);
+        float UpdateParam(uint8_t param, float value);
+        void SetParam(uint8_t param, float value);
+        void ResetParams();
+        std::string GetParamString(uint8_t param);
 
         std::string Name() { return "Blank"; }
         std::string Slot() { return slot; }
@@ -58,8 +40,8 @@ class Blank: public IDrum {
     private:
         std::string paramNames[PARAM_COUNT] = { "Freq", "Att", "Dec" };
         std::string slot;
+        Param parameters[PARAM_COUNT];
         float velocity;
-        float params[PARAM_COUNT];
         // audio objects
 
 };

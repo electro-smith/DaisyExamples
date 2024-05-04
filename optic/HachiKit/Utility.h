@@ -7,7 +7,15 @@
 using namespace daisy;
 using namespace daisysp;
 
+typedef signed long  s32;
+typedef signed short s16;
+typedef signed char  s8;
+
+typedef unsigned long long u64;
+typedef unsigned long  u32;
+typedef unsigned short u16;
 typedef unsigned char  u8;
+
 
 #define MAX_ENV_TIME 20
 

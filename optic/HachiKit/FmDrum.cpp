@@ -12,16 +12,16 @@ void FmDrum::Init(float sample_rate, float frequency, float ratio, float modAmou
 
     // 2-osc fm object
     fm.Init(sample_rate);
-    SetParam(PARAM_FREQUENCY, frequency, false);
-    SetParam(PARAM_RATIO, ratio, false);
-    SetParam(PARAM_MOD_AMT, modAmount, false);
+    SetParam(PARAM_FREQUENCY, frequency);
+    SetParam(PARAM_RATIO, ratio);
+    SetParam(PARAM_MOD_AMT, modAmount);
 
     ampEnv.Init(sample_rate);
     ampEnv.SetMax(1);
     ampEnv.SetMin(0);
-    SetParam(PARAM_ATTACK, attack, false);
-    SetParam(PARAM_DECAY, decay, false);
-    SetParam(PARAM_ENV_CURVE, curve, false);
+    SetParam(PARAM_ATTACK, attack);
+    SetParam(PARAM_DECAY, decay);
+    SetParam(PARAM_ENV_CURVE, curve);
 }
 
 float FmDrum::Process() {
@@ -36,7 +36,7 @@ void FmDrum::Trigger(float velocity) {
 }
 
 float FmDrum::GetParam(uint8_t param) {
-    return param < FmDrum::PARAM_COUNT ? params[param] : 0.0f;
+    return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
 }
 
 std::string FmDrum::GetParamString(uint8_t param) {
@@ -58,42 +58,48 @@ std::string FmDrum::GetParamString(uint8_t param) {
    return "";
  }
 
-float FmDrum::SetParam(uint8_t param, float value, bool scaled) {
+float FmDrum::UpdateParam(uint8_t param, float raw) {
+    float scaled = raw;
     if (param < FmDrum::PARAM_COUNT) {
         switch (param) {
             case PARAM_FREQUENCY: 
-                params[param] = value;
-                if (scaled) params[param] = Utility::ScaleFloat(value, 20, 5000, Parameter::EXPONENTIAL);
-                fm.SetFrequency(params[param]);
-                return params[param];
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 20, 5000, Parameter::EXPONENTIAL));
+                fm.SetFrequency(scaled);
+                break;
             case PARAM_RATIO: 
-                params[param] = value;
-                if (scaled) params[param] = Utility::ScaleFloat(value, 0.125, 8, Parameter::EXPONENTIAL);
-                fm.SetRatio(params[param]);
-                return params[param];
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.125, 8, Parameter::EXPONENTIAL));
+                fm.SetRatio(scaled);
+                break;
             case PARAM_MOD_AMT: 
-                params[param] = value;
-                if (scaled) params[param] = Utility::ScaleFloat(value, 0, 5, Parameter::EXPONENTIAL);
-                fm.SetIndex(params[param]);
-                return params[param];
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0, 5, Parameter::EXPONENTIAL));
+                fm.SetIndex(scaled);
+                break;
             case PARAM_ATTACK: 
-                params[param] = value;
-                if (scaled) params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                ampEnv.SetTime(ADENV_SEG_ATTACK, params[param]);
-                return params[param];
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                ampEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
             case PARAM_DECAY: 
-                params[param] = value;
-                if (scaled) params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                ampEnv.SetTime(ADENV_SEG_DECAY, params[param]);
-                return params[param];
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                ampEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
             case PARAM_ENV_CURVE: 
-                params[param] = value;
-                if (scaled) params[param] = Utility::ScaleFloat(value, -100, 100, Parameter::LINEAR);
-                ampEnv.SetTime(ADENV_SEG_DECAY, params[param]);
-                return params[param];
+                scaled = raw;
+                // TODO: set the curve
+                break;
         }
-        return params[param];
     }
 
-    return value;
+    return scaled;    
+}
+
+void FmDrum::ResetParams() {
+    for (u8 param = 0; param < PARAM_COUNT; param++) {
+        parameters[param].Reset();
+    }
+}
+
+void FmDrum::SetParam(uint8_t param, float value) {
+    if (param < PARAM_COUNT) {
+        parameters[param].SetScaledValue(value);
+    }
 }

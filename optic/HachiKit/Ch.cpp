@@ -30,8 +30,8 @@ void Ch::Init(float sample_rate, float attack, float decay, ISource *source) {
     env.SetMax(1);
     env.SetMin(0);
     env.SetCurve(-20);
-    SetParam(PARAM_ATTACK, attack, false);
-    SetParam(PARAM_DECAY, decay, false);
+    SetParam(PARAM_ATTACK, attack);
+    SetParam(PARAM_DECAY, decay);
 }
 
 float Ch::Process() {
@@ -51,7 +51,7 @@ void Ch::Trigger(float velocity) {
 }
 
 float Ch::GetParam(uint8_t param) {
-    return param < Ch::PARAM_COUNT ? params[param] : 0.0f;
+    return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
 }
 
 std::string Ch::GetParamString(uint8_t param) {
@@ -65,23 +65,30 @@ std::string Ch::GetParamString(uint8_t param) {
    return "";
  }
 
-float Ch::SetParam(uint8_t param, float value, bool scaled) {
+float Ch::UpdateParam(uint8_t param, float raw) {
+    float scaled = raw;
     if (param < Ch::PARAM_COUNT) {
-        if (scaled) {
-            switch (param) {
-                case PARAM_ATTACK: 
-                    params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                    // update accordingly
-                    return params[param];
-                case PARAM_DECAY: 
-                    params[param] = Utility::ScaleFloat(value, 0.01, 5, Parameter::EXPONENTIAL);
-                    // update accordingly
-                    return params[param];
-            }
-        } else {
-            params[param] = value;
+        switch (param) {
+            case PARAM_ATTACK: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                break;
+            case PARAM_DECAY: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                break;
         }
     }
 
-    return value;
+    return scaled;    
+}
+
+void Ch::ResetParams() {
+    for (u8 param = 0; param < PARAM_COUNT; param++) {
+        parameters[param].Reset();
+    }
+}
+
+void Ch::SetParam(uint8_t param, float value) {
+    if (param < PARAM_COUNT) {
+        parameters[param].SetScaledValue(value);
+    }
 }

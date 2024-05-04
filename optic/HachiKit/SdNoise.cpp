@@ -13,9 +13,9 @@ void SdNoise::Init(float sample_rate, float attack, float decay, float curve) {
     ampEnv.Init(sample_rate);
     ampEnv.SetMax(1);
     ampEnv.SetMin(0);
-    SetParam(PARAM_ATTACK, attack, false);
-    SetParam(PARAM_DECAY, decay, false);
-    SetParam(PARAM_CURVE, curve, false);
+    SetParam(PARAM_ATTACK, attack);
+    SetParam(PARAM_DECAY, decay);
+    SetParam(PARAM_CURVE, curve);
 }
 
 float SdNoise::Process() {
@@ -30,7 +30,7 @@ void SdNoise::Trigger(float velocity) {
 }
 
 float SdNoise::GetParam(uint8_t param) {
-    return param < PARAM_COUNT ? params[param] : 0.0f;
+    return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
 }
 
 std::string SdNoise::GetParamString(uint8_t param) {
@@ -46,28 +46,36 @@ std::string SdNoise::GetParamString(uint8_t param) {
    return "";
  }
 
-float SdNoise::SetParam(uint8_t param, float value, bool scaled) {
+float SdNoise::UpdateParam(uint8_t param, float raw) {
+    float scaled = raw;
     if (param < SdNoise::PARAM_COUNT) {
-        if (scaled) {
-            switch (param) {
-                case PARAM_ATTACK: 
-                    params[param] = Utility::ScaleFloat(value, 0.001, 5, Parameter::EXPONENTIAL);
-                    ampEnv.SetTime(ADENV_SEG_ATTACK, params[param]);
-                    return params[param];
-                case PARAM_DECAY: 
-                    params[param] = Utility::ScaleFloat(value, 0.001, 5, Parameter::EXPONENTIAL);
-                    ampEnv.SetTime(ADENV_SEG_DECAY, params[param]);
-                    return params[param];
-                case PARAM_CURVE: 
-                    params[param] = Utility::ScaleFloat(value, -100, 100, Parameter::LINEAR);
-                    ampEnv.SetCurve(params[param]);
-                    return params[param];
-            }
-        } else {
-            params[param] = value;
-            return value;
+        switch (param) {
+            case PARAM_ATTACK: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                ampEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_DECAY: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                ampEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_CURVE: 
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, -100, 100, Parameter::LINEAR));
+                ampEnv.SetCurve(scaled);
+                break;
         }
     }
 
-    return 0.0f;
+    return scaled;    
+}
+
+void SdNoise::ResetParams() {
+    for (u8 param = 0; param < PARAM_COUNT; param++) {
+        parameters[param].Reset();
+    }
+}
+
+void SdNoise::SetParam(uint8_t param, float value) {
+    if (param < PARAM_COUNT) {
+        parameters[param].SetScaledValue(value);
+    }
 }

@@ -5,6 +5,7 @@
 #include "daisysp.h"
 #include <string>
 #include "Utility.h"
+#include "BitArray.h"
 #include "Screen.h"
 #include "IDrum.h"
 #include "Bd8.h"
@@ -78,6 +79,7 @@ void ProcessEncoder() {
     int inc = hw.encoder.Increment();
     if (inc != 0) {
         currentDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
+        drums[currentDrum]->ResetParams();
         screen.DrawMenu(currentDrum);
         DisplayParamMenu();
         hw.display.Update();        
@@ -89,10 +91,15 @@ void ProcessEncoder() {
 void ProcessKnobs() {
 
     for (int knob = 0; knob < KNOB_COUNT; knob++) {
-        float sig = hw.controls[knob].Process();
-        // need to add check for whether we should update value
+        float sig = hw.controls[knob].Value();
         uint8_t param = currentKnobRow * KNOB_COUNT + knob;
-        drums[currentDrum]->SetParam(param, sig, true);
+        // drums[currentDrum]->SetParam(param, sig, true);
+        drums[currentDrum]->UpdateParam(param, sig);
+        // float val = drums[currentDrum]->UpdateParam(param, sig);
+        // if (param == 0) {
+        //     float scaled = Utility::ScaleFloat(sig, 20, 5000, Parameter::EXPONENTIAL);
+        //     OledMessage("Upd: " + std::to_string(param) + ", " + std::to_string((int)(sig*1000)) + ", " + std::to_string((int)scaled) + ", " + std::to_string((int)val) + "     ", 4);
+        // }
     }
 }
 
@@ -163,7 +170,6 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 // Typical Switch case for Message Type.
 void HandleMidiMessage(MidiEvent m)
 {
-    OledMessage("MIDI, d=" + std::to_string(m.data[0]) + "," + std::to_string(m.data[1]), 4);
 
     switch(m.type)
     {
@@ -187,7 +193,6 @@ void HandleMidiMessage(MidiEvent m)
                 if (p.note >= MINIMUM_NOTE && p.note < MINIMUM_NOTE + drumCount) {
                     drums[p.note - MINIMUM_NOTE]->Trigger(velocity);
                 }
-                OledMessage("Midi: " + std::to_string(p.note) + ", " + std::to_string(p.velocity) + "     ", 2);
             }
         }
         break;
@@ -225,16 +230,16 @@ int main(void)
     drums[1] = &rs;
     drums[2] = &sd;
     drums[3] = &cp;
-    // drums[4] = &ch;
-    // drumCount = 5;
+    drums[4] = &ch;
+    drumCount = 5;
     currentDrum = 0;
 
     for (uint8_t i = 0; i < drumCount; i++) {
         drums[i]->Init(samplerate);
     }
 
-    source68.Init(samplerate, 0.5);
-    ch.Init(samplerate,0.001, 0.5, &source68);
+    // source68.Init(samplerate, 0.5);
+    // ch.Init(samplerate,0.001, 0.5, &source68);
 
     // for (u8 i = 0; i < 4; i++) {
     //     for (u8 j = 1; j < 4; j++) {
@@ -259,7 +264,6 @@ int main(void)
     int c = 0;
     for(;;)
     {
-        OledMessage("Count: " + std::to_string(c), 3);
         hw.midi.Listen();
         // Handle MIDI Events
         while(hw.midi.HasEvents())
