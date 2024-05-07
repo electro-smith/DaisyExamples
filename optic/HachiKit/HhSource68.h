@@ -3,14 +3,21 @@
 
 #include "daisy_patch.h"
 #include "daisysp.h"
-#include "ISource.h"
+#include "IDrum.h"
+#include "Param.h"
 
 using namespace daisy;
 using namespace daisysp;
 
-class HhSource68: public ISource {
+class HhSource68: public IDrum {
 
     public:
+        // Number of settable parameters for this model.
+        static const uint8_t PARAM_COUNT = 3;
+        static const uint8_t PARAM_MORPH = 0;
+        static const uint8_t PARAM_HPF = 1;
+        static const uint8_t PARAM_LPF = 2;
+
         // how many square waves make up the sound source
         static const uint8_t OSC_COUNT = 6;
 
@@ -35,29 +42,35 @@ class HhSource68: public ISource {
         void Init(float sample_rate, float morph);
 
         float Process();
+        void Trigger(float velocity);
         float Signal();
-        float hpfFreq = 2700;
-        float lpfFreq = 5000;
 
-        float GetMorph();
-        void SetMorph(float morph);
-        float GetHpfFrequency();
-        void SetHpfFrequency(float freq);
-        float GetLpfFrequency();
-        void SetLpfFrequency(float freq);
+        float GetParam(uint8_t param);
+        std::string GetParamString(uint8_t param);
+        float UpdateParam(uint8_t param, float value);
+        void SetParam(uint8_t param, float value);
+        void ResetParams();
+
+        std::string Name() { return "Bd8"; }
+        std::string Slot() { return slot; }
+        std::string GetParamName(uint8_t param) { return param < PARAM_COUNT ? paramNames[param] : ""; }
 
     private:
         static const float freqs606[];
         static const float freqs808[];
         static const float MIN_FREQ_FACTOR;
 
-        float morph;
-        float signal;
-        float gain = 1.0;
+        std::string paramNames[PARAM_COUNT] = { "Mrph", "HPF", "LPF" };
+        std::string slot;
+        Param parameters[PARAM_COUNT];
 
+        float signal = 0.0f;
+        float gain = 1.0;
         Oscillator* oscs[OSC_COUNT];
         Oscillator osc0, osc1, osc2, osc3, osc4, osc5;
         Svf hpf, lpf;
+
+        void SetMorph(float morph);
 
 };
 

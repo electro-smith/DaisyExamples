@@ -21,12 +21,12 @@ class Ch: public IDrum {
         // This is the order params will appear in the UI.
         static const uint8_t PARAM_ATTACK = 0;
         static const uint8_t PARAM_DECAY = 1;
+        // These are pass-thru params that belong to the sound source and aren't tracked in Ch
         static const uint8_t PARAM_MORPH = 2;
         static const uint8_t PARAM_HPF = 3;
         static const uint8_t PARAM_LPF = 4;
 
         void Init(float sample_rate);
-        // void Init(float sample_rate, float attack, float decay, ISource *source);
         void Init(float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf);
         float Process();
         void Trigger(float velocity);

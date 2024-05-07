@@ -61,17 +61,15 @@ float HhSource68::Process() {
     return signal;
 }
 
+void HhSource68::Trigger(float velocity) {
+    // NOP
+}
+
 float HhSource68::Signal() {
     return signal;
 }
 
-float HhSource68::GetMorph() {
-    return this->morph;
-}
-
 void HhSource68::SetMorph(float morph) {
-
-    this->morph = morph;
 
     float range68 = MORPH_808_VALUE - MORPH_606_VALUE; // assumes 8>6 and both betw 0 and 1
     float weight8 = (morph - MORPH_606_VALUE) * (1 / range68);
@@ -85,21 +83,53 @@ void HhSource68::SetMorph(float morph) {
     }
 }
 
-float HhSource68::GetHpfFrequency() {
-    return hpfFreq;
+float HhSource68::GetParam(uint8_t param) {
+    return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
 }
 
-void HhSource68::SetHpfFrequency(float freq) {
-    hpfFreq = freq;
-    hpf.SetFreq(hpfFreq);    
-    gain = Utility::LimitFloat(1.0f + freq * (HH_HPF_MAX - HH_HPF_MIN) * (GAIN_MAX - 1), 1.0f, GAIN_MAX);
+std::string HhSource68::GetParamString(uint8_t param) {
+    if (param < PARAM_COUNT) {
+        switch (param) {
+            case PARAM_MORPH: 
+                return std::to_string((int)GetParam(param * 100));
+            case PARAM_HPF:
+            case PARAM_LPF:
+                return std::to_string((int)GetParam(param));// + "hz";
+        }
+    }
+   return "";
+ }
+
+float HhSource68::UpdateParam(uint8_t param, float raw) {
+    float scaled = raw;
+    if (param < PARAM_COUNT) {
+        switch (param) {
+            case PARAM_MORPH: 
+                scaled = parameters[param].Update(raw, Utility::Limit(raw));
+                SetMorph(scaled);
+                break;
+            case PARAM_HPF:
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HH_HPF_MIN, HH_HPF_MAX, Parameter::EXPONENTIAL));
+                hpf.SetFreq(scaled);
+                break;
+            case PARAM_LPF:
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HH_HPF_MIN, HH_HPF_MAX, Parameter::EXPONENTIAL));
+                lpf.SetFreq(scaled);
+                break;
+        }
+    }
+
+    return scaled;    
 }
 
-float HhSource68::GetLpfFrequency() {
-    return lpfFreq;
+void HhSource68::ResetParams() {
+    for (u8 param = 0; param < PARAM_COUNT; param++) {
+        parameters[param].Reset();
+    }
 }
 
-void HhSource68::SetLpfFrequency(float freq) {
-    lpfFreq = freq;
-    lpf.SetFreq(lpfFreq);    
+void HhSource68::SetParam(uint8_t param, float value) {
+    if (param < PARAM_COUNT) {
+        parameters[param].SetScaledValue(value);
+    }
 }

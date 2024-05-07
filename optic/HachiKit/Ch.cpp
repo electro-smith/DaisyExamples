@@ -45,12 +45,20 @@ void Ch::Trigger(float velocity) {
 }
 
 float Ch::GetParam(uint8_t param) {
-    // have to refetch source params since they could be changed in other ways
-    // parameters[PARAM_MORPH].SetScaledValue(source->GetMorph());
-    // parameters[PARAM_HPF].SetScaledValue(source->GetHpfFrequency());
-    // parameters[PARAM_LPF].SetScaledValue(source->GetLpfFrequency());
-
-    return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
+    if (param < PARAM_COUNT) {
+        switch (param) {
+            case PARAM_ATTACK: 
+            case PARAM_DECAY: 
+                return parameters[param].GetScaledValue();
+            case PARAM_MORPH:
+                return source->GetParam(HhSource68::PARAM_MORPH);
+            case PARAM_HPF:
+                return source->GetParam(HhSource68::PARAM_HPF);
+            case PARAM_LPF:
+                return source->GetParam(HhSource68::PARAM_LPF);
+        }
+    }
+    return 0.0f;
 }
 
 std::string Ch::GetParamString(uint8_t param) {
@@ -62,10 +70,6 @@ std::string Ch::GetParamString(uint8_t param) {
             case PARAM_MORPH:
             case PARAM_HPF:
             case PARAM_LPF:
-            // have to refetch source params since they could be changed in other ways
-            // parameters[PARAM_MORPH].SetScaledValue(source->GetMorph());
-            // parameters[PARAM_HPF].SetScaledValue(source->GetHpfFrequency());
-            // parameters[PARAM_LPF].SetScaledValue(source->GetLpfFrequency());
                 return std::to_string((int)GetParam(param));
         }
     }
@@ -85,16 +89,13 @@ float Ch::UpdateParam(uint8_t param, float raw) {
                 env.SetTime(ADENV_SEG_DECAY, scaled);
                 break;
             case PARAM_MORPH:
-                scaled = parameters[param].Update(raw, Utility::Limit(raw));
-                source->SetMorph(scaled);
+                source->UpdateParam(HhSource68::PARAM_MORPH, raw);
                 break;
             case PARAM_HPF:
-                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HhSource68::HH_HPF_MIN, HhSource68::HH_HPF_MAX, Parameter::EXPONENTIAL));
-                source->SetHpfFrequency(scaled);
+                source->UpdateParam(HhSource68::PARAM_HPF, raw);
                 break;
             case PARAM_LPF:
-                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HhSource68::HH_HPF_MIN, HhSource68::HH_HPF_MAX, Parameter::EXPONENTIAL));
-                source->SetLpfFrequency(scaled);
+                source->UpdateParam(HhSource68::PARAM_LPF, raw);
                 break;
         }
     }
