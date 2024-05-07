@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 void Bd8::Init(float sample_rate) {
-    Init(sample_rate, 60, 0.001, 0.5, 0.001, 0.2, 0.1);
+    Init(sample_rate, 78, 0.001, 4.857, 0.001, 0.1, 0.95);
 }
 
 void Bd8::Init(float sample_rate, float frequency, float ampAttack, float ampDecay, float pitchAttack, float pitchDecay, float modAmount) {
@@ -37,7 +37,7 @@ float Bd8::Process() {
     float psig = pitchEnv.Process();
     osc.SetFreq(parameters[PARAM_FREQUENCY].GetScaledValue() + parameters[PARAM_MOD_AMT].GetScaledValue() * psig);
     // osc.SetFreq(parameters[PARAM_FREQUENCY].GetScaledValue());
-    return velocity * osc.Process() * ampEnv.Process();
+    return 2 * velocity * osc.Process() * ampEnv.Process();
 }
 
 void Bd8::Trigger(float velocity) {

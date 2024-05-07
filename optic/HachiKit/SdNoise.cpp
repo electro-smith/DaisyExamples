@@ -5,7 +5,7 @@ using namespace daisy;
 using namespace daisysp;
 
 void SdNoise::Init(float sample_rate) {
-    Init(sample_rate, 0.01, 0.1, -100.0f);
+    Init(sample_rate, 0.01, 0.237 -30.0f);
 }
 
 void SdNoise::Init(float sample_rate, float attack, float decay, float curve) {

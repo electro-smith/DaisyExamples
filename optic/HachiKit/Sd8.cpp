@@ -8,7 +8,7 @@ const std::string Sd8::paramNames[]  = { "oFrq", "oDcy", "nDcy", "Mix", "oAtk", 
 
 
 void Sd8::Init(float sample_rate) {
-    Init(sample_rate, 110, 0.001, 0.5, 0.001, 0.5, 0.5);
+    Init(sample_rate, 153, 0.001, 1.212, 0.001, 0.971, 0.5);
 }
 
 void Sd8::Init(float sample_rate, float oscFrequency, float oscAttack, float oscDecay, float noiseAttack, float noiseDecay, float mix) {
