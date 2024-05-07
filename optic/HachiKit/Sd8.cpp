@@ -48,6 +48,7 @@ float Sd8::Process() {
 void Sd8::Trigger(float velocity) {
     this->velocity = Utility::Limit(velocity);
     if (this->velocity > 0) {
+        osc.Reset();
         oscEnv.Trigger();
         noiseEnv.Trigger();
     }

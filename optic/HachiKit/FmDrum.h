@@ -40,7 +40,7 @@ class FmDrum: public IDrum {
         std::string GetParamName(uint8_t param) { return param < PARAM_COUNT ? paramNames[param] : ""; }
 
     private:
-        std::string paramNames[PARAM_COUNT] = { "Freq", "Ratio", "Mod", "Dec", "Att", "Curve" };
+        std::string paramNames[PARAM_COUNT] = { "Freq", "Ratio", "Mod", "Dcy", "Atk", "Curve" };
         std::string slot;
         Param parameters[PARAM_COUNT];
         float velocity;

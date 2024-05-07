@@ -29,12 +29,13 @@ Bd8 bd;
 SdNoise rs;
 Sd8 sd;
 FmDrum cp;
-Ch ch;
+Ch ch, ch2;
 
 HhSource68 source68;
 
 uint8_t currentDrum = 0;
 uint8_t currentKnobRow = 0;
+
 
 void OledMessage(std::string message, int row) 
 {
@@ -78,8 +79,9 @@ void DisplayParamMenu() {
 void ProcessEncoder() {
     int inc = hw.encoder.Increment();
     if (inc != 0) {
-        currentDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
-        drums[currentDrum]->ResetParams();
+        int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
+        drums[newDrum]->ResetParams();
+        currentDrum = newDrum;
         screen.DrawMenu(currentDrum);
         DisplayParamMenu();
         hw.display.Update();        
@@ -154,6 +156,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     for(size_t i = 0; i < size; i++)
     {
 
+        float src = source68.Process();
+
         float sig = 0.0f;
         for (uint8_t i = 0; i < drumCount; i++) {
             sig += drums[i]->Process();
@@ -161,7 +165,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
         float limited = sig / drumCount;
 
         out[0][i] = out[1][i] = limited;
-        out[2][i] = out[3][i] = sig;
+        // out[2][i] = out[3][i] = sig;
+        out[2][i] = out[3][i] = src;
 
     }
 }
@@ -231,22 +236,18 @@ int main(void)
     drums[2] = &sd;
     drums[3] = &cp;
     drums[4] = &ch;
-    drumCount = 5;
+    drums[5] = &ch2;
+    drumCount = 4;
     currentDrum = 0;
 
     for (uint8_t i = 0; i < drumCount; i++) {
         drums[i]->Init(samplerate);
     }
 
-    // source68.Init(samplerate, 0.5);
-    // ch.Init(samplerate,0.001, 0.5, &source68);
-
-    // for (u8 i = 0; i < 4; i++) {
-    //     for (u8 j = 1; j < 4; j++) {
-    //         drums[j * 4 + i] = drums[i];
-    //     }
-    // }
-    // drumCount = 16;
+    drumCount = 6;
+    source68.Init(samplerate, 0.65);
+    ch.Init(samplerate, 0.001, 0.5, &source68, HhSource68::MORPH_808_VALUE, 8000, 8000);
+    ch2.Init(samplerate, 0.001, 0.5, &source68, HhSource68::MORPH_808_VALUE, 8000, 8000);
 
     //display
     hw.display.Fill(false);

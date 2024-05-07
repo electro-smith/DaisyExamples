@@ -31,6 +31,7 @@ float FmDrum::Process() {
 void FmDrum::Trigger(float velocity) {
     this->velocity = Utility::Limit(velocity);
     if (this->velocity > 0) {
+        fm.Reset();
         ampEnv.Trigger();
     }
 }

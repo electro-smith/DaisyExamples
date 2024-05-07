@@ -6,24 +6,11 @@ using namespace daisysp;
 
 
 void Ch::Init(float sample_rate) {
-    // Init(sample_rate, 0.001, 0.5);
-    Init(sample_rate, 0.001, 0.5, NULL);
+    Init(sample_rate, 0.001, 0.5, NULL, 0.5, 2000, 5000);
 }
 
-// void Ch::Init(float sample_rate, float attack, float decay) {
-
-//     // env settings
-//     env.Init(sample_rate);
-//     env.SetMax(1);
-//     env.SetMin(0);
-//     env.SetCurve(-20);
-//     SetParam(PARAM_ATTACK, attack, false);
-//     SetParam(PARAM_DECAY, decay, false);
-// }
-
-void Ch::Init(float sample_rate, float attack, float decay, ISource *source) {
-
-    this->source = source;
+// void Ch::Init(float sample_rate, float attack, float decay, ISource *source) {
+void Ch::Init(float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf) {
 
     // env settings
     env.Init(sample_rate);
@@ -32,6 +19,13 @@ void Ch::Init(float sample_rate, float attack, float decay, ISource *source) {
     env.SetCurve(-20);
     SetParam(PARAM_ATTACK, attack);
     SetParam(PARAM_DECAY, decay);
+
+    // source settings
+    this->source = source;
+    SetParam(PARAM_MORPH, morph);
+    SetParam(PARAM_HPF, hpf);
+    SetParam(PARAM_LPF, lpf);
+
 }
 
 float Ch::Process() {
@@ -51,6 +45,11 @@ void Ch::Trigger(float velocity) {
 }
 
 float Ch::GetParam(uint8_t param) {
+    // have to refetch source params since they could be changed in other ways
+    // parameters[PARAM_MORPH].SetScaledValue(source->GetMorph());
+    // parameters[PARAM_HPF].SetScaledValue(source->GetHpfFrequency());
+    // parameters[PARAM_LPF].SetScaledValue(source->GetLpfFrequency());
+
     return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
 }
 
@@ -60,6 +59,14 @@ std::string Ch::GetParamString(uint8_t param) {
             case PARAM_ATTACK: 
             case PARAM_DECAY: 
                 return std::to_string((int)(GetParam(param) * 1000));// + "ms";
+            case PARAM_MORPH:
+            case PARAM_HPF:
+            case PARAM_LPF:
+            // have to refetch source params since they could be changed in other ways
+            // parameters[PARAM_MORPH].SetScaledValue(source->GetMorph());
+            // parameters[PARAM_HPF].SetScaledValue(source->GetHpfFrequency());
+            // parameters[PARAM_LPF].SetScaledValue(source->GetLpfFrequency());
+                return std::to_string((int)GetParam(param));
         }
     }
    return "";
@@ -71,9 +78,23 @@ float Ch::UpdateParam(uint8_t param, float raw) {
         switch (param) {
             case PARAM_ATTACK: 
                 scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                env.SetTime(ADENV_SEG_ATTACK, scaled);
                 break;
             case PARAM_DECAY: 
                 scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
+                env.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_MORPH:
+                scaled = parameters[param].Update(raw, Utility::Limit(raw));
+                source->SetMorph(scaled);
+                break;
+            case PARAM_HPF:
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HhSource68::HH_HPF_MIN, HhSource68::HH_HPF_MAX, Parameter::EXPONENTIAL));
+                source->SetHpfFrequency(scaled);
+                break;
+            case PARAM_LPF:
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HhSource68::HH_HPF_MIN, HhSource68::HH_HPF_MAX, Parameter::EXPONENTIAL));
+                source->SetLpfFrequency(scaled);
                 break;
         }
     }

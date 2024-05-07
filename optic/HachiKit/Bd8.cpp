@@ -43,6 +43,7 @@ float Bd8::Process() {
 void Bd8::Trigger(float velocity) {
     this->velocity = Utility::Limit(velocity);
     if (this->velocity > 0) {
+        osc.Reset();
         ampEnv.Trigger();
         pitchEnv.Trigger();
     }

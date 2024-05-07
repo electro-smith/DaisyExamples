@@ -8,6 +8,7 @@
 #include "ISource.h"
 #include "Utility.h"
 #include "Param.h"
+#include "HhSource68.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -16,13 +17,17 @@ class Ch: public IDrum {
 
     public:
         // Number of settable parameters for this model.
-        static const uint8_t PARAM_COUNT = 2;
+        static const uint8_t PARAM_COUNT = 5;
         // This is the order params will appear in the UI.
         static const uint8_t PARAM_ATTACK = 0;
         static const uint8_t PARAM_DECAY = 1;
+        static const uint8_t PARAM_MORPH = 2;
+        static const uint8_t PARAM_HPF = 3;
+        static const uint8_t PARAM_LPF = 4;
 
         void Init(float sample_rate);
-        void Init(float sample_rate, float attack, float decay, ISource *source);
+        // void Init(float sample_rate, float attack, float decay, ISource *source);
+        void Init(float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf);
         float Process();
         void Trigger(float velocity);
 
@@ -37,11 +42,12 @@ class Ch: public IDrum {
         std::string GetParamName(uint8_t param) { return param < PARAM_COUNT ? paramNames[param] : ""; }
 
     private:
-        std::string paramNames[PARAM_COUNT] = { "Att", "Dec" };
+        std::string paramNames[PARAM_COUNT] = { "Atk", "Dcy", "Mrph", "Hpf" };
         std::string slot;
         Param parameters[PARAM_COUNT];
         float velocity;
-        ISource *source = NULL;
+        // ISource *source = NULL;
+        HhSource68 *source = NULL;
         AdEnv env;
 
 };

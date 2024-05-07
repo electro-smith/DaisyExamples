@@ -38,7 +38,7 @@ class Blank: public IDrum {
         std::string GetParamName(uint8_t param) { return param < PARAM_COUNT ? paramNames[param] : ""; }
 
     private:
-        std::string paramNames[PARAM_COUNT] = { "Freq", "Att", "Dec" };
+        std::string paramNames[PARAM_COUNT] = { "Freq", "Atk", "Dcy" };
         std::string slot;
         Param parameters[PARAM_COUNT];
         float velocity;

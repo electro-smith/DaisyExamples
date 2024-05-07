@@ -15,10 +15,13 @@ class HhSource68: public ISource {
         static const uint8_t OSC_COUNT = 6;
 
         // the morph value at which the sound imitates a 606
-        static const uint8_t MORPH_606_VALUE = 0.35;
+        static const float MORPH_606_VALUE;
         // the morph value at which the sound imitates an 808
-        static const uint8_t MORPH_808_VALUE = 0.65;
+        static const float MORPH_808_VALUE;
 
+        static const float HH_HPF_MAX;
+        static const float HH_HPF_MIN;
+        static const float GAIN_MAX;
 
         /** Initialize model with default parameters.
          * \param sample_rate audio sample rate.
@@ -33,19 +36,28 @@ class HhSource68: public ISource {
 
         float Process();
         float Signal();
+        float hpfFreq = 2700;
+        float lpfFreq = 5000;
 
         float GetMorph();
         void SetMorph(float morph);
+        float GetHpfFrequency();
+        void SetHpfFrequency(float freq);
+        float GetLpfFrequency();
+        void SetLpfFrequency(float freq);
 
     private:
         static const float freqs606[];
         static const float freqs808[];
         static const float MIN_FREQ_FACTOR;
 
-        Oscillator oscs[OSC_COUNT];
         float morph;
-        float frequencies[OSC_COUNT];
         float signal;
+        float gain = 1.0;
+
+        Oscillator* oscs[OSC_COUNT];
+        Oscillator osc0, osc1, osc2, osc3, osc4, osc5;
+        Svf hpf, lpf;
 
 };
 
