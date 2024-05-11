@@ -9,7 +9,9 @@ Sd8.cpp \
 SdNoise.cpp \
 FmDrum.cpp \
 HhSource68.cpp \
-Ch.cpp
+Ch.cpp \
+AhdEnv.cpp \
+Oh.cpp
 
 
 OPT = -Os
