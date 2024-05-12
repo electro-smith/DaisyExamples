@@ -31,6 +31,7 @@ OPT = -Os
 # Core location, and generic makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
 include $(SYSTEM_FILES_DIR)/Makefile
+ USE_DAISYSP_LGPL=1
 
 
 ### Need to override all to get support for .cc files

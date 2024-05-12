@@ -89,6 +89,6 @@
                 }
             }
         ]
-    }
-    
+    },
+    "cmake.sourceDirectory": "X:/code/CleanRoom/DaisyExamples/DaisySP"
 }
