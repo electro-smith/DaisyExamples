@@ -6,7 +6,7 @@ using namespace patch_sm;
 using namespace daisysp;
 
 /** Hardware object for the patch_sm */
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 
 /** Switch object */
 Switch button;
@@ -14,12 +14,12 @@ Switch button;
 int main(void)
 {
     /** Initialize the patch_sm hardware object */
-    patch.Init();
+    hw.Init();
 
     /* Initialize the switch
 	 - We'll read the switch on pin B7
 	*/
-    button.Init(patch.B7);
+    button.Init(hw.B7);
 
     /** loop forever */
     while(1)
@@ -31,6 +31,6 @@ int main(void)
         bool state = button.Pressed();
 
         /** Set the onboard led to the current state */
-        patch.SetLed(state);
+        hw.SetLed(state);
     }
 }

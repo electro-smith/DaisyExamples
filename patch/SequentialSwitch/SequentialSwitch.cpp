@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 
 bool    isMultiIn;
 uint8_t step;
@@ -31,49 +31,49 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
 
 int main(void)
 {
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
     while(1)
     {
         //OLED
-        patch.display.Fill(false);
+        hw.display.Fill(false);
 
-        patch.display.SetCursor(0, 0);
+        hw.display.SetCursor(0, 0);
         std::string str  = "Sequential Switch";
         char*       cstr = &str[0];
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.WriteString(cstr, Font_7x10, true);
 
-        patch.display.SetCursor(0, 25);
+        hw.display.SetCursor(0, 25);
         str = isMultiIn ? "Multi " : "Single ";
         str += "In -> ";
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.WriteString(cstr, Font_7x10, true);
 
-        patch.display.SetCursor(0, 35);
+        hw.display.SetCursor(0, 35);
         str = isMultiIn ? "Single " : "Multi ";
         str += "Out";
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.WriteString(cstr, Font_7x10, true);
 
-        patch.display.Update();
+        hw.display.Update();
     }
 }
 
 void UpdateControls()
 {
-    patch.ProcessDigitalControls();
-    if(patch.gate_input[0].Trig())
+    hw.ProcessDigitalControls();
+    if(hw.gate_input[0].Trig())
     {
         step++;
         step %= 4;
     }
 
-    if(patch.gate_input[1].Trig())
+    if(hw.gate_input[1].Trig())
     {
         step = 0;
     }
 
-    if(patch.encoder.RisingEdge())
+    if(hw.encoder.RisingEdge())
     {
         isMultiIn = !isMultiIn;
     }

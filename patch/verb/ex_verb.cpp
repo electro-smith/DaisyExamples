@@ -4,7 +4,7 @@
 
 using namespace daisy;
 using namespace daisysp;
-static DaisyPatch patch;
+static DaisyPatch hw;
 static ReverbSc   verb;
 static DcBlock    blk[2];
 Parameter         lpParam;
@@ -15,13 +15,13 @@ static void VerbCallback(AudioHandle::InputBuffer  in,
                          size_t                    size)
 {
     float dryL, dryR, wetL, wetR, sendL, sendR;
-    patch.ProcessAnalogControls();
+    hw.ProcessAnalogControls();
     for(size_t i = 0; i < size; i++)
     {
         // read some controls
-        drylevel = patch.GetKnobValue(patch.CTRL_1);
-        send     = patch.GetKnobValue(patch.CTRL_2);
-        verb.SetFeedback(patch.GetKnobValue(patch.CTRL_3) * .94f);
+        drylevel = hw.GetKnobValue(hw.CTRL_1);
+        send     = hw.GetKnobValue(hw.CTRL_2);
+        verb.SetFeedback(hw.GetKnobValue(hw.CTRL_3) * .94f);
         verb.SetLpFreq(lpParam.Process());
 
         // Read Inputs (only stereo in are used)
@@ -52,8 +52,8 @@ void UpdateOled();
 int main(void)
 {
     float samplerate;
-    patch.Init();
-    samplerate = patch.AudioSampleRate();
+    hw.Init();
+    samplerate = hw.AudioSampleRate();
 
     verb.Init(samplerate);
     verb.SetFeedback(0.85f);
@@ -62,17 +62,17 @@ int main(void)
     blk[0].Init(samplerate);
     blk[1].Init(samplerate);
 
-    lpParam.Init(patch.controls[3], 20, 20000, Parameter::LOGARITHMIC);
+    lpParam.Init(hw.controls[3], 20, 20000, Parameter::LOGARITHMIC);
 
     //briefly display the module name
     std::string str  = "Stereo Reverb";
     char*       cstr = &str[0];
-    patch.display.WriteString(cstr, Font_7x10, true);
-    patch.display.Update();
-    patch.DelayMs(1000);
+    hw.display.WriteString(cstr, Font_7x10, true);
+    hw.display.Update();
+    hw.DelayMs(1000);
 
-    patch.StartAdc();
-    patch.StartAudio(VerbCallback);
+    hw.StartAdc();
+    hw.StartAudio(VerbCallback);
 
     while(1)
     {
@@ -82,5 +82,5 @@ int main(void)
 
 void UpdateOled()
 {
-    patch.DisplayControls(false);
+    hw.DisplayControls(false);
 }

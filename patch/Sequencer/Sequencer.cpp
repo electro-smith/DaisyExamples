@@ -5,7 +5,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 
 int  values[5];
 bool trigs[5];
@@ -21,7 +21,7 @@ void UpdateOutputs();
 
 int main(void)
 {
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
 
     //init global vars
     stepNumber = 0;
@@ -35,7 +35,7 @@ int main(void)
         trigs[i]  = false;
     }
 
-    patch.StartAdc();
+    hw.StartAdc();
     while(1)
     {
         UpdateControls();
@@ -46,23 +46,23 @@ int main(void)
 
 void UpdateControls()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     //encoder
     //can we simplify the menu logic?
     if(!inSubMenu)
     {
-        menuPos += patch.encoder.Increment();
+        menuPos += hw.encoder.Increment();
         menuPos = (menuPos % 10 + 10) % 10;
 
         if(menuPos < 5)
         {
-            inSubMenu = patch.encoder.RisingEdge() ? true : false;
+            inSubMenu = hw.encoder.RisingEdge() ? true : false;
         }
         else
         {
-            trigs[menuPos % 5] = patch.encoder.RisingEdge()
+            trigs[menuPos % 5] = hw.encoder.RisingEdge()
                                      ? !trigs[menuPos % 5]
                                      : trigs[menuPos % 5];
         }
@@ -70,14 +70,14 @@ void UpdateControls()
 
     else
     {
-        values[menuPos] += patch.encoder.Increment();
+        values[menuPos] += hw.encoder.Increment();
         values[menuPos] = values[menuPos] < 0.f ? 0.f : values[menuPos];
         values[menuPos] = values[menuPos] > 60.f ? 60.f : values[menuPos];
-        inSubMenu       = patch.encoder.RisingEdge() ? false : true;
+        inSubMenu       = hw.encoder.RisingEdge() ? false : true;
     }
 
     //gate in
-    if(patch.gate_input[0].Trig() || patch.gate_input[1].Trig())
+    if(hw.gate_input[0].Trig() || hw.gate_input[1].Trig())
     {
         stepNumber++;
         stepNumber %= 5;
@@ -87,40 +87,40 @@ void UpdateControls()
 
 void UpdateOled()
 {
-    patch.display.Fill(false);
+    hw.display.Fill(false);
 
     std::string str  = "!";
     char*       cstr = &str[0];
-    patch.display.SetCursor(25 * stepNumber, 45);
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.SetCursor(25 * stepNumber, 45);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
     //values and trigs
     for(int i = 0; i < 5; i++)
     {
         sprintf(cstr, "%d", values[i]);
-        patch.display.SetCursor(i * 25, 10);
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.SetCursor(i * 25, 10);
+        hw.display.WriteString(cstr, Font_7x10, true);
 
         str = trigs[i % 5] ? "X" : "O";
-        patch.display.SetCursor(i * 25, 30);
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.SetCursor(i * 25, 30);
+        hw.display.WriteString(cstr, Font_7x10, true);
     }
 
     //cursor
     str = inSubMenu ? "@" : "o";
-    patch.display.SetCursor((menuPos % 5) * 25, (menuPos > 4) * 20);
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.SetCursor((menuPos % 5) * 25, (menuPos > 4) * 20);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
-    patch.display.Update();
+    hw.display.Update();
 }
 
 void UpdateOutputs()
 {
-    patch.seed.dac.WriteValue(DacHandle::Channel::ONE,
+    hw.seed.dac.WriteValue(DacHandle::Channel::ONE,
                               round((values[stepNumber] / 12.f) * 819.2f));
-    patch.seed.dac.WriteValue(DacHandle::Channel::TWO,
+    hw.seed.dac.WriteValue(DacHandle::Channel::TWO,
                               round((values[stepNumber] / 12.f) * 819.2f));
 
-    dsy_gpio_write(&patch.gate_output, trigOut);
+    dsy_gpio_write(&hw.gate_output, trigOut);
     trigOut = false;
 }

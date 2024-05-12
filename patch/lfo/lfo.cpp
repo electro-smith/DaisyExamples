@@ -7,7 +7,7 @@ using namespace daisysp;
 
 #define MAX_WAVE Oscillator::WAVE_POLYBLEP_TRI
 
-DaisyPatch patch;
+DaisyPatch hw;
 
 struct lfoStruct
 {
@@ -35,7 +35,7 @@ struct lfoStruct
         osc.SetWaveform(waveform);
 
         //write to the DAC
-        patch.seed.dac.WriteValue(
+        hw.seed.dac.WriteValue(
             chn,
             uint16_t((osc.Process() + 1.f) * .5f * ampCtrl.Process() * 4095.f));
     }
@@ -72,23 +72,23 @@ void SetupWaveNames()
 
 int main(void)
 {
-    patch.Init(); // Initialize hardware (daisy seed, and patch)
-    float samplerate = patch.AudioSampleRate();
+    hw.Init(); // Initialize hardware (daisy seed, and patch)
+    float samplerate = hw.AudioSampleRate();
 
     //init the lfos
-    lfos[0].Init(samplerate, patch.controls[0], patch.controls[1]);
-    lfos[1].Init(samplerate, patch.controls[2], patch.controls[3]);
+    lfos[0].Init(samplerate, hw.controls[0], hw.controls[1]);
+    lfos[1].Init(samplerate, hw.controls[2], hw.controls[3]);
 
     lfoSelect = menuSelect = 0;
 
     SetupWaveNames();
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
 
     while(1)
     {
-        patch.DelayMs(1);
+        hw.DelayMs(1);
         UpdateOled();
         UpdateEncoder();
     }
@@ -96,49 +96,49 @@ int main(void)
 
 void UpdateOled()
 {
-    patch.display.Fill(false);
+    hw.display.Fill(false);
 
-    patch.display.SetCursor(0, 0);
+    hw.display.SetCursor(0, 0);
     std::string str  = "Dual LFO";
     char*       cstr = &str[0];
-    patch.display.WriteString(cstr, Font_7x10, true);
+    hw.display.WriteString(cstr, Font_7x10, true);
 
     //cursor
-    patch.display.SetCursor(lfoSelect * 70, 25);
+    hw.display.SetCursor(lfoSelect * 70, 25);
     char select = menuSelect ? '@' : 'o';
-    patch.display.WriteChar(select, Font_7x10, true);
+    hw.display.WriteChar(select, Font_7x10, true);
 
     //waveforms
     for(int i = 0; i < 2; i++)
     {
         cstr = &waveNames[lfos[i].waveform][0];
-        patch.display.SetCursor(i * 70, 35);
-        patch.display.WriteString(cstr, Font_7x10, true);
+        hw.display.SetCursor(i * 70, 35);
+        hw.display.WriteString(cstr, Font_7x10, true);
     }
 
-    patch.display.Update();
+    hw.display.Update();
 }
 
 void UpdateEncoder()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     //annoying menu stuff
-    if(patch.encoder.RisingEdge())
+    if(hw.encoder.RisingEdge())
     {
         menuSelect = !menuSelect;
     }
 
     if(menuSelect)
     {
-        lfos[lfoSelect].waveform += patch.encoder.Increment();
+        lfos[lfoSelect].waveform += hw.encoder.Increment();
         lfos[lfoSelect].waveform
             = (lfos[lfoSelect].waveform % MAX_WAVE + MAX_WAVE) % MAX_WAVE;
     }
     else
     {
-        lfoSelect += patch.encoder.Increment();
+        lfoSelect += hw.encoder.Increment();
         lfoSelect = (lfoSelect % 2 + 2) % 2;
     }
 }

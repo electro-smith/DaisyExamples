@@ -3,19 +3,19 @@
 using namespace daisy;
 using namespace patch_sm;
 
-DaisyPatchSM patch;
+DaisyPatchSM hw;
 
 int main(void)
 {
     /** Initialize the hardware */
-    patch.Init();
+    hw.Init();
     while(1)
     {
         /** Delay half a second */
-        patch.Delay(500);
+        hw.Delay(500);
         /** Get a truly random float from the hardware */
-        float voltage = patch.GetRandomFloat(0.0, 5.0);
+        float voltage = hw.GetRandomFloat(0.0, 5.0);
         /** Write it to both CV Outputs */
-        patch.WriteCvOut(CV_OUT_BOTH, voltage);
+        hw.WriteCvOut(CV_OUT_BOTH, voltage);
     }
 }

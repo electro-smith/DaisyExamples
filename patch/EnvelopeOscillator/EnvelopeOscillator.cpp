@@ -6,7 +6,7 @@
 using namespace daisy;
 using namespace daisysp;
 
-DaisyPatch patch;
+DaisyPatch hw;
 float      sampleRate;
 
 constexpr uint8_t NUM_CV_IN   = 4;
@@ -27,17 +27,17 @@ inline float static CalcFreq(const float value)
 
 void UpdateControls()
 {
-    patch.ProcessAnalogControls();
-    patch.ProcessDigitalControls();
+    hw.ProcessAnalogControls();
+    hw.ProcessDigitalControls();
 
     for(uint8_t n = 0; n < NUM_CV_IN; n++)
     {
-        ctrl[n] = patch.GetKnobValue(static_cast<DaisyPatch::Ctrl>(n));
+        ctrl[n] = hw.GetKnobValue(static_cast<DaisyPatch::Ctrl>(n));
     }
 
     for(uint8_t n = 0; n < NUM_GATE_IN; n++)
     {
-        gate[n] = patch.gate_input[n].Trig();
+        gate[n] = hw.gate_input[n].Trig();
     }
 
     osc.SetFreq(CalcFreq(ctrl[0]));
@@ -45,7 +45,7 @@ void UpdateControls()
     env.SetRise(ctrl[2]);
     env.SetFall(ctrl[3]);
 
-    if(gate[0] || patch.encoder.FallingEdge())
+    if(gate[0] || hw.encoder.FallingEdge())
     {
         env.Trigger();
     }
@@ -65,7 +65,7 @@ static void AudioCallback(AudioHandle::InputBuffer  in,
         out[3][n] = 0.f;
     }
 
-    patch.seed.dac.WriteValue(DacHandle::Channel::BOTH,
+    hw.seed.dac.WriteValue(DacHandle::Channel::BOTH,
                               static_cast<uint16_t>(4095 * env.GetCurrValue()));
 }
 
@@ -75,47 +75,47 @@ void UpdateDisplay()
     uint32_t minY       = 0;
     uint32_t lineOffset = 8;
 
-    patch.display.Fill(false);
+    hw.display.Fill(false);
 
     std::string str  = "ENVELOPE OSCILLATOR";
     char*       cstr = &str[0];
-    patch.display.SetCursor(minX, minY);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, minY);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "FREQ:" + std::to_string(static_cast<uint32_t>(osc.GetFreq()));
-    patch.display.SetCursor(minX, lineOffset + minY);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, lineOffset + minY);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "MRPH:" + std::to_string(static_cast<uint8_t>(100 * osc.GetMorph()));
-    patch.display.SetCursor(minX, 2 * lineOffset + minY);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, 2 * lineOffset + minY);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "RISE:" + std::to_string(static_cast<uint32_t>(1000 * env.GetRise()));
-    patch.display.SetCursor(minX, 3 * lineOffset + minY);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, 3 * lineOffset + minY);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "FALL:" + std::to_string(static_cast<uint32_t>(1000 * env.GetFall()));
-    patch.display.SetCursor(minX, 4 * lineOffset + minY);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, 4 * lineOffset + minY);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
     str = "ENV:"
           + std::to_string(static_cast<uint8_t>(100 * env.GetCurrValue()));
-    patch.display.SetCursor(minX, 5 * lineOffset + minY);
-    patch.display.WriteString(cstr, Font_6x8, true);
+    hw.display.SetCursor(minX, 5 * lineOffset + minY);
+    hw.display.WriteString(cstr, Font_6x8, true);
 
-    patch.display.Update();
+    hw.display.Update();
 }
 
 int main(void)
 {
-    patch.Init();
-    sampleRate = patch.AudioSampleRate();
+    hw.Init();
+    sampleRate = hw.AudioSampleRate();
 
     env.Init(sampleRate);
     osc.Init(sampleRate);
 
-    patch.StartAdc();
-    patch.StartAudio(AudioCallback);
+    hw.StartAdc();
+    hw.StartAudio(AudioCallback);
 
     while(1)
     {
