@@ -68,6 +68,7 @@ std::string Ch::GetParamString(uint8_t param) {
             case PARAM_DECAY: 
                 return std::to_string((int)(GetParam(param) * 1000));// + "ms";
             case PARAM_MORPH:
+                return std::to_string((int)(GetParam(param) * 100));
             case PARAM_HPF:
             case PARAM_LPF:
                 return std::to_string((int)GetParam(param));
@@ -107,10 +108,28 @@ void Ch::ResetParams() {
     for (u8 param = 0; param < PARAM_COUNT; param++) {
         parameters[param].Reset();
     }
+    source->ResetParams();
 }
 
-void Ch::SetParam(uint8_t param, float value) {
+void Ch::SetParam(uint8_t param, float scaled) {
     if (param < PARAM_COUNT) {
-        parameters[param].SetScaledValue(value);
-    }
-}
+        switch (param) {
+            case PARAM_ATTACK: 
+                parameters[param].SetScaledValue(scaled);
+                env.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_DECAY: 
+                parameters[param].SetScaledValue(scaled);
+                env.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_MORPH:
+                source->SetParam(HhSource68::PARAM_MORPH, scaled);
+                break;
+            case PARAM_HPF:
+                source->SetParam(HhSource68::PARAM_HPF, scaled);
+                break;
+            case PARAM_LPF:
+                source->SetParam(HhSource68::PARAM_LPF, scaled);
+                break;
+        }
+    }}

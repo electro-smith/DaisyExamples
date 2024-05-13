@@ -44,7 +44,7 @@ class Oh: public IDrum {
         std::string GetParamName(uint8_t param) { return param < PARAM_COUNT ? paramNames[param] : ""; }
 
     private:
-        std::string paramNames[PARAM_COUNT] = { "Atk", "Hold", "Dcy", "Lpf" };
+        std::string paramNames[PARAM_COUNT] = { "Atk", "Hold", "Dcy", "Lpf", "Mrph", "Hpf" };
         std::string slot;
         Param parameters[PARAM_COUNT];
         float velocity;

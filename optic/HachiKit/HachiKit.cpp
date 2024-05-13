@@ -80,8 +80,8 @@ void DisplayParamMenu() {
 
 void ProcessEncoder() {
     int inc = hw.encoder.Increment();
-    if (inc != 0) {
-        int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
+    int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
+    if (newDrum != currentDrum) {
         drums[newDrum]->ResetParams();
         currentDrum = newDrum;
         screen.DrawMenu(currentDrum);

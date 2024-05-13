@@ -77,7 +77,7 @@ std::string Sd8::GetParamString(uint8_t param) {
 
 float Sd8::UpdateParam(uint8_t param, float raw) {
     float scaled = raw;
-    if (param < Sd8::PARAM_COUNT) {
+    if (param < PARAM_COUNT) {
         switch (param) {
             case PARAM_OSC_FREQUENCY: 
                 scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 20, 5000, Parameter::EXPONENTIAL));
@@ -114,8 +114,31 @@ void Sd8::ResetParams() {
     }
 }
 
-void Sd8::SetParam(uint8_t param, float value) {
+void Sd8::SetParam(uint8_t param, float scaled) {
     if (param < PARAM_COUNT) {
-        parameters[param].SetScaledValue(value);
-    }
-}
+        switch (param) {
+            case PARAM_OSC_FREQUENCY: 
+                parameters[param].SetScaledValue(scaled);
+                osc.SetFreq(scaled);
+                break;
+            case PARAM_OSC_ATTACK: 
+                parameters[param].SetScaledValue(scaled);
+                oscEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_OSC_DECAY: 
+                parameters[param].SetScaledValue(scaled);
+                oscEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_NOISE_ATTACK: 
+                parameters[param].SetScaledValue(scaled);
+                noiseEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_NOISE_DECAY: 
+                parameters[param].SetScaledValue(scaled);
+                noiseEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_MIX: 
+                parameters[param].SetScaledValue(scaled);
+                break;
+        }
+    }}

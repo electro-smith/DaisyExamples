@@ -107,9 +107,33 @@ void Bd8::ResetParams() {
     }
 }
 
-void Bd8::SetParam(uint8_t param, float value) {
+void Bd8::SetParam(uint8_t param, float scaled) {
     if (param < PARAM_COUNT) {
-        parameters[param].SetScaledValue(value);
+        switch (param) {
+            case PARAM_FREQUENCY: 
+                parameters[param].SetScaledValue(scaled);
+                break;
+            case PARAM_AMP_ATTACK: 
+                parameters[param].SetScaledValue(scaled);
+                ampEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_AMP_DECAY: 
+                parameters[param].SetScaledValue(scaled);
+                ampEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_PITCH_ATTACK: 
+                parameters[param].SetScaledValue(scaled);
+                pitchEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_PITCH_DECAY: 
+                parameters[param].SetScaledValue(scaled);
+                pitchEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_MOD_AMT: 
+                parameters[param].SetScaledValue(scaled);
+                break;
+        }
     }
+
 }
 

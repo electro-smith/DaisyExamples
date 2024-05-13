@@ -28,6 +28,8 @@ class HhSource68: public IDrum {
 
         static const float HH_HPF_MAX;
         static const float HH_HPF_MIN;
+        static const float HH_LPF_MAX;
+        static const float HH_LPF_MIN;
         static const float GAIN_MAX;
 
         /** Initialize model with default parameters.

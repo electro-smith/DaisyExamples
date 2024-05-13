@@ -56,7 +56,7 @@ class Param {
         */
         float Update(float raw, float scaled) {
             if (!active) {
-                if (scaled <= this->scaled || raw <= 0.01) lower = true;
+                if (scaled <= this->scaled || (raw <= 0.01 && raw >= 0.0f)) lower = true;
                 if (scaled >= this->scaled || raw >= 0.99) higher = true;
                 active = (lower && higher);
             }

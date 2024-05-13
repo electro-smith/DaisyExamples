@@ -7,8 +7,8 @@ using namespace daisysp;
 void AhdEnv::Init(float sample_rate) {
     ad.Init(sample_rate);
     adsr.Init(sample_rate);
-    adsr.SetTime(ADSR_SEG_DECAY, 0);
-    adsr.SetSustainLevel(1.0);
+    adsr.SetTime(ADSR_SEG_DECAY, 0.001);
+    adsr.SetSustainLevel(0.5);
 }
 
 float AhdEnv::Process() {
@@ -19,7 +19,7 @@ float AhdEnv::Process() {
 
 void AhdEnv::Trigger() {
     ad.Trigger();
-    adsr.Retrigger(false);
+    adsr.Retrigger(true);
 }
 
 void AhdEnv::SetAttack(float time) {

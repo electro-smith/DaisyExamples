@@ -48,7 +48,7 @@ std::string SdNoise::GetParamString(uint8_t param) {
 
 float SdNoise::UpdateParam(uint8_t param, float raw) {
     float scaled = raw;
-    if (param < SdNoise::PARAM_COUNT) {
+    if (param < PARAM_COUNT) {
         switch (param) {
             case PARAM_ATTACK: 
                 scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
@@ -74,8 +74,21 @@ void SdNoise::ResetParams() {
     }
 }
 
-void SdNoise::SetParam(uint8_t param, float value) {
+void SdNoise::SetParam(uint8_t param, float scaled) {
     if (param < PARAM_COUNT) {
-        parameters[param].SetScaledValue(value);
-    }
+        switch (param) {
+            case PARAM_ATTACK: 
+                parameters[param].SetScaledValue(scaled);
+                ampEnv.SetTime(ADENV_SEG_ATTACK, scaled);
+                break;
+            case PARAM_DECAY: 
+                parameters[param].SetScaledValue(scaled);
+                ampEnv.SetTime(ADENV_SEG_DECAY, scaled);
+                break;
+            case PARAM_CURVE: 
+                parameters[param].SetScaledValue(scaled);
+                ampEnv.SetCurve(scaled);
+                break;
+        }
+    }    
 }
