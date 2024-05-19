@@ -1,5 +1,5 @@
-#ifndef CH_H
-#define CH_H
+#ifndef CY_H
+#define CY_H
 
 #include "daisy_patch.h"
 #include "daisysp.h"
@@ -13,21 +13,25 @@
 using namespace daisy;
 using namespace daisysp;
 
-class Ch: public IDrum {
+class Cy: public IDrum {
 
     public:
         // Number of settable parameters for this model.
-        static const uint8_t PARAM_COUNT = 5;
+        static const uint8_t PARAM_COUNT = 4;
         // This is the order params will appear in the UI.
         static const uint8_t PARAM_ATTACK = 0;
         static const uint8_t PARAM_DECAY = 1;
         // These are pass-thru params that belong to the sound source and aren't tracked in Ch
-        static const uint8_t PARAM_MORPH = 2;
-        static const uint8_t PARAM_HPF = 3;
-        static const uint8_t PARAM_LPF = 4;
+        static const uint8_t PARAM_HPF = 2;
+        static const uint8_t PARAM_LPF = 3;
+
+        static const float HPF_MAX;
+        static const float HPF_MIN;
+        static const float LPF_MAX;
+        static const float LPF_MIN;
 
         void Init(float sample_rate);
-        void Init(float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf);
+        void Init(float sample_rate, float attack, float decay, HhSource68 *source, float hpfCutoff, float lpfCutoff);
         float Process();
         void Trigger(float velocity);
 
@@ -42,13 +46,14 @@ class Ch: public IDrum {
         std::string GetParamName(uint8_t param) { return param < PARAM_COUNT ? paramNames[param] : ""; }
 
     private:
-        std::string paramNames[PARAM_COUNT] = { "Atk", "Dcy", "Mrph", "Hpf", "Lpf" };
+        std::string paramNames[PARAM_COUNT] = { "Atk", "Dcy", "Hpf", "Lpf" };
         std::string slot;
         Param parameters[PARAM_COUNT];
         float velocity;
         // ISource *source = NULL;
         HhSource68 *source = NULL;
         AdEnv env;
+        Svf hpf, lpf;
 
 };
 

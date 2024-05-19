@@ -35,12 +35,12 @@ void HhSource68::Init(float sample_rate, float morph) {
     }
 
     hpf.Init(sample_rate);
-    hpf.SetRes(0);
+    hpf.SetRes(0.05);
     hpf.SetDrive(.002);
     hpf.SetFreq(2700);
 
     lpf.Init(sample_rate);
-    lpf.SetRes(0);
+    lpf.SetRes(0.05);
     lpf.SetDrive(.002);
     lpf.SetFreq(5000);
 
@@ -130,8 +130,21 @@ void HhSource68::ResetParams() {
     }
 }
 
-void HhSource68::SetParam(uint8_t param, float value) {
+void HhSource68::SetParam(uint8_t param, float scaled) {
     if (param < PARAM_COUNT) {
-        parameters[param].SetScaledValue(value);
+        switch (param) {
+            case PARAM_MORPH: 
+                parameters[param].SetScaledValue(scaled);
+                SetMorph(scaled);
+                break;
+            case PARAM_HPF:
+                parameters[param].SetScaledValue(scaled);
+                hpf.SetFreq(scaled);
+                break;
+            case PARAM_LPF:
+                parameters[param].SetScaledValue(scaled);
+                lpf.SetFreq(scaled);
+                break;
+        }
     }
 }

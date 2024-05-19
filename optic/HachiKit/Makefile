@@ -11,7 +11,8 @@ FmDrum.cpp \
 HhSource68.cpp \
 Ch.cpp \
 AhdEnv.cpp \
-Oh.cpp
+Oh.cpp \
+Cy.cpp
 
 
 OPT = -Os

@@ -6,7 +6,7 @@ using namespace daisysp;
 
 
 void Oh::Init(float sample_rate) {
-    Init(sample_rate, 0.001, 0.3f, 0.2f, NULL, 0.5, 2000, 5000);
+    Init(sample_rate, 0.001, 0.13f, 0.05f, NULL, 0.5, 2000, 5000);
 }
 
 void Oh::Init(float sample_rate, float attack, float hold, float decay, HhSource68 *source, float morph, float hpf, float lpf) {
