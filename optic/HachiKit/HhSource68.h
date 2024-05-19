@@ -46,6 +46,7 @@ class HhSource68: public IDrum {
         float Process();
         void Trigger(float velocity);
         float Signal();
+        float Cowbell(bool isLow);
 
         float GetParam(uint8_t param);
         std::string GetParamString(uint8_t param);
@@ -67,6 +68,8 @@ class HhSource68: public IDrum {
         Param parameters[PARAM_COUNT];
 
         float signal = 0.0f;
+        float cowSignal = 0.0f;
+        float lowCowSignal = 0.0f;
         float gain = 1.0;
         Oscillator* oscs[OSC_COUNT];
         Oscillator osc0, osc1, osc2, osc3, osc4, osc5;

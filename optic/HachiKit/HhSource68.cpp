@@ -49,9 +49,16 @@ void HhSource68::Init(float sample_rate, float morph) {
 }
 
 float HhSource68::Process() {
-    float sig = 0.0f;
+    float sig = cowSignal = lowCowSignal = 0.0f;
     for (int osc = 0; osc < OSC_COUNT; osc++) {
-        sig += oscs[osc]->Process();
+        float oscSignal = oscs[osc]->Process();
+        sig += oscSignal;
+        if (osc == 4 || osc == 5) {
+            cowSignal += oscSignal;
+        }
+        if (osc == 3 || osc == 4) {
+            lowCowSignal += oscSignal;
+        }
     }
     // sig = sig / OSC_COUNT;
 
@@ -69,6 +76,10 @@ void HhSource68::Trigger(float velocity) {
 
 float HhSource68::Signal() {
     return signal;
+}
+
+float HhSource68::Cowbell(bool isLow) {
+    return isLow ? lowCowSignal : cowSignal;
 }
 
 void HhSource68::SetMorph(float morph) {

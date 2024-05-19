@@ -16,6 +16,7 @@
 #include "Ch.h"
 #include "Oh.h"
 #include "Cy.h"
+#include "Cow8.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -34,6 +35,7 @@ FmDrum cp;
 Ch ch;
 Oh oh;
 Cy cy;
+Cow8 cb;
 
 HhSource68 source68;
 
@@ -249,11 +251,13 @@ int main(void)
     drums[4] = &ch;
     drums[5] = &oh;
     drums[6] = &cy;
-    drumCount = 7;
+    drums[7] = &cb;
+    drumCount = 8;
     source68.Init(samplerate, HhSource68::MORPH_808_VALUE);
     ch.Init(samplerate, 0.001, 0.5, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
     oh.Init(samplerate, 0.001, 0.13, 0.05, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
     cy.Init(samplerate, 0.001, 3.5, &source68, 1700, 2400);
+    cb.Init(samplerate, 0.001, 0.5, &source68, 1700, 2400);
 
     //display
     hw.display.Fill(false);

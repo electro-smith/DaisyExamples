@@ -1,28 +1,28 @@
-#include "Cy.h"
+#include "Cow8.h"
 #include "Utility.h"
 
 using namespace daisy;
 using namespace daisysp;
 
 
-const float Cy::HPF_MAX = 12000;
-const float Cy::HPF_MIN = 100;
-const float Cy::LPF_MAX = 18000;
-const float Cy::LPF_MIN = 100;
+const float Cow8::HPF_MAX = 12000;
+const float Cow8::HPF_MIN = 100;
+const float Cow8::LPF_MAX = 18000;
+const float Cow8::LPF_MIN = 100;
 
 
-void Cy::Init(float sample_rate) {
+void Cow8::Init(float sample_rate) {
     Init(sample_rate, 0.001, 3.5, NULL, 1700, 2300);
 }
 
-// void Cy::Init(float sample_rate, float attack, float decay, ISource *source) {
-void Cy::Init(float sample_rate, float attack, float decay, HhSource68 *source, float hpfCutoff, float lpfCutoff) {
+// void Cow8::Init(float sample_rate, float attack, float decay, ISource *source) {
+void Cow8::Init(float sample_rate, float attack, float decay, HhSource68 *source, float hpfCutoff, float lpfCutoff) {
 
     // env settings
     env.Init(sample_rate);
     env.SetMax(1);
     env.SetMin(0);
-    env.SetCurve(-4);
+    env.SetCurve(-20);
     SetParam(PARAM_ATTACK, attack);
     SetParam(PARAM_DECAY, decay);
 
@@ -40,25 +40,25 @@ void Cy::Init(float sample_rate, float attack, float decay, HhSource68 *source, 
 
 }
 
-float Cy::Process() {
+float Cow8::Process() {
     if (source == NULL) {
         return 0.0f;
     }
 
-    float sig = source->Signal() * env.Process();
+    float sig = source->Cowbell(false) * env.Process();
     hpf.Process(sig);
     lpf.Process(hpf.High());
     return velocity * lpf.Low();;
 }
 
-void Cy::Trigger(float velocity) {
+void Cow8::Trigger(float velocity) {
     this->velocity = Utility::Limit(velocity);
     if (this->velocity > 0) {
         env.Trigger();
     }
 }
 
-float Cy::GetParam(uint8_t param) {
+float Cow8::GetParam(uint8_t param) {
     if (param < PARAM_COUNT) {
         switch (param) {
             case PARAM_ATTACK: 
@@ -71,7 +71,7 @@ float Cy::GetParam(uint8_t param) {
     return 0.0f;
 }
 
-std::string Cy::GetParamString(uint8_t param) {
+std::string Cow8::GetParamString(uint8_t param) {
     if (param < PARAM_COUNT) {
         switch (param) {
             case PARAM_ATTACK: 
@@ -85,9 +85,9 @@ std::string Cy::GetParamString(uint8_t param) {
    return "";
  }
 
-float Cy::UpdateParam(uint8_t param, float raw) {
+float Cow8::UpdateParam(uint8_t param, float raw) {
     float scaled = raw;
-    if (param < Cy::PARAM_COUNT) {
+    if (param < Cow8::PARAM_COUNT) {
         switch (param) {
             case PARAM_ATTACK: 
                 scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0.01, 5, Parameter::EXPONENTIAL));
@@ -111,14 +111,14 @@ float Cy::UpdateParam(uint8_t param, float raw) {
     return scaled;    
 }
 
-void Cy::ResetParams() {
+void Cow8::ResetParams() {
     for (u8 param = 0; param < PARAM_COUNT; param++) {
         parameters[param].Reset();
     }
     source->ResetParams();
 }
 
-void Cy::SetParam(uint8_t param, float scaled) {
+void Cow8::SetParam(uint8_t param, float scaled) {
     if (param < PARAM_COUNT) {
         switch (param) {
             case PARAM_ATTACK: 

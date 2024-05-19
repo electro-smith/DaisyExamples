@@ -12,7 +12,8 @@ HhSource68.cpp \
 Ch.cpp \
 AhdEnv.cpp \
 Oh.cpp \
-Cy.cpp
+Cy.cpp \
+Cow8.cpp
 
 
 OPT = -Os
