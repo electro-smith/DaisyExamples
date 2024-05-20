@@ -17,6 +17,7 @@
 #include "Oh.h"
 #include "Cy.h"
 #include "Cow8.h"
+#include "Tom.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -36,6 +37,7 @@ Ch ch;
 Oh oh;
 Cy cy;
 Cow8 cb;
+Tom lt, mt, ht;
 
 HhSource68 source68;
 
@@ -237,27 +239,34 @@ int main(void)
     hw.Init();
     samplerate = hw.AudioSampleRate();
 
-    drums[0] = &bd;
-    drums[1] = &rs;
-    drums[2] = &sd;
-    drums[3] = &cp;
-    drumCount = 4;
-    currentDrum = 0;
+    bd.Init(samplerate);
+    rs.Init(samplerate);
+    sd.Init(samplerate);
+    cp.Init(samplerate);
 
-    for (uint8_t i = 0; i < drumCount; i++) {
-        drums[i]->Init(samplerate);
-    }
+    lt.Init(samplerate, 80);
+    mt.Init(samplerate, 91);
+    ht.Init(samplerate, 106);
 
-    drums[4] = &ch;
-    drums[5] = &oh;
-    drums[6] = &cy;
-    drums[7] = &cb;
-    drumCount = 8;
     source68.Init(samplerate, HhSource68::MORPH_808_VALUE);
     ch.Init(samplerate, 0.001, 0.5, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
     oh.Init(samplerate, 0.001, 0.13, 0.05, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
     cy.Init(samplerate, 0.001, 3.5, &source68, 1700, 2400);
     cb.Init(samplerate, 0.001, 0.5, &source68, 1700, 2400);
+
+    drums[0] = &bd;
+    drums[1] = &rs;
+    drums[2] = &sd;
+    drums[3] = &cp;
+    drums[4] = &lt;
+    drums[5] = &mt;
+    drums[6] = &ch;
+    // drums[7] = &ht;
+    drums[7] = &oh;
+    // drums[9] = &cb;
+    drums[8] = &cy;
+    drumCount = 9;
+    currentDrum = 0;
 
     //display
     hw.display.Fill(false);

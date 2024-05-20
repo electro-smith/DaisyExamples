@@ -26,10 +26,10 @@ class HhSource68: public IDrum {
         // the morph value at which the sound imitates an 808
         static const float MORPH_808_VALUE;
 
-        static const float HH_HPF_MAX;
-        static const float HH_HPF_MIN;
-        static const float HH_LPF_MAX;
-        static const float HH_LPF_MIN;
+        static const float HPF_MAX;
+        static const float HPF_MIN;
+        static const float LPF_MAX;
+        static const float LPF_MIN;
         static const float GAIN_MAX;
 
         /** Initialize model with default parameters.

@@ -29,12 +29,12 @@ void Cy::Init(float sample_rate, float attack, float decay, HhSource68 *source, 
     hpf.Init(sample_rate);
     hpf.SetRes(0.2);
     hpf.SetDrive(.002);
-    hpf.SetFreq(hpfCutoff);
+    SetParam(PARAM_HPF, hpfCutoff);
 
     lpf.Init(sample_rate);
     lpf.SetRes(0.2);
     lpf.SetDrive(.002);
-    lpf.SetFreq(lpfCutoff);
+    SetParam(PARAM_LPF, lpfCutoff);
 
     this->source = source;
 

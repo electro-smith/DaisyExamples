@@ -8,10 +8,10 @@ const float HhSource68::freqs808[OSC_COUNT] = { 204, 298, 366, 515, 540, 800 };
 const float HhSource68::MIN_FREQ_FACTOR = 0.1;
 const float HhSource68::MORPH_606_VALUE = 0.35;
 const float HhSource68::MORPH_808_VALUE = 0.65;
-const float HhSource68::HH_HPF_MAX = 12000;
-const float HhSource68::HH_HPF_MIN = 100;
-const float HhSource68::HH_LPF_MAX = 18000;
-const float HhSource68::HH_LPF_MIN = 100;
+const float HhSource68::HPF_MAX = 12000;
+const float HhSource68::HPF_MIN = 100;
+const float HhSource68::LPF_MAX = 18000;
+const float HhSource68::LPF_MIN = 100;
 const float HhSource68::GAIN_MAX = 100;
 
 
@@ -122,11 +122,11 @@ float HhSource68::UpdateParam(uint8_t param, float raw) {
                 SetMorph(scaled);
                 break;
             case PARAM_HPF:
-                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HH_HPF_MIN, HH_HPF_MAX, Parameter::EXPONENTIAL));
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HPF_MIN, HPF_MAX, Parameter::EXPONENTIAL));
                 hpf.SetFreq(scaled);
                 break;
             case PARAM_LPF:
-                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, HH_LPF_MIN, HH_LPF_MAX, Parameter::EXPONENTIAL));
+                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, LPF_MIN, LPF_MAX, Parameter::EXPONENTIAL));
                 lpf.SetFreq(scaled);
                 break;
         }

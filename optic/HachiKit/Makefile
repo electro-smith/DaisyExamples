@@ -13,7 +13,8 @@ Ch.cpp \
 AhdEnv.cpp \
 Oh.cpp \
 Cy.cpp \
-Cow8.cpp
+Cow8.cpp \
+Tom.cpp
 
 
 OPT = -Os
