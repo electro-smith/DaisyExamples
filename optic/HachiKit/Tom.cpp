@@ -6,10 +6,12 @@ using namespace daisysp;
 
 
 void Tom::Init(float sample_rate) {
-    Init(sample_rate, 80);
+    Init(sample_rate, 80, NULL);
 }
 
-void Tom::Init(float sample_rate, float frequency) {
+void Tom::Init(float sample_rate, float frequency, ClickSource *clickSource) {
+
+    this->clickSource = clickSource;
 
     osc.Init(sample_rate);
     SetParam(PARAM_FREQUENCY, frequency);
@@ -19,8 +21,6 @@ void Tom::Init(float sample_rate, float frequency) {
     vibratoOsc.SetWaveform(Oscillator::WAVE_SIN);
     vibratoOsc.SetFreq(20);
 
-    noise.Init();
-
     ampEnv.Init(sample_rate);
     ampEnv.SetMax(1);
     ampEnv.SetMin(0);
@@ -29,43 +29,17 @@ void Tom::Init(float sample_rate, float frequency) {
     SetParam(PARAM_AMP_DECAY, 1.1);
     SetParam(PARAM_PITCH_MOD, 60);
 
-    lpfEnv.Init(sample_rate);
-    lpfEnv.SetMax(1);
-    lpfEnv.SetMin(0);
-    lpfEnv.SetCurve(-20);
-    lpfEnv.SetTime(ADENV_SEG_ATTACK, 0.001);
-    lpfEnv.SetTime(ADENV_SEG_DECAY, 0.09);
-
     pitchEnv.Init(sample_rate);
     pitchEnv.SetMax(1);
     pitchEnv.SetMin(0);
     pitchEnv.SetCurve(-20);
     pitchEnv.SetTime(ADENV_SEG_ATTACK, 0.001);
     pitchEnv.SetTime(ADENV_SEG_DECAY, 0.25);
-
-    hpf.Init(sample_rate);
-    hpf.SetRes(0.2);
-    hpf.SetDrive(.002);
-    SetParam(PARAM_HPF, 1500);
-
-    lpf.Init(sample_rate);
-    lpf.SetRes(0.2);
-    lpf.SetDrive(.002);
-    SetParam(PARAM_LPF, 191);
-    SetParam(PARAM_LPF_MOD, 116);
-
-
 }
 
 float Tom::Process() {
 
-    // noise goes through a hpf, then through an lpf modulated by the lpf env.
-    // lpf env also controls amp of noise
-    float lpfEnvSignal = lpfEnv.Process();
-    lpf.SetFreq(1000 + parameters[PARAM_LPF_MOD].GetScaledValue() * lpfEnvSignal);
-    hpf.Process(noise.Process());
-    lpf.Process(hpf.High());
-    float noiseSignal = lpf.Low() * lpfEnvSignal;
+    float clickSignal = clickSource == NULL ? 0.0f :  clickSource->Signal();
     
     // sine osc freq is modulated by pitch env, amp by amp env
     float pitchEnvSignal = pitchEnv.Process();
@@ -80,14 +54,14 @@ float Tom::Process() {
     // // // apply velocity scaling more strong to noise than osc
     // // float signal = noiseSignal * velocity + oscSignal * (0.4 + velocity * 0.6);
     // // return signal;
-    return (noiseSignal + oscSignal) * velocity; 
+    return (clickSignal + oscSignal) * velocity; 
 }
 
 void Tom::Trigger(float velocity) {
     this->velocity = Utility::Limit(velocity);
     if (this->velocity > 0) {
+        clickSource->Trigger(velocity);
         ampEnv.Trigger();
-        lpfEnv.Trigger();
         pitchEnv.Trigger();
         osc.Reset();
         vibratoOsc.Reset();
@@ -95,7 +69,22 @@ void Tom::Trigger(float velocity) {
 }
 
 float Tom::GetParam(uint8_t param) {
-    return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
+    if (param < PARAM_COUNT) {
+        switch (param) {
+            case PARAM_FREQUENCY: 
+            case PARAM_AMP_DECAY: 
+            case PARAM_PITCH_MOD:
+                return param < PARAM_COUNT ? parameters[param].GetScaledValue() : 0.0f;
+            case PARAM_LPF_MOD:
+                return clickSource->GetParam(ClickSource::PARAM_LPF_MOD);
+            case PARAM_HPF:
+                return clickSource->GetParam(ClickSource::PARAM_HPF);
+            case PARAM_LPF:
+                return clickSource->GetParam(ClickSource::PARAM_LPF);
+        }
+    }
+
+    return 0.0f;
 }
 
 std::string Tom::GetParamString(uint8_t param) {
@@ -103,12 +92,14 @@ std::string Tom::GetParamString(uint8_t param) {
         switch (param) {
             case PARAM_FREQUENCY: 
             case PARAM_PITCH_MOD:
-            case PARAM_LPF_MOD:
-            case PARAM_HPF:
-            case PARAM_LPF:
-                return std::to_string((int)GetParam(param));
             case PARAM_AMP_DECAY: 
-                return std::to_string((int)(GetParam(param) * 1000));// + "ms";                
+                return std::to_string((int)GetParam(param));
+            case PARAM_LPF_MOD:
+                return clickSource->GetParamString(ClickSource::PARAM_LPF_MOD);
+            case PARAM_HPF:
+                return clickSource->GetParamString(ClickSource::PARAM_HPF);
+            case PARAM_LPF:
+                return clickSource->GetParamString(ClickSource::PARAM_LPF);
         }
     }
    return "";
@@ -126,16 +117,16 @@ float Tom::UpdateParam(uint8_t param, float raw) {
                 ampEnv.SetTime(ADENV_SEG_DECAY, scaled);
                 break;
             case PARAM_PITCH_MOD:
-            case PARAM_LPF_MOD:
                 scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 0, 2000, Parameter::EXPONENTIAL));
                 break;
+            case PARAM_LPF_MOD:
+                clickSource->UpdateParam(ClickSource::PARAM_LPF_MOD, raw);
+                break;
             case PARAM_HPF:
-                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 20, 3000, Parameter::EXPONENTIAL));
-                hpf.SetFreq(scaled);
+                clickSource->UpdateParam(ClickSource::PARAM_HPF, raw);
                 break;
             case PARAM_LPF:
-                scaled = parameters[param].Update(raw, Utility::ScaleFloat(raw, 20, 3000, Parameter::EXPONENTIAL));
-                lpf.SetFreq(scaled);
+                clickSource->UpdateParam(ClickSource::PARAM_LPF, raw);
                 break;
         }
     }
@@ -160,16 +151,16 @@ void Tom::SetParam(uint8_t param, float scaled) {
                 ampEnv.SetTime(ADENV_SEG_DECAY, scaled);
                 break;
             case PARAM_PITCH_MOD:
-            case PARAM_LPF_MOD:
                 parameters[param].SetScaledValue(scaled);
+                break;
+            case PARAM_LPF_MOD:
+                clickSource->SetParam(ClickSource::PARAM_LPF_MOD, scaled);
                 break;
             case PARAM_HPF:
-                parameters[param].SetScaledValue(scaled);
-                hpf.SetFreq(scaled);
+                clickSource->SetParam(ClickSource::PARAM_LPF_MOD, scaled);
                 break;
             case PARAM_LPF:
-                parameters[param].SetScaledValue(scaled);
-                lpf.SetFreq(scaled);
+                clickSource->SetParam(ClickSource::PARAM_LPF_MOD, scaled);
                 break;
         }
     }

@@ -1,5 +1,5 @@
-#ifndef TOM_H
-#define TOM_H
+#ifndef CLICKSOURCE_H
+#define CLICKSOURCE_H
 
 #include "daisy_patch.h"
 #include "daisysp.h"
@@ -8,29 +8,25 @@
 #include "ISource.h"
 #include "Utility.h"
 #include "Param.h"
-#include "ClickSource.h"
 
 using namespace daisy;
 using namespace daisysp;
 
-class Tom: public IDrum {
+class ClickSource: public IDrum {
 
     public:
         // Number of settable parameters for this model.
-        static const uint8_t PARAM_COUNT = 6;
+        static const uint8_t PARAM_COUNT = 3;
         // This is the order params will appear in the UI.
-        static const uint8_t PARAM_FREQUENCY = 0;
-        static const uint8_t PARAM_AMP_DECAY = 1;
-        static const uint8_t PARAM_PITCH_MOD = 2;
-        // These are pass-thru params that belong to the click source and aren't tracked in Tom
-        static const uint8_t PARAM_LPF_MOD = 3;
-        static const uint8_t PARAM_HPF = 4;
-        static const uint8_t PARAM_LPF = 5;
+        static const uint8_t PARAM_HPF = 0;
+        static const uint8_t PARAM_LPF = 1;
+        static const uint8_t PARAM_LPF_MOD = 2;
 
         void Init(float sample_rate);
-        void Init(float sample_rate, float frequency, ClickSource *clickSource);
+        void Init(float sample_rate, float hpfFreq, float lpfFreq, float mod);
         float Process();
         void Trigger(float velocity);
+        float Signal() { return signal; }
 
         float GetParam(uint8_t param);
         float UpdateParam(uint8_t param, float value);
@@ -43,13 +39,14 @@ class Tom: public IDrum {
         std::string GetParamName(uint8_t param) { return param < PARAM_COUNT ? paramNames[param] : ""; }
 
     private:
-        std::string paramNames[PARAM_COUNT] = { "Freq", "aDcy", "pMod", "fMod", "Hpf", "Lpf" };
+        std::string paramNames[PARAM_COUNT] = { "Hpf", "Lpf", "fMod" };
         std::string slot;
         Param parameters[PARAM_COUNT];
         float velocity;
-        Oscillator osc, vibratoOsc;
-        AdEnv ampEnv, pitchEnv;
-        ClickSource *clickSource;
+        float signal;
+        WhiteNoise noise;
+        Svf hpf, lpf;
+        AdEnv lpfEnv;
 
 };
 

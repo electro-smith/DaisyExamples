@@ -14,6 +14,7 @@
 #include "SdNoise.h"
 #include "FmDrum.h"
 #include "HhSource68.h"
+#include "ClickSource.h"
 #include "Ch.h"
 #include "Oh.h"
 #include "Cy.h"
@@ -28,6 +29,8 @@ using namespace daisysp;
 
 DaisyPatch hw;
 Screen screen(&hw.display);
+CpuLoadMeter meter;
+
 IDrum *drums[16];
 uint8_t drumCount = 4;
 Bd8 bd;
@@ -40,8 +43,9 @@ Cy cy;
 Cow8 cb;
 Tom lt, mt, ht;
 
+// Shared sound sources
 HhSource68 source68;
-CpuLoadMeter meter;
+ClickSource clickSource;
 
 uint8_t currentDrum = 0;
 uint8_t currentKnobRow = 0;
@@ -172,7 +176,9 @@ void AudioCallback(AudioHandle::InputBuffer  in,
     for(size_t i = 0; i < size; i++)
     {
 
-        float src = source68.Process();
+        // Process shared sound sources
+        source68.Process();
+        clickSource.Process();
 
         float sig = 0.0f;
         for (uint8_t i = 0; i < drumCount; i++) {
@@ -181,8 +187,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
         float limited = sig / drumCount;
 
         out[0][i] = out[1][i] = limited;
-        // out[2][i] = out[3][i] = sig;
-        out[2][i] = out[3][i] = src;
+        out[2][i] = out[3][i] = sig;
 
     }
 
@@ -251,16 +256,19 @@ int main(void)
 
     meter.Init(samplerate, 128, 1.0f);
 
+    // Shared sound sources
+    source68.Init(samplerate, HhSource68::MORPH_808_VALUE);
+    clickSource.Init(samplerate, 1500, 191, 116);
+
     bd.Init(samplerate);
     rs.Init(samplerate);
     sd.Init(samplerate);
     cp.Init(samplerate);
 
-    lt.Init(samplerate, 80);
-    mt.Init(samplerate, 91);
-    ht.Init(samplerate, 106);
+    lt.Init(samplerate, 80, &clickSource);
+    mt.Init(samplerate, 91, &clickSource);
+    ht.Init(samplerate, 106, &clickSource);
 
-    source68.Init(samplerate, HhSource68::MORPH_808_VALUE);
     ch.Init(samplerate, 0.001, 0.5, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
     oh.Init(samplerate, 0.001, 0.13, 0.05, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
     cy.Init(samplerate, 0.001, 3.5, &source68, 1700, 2400);
@@ -277,7 +285,7 @@ int main(void)
     drums[8] = &oh; //2
     drums[9] = &cb; //
     drums[10] = &cy; //
-    drumCount = 10;
+    drumCount = 11;
     currentDrum = 0;
 
     maxDrum = 11;

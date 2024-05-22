@@ -14,7 +14,8 @@ AhdEnv.cpp \
 Oh.cpp \
 Cy.cpp \
 Cow8.cpp \
-Tom.cpp
+Tom.cpp \
+ClickSource.cpp
 
 
 OPT = -Os
