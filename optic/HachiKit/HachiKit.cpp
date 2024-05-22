@@ -3,6 +3,7 @@
 
 #include "daisy_patch.h"
 #include "daisysp.h"
+#include "util/CpuLoadMeter.h"
 #include <string>
 #include "Utility.h"
 #include "BitArray.h"
@@ -40,9 +41,11 @@ Cow8 cb;
 Tom lt, mt, ht;
 
 HhSource68 source68;
+CpuLoadMeter meter;
 
 uint8_t currentDrum = 0;
 uint8_t currentKnobRow = 0;
+u8 maxDrum = 1;
 
 
 void OledMessage(std::string message, int row) 
@@ -86,8 +89,12 @@ void DisplayParamMenu() {
 
 void ProcessEncoder() {
     int inc = hw.encoder.Increment();
-    int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
+    // int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
+    int newDrum = Utility::LimitInt(currentDrum + inc, 0, maxDrum-1);
     if (newDrum != currentDrum) {
+        if (newDrum < maxDrum) {
+            drumCount = newDrum + 1;
+        }
         drums[newDrum]->ResetParams();
         currentDrum = newDrum;
         screen.DrawMenu(currentDrum);
@@ -158,6 +165,7 @@ void AudioCallback(AudioHandle::InputBuffer  in,
                    AudioHandle::OutputBuffer out,
                    size_t                    size)
 {
+    meter.OnBlockStart();
 
     ProcessControls();
 
@@ -177,6 +185,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
         out[2][i] = out[3][i] = src;
 
     }
+
+    meter.OnBlockEnd();
 }
 
 
@@ -239,6 +249,8 @@ int main(void)
     hw.Init();
     samplerate = hw.AudioSampleRate();
 
+    meter.Init(samplerate, 128, 1.0f);
+
     bd.Init(samplerate);
     rs.Init(samplerate);
     sd.Init(samplerate);
@@ -254,19 +266,22 @@ int main(void)
     cy.Init(samplerate, 0.001, 3.5, &source68, 1700, 2400);
     cb.Init(samplerate, 0.001, 0.5, &source68, 1700, 2400);
 
-    drums[0] = &bd;
-    drums[1] = &rs;
-    drums[2] = &sd;
-    drums[3] = &cp;
-    drums[4] = &lt;
-    drums[5] = &mt;
-    drums[6] = &ch;
-    // drums[7] = &ht;
-    drums[7] = &oh;
-    // drums[9] = &cb;
-    drums[8] = &cy;
-    drumCount = 9;
+    drums[0] = &bd; //15?
+    drums[1] = &rs; //4
+    drums[2] = &sd; //7
+    drums[3] = &cp; //7
+    drums[4] = &lt; //19
+    drums[5] = &mt; //19
+    drums[6] = &ch; //3
+    drums[7] = &ht; //19
+    drums[8] = &oh; //2
+    drums[9] = &cb; //
+    drums[10] = &cy; //
+    drumCount = 10;
     currentDrum = 0;
+
+    maxDrum = 11;
+    drumCount = 1;
 
     //display
     hw.display.Fill(false);
@@ -281,7 +296,6 @@ int main(void)
     hw.midi.StartReceive();
     hw.StartAdc();
     hw.StartAudio(AudioCallback);
-    int c = 0;
     for(;;)
     {
         hw.midi.Listen();
@@ -291,7 +305,10 @@ int main(void)
             HandleMidiMessage(hw.midi.PopEvent());
         }
         DisplayKnobValues();
+
+        float avgCpu = meter.GetAvgCpuLoad();
+        OledMessage("cpu:" + std::to_string((int)(avgCpu * 100)) + "%", 4);
+
         hw.display.Update();
-        c++;
     }
 }
