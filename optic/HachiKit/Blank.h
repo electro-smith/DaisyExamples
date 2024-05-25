@@ -31,7 +31,6 @@ class Blank: public IDrum {
         float UpdateParam(uint8_t param, float value);
         void SetParam(uint8_t param, float value);
         void ResetParams();
-        std::string GetParamString(uint8_t param);
 
         std::string Name() { return "Blank"; }
         std::string Slot() { return slot; }

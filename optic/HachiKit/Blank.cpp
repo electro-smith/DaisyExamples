@@ -10,14 +10,13 @@ void Blank::Init(float sample_rate) {
 
 void Blank::Init(float sample_rate, float frequency, float attack, float decay) {
     // initialize audio objects
-    SetParam(PARAM_FREQUENCY, frequency, false);
-    SetParam(PARAM_ATTACK, attack, false);
-    SetParam(PARAM_DECAY, decay, false);
+    SetParam(PARAM_FREQUENCY, frequency);
+    SetParam(PARAM_ATTACK, attack);
+    SetParam(PARAM_DECAY, decay);
 }
 
 float Blank::Process() {
-    float sig = 0.0f;
-    return velocity * sig;
+    return 0.0f;
 }
 
 void Blank::Trigger(float velocity) {
