@@ -274,17 +274,17 @@ int main(void)
     cy.Init(samplerate, 0.001, 3.5, &source68, 1700, 2400);
     cb.Init(samplerate, 0.001, 0.5, &source68, 1700, 2400);
 
-    drums[0] = &bd; //15?
-    drums[1] = &rs; //4
-    drums[2] = &sd; //7
-    drums[3] = &cp; //7
-    drums[4] = &lt; //19
-    drums[5] = &mt; //19
-    drums[6] = &ch; //3
-    drums[7] = &ht; //19
-    drums[8] = &oh; //2
-    drums[9] = &cb; //
-    drums[10] = &cy; //
+    drums[0] = &bd;
+    drums[1] = &rs;     // 24
+    drums[2] = &sd;     // 32
+    drums[3] = &cp;     // 38
+    drums[4] = &lt;     // 45
+    drums[5] = &mt;     // 52
+    drums[6] = &ch;     // 55
+    drums[7] = &ht;     // 62
+    drums[8] = &oh;     // 65
+    drums[9] = &cb;     // 70
+    drums[10] = &cy;    // 75
     drumCount = 11;
     currentDrum = 0;
 

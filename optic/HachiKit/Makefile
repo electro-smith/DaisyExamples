@@ -15,7 +15,7 @@ Oh.cpp \
 Cy.cpp \
 Cow8.cpp \
 Tom.cpp \
-ClickSource.cpp
+ClickSource.cpp 
 
 
 OPT = -Os

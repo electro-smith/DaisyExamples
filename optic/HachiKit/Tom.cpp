@@ -92,8 +92,9 @@ std::string Tom::GetParamString(uint8_t param) {
         switch (param) {
             case PARAM_FREQUENCY: 
             case PARAM_PITCH_MOD:
-            case PARAM_AMP_DECAY: 
                 return std::to_string((int)GetParam(param));
+            case PARAM_AMP_DECAY: 
+                return std::to_string((int)(GetParam(param) * 1000));// + "ms";
             case PARAM_LPF_MOD:
                 return clickSource->GetParamString(ClickSource::PARAM_LPF_MOD);
             case PARAM_HPF:
