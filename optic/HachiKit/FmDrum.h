@@ -24,8 +24,8 @@ class FmDrum: public IDrum {
         static const uint8_t PARAM_ATTACK = 4;
         static const uint8_t PARAM_ENV_CURVE = 5;
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float frequency, float ratio, float modAmount, float attack, float decay, float curve);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float frequency, float ratio, float modAmount, float attack, float decay, float curve);
         float Process();
         void Trigger(float velocity);
 

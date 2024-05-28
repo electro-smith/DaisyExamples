@@ -5,11 +5,13 @@ using namespace daisy;
 using namespace daisysp;
 
 
-void ClickSource::Init(float sample_rate) {
-    Init(sample_rate, 1500, 191, 116);
+void ClickSource::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 1500, 191, 116);
 }
 
-void ClickSource::Init(float sample_rate, float hpfFreq, float lpfFreq, float mod) {
+void ClickSource::Init(std::string slot, float sample_rate, float hpfFreq, float lpfFreq, float mod) {
+
+    this->slot = slot;
 
     noise.Init();
 

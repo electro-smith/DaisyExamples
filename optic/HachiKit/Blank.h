@@ -21,8 +21,8 @@ class Blank: public IDrum {
         static const uint8_t PARAM_ATTACK = 1;
         static const uint8_t PARAM_DECAY = 2;
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float frequency, float attack, float decay);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float frequency, float attack, float decay);
         float Process();
         void Trigger(float velocity);
 

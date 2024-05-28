@@ -4,11 +4,12 @@
 using namespace daisy;
 using namespace daisysp;
 
-void SdNoise::Init(float sample_rate) {
-    Init(sample_rate, 0.01, 0.237, -30.0f);
+void SdNoise::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 0.01, 0.237, -30.0f);
 }
 
-void SdNoise::Init(float sample_rate, float attack, float decay, float curve) {
+void SdNoise::Init(std::string slot, float sample_rate, float attack, float decay, float curve) {
+    this->slot = slot;
     noise.Init();
     ampEnv.Init(sample_rate);
     ampEnv.SetMax(1);

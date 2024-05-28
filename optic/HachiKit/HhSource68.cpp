@@ -15,11 +15,13 @@ const float HhSource68::LPF_MIN = 100;
 const float HhSource68::GAIN_MAX = 100;
 
 
-void HhSource68::Init(float sample_rate) {
-    Init(sample_rate, MORPH_808_VALUE);
+void HhSource68::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, MORPH_808_VALUE);
 }
 
-void HhSource68::Init(float sample_rate, float morph) {
+void HhSource68::Init(std::string slot, float sample_rate, float morph) {
+    
+    this->slot = slot;
     
     oscs[0] = &osc0;
     oscs[1] = &osc1;

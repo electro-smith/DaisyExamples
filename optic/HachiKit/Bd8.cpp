@@ -4,11 +4,13 @@
 using namespace daisy;
 using namespace daisysp;
 
-void Bd8::Init(float sample_rate) {
-    Init(sample_rate, 78, 0.001, 4.857, 0.001, 0.1, 0.95);
+void Bd8::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 78, 0.001, 4.857, 0.001, 0.1, 0.95);
 }
 
-void Bd8::Init(float sample_rate, float frequency, float ampAttack, float ampDecay, float pitchAttack, float pitchDecay, float modAmount) {
+void Bd8::Init(std::string slot, float sample_rate, float frequency, float ampAttack, float ampDecay, float pitchAttack, float pitchDecay, float modAmount) {
+
+    this->slot = slot;
 
     // oscillator settings
     osc.Init(sample_rate);

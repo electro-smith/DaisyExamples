@@ -25,8 +25,8 @@ class Bd8: public IDrum {
         static const uint8_t PARAM_PITCH_ATTACK = 5;
         // TODO: add aCurve and pCurve
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float frequency, float ampAttack, float ampDecay, float pitchAttack, float pitchDecay, float modAmount);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float frequency, float ampAttack, float ampDecay, float pitchAttack, float pitchDecay, float modAmount);
         float Process();
         void Trigger(float velocity);
 

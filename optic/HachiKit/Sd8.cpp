@@ -7,12 +7,14 @@ using namespace daisysp;
 const std::string Sd8::paramNames[]  = { "oFrq", "oDcy", "nDcy", "Mix", "oAtk", "nAtk" };
 
 
-void Sd8::Init(float sample_rate) {
-    Init(sample_rate, 153, 0.001, 1.212, 0.001, 0.971, 0.5);
+void Sd8::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 153, 0.001, 1.212, 0.001, 0.971, 0.5);
 }
 
-void Sd8::Init(float sample_rate, float oscFrequency, float oscAttack, float oscDecay, float noiseAttack, float noiseDecay, float mix) {
+void Sd8::Init(std::string slot, float sample_rate, float oscFrequency, float oscAttack, float oscDecay, float noiseAttack, float noiseDecay, float mix) {
 
+    this->slot = slot;
+    
     // oscillator settings
     osc.Init(sample_rate);
     SetParam(PARAM_OSC_FREQUENCY, oscFrequency);

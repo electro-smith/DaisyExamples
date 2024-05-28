@@ -30,8 +30,8 @@ class Cow8: public IDrum {
         static const float LPF_MAX;
         static const float LPF_MIN;
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float attack, float decay, HhSource68 *source, float hpfCutoff, float lpfCutoff);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float attack, float decay, HhSource68 *source, float hpfCutoff, float lpfCutoff);
         float Process();
         void Trigger(float velocity);
 

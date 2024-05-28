@@ -28,8 +28,8 @@ class Oh: public IDrum {
         static const uint8_t PARAM_MORPH = 4;
         static const uint8_t PARAM_HPF = 5;
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float attack, float hold, float decay, HhSource68 *source, float morph, float hpf, float lpf);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float attack, float hold, float decay, HhSource68 *source, float morph, float hpf, float lpf);
         float Process();
         void Trigger(float velocity);
 

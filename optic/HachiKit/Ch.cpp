@@ -5,12 +5,13 @@ using namespace daisy;
 using namespace daisysp;
 
 
-void Ch::Init(float sample_rate) {
-    Init(sample_rate, 0.001, 0.5, NULL, 0.5, 2000, 5000);
+void Ch::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 0.001, 0.5, NULL, 0.5, 2000, 5000);
 }
 
-// void Ch::Init(float sample_rate, float attack, float decay, ISource *source) {
-void Ch::Init(float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf) {
+void Ch::Init(std::string slot, float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf) {
+
+    this->slot = slot;
 
     // env settings
     env.Init(sample_rate);

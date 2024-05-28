@@ -35,13 +35,13 @@ class HhSource68: public IDrum {
         /** Initialize model with default parameters.
          * \param sample_rate audio sample rate.
         */
-        void Init(float sample_rate);
+        void Init(std::string slot, float sample_rate);
 
         /** Initialize model with specified parameters.
          * \param sample_rate audio sample rate.
          * \param frequency oscillator frequency in hertz.
         */
-        void Init(float sample_rate, float morph);
+        void Init(std::string slot, float sample_rate, float morph);
 
         float Process();
         void Trigger(float velocity);

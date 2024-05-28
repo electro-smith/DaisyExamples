@@ -22,7 +22,7 @@ class IDrum {
         /** Initialize model with default parameters.
          * \param sample_rate audio sample rate.
         */
-        virtual void Init(float sample_rate) = 0;
+        virtual void Init(std::string slot, float sample_rate) = 0;
 
         /**
          * Calculate the next sample value.

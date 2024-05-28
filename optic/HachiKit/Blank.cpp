@@ -4,11 +4,14 @@
 using namespace daisy;
 using namespace daisysp;
 
-void Blank::Init(float sample_rate) {
-    Init(sample_rate, 220, 0.001, 0.5);
+void Blank::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 220, 0.001, 0.5);
 }
 
-void Blank::Init(float sample_rate, float frequency, float attack, float decay) {
+void Blank::Init(std::string slot, float sample_rate, float frequency, float attack, float decay) {
+
+    this->slot = slot;
+    
     // initialize audio objects
     SetParam(PARAM_FREQUENCY, frequency);
     SetParam(PARAM_ATTACK, attack);

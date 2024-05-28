@@ -27,8 +27,8 @@ class Tom: public IDrum {
         static const uint8_t PARAM_HPF = 4;
         static const uint8_t PARAM_LPF = 5;
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float frequency, ClickSource *clickSource);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float frequency, ClickSource *clickSource);
         float Process();
         void Trigger(float velocity);
 

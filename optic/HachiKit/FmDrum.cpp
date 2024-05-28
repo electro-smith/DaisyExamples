@@ -4,12 +4,14 @@
 using namespace daisy;
 using namespace daisysp;
 
-void FmDrum::Init(float sample_rate) {
-    Init(sample_rate, 68, 3.3, 2.2, 0.001, 0.043, -50);
+void FmDrum::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 68, 3.3, 2.2, 0.001, 0.043, -50);
 }
 
-void FmDrum::Init(float sample_rate, float frequency, float ratio, float modAmount, float attack, float decay, float curve) {
+void FmDrum::Init(std::string slot, float sample_rate, float frequency, float ratio, float modAmount, float attack, float decay, float curve) {
 
+    this->slot = slot;
+    
     // 2-osc fm object
     fm.Init(sample_rate);
     SetParam(PARAM_FREQUENCY, frequency);

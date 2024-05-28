@@ -5,12 +5,13 @@ using namespace daisy;
 using namespace daisysp;
 
 
-void Tom::Init(float sample_rate) {
-    Init(sample_rate, 80, NULL);
+void Tom::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 80, NULL);
 }
 
-void Tom::Init(float sample_rate, float frequency, ClickSource *clickSource) {
+void Tom::Init(std::string slot, float sample_rate, float frequency, ClickSource *clickSource) {
 
+    this->slot = slot;
     this->clickSource = clickSource;
 
     osc.Init(sample_rate);

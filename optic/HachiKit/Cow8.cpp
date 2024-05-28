@@ -11,12 +11,13 @@ const float Cow8::LPF_MAX = 18000;
 const float Cow8::LPF_MIN = 100;
 
 
-void Cow8::Init(float sample_rate) {
-    Init(sample_rate, 0.001, 3.5, NULL, 1700, 2300);
+void Cow8::Init(std::string slot, float sample_rate) {
+    Init(slot, sample_rate, 0.001, 3.5, NULL, 1700, 2300);
 }
 
-// void Cow8::Init(float sample_rate, float attack, float decay, ISource *source) {
-void Cow8::Init(float sample_rate, float attack, float decay, HhSource68 *source, float hpfCutoff, float lpfCutoff) {
+void Cow8::Init(std::string slot, float sample_rate, float attack, float decay, HhSource68 *source, float hpfCutoff, float lpfCutoff) {
+
+    this->slot = slot;
 
     // env settings
     env.Init(sample_rate);

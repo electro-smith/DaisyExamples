@@ -26,6 +26,7 @@ using namespace daisysp;
 
 #define MINIMUM_NOTE 36
 #define KNOB_COUNT 4
+#define CPU_SINGLE false
 
 DaisyPatch hw;
 Screen screen(&hw.display);
@@ -93,12 +94,8 @@ void DisplayParamMenu() {
 
 void ProcessEncoder() {
     int inc = hw.encoder.Increment();
-    // int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
-    int newDrum = Utility::LimitInt(currentDrum + inc, 0, maxDrum-1);
+    int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
     if (newDrum != currentDrum) {
-        if (newDrum < maxDrum) {
-            drumCount = newDrum + 1;
-        }
         drums[newDrum]->ResetParams();
         currentDrum = newDrum;
         screen.DrawMenu(currentDrum);
@@ -173,18 +170,23 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
     ProcessControls();
 
-    for(size_t i = 0; i < size; i++)
-    {
+    for(size_t i = 0; i < size; i++) {
 
         // Process shared sound sources
         source68.Process();
         clickSource.Process();
 
         float sig = 0.0f;
-        for (uint8_t i = 0; i < drumCount; i++) {
-            sig += drums[i]->Process();
+        float limited = 0.0f;
+        if (CPU_SINGLE) {
+            sig = drums[currentDrum]->Process();
+            limited = sig;
+        } else {
+            for (uint8_t i = 0; i < drumCount; i++) {
+                sig += drums[i]->Process();
+            }
+            limited = sig / drumCount;
         }
-        float limited = sig / drumCount;
 
         out[0][i] = out[1][i] = limited;
         out[2][i] = out[3][i] = sig;
@@ -257,22 +259,22 @@ int main(void)
     meter.Init(samplerate, 128, 1.0f);
 
     // Shared sound sources
-    source68.Init(samplerate, HhSource68::MORPH_808_VALUE);
-    clickSource.Init(samplerate, 1500, 191, 116);
+    source68.Init("", samplerate, HhSource68::MORPH_808_VALUE);
+    clickSource.Init("", samplerate, 1500, 191, 116);
 
-    bd.Init(samplerate);
-    rs.Init(samplerate);
-    sd.Init(samplerate);
-    cp.Init(samplerate);
+    bd.Init("BD", samplerate);
+    rs.Init("RS", samplerate);
+    sd.Init("SD", samplerate);
+    cp.Init("CP", samplerate);
 
-    lt.Init(samplerate, 80, &clickSource);
-    mt.Init(samplerate, 91, &clickSource);
-    ht.Init(samplerate, 106, &clickSource);
+    lt.Init("LT", samplerate, 80, &clickSource);
+    mt.Init("MT", samplerate, 91, &clickSource);
+    ht.Init("HT", samplerate, 106, &clickSource);
 
-    ch.Init(samplerate, 0.001, 0.5, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
-    oh.Init(samplerate, 0.001, 0.13, 0.05, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
-    cy.Init(samplerate, 0.001, 3.5, &source68, 1700, 2400);
-    cb.Init(samplerate, 0.001, 0.5, &source68, 1700, 2400);
+    ch.Init("CH", samplerate, 0.001, 0.5, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
+    oh.Init("OH", samplerate, 0.001, 0.13, 0.05, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
+    cy.Init("CY", samplerate, 0.001, 3.5, &source68, 1700, 2400);
+    cb.Init("CB", samplerate, 0.001, 0.5, &source68, 1700, 2400);
 
     drums[0] = &bd;
     drums[1] = &rs;     // 24
@@ -287,9 +289,6 @@ int main(void)
     drums[10] = &cy;    // 75
     drumCount = 11;
     currentDrum = 0;
-
-    maxDrum = 11;
-    drumCount = 1;
 
     //display
     hw.display.Fill(false);

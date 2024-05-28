@@ -26,8 +26,8 @@ class Ch: public IDrum {
         static const uint8_t PARAM_HPF = 3;
         static const uint8_t PARAM_LPF = 4;
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float attack, float decay, HhSource68 *source, float morph, float hpf, float lpf);
         float Process();
         void Trigger(float velocity);
 

@@ -24,8 +24,8 @@ class Sd8: public IDrum {
         static const uint8_t PARAM_OSC_ATTACK = 4;
         static const uint8_t PARAM_NOISE_ATTACK = 5;
 
-        void Init(float sample_rate);
-        void Init(float sample_rate, float oscFrequency, float oscAttack, float oscDecay, float noiseAttack, float noiseDecay, float mix);
+        void Init(std::string slot, float sample_rate);
+        void Init(std::string slot, float sample_rate, float oscFrequency, float oscAttack, float oscDecay, float noiseAttack, float noiseDecay, float mix);
         float Process();
         void Trigger(float velocity);
 
