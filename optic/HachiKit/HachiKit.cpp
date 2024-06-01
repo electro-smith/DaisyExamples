@@ -72,14 +72,16 @@ void OledMessage(std::string message, int row, int column)
 // Display the available parameter names.
 void DisplayParamMenu() {
 
-    hw.display.DrawRect(0, 0, 127, 30, false, true);
-    hw.display.DrawLine(0,10,127,10, true);
+    hw.display.DrawRect(0, 9, 127, 36, false, true);
+    // hw.display.DrawLine(0,12,127,12, true);
+    // hw.display.DrawLine(0,33,127,33, true);
+    // hw.display.DrawLine(0,44,127,44, true);
 
     uint8_t param;
     for (int knob = 0; knob < KNOB_COUNT; knob++) {
-        for (u8 row = 0; row <= drums[currentDrum]->PARAM_COUNT / 4; row++) {
-        // for (u8 row = 0; row < 2; row++) {
-            Rectangle rect2(knob * 32, (row + 1) * 11, 32, 11);
+        // for (u8 row = 0; row <= drums[currentDrum]->PARAM_COUNT / 4; row++) {
+        for (u8 row = 0; row < 2; row++) {
+            Rectangle rect2(knob * 32, (row + 1) * 12, 32, 12);
             param = row * KNOB_COUNT + knob;
             std::string sc = drums[currentDrum]->GetParamName(param);
             bool selected = row == currentKnobRow;
@@ -87,17 +89,63 @@ void DisplayParamMenu() {
             screen.DrawButton(rect2, sc, selected, selected, !selected);
             // hw.display.SetCursor(rect2.GetX(), rect2.GetY());
             // hw.display.WriteString(sc.c_str(), Font_6x8, true);
-            hw.display.DrawLine(0, rect2.GetY() + 11, 127, rect2.GetY() + 11, true);
+            // hw.display.DrawLine(0, rect2.GetY() + 11, 127, rect2.GetY() + 11, true);
         }
+    }
+
+    hw.display.DrawLine(0,11,127,11, true);
+    hw.display.DrawLine(0,36,127,36, true);
+
+}
+
+// Display the current values and parameter names of model params for 4 knobs.
+// Knob number == param number, since model params are listed in UI order.
+void DisplayKnobValues() {
+
+    hw.display.DrawRect(0, 0, 127, 11, false, true);
+    // hw.display.DrawLine(0,10,127,10, true);
+
+    uint8_t param;
+    for (int knob = 0; knob < KNOB_COUNT; knob++) {
+        // top row: current param values from knobs
+        param = currentKnobRow * KNOB_COUNT + knob;
+        Rectangle rect(knob * 32, 0, 32, 8);
+        std::string sc = drums[currentDrum]->GetParamString(param);
+        hw.display.WriteStringAligned(sc.c_str(), Font_6x8, rect, Alignment::centered, true);
+        // screen.DrawButton(rect, sc, false, true, false);
+
+    //     for (u8 row = 0; row <= drums[currentDrum]->PARAM_COUNT / 4; row++) {
+    //         Rectangle rect2(knob * 32, (row + 1) * 11, 32, 11);
+    //         param = row * KNOB_COUNT + knob;
+    //         sc = drums[currentDrum]->GetParamName(param);
+    //         bool selected = row == currentKnobRow;
+    //         // hw.display.WriteStringAligned(sc.c_str(), Font_6x8, rect2, Alignment::centered, true);
+    //         screen.DrawButton(rect2, sc, selected, selected, !selected);
+    //         // hw.display.SetCursor(rect2.GetX(), rect2.GetY());
+    //         // hw.display.WriteString(sc.c_str(), Font_6x8, true);
+    //         hw.display.DrawLine(0, rect2.GetY() + 11, 127, rect2.GetY() + 11, true);
+    //     }
     }
 }
 
 void ProcessEncoder() {
+
+    bool redraw = false;
     int inc = hw.encoder.Increment();
     int newDrum = Utility::LimitInt(currentDrum + inc, 0, drumCount-1);
     if (newDrum != currentDrum) {
         drums[newDrum]->ResetParams();
         currentDrum = newDrum;
+        redraw = true;
+    }
+
+    if (hw.encoder.RisingEdge()) {
+        currentKnobRow = (currentKnobRow + 1) % 2;
+        redraw = true;
+        drums[currentDrum]->ResetParams();
+    }
+
+    if (redraw) {
         screen.DrawMenu(currentDrum);
         DisplayParamMenu();
         hw.display.Update();        
@@ -111,43 +159,7 @@ void ProcessKnobs() {
     for (int knob = 0; knob < KNOB_COUNT; knob++) {
         float sig = hw.controls[knob].Value();
         uint8_t param = currentKnobRow * KNOB_COUNT + knob;
-        // drums[currentDrum]->SetParam(param, sig, true);
         drums[currentDrum]->UpdateParam(param, sig);
-        // float val = drums[currentDrum]->UpdateParam(param, sig);
-        // if (param == 0) {
-        //     float scaled = Utility::ScaleFloat(sig, 20, 5000, Parameter::EXPONENTIAL);
-        //     OledMessage("Upd: " + std::to_string(param) + ", " + std::to_string((int)(sig*1000)) + ", " + std::to_string((int)scaled) + ", " + std::to_string((int)val) + "     ", 4);
-        // }
-    }
-}
-
-// Display the current values and parameter names of model params for 4 knobs.
-// Knob number == param number, since model params are listed in UI order.
-void DisplayKnobValues() {
-
-    hw.display.DrawRect(0, 0, 127, 30, false, true);
-    hw.display.DrawLine(0,10,127,10, true);
-
-    uint8_t param;
-    for (int knob = 0; knob < KNOB_COUNT; knob++) {
-        // top row: current param values from knobs
-        param = currentKnobRow * KNOB_COUNT + knob;
-        Rectangle rect(knob * 32, 0, 32, 8);
-        std::string sc = drums[currentDrum]->GetParamString(param);
-        hw.display.WriteStringAligned(sc.c_str(), Font_6x8, rect, Alignment::centered, true);
-        // screen.DrawButton(rect, sc, false, true, false);
-
-        for (u8 row = 0; row <= drums[currentDrum]->PARAM_COUNT / 4; row++) {
-            Rectangle rect2(knob * 32, (row + 1) * 11, 32, 11);
-            param = row * KNOB_COUNT + knob;
-            sc = drums[currentDrum]->GetParamName(param);
-            bool selected = row == currentKnobRow;
-            // hw.display.WriteStringAligned(sc.c_str(), Font_6x8, rect2, Alignment::centered, true);
-            screen.DrawButton(rect2, sc, selected, selected, !selected);
-            // hw.display.SetCursor(rect2.GetX(), rect2.GetY());
-            // hw.display.WriteString(sc.c_str(), Font_6x8, true);
-            hw.display.DrawLine(0, rect2.GetY() + 11, 127, rect2.GetY() + 11, true);
-        }
     }
 }
 
@@ -295,6 +307,7 @@ int main(void)
     // OledMessage("Hachikit 0.1", 5);
     // Utility::DrawDrums(&hw.display, 5);
     screen.DrawMenu(currentDrum);
+    DisplayParamMenu();
     hw.display.Update();
 
 
