@@ -47,7 +47,7 @@ class Tom: public IDrum {
         std::string slot;
         Param parameters[PARAM_COUNT];
         float velocity;
-        Oscillator osc, vibratoOsc;
+        Oscillator osc;
         AdEnv ampEnv, pitchEnv;
         ClickSource *clickSource;
 

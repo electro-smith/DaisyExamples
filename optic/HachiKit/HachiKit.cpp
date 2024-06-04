@@ -53,6 +53,11 @@ uint8_t currentKnobRow = 0;
 u8 maxDrum = 1;
 
 
+u8 cycle = 0;
+u8 cycleLength = 8;
+float savedSignal = 0.0f;
+
+
 void OledMessage(std::string message, int row) 
 {
     char* mstr = &message[0];
@@ -190,6 +195,8 @@ void AudioCallback(AudioHandle::InputBuffer  in,
 
         float sig = 0.0f;
         float limited = 0.0f;
+        cycle = (cycle + 1) % 8;
+        if (cycle < 5) {
         if (CPU_SINGLE) {
             sig = drums[currentDrum]->Process();
             limited = sig;
@@ -199,10 +206,10 @@ void AudioCallback(AudioHandle::InputBuffer  in,
             }
             limited = sig / drumCount;
         }
+        }
 
         out[0][i] = out[1][i] = limited;
         out[2][i] = out[3][i] = sig;
-
     }
 
     meter.OnBlockEnd();
@@ -266,6 +273,7 @@ int main(void)
     // Init
     float samplerate;
     hw.Init();
+    hw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
     samplerate = hw.AudioSampleRate();
 
     meter.Init(samplerate, 128, 1.0f);

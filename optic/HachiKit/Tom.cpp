@@ -18,10 +18,6 @@ void Tom::Init(std::string slot, float sample_rate, float frequency, ClickSource
     SetParam(PARAM_FREQUENCY, frequency);
     osc.SetWaveform(Oscillator::WAVE_POLYBLEP_TRI);
 
-    vibratoOsc.Init(sample_rate);
-    vibratoOsc.SetWaveform(Oscillator::WAVE_SIN);
-    vibratoOsc.SetFreq(20);
-
     ampEnv.Init(sample_rate);
     ampEnv.SetMax(1);
     ampEnv.SetMin(0);
@@ -45,9 +41,6 @@ float Tom::Process() {
     // sine osc freq is modulated by pitch env, amp by amp env
     float pitchEnvSignal = pitchEnv.Process();
     float ampEnvSignal = ampEnv.Process();
-    // TODO: including vibrato seems to crash the Daisy if there are 3 toms
-    // float vibratoSignal = vibratoOsc.Process();
-    // osc.SetFreq(parameters[PARAM_FREQUENCY].GetScaledValue() + parameters[PARAM_PITCH_MOD].GetScaledValue() * pitchEnvSignal + 3 * vibratoSignal);
     osc.SetFreq(parameters[PARAM_FREQUENCY].GetScaledValue() + parameters[PARAM_PITCH_MOD].GetScaledValue() * pitchEnvSignal);
     float oscSignal = osc.Process() * ampEnvSignal;
 
@@ -65,7 +58,6 @@ void Tom::Trigger(float velocity) {
         ampEnv.Trigger();
         pitchEnv.Trigger();
         osc.Reset();
-        vibratoOsc.Reset();
     }
 }
 
