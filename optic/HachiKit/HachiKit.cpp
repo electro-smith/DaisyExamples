@@ -51,33 +51,20 @@ ClickSource clickSource;
 uint8_t currentDrum = 0;
 uint8_t currentKnobRow = 0;
 u8 maxDrum = 1;
-
+float lastKnobValue[KNOB_COUNT];
 
 u8 cycle = 0;
 u8 cycleLength = 8;
 float savedSignal = 0.0f;
+u32 usageCounter = 0;
 
 
-void OledMessage(std::string message, int row) 
-{
-    char* mstr = &message[0];
-    hw.display.SetCursor(0, row * 10);
-    hw.display.WriteString(mstr, Font_6x8, true);
-    hw.display.Update();
-}
 
-void OledMessage(std::string message, int row, int column) 
-{
-    char* mstr = &message[0];
-    hw.display.SetCursor(column * 8, row * 10);
-    hw.display.WriteString(mstr, Font_6x8, true);
-    hw.display.Update();
-}
 
 // Display the available parameter names.
 void DisplayParamMenu() {
 
-    hw.display.DrawRect(0, 9, 127, 36, false, true);
+    screen.DrawRect(0, 9, 127, 36, false, true);
     // hw.display.DrawLine(0,12,127,12, true);
     // hw.display.DrawLine(0,33,127,33, true);
     // hw.display.DrawLine(0,44,127,44, true);
@@ -98,8 +85,8 @@ void DisplayParamMenu() {
         }
     }
 
-    hw.display.DrawLine(0,11,127,11, true);
-    hw.display.DrawLine(0,36,127,36, true);
+    screen.DrawLine(0,11,127,11, true);
+    screen.DrawLine(0,36,127,36, true);
 
 }
 
@@ -107,8 +94,8 @@ void DisplayParamMenu() {
 // Knob number == param number, since model params are listed in UI order.
 void DisplayKnobValues() {
 
-    hw.display.DrawRect(0, 0, 127, 11, false, true);
-    // hw.display.DrawLine(0,10,127,10, true);
+    screen.DrawRect(0, 0, 127, 11, false, true);
+    // screen.DrawLine(0,10,127,10, true);
 
     uint8_t param;
     for (int knob = 0; knob < KNOB_COUNT; knob++) {
@@ -116,7 +103,7 @@ void DisplayKnobValues() {
         param = currentKnobRow * KNOB_COUNT + knob;
         Rectangle rect(knob * 32, 0, 32, 8);
         std::string sc = drums[currentDrum]->GetParamString(param);
-        hw.display.WriteStringAligned(sc.c_str(), Font_6x8, rect, Alignment::centered, true);
+        screen.WriteStringAligned(sc.c_str(), Font_6x8, rect, Alignment::centered, true);
         // screen.DrawButton(rect, sc, false, true, false);
 
     //     for (u8 row = 0; row <= drums[currentDrum]->PARAM_COUNT / 4; row++) {
@@ -133,6 +120,16 @@ void DisplayKnobValues() {
     }
 }
 
+void DrawScreen(bool clearFirst) {
+    if (clearFirst) {
+        hw.display.Fill(false);
+    }
+    DisplayParamMenu();
+    DisplayKnobValues();
+    screen.DrawMenu(currentDrum);
+    hw.display.Update();        
+}
+
 void ProcessEncoder() {
 
     bool redraw = false;
@@ -142,17 +139,22 @@ void ProcessEncoder() {
         drums[newDrum]->ResetParams();
         currentDrum = newDrum;
         redraw = true;
+        usageCounter = 0;
+        screen.SetScreenOn(true);
+        hw.display.Fill(false);
     }
 
     if (hw.encoder.RisingEdge()) {
         currentKnobRow = (currentKnobRow + 1) % 2;
         redraw = true;
         drums[currentDrum]->ResetParams();
+        usageCounter = 0;
+        screen.SetScreenOn(true);
+        hw.display.Fill(false);
     }
 
     if (redraw) {
-        screen.DrawMenu(currentDrum);
-        DisplayParamMenu();
+        DrawScreen(false);
         hw.display.Update();        
     }
 }
@@ -165,6 +167,13 @@ void ProcessKnobs() {
         float sig = hw.controls[knob].Value();
         uint8_t param = currentKnobRow * KNOB_COUNT + knob;
         drums[currentDrum]->UpdateParam(param, sig);
+        if (std::abs(sig - lastKnobValue[knob]) > 0.1f) {    // TODO: use delta value from Param?
+            usageCounter = 0;
+            screen.SetScreenOn(true);
+            lastKnobValue[knob] = sig;
+            DrawScreen(true);
+        }
+
     }
 }
 
@@ -196,16 +205,16 @@ void AudioCallback(AudioHandle::InputBuffer  in,
         float sig = 0.0f;
         float limited = 0.0f;
         cycle = (cycle + 1) % 8;
-        if (cycle < 5) {
-        if (CPU_SINGLE) {
-            sig = drums[currentDrum]->Process();
-            limited = sig;
-        } else {
-            for (uint8_t i = 0; i < drumCount; i++) {
-                sig += drums[i]->Process();
+        if (cycle < 9) {
+            if (CPU_SINGLE) {
+                sig = drums[currentDrum]->Process();
+                limited = sig;
+            } else {
+                for (uint8_t i = 0; i < drumCount; i++) {
+                    sig += drums[i]->Process();
+                }
+                limited = sig / drumCount;
             }
-            limited = sig / drumCount;
-        }
         }
 
         out[0][i] = out[1][i] = limited;
@@ -234,13 +243,15 @@ void HandleMidiMessage(MidiEvent m)
             // } else {
             //     osc.SetAmp(0.0f);
             // }
-            // OledMessage("Midi: " + std::to_string(p.note) + ", " + std::to_string(p.velocity) + "     ", 3);
+            // screen.OledMessage("Midi: " + std::to_string(p.note) + ", " + std::to_string(p.velocity) + "     ", 3);
 
             NoteOnEvent p = m.AsNoteOn();
             float velocity = p.velocity / 127.0f;
             if (p.velocity > 0) {
                 if (p.note >= MINIMUM_NOTE && p.note < MINIMUM_NOTE + drumCount) {
-                    drums[p.note - MINIMUM_NOTE]->Trigger(velocity);
+                    u8 drum = p.note - MINIMUM_NOTE;
+                    drums[drum]->Trigger(velocity);
+                    screen.ScreensaveEvent(drum);
                 }
             }
         }
@@ -272,8 +283,8 @@ int main(void)
 {
     // Init
     float samplerate;
-    hw.Init();
-    hw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
+    hw.Init(true);     // "true" boosts processor speed from 400mhz to 480mhz
+    hw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_32KHZ);  // 8,16,32,48
     samplerate = hw.AudioSampleRate();
 
     meter.Init(samplerate, 128, 1.0f);
@@ -310,9 +321,13 @@ int main(void)
     drumCount = 11;
     currentDrum = 0;
 
+    for (u8 i = 0; i < KNOB_COUNT; i++) {
+        lastKnobValue[i] = 0.0f;
+    }
+
     //display
     hw.display.Fill(false);
-    // OledMessage("Hachikit 0.1", 5);
+    // screen.OledMessage("Hachikit 0.1", 5);
     // Utility::DrawDrums(&hw.display, 5);
     screen.DrawMenu(currentDrum);
     DisplayParamMenu();
@@ -335,8 +350,15 @@ int main(void)
         DisplayKnobValues();
 
         float avgCpu = meter.GetAvgCpuLoad();
-        OledMessage("cpu:" + std::to_string((int)(avgCpu * 100)) + "%", 4);
+        screen.OledMessage("cpu:" + std::to_string((int)(avgCpu * 100)) + "%", 4);
 
+        usageCounter++;
+        if (usageCounter > 10000) {    // 10000=about 90 seconds
+            if (screen.IsScreenOn()) {
+                screen.SetScreenOn(false);
+            }
+            screen.Screensave();
+        }
         hw.display.Update();
     }
 }
