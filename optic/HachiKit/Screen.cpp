@@ -92,14 +92,6 @@ void Screen::SetScreenOn(bool screenOn) {
 void Screen::Screensave() {
     if (screenOn) { return; }
 
-    // // blank the screen
-    // display->Fill(false);
-
-    // // randomly blank one pixel at a time
-    // u8 x = std::rand() % WIDTH;
-    // u8 y = std::rand() % HEIGHT;
-    // display->DrawPixel(x, y, false);
-
     // horizontal wipe
     u8 x = (screenCounter / 8) % (WIDTH + 1);
     display->DrawLine(x, 0, x, HEIGHT, false);
@@ -112,6 +104,7 @@ void Screen::Screensave() {
 void Screen::ScreensaveEvent(u8 drum) {
     if (screenOn) { return; }
 
+    // show notes with horizontal wipe
     u8 x = (screenCounter / 8) % (WIDTH + 1);
     if (x > 6 && x < WIDTH - 2) {
         display->DrawCircle(x - 4, (15-drum) * 4 + 1, 1, true);
