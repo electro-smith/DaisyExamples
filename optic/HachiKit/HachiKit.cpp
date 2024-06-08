@@ -20,6 +20,7 @@
 #include "Cy.h"
 #include "Cow8.h"
 #include "Tom.h"
+#include "Clap.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -37,12 +38,13 @@ uint8_t drumCount = 4;
 Bd8 bd;
 SdNoise rs;
 Sd8 sd;
-FmDrum cp;
+FmDrum fm;
 Ch ch;
 Oh oh;
 Cy cy;
 Cow8 cb;
 Tom lt, mt, ht;
+Clap cp;
 
 // Shared sound sources
 HhSource68 source68;
@@ -308,17 +310,18 @@ int main(void)
     cb.Init("CB", samplerate, 0.001, 0.5, &source68, 1700, 2400);
 
     drums[0] = &bd;
-    drums[1] = &rs;     // 24
-    drums[2] = &sd;     // 32
-    drums[3] = &cp;     // 38
-    drums[4] = &lt;     // 45
-    drums[5] = &mt;     // 52
-    drums[6] = &ch;     // 55
-    drums[7] = &ht;     // 62
-    drums[8] = &oh;     // 65
-    drums[9] = &cb;     // 70
-    drums[10] = &cy;    // 75
-    drumCount = 11;
+    drums[1] = &rs;
+    drums[2] = &sd;
+    drums[3] = &cp;
+    drums[4] = &lt;
+    drums[5] = &mt;
+    drums[6] = &ch;
+    drums[7] = &ht;
+    drums[8] = &oh;
+    drums[9] = &cb;
+    drums[10] = &cy;
+    drums[11] = &fm;
+    drumCount = 12;
     currentDrum = 0;
 
     for (u8 i = 0; i < KNOB_COUNT; i++) {
