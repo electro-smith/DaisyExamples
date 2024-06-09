@@ -44,7 +44,7 @@ void Sd8::Init(std::string slot, float sample_rate, float oscFrequency, float os
 float Sd8::Process() {
     float sig = (1 - parameters[PARAM_MIX].GetScaledValue()) * osc.Process() * oscEnv.Process();
     sig += parameters[PARAM_MIX].GetScaledValue() * noise.Process() * noiseEnv.Process();
-    return velocity * sig; // / 2;
+    return velocity * sig * 10; 
 }
 
 void Sd8::Trigger(float velocity) {

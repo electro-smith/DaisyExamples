@@ -16,7 +16,8 @@ Cy.cpp \
 Cow8.cpp \
 Tom.cpp \
 ClickSource.cpp \
-Clap.cpp
+Clap.cpp \
+DigiClap.cpp
 
 
 OPT = -Os

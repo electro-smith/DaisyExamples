@@ -21,6 +21,7 @@
 #include "Cow8.h"
 #include "Tom.h"
 #include "Clap.h"
+#include "DigiClap.h"
 
 using namespace daisy;
 using namespace daisysp;
@@ -34,17 +35,18 @@ Screen screen(&hw.display);
 CpuLoadMeter meter;
 
 IDrum *drums[16];
-uint8_t drumCount = 4;
+uint8_t drumCount = 1;
 Bd8 bd;
 SdNoise rs;
 Sd8 sd;
-FmDrum fm;
+Clap cp;
+DigiClap sd2;
+Tom lt, mt, ht;
 Ch ch;
 Oh oh;
 Cy cy;
 Cow8 cb;
-Tom lt, mt, ht;
-Clap cp;
+FmDrum fm1, fm2;
 
 // Shared sound sources
 HhSource68 source68;
@@ -87,8 +89,8 @@ void DisplayParamMenu() {
         }
     }
 
-    screen.DrawLine(0,11,127,11, true);
-    screen.DrawLine(0,36,127,36, true);
+    // screen.DrawLine(0,11,127,11, true);
+    // screen.DrawLine(0,36,127,36, true);
 
 }
 
@@ -298,8 +300,9 @@ int main(void)
     bd.Init("BD", samplerate);
     rs.Init("RS", samplerate);
     sd.Init("SD", samplerate);
-    cp.Init("CP", samplerate);
+    cp.Init("CP", samplerate, 0.012, 0.8);
 
+    sd2.Init("S2", samplerate, 0.012, 0.8, 3000);
     lt.Init("LT", samplerate, 80, &clickSource);
     mt.Init("MT", samplerate, 91, &clickSource);
     ht.Init("HT", samplerate, 106, &clickSource);
@@ -308,20 +311,24 @@ int main(void)
     oh.Init("OH", samplerate, 0.001, 0.13, 0.05, &source68, HhSource68::MORPH_808_VALUE, 6000, 16000);
     cy.Init("CY", samplerate, 0.001, 3.5, &source68, 1700, 2400);
     cb.Init("CB", samplerate, 0.001, 0.5, &source68, 1700, 2400);
+    fm1.Init("LC", samplerate, 98, 3.3, 2.2, 0.001, 0.101, -50);
+    fm2.Init("HC", samplerate, 131, 3.3, 2.2, 0.001, 0.101, -50);
 
     drums[0] = &bd;
     drums[1] = &rs;
     drums[2] = &sd;
     drums[3] = &cp;
-    drums[4] = &lt;
-    drums[5] = &mt;
+    drums[4] = &sd2;
+    drums[5] = &lt;
     drums[6] = &ch;
-    drums[7] = &ht;
+    drums[7] = &mt;
     drums[8] = &oh;
-    drums[9] = &cb;
+    drums[9] = &ht;
     drums[10] = &cy;
-    drums[11] = &fm;
-    drumCount = 12;
+    drums[11] = &fm1;
+    drums[12] = &fm2;
+    drums[13] = &cb;
+    drumCount = 14;
     currentDrum = 0;
 
     for (u8 i = 0; i < KNOB_COUNT; i++) {
