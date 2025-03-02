@@ -9,21 +9,28 @@
 using namespace daisysp;
 using namespace daisy;
 
+enum NoteInterval
+{
+    ROOT,
+    THIRD,
+    FIFTH,
+    NUM_INTERVALS
+};
+
+static void UpdateChord(uint16_t root_midi_note);
+
 static DaisyPod     pod;
-// static NCO          nco;
-static HarmonicNCO  harmonicNco;
-static uint16_t     nco_kval;
+static HarmonicNCO  harmonicNco[NUM_INTERVALS];
 static float        amp            = 0.5f;
-static float        freq           = FREQ_A4;
-static int          midi_note      = MIDI_A4;
-static int          prev_midi_note = MIDI_A4;  
+static uint16_t     s_midi_note    = MIDI_A4;
+static uint16_t     prev_midi_note = MIDI_A4;  
 
 static float        harmonicAmps[] = 
 {
     1.0,
-    0.8,
     0.7,
-    0.0,
+    0.6,
+    0.3,
     0.0,
     0.0,
     0.0,
@@ -50,24 +57,59 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
     pod.ProcessAllControls();
 
-    midi_note += pod.encoder.Increment();
-    midi_note = DSY_CLAMP(midi_note, 0, 127);
+    s_midi_note += pod.encoder.Increment();
+    s_midi_note = DSY_CLAMP(s_midi_note, 0, 127);
 
-    if (midi_note != prev_midi_note) 
+    if (s_midi_note != prev_midi_note) 
     {
-        freq = mtof(midi_note);
-        harmonicNco.SetFrequency(freq);
+        UpdateChord(s_midi_note);
+
+        prev_midi_note = s_midi_note;
     }
-    prev_midi_note = midi_note;
 
     // Audio Loop
     for (size_t ndx = 0; ndx < size; ndx += 2)
     {
-        sample = amp * harmonicNco.NextSample();
+        for (uint8_t note = ROOT; note < NUM_INTERVALS; note++)
+        {
+            sample += (amp / NUM_INTERVALS) * harmonicNco[note].NextSample();
+        }
         // left out
         out[ndx] = sample;
         // right out
         out[ndx + 1] = sample;
+
+        sample = 0;
+    }
+}
+
+static void InitChordNcos(uint16_t root_midi_note, uint32_t sample_rate)
+{
+    for (uint8_t note = ROOT; note < NUM_INTERVALS; note++)
+    {
+        harmonicNco[note].SetSampleRate(sample_rate);
+        harmonicNco[note].SetAmplitudes(harmonicAmps);
+        harmonicNco[note].SetPhases(harmonicPhases);
+    }
+
+    // Set the frequencies of each NCO
+    UpdateChord(root_midi_note);
+}
+
+// Sets the NCO's to play a major chord
+static void UpdateChord(uint16_t root_midi_note)
+{
+    float       freq        = 0;
+    uint16_t    midi_note   = root_midi_note;
+    
+    for (uint8_t note = ROOT; note < NUM_INTERVALS; note++)
+    {
+        // Apply offset based on interval
+        midi_note  = root_midi_note + (3 * note);
+        midi_note += (note != ROOT) ? 1 : 0;
+        
+        freq = mtof(midi_note);
+        harmonicNco[note].SetFrequency(freq);
     }
 }
 
@@ -79,10 +121,7 @@ int main(void)
     pod.Init();
     sample_rate = pod.AudioSampleRate();
 
-    harmonicNco.SetSampleRate((uint32_t)sample_rate);
-    harmonicNco.SetFrequency(freq);
-    harmonicNco.SetAmplitudes(harmonicAmps);
-    harmonicNco.SetPhases(harmonicPhases);
+    InitChordNcos(MIDI_A4, (uint32_t)sample_rate);
 
     // start callback
     pod.StartAudio(AudioCallback);
