@@ -38,12 +38,25 @@ int main(void) {
         patch.display.WriteString("ByteShift v0.1", Font_7x10, true);
 
         char buffer[32];
+
         snprintf(buffer, sizeof(buffer), "C1: %d", (int)(controlManager.GetCtrl1() * 100));
         patch.display.SetCursor(0, 12);
         patch.display.WriteString(buffer, Font_7x10, true);
 
-        snprintf(buffer, sizeof(buffer), "Enc: %d", controlManager.GetEncoderCount());
+        snprintf(buffer, sizeof(buffer), "C2: %d", (int)(controlManager.GetCtrl2() * 100));
         patch.display.SetCursor(0, 24);
+        patch.display.WriteString(buffer, Font_7x10, true);
+
+        snprintf(buffer, sizeof(buffer), "C3: %d", (int)(controlManager.GetCtrl3() * 100));
+        patch.display.SetCursor(0, 36);
+        patch.display.WriteString(buffer, Font_7x10, true);
+
+        snprintf(buffer, sizeof(buffer), "C4: %d", (int)(controlManager.GetCtrl4() * 100));
+        patch.display.SetCursor(0, 48);
+        patch.display.WriteString(buffer, Font_7x10, true);
+
+        snprintf(buffer, sizeof(buffer), "Enc: %d", controlManager.GetEncoderCount());
+        patch.display.SetCursor(60, 12);
         patch.display.WriteString(buffer, Font_7x10, true);
 
         patch.display.Update();
