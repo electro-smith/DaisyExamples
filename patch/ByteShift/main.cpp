@@ -16,12 +16,9 @@ void AudioCallbackWrapper(daisy::AudioHandle::InputBuffer in,
     }
 }
 
-void AudioCallbackWrapper(daisy::AudioHandle::InputBuffer in, 
-    daisy::AudioHandle::OutputBuffer out, 
-    size_t size);
-
 int main(void) {
     patch.Init();
+
     controlManager.Init(&patch);
     synth.Init(&patch);
 
@@ -46,7 +43,7 @@ int main(void) {
         patch.display.WriteString(buffer, Font_7x10, true);
 
         snprintf(buffer, sizeof(buffer), "Enc: %d", controlManager.GetEncoderCount());
-        patch.display.SetCursor(0, 60);
+        patch.display.SetCursor(0, 24);
         patch.display.WriteString(buffer, Font_7x10, true);
 
         patch.display.Update();

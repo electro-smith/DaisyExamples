@@ -116,6 +116,12 @@ void BytebeatSynth::UpdateControls() {
 //     }
 // }
 
+// *****************************************************
+// 
+// Process Audio 
+// 
+// *****************************************************
+
 // Constants for min/max frequency
 constexpr float MIN_FREQUENCY = 24.0f;   // 8.0 Lower limit (adjust as needed)
 constexpr float MAX_FREQUENCY = 112.0f; // Upper limit (adjust as needed)
@@ -144,6 +150,13 @@ void BytebeatSynth::ProcessAudio(AudioHandle::InputBuffer in, AudioHandle::Outpu
         out[1][i] = output;
     }
 }
+
+
+// *************************************************
+// 
+// Update Display 
+// 
+// *************************************************
 
 // OLED Display Update (Now Shows a, b, c)
 void BytebeatSynth::UpdateDisplay() {

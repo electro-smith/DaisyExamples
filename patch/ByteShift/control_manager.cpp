@@ -2,6 +2,8 @@
 
 void ControlManager::Init(daisy::DaisyPatch* p) {
     patch = p;
+    patch->StartAdc();
+    
     ctrl1 = ctrl2 = ctrl3 = ctrl4 = 0.0f;
     encoderCount = 0;
     encoderPressed = false;
