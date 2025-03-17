@@ -2,33 +2,29 @@
 #define BYTEBEAT_SYNTH_H
 
 #include "daisy_patch.h"
-#include "daisysp.h"
+#include "control_manager.h"
 
-using namespace daisy;
-using namespace daisysp;
+
+// *******************************************************************
+//
+// Bytebeat Synth h
+//
+// *******************************************************************
 
 class BytebeatSynth {
 public:
-    void Init(DaisyPatch* p);
-    void UpdateControls();
-    float GenerateSample();  // Now returns a single sample for processing
-    void UpdateDisplay();
-    float ProcessSample();
-    void NextFormula();
-    int GetFormulaIndex() const { return formula_index; }
+    void Init(daisy::DaisyPatch* p) { patch = p; }
+    float GenerateSample();  
+    void UpdateControls(ControlManager& controlManager);
+
+    int a, b, c, formulaIndex;
+
+    static const int FORMULA_COUNT = 6;
 
 private:
-    DaisyPatch* patch;
-    uint32_t t;
-    int formula_index;
-    static const int formula_count = 6;
+    daisy::DaisyPatch* patch;
 
-    // Dynamic formula parameters
-    int a, b, c;
-
-    // Scaling factor for musically tuned timing
-    float tScale;
-
+    // Bytebeat formulas
     using BytebeatFunc = uint8_t (*)(uint32_t, BytebeatSynth*);
     static BytebeatFunc formulaTable[];
 
@@ -38,6 +34,7 @@ private:
     static uint8_t BytebeatFormula3(uint32_t t, BytebeatSynth* synth);
     static uint8_t BytebeatFormula4(uint32_t t, BytebeatSynth* synth);
     static uint8_t BytebeatFormula5(uint32_t t, BytebeatSynth* synth);
+
 };
 
 #endif // BYTEBEAT_SYNTH_H

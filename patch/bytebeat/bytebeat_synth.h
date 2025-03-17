@@ -7,6 +7,12 @@
 using namespace daisy;
 using namespace daisysp;
 
+// *******************************************************************
+//
+// Bytebeat Synth h
+//
+// *******************************************************************
+
 class BytebeatSynth {
 public:
     void Init(DaisyPatch* p);
@@ -18,7 +24,7 @@ private:
     DaisyPatch* patch;
     float speed;
     uint32_t t;
-    float tScale;  // ✅ Declare tScale
+    float tScale;
     int formula_index;
     static const int formula_count = 6;
 

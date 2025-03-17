@@ -1,5 +1,11 @@
 #include "bytebeat_synth.h"
 
+// *******************************************************************
+//
+// Bytebeat Synth main
+// 
+// *******************************************************************
+
 int main(void) {
     // Create an instance of DaisyPatch assigned to local var patch
     DaisyPatch patch;

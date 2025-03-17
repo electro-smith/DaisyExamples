@@ -1,19 +1,22 @@
 #ifndef BYTESHIFT_H
 #define BYTESHIFT_H
 
-#include "daisy_patch.h"
-#include "control_manager.h"
+#include "daisysp.h"
+
+// *******************************************************************
+// 
+// Byte shift
+// 
+// *******************************************************************
 
 class ByteShift {
 public:
-    void Init(daisy::DaisyPatch* p);
-    void ProcessAudio(float** out, size_t size);
-    void SetControlValues(float c1, float c2, float c3, float c4, int enc);
+    void Init(float sampleRate);
+    float ProcessSample(float inSample);  // Takes input sample from BytebeatSynth
+    void SetPitchShift(int encoderCount);
 
 private:
-    daisy::DaisyPatch* patch;
-    float speed, paramA, paramB, paramC;
-    int encoderValue;
+    daisysp::PitchShifter pitchShifter;
 };
 
 #endif

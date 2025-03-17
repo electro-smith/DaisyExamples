@@ -9,7 +9,7 @@ DAISYSP_DIR = ../../DaisySP
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
 
 # Source files
-CPP_SOURCES = main.cpp byteshift.cpp control_manager.cpp
+CPP_SOURCES = main.cpp byteshift.cpp control_manager.cpp bytebeat_synth.cpp
 
 # Include the Daisy system Makefile
 include $(SYSTEM_FILES_DIR)/Makefile
