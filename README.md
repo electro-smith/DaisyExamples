@@ -9,7 +9,7 @@
     <a href="https://github.com/electro-smith/libDaisy/actions/workflows/style.yml">
       <img src="https://github.com/electro-smith/libDaisy/workflows/Style/badge.svg">
     </a>
-    <a href="https://electro-smith.github.io/libDaisy/index.html">
+    <a href="https://daisy.audio/software/">
       <img src="https://github.com/electro-smith/libDaisy/workflows/Documentation/badge.svg">
     </a>
 </p>
@@ -27,7 +27,7 @@
     </a>
 </p>
 
-If you are just getting started with Daisy, check out our [Getting Started Wiki page!](https://github.com/electro-smith/DaisyWiki/wiki)
+If you are just getting started with Daisy, check out our [Getting Started page](https://daisy.audio/tutorials/cpp-dev-env/)!
 
 This repo is home to a functional pipeline utilizing libDaisy and DaisySP libraries.
 
@@ -60,7 +60,7 @@ git submodule update --init
 
 ### Compiling the Source
 
-Once you have the repository and the submodules (libDaisy/DaisySP) properly cloned, and the toolchain installed (for details see the [Daisy Wiki](https://github.com/electro-smith/DaisyWiki/wiki) for platform specific instructions) it's time to build the libraries, and some examples.
+Once you have the repository and the submodules (libDaisy/DaisySP) properly cloned, and the toolchain installed (for details see the [Daisy support site](https://daisy.audio/tutorials/Understanding-the-Toolchain/) for platform specific instructions) it's time to build the libraries, and some examples.
 
 To build everything at once, run: `./rebuild_all.sh`
 
