@@ -5,6 +5,8 @@
 Ported by Ben Sergentanis
 Originally by Emilie Gillet
 
+This app is built for use on the Daisy Bootloader. First, flash your patch with the Daisy Bootloader using the Daisy Web Programmer. Then, flash this app onto the bootloader.
+
 ## Description
 
 Nimbus is a port of Mutable Instrument's Clouds. Clouds is a granular  

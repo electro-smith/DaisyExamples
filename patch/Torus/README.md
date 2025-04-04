@@ -7,6 +7,8 @@ Originally by: Émilie Gillet
 
 Please refer to the [Rings manual](https://mutable-instruments.net/modules/rings/manual/) for more detail on everything Rings. 
 
+This app is built for use on the Daisy Bootloader. First, flash your patch with the Daisy Bootloader using the Daisy Web Programmer. Then, flash this app onto the bootloader.
+
 ## Controls and I/O
 - Ctrl 1-4: Map these to the usual Rings controls. More info in the Control Menu section.  
 - Gate In 1: Trigger In
