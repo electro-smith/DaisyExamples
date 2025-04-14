@@ -19,7 +19,11 @@ int main(void)
         /** Update all cv inputs */
         patch.ProcessAllControls();
 
-        /** Get CV_1 Input (0, 1) */
+        /** Get CV_1 Input ~(0, 1)
+          * The values can be slightly outside of that
+          * range - That means you can get small negative
+          * values, too!
+        */
         float value = patch.GetAdcValue(CV_1);
 
         /** Here the pot is wired to GND and 5V
