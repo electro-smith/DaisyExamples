@@ -1,98 +1,112 @@
-// # WavPlayer
-// ## Description
-// Fairly simply sample player.
-// Loads 16
-//
-// Play .wav file from the SD Card.
-//
 #include <stdio.h>
 #include <string.h>
 #include "daisy_pod.h"
-//#include "daisy_patch.h"
 
 using namespace daisy;
 
-//DaisyPatch   hw;
-DaisyPod       hw;
+DaisyPod       hardware;
 SdmmcHandler   sdcard;
 FatFSInterface fsi;
-WavPlayer      sampler;
+WavPlayer      wavPlayer;
+
+size_t numberOfFiles;
+size_t currentFile = 0;
+bool sampleChanged = false;
+bool restart = false;
+
+void ProcessControls();
 
 void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                    AudioHandle::InterleavingOutputBuffer out,
                    size_t                                size)
 {
-    int32_t inc;
+    ProcessControls();
 
-    // Debounce digital controls
-    hw.ProcessDigitalControls();
-
-    // Change file with encoder.
-    inc = hw.encoder.Increment();
-    if(inc > 0)
-    {
-        size_t curfile;
-        curfile = sampler.GetCurrentFile();
-        if(curfile < sampler.GetNumberFiles() - 1)
-        {
-            sampler.Open(curfile + 1);
-        }
-    }
-    else if(inc < 0)
-    {
-        size_t curfile;
-        curfile = sampler.GetCurrentFile();
-        if(curfile > 0)
-        {
-            sampler.Open(curfile - 1);
-        }
-    }
-
-    //    if(hw.button1.RisingEdge())
-    //    {
-    //        sampler.Restart();
-    //    }
-    //
-    //    if(hw.button2.RisingEdge())
-    //    {
-    //        sampler.SetLooping(!sampler.GetLooping());
-    //        //hw.SetLed(DaisyPatch::LED_2_B, sampler.GetLooping());
-    //        //dsy_gpio_write(&hw.leds[DaisyPatch::LED_2_B],
-    //        //               static_cast<uint8_t>(!sampler.GetLooping()));
-    //    }
-
+    float sample = 0.0f;
     for(size_t i = 0; i < size; i += 2)
     {
-        out[i] = out[i + 1] = s162f(sampler.Stream()) * 0.5f;
+        sample = s162f(wavPlayer.Stream());
+        out[i] = out[i + 1] = sample * 0.5f;
     }
 }
 
+void ProcessControls(){
+    // Debounce digital controls
+    hardware.ProcessDigitalControls();
+
+    // Change file with encoder.
+    int32_t increment = hardware.encoder.Increment();
+    if(increment != 0)
+    {
+        int next = currentFile + increment;
+
+        // Make sure we don't go out of bounds.
+        next = std::min(next, int (numberOfFiles) - 1);
+        next = std::max(next, 0);
+        currentFile = size_t (next);
+
+        sampleChanged = true;
+    }
+
+    if(hardware.button1.RisingEdge())
+    {
+        restart = true;
+    }
+
+    if(hardware.button2.RisingEdge())
+    {
+        wavPlayer.SetLooping(!wavPlayer.GetLooping());
+        hardware.led2.Set(wavPlayer.GetLooping(),0,0);
+    }
+
+    hardware.UpdateLeds();     
+}
 
 int main(void)
 {
     // Init hardware
-    size_t blocksize = 4;
-    hw.Init();
-    //    hw.ClearLeds();
+    hardware.Init();
+    hardware.SetAudioBlockSize(128);
+
     SdmmcHandler::Config sd_cfg;
     sd_cfg.Defaults();
     sdcard.Init(sd_cfg);
     fsi.Init(FatFSInterface::Config::MEDIA_SD);
+
+    // Read from the root folder
     f_mount(&fsi.GetSDFileSystem(), "/", 1);
 
-    sampler.Init(fsi.GetSDPath());
-    sampler.SetLooping(true);
+    wavPlayer.Init(fsi.GetSDPath());
+    wavPlayer.SetLooping(true);
 
-    // SET LED to indicate Looping status.
-    //hw.SetLed(DaisyPatch::LED_2_B, sampler.GetLooping());
+    // Set led1 to indicate Looping status.
+    float r = wavPlayer.GetLooping();
+    hardware.led2.Set(r,0,0);
 
     // Init Audio
-    hw.SetAudioBlockSize(blocksize);
-    hw.StartAudio(AudioCallback);
+    hardware.StartAdc();
+    hardware.StartAudio(AudioCallback);
+
     // Loop forever...
-    for(;;)
+    while(true)
     {
-        // Prepare buffers for sampler as needed
-        sampler.Prepare();
+        // Prepare buffers for wavPlayer as needed
+        wavPlayer.Prepare();
+
+        numberOfFiles = wavPlayer.GetNumberFiles();
+
+        if (sampleChanged)
+        {
+            wavPlayer.Close();
+            wavPlayer.Open(currentFile);
+            sampleChanged = false;
+        }
+
+        currentFile = wavPlayer.GetCurrentFile();
+        
+        if (restart){
+            wavPlayer.Restart();
+            restart = false;
+        }
     }
 }
