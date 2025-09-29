@@ -36,15 +36,14 @@ enum BasicChordType
 
 static void UpdateChord(uint16_t root_midi_note, BasicChordType chord_type);
 static void AdvanceChord(uint16_t root_midi_note, int direction);
+static int getButtonDir(void);
 
 static DaisyPod     pod;
 static HarmonicNCO  harmonicNco[NUM_INTERVALS];
 static float        amp             = 0.5f;
-// static uint16_t     s_midi_note     = MIDI_A4;
 static uint16_t     s_key_root_note = MIDI_C4;
-// static uint16_t     prev_midi_note  = MIDI_A4;
 
-static float        harmonicAmps[] = 
+static float    harmonicAmps[] = 
 {
     1.0,
     0.7,
@@ -56,7 +55,7 @@ static float        harmonicAmps[] =
     0.0
 };
 
-static float        harmonicPhases[] = 
+static float    harmonicPhases[] = 
 {
     0.0,
     0.9,
@@ -74,24 +73,23 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 {
     float sample = 0;
     int encoder_dir = 0;
+    int button_dir = 0;
 
     pod.ProcessAllControls();
 
-    // s_midi_note += pod.encoder.Increment();
-    // s_midi_note = DSY_CLAMP(s_midi_note, 0, 127);
+    button_dir = getButtonDir();
 
-    // if (s_midi_note != prev_midi_note) 
-    // {
-    //     UpdateChord(s_midi_note);
-
-    //     prev_midi_note = s_midi_note;
-    // }
+    if (button_dir)
+    {
+        AdvanceChord(s_key_root_note, button_dir);
+    }
 
     encoder_dir = pod.encoder.Increment();
 
     if (encoder_dir)
     {
-        AdvanceChord(s_key_root_note, encoder_dir);
+        s_key_root_note += encoder_dir;
+        AdvanceChord(s_key_root_note, 0);
     }
 
     // Audio Loop
@@ -187,6 +185,28 @@ static void AdvanceChord(uint16_t root_midi_note, int direction)
     }
 }
 
+static int getButtonDir(void)
+{
+    bool    button_1_state  = pod.button1.RisingEdge();
+    bool    button_2_state  = pod.button2.RisingEdge();
+    int     button_dir      = 0;
+
+    if (button_1_state && !button_2_state)
+    {
+        button_dir = -1;
+    }
+    else if (!button_1_state && button_2_state)
+    {
+        button_dir = 1;
+    }
+    else
+    {
+        button_dir = 0;
+    }
+
+    return button_dir;
+}
+
 int main(void)
 {
     // Initialize pod hardware and oscillator daisysp module
@@ -197,7 +217,7 @@ int main(void)
 
     InitChordNcos(s_key_root_note, (uint32_t)sample_rate);
 
-    // start callback
+    // Start audio callback
     pod.StartAudio(AudioCallback);
 
 
