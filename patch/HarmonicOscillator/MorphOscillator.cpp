@@ -35,12 +35,12 @@ void MorphOscillator::SetAmp(float a) {
 }
 
 float MorphOscillator::Process() {
-    float morph = shape * 3.0f;
-    int index = (int)morph;
-    float frac = morph - index;
+    float morph = shape * 3.0f; // 0 - 3 selects 4 waveforms 
+    int index = (int)morph;     // Get the index of the starting wave soemthing like 1.23
+    float frac = morph - index; // Get the get the fraction of the next wave form 0.23
 
-    float a = osc[index].Process();
-    float b = osc[(index + 1 < 4) ? (index + 1) : 3].Process();
+    float a = osc[index].Process(); // Get the value of the current wave form
+    float b = osc[(index + 1 < 4) ? (index + 1) : 3].Process(); // get the next wave form
 
-    return a * (1.0f - frac) + b * frac;
+    return a * (1.0f - frac) + b * frac; // Mix the wave with a fraction of the next wave
 }

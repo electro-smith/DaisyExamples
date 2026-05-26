@@ -8,12 +8,12 @@ class MorphOscillator {
     void Init(float sample_rate);
 
     void SetFreq(float f);
-    void SetShape(float s);
     void SetAmp(float a);
+    void SetShape(float s);
     float Process();
 
   private:
-    Oscillator osc[4];
+    Oscillator osc[4]; 
     float freq;
     float shape;
 };
