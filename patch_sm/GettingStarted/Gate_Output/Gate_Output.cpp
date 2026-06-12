@@ -17,13 +17,13 @@ int main(void)
     while(1)
     {
         /** Set the gate high */
-        dsy_gpio_write(&patch.gate_out_1, true);
+        patch.gate_out_1.Write(true);
 
         /** Wait 250 ms */
         patch.Delay(250);
 
         /** Set the gate low */
-        dsy_gpio_write(&patch.gate_out_1, false);
+        patch.gate_out_1.Write(false);
 
         /** Wait 250 ms */
         patch.Delay(250);

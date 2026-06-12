@@ -1,6 +1,9 @@
 # Project Name
 TARGET = Nimbus
 
+APP_TYPE=BOOT_SRAM
+LDSCRIPT=sram_linker.lds
+
 # Sources
 CPP_SOURCES += \
 Nimbus.cpp \

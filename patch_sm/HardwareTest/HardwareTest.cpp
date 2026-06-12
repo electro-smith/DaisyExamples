@@ -132,8 +132,8 @@ int main(void)
         }
         if(now - gatet > 1000)
         {
-            dsy_gpio_toggle(&hw.gate_out_1);
-            dsy_gpio_toggle(&hw.gate_out_2);
+            hw.gate_out_1.Toggle();
+            hw.gate_out_2.Toggle();
             gatet = now;
         }
 
