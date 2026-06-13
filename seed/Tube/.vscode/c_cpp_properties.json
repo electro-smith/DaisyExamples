@@ -1,0 +1,39 @@
+{
+  "configurations": [
+    {
+      "cStandard": "c11",
+      "compilerPath": "C:/Program Files/DaisyToolchain/bin/arm-none-eabi-g++.exe",
+      "cppStandard": "c++17",
+      "defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/../../libDaisy//**",
+        "${workspaceFolder}/../../DaisySP//**"
+      ],
+      "name": "windows-clang-arm64",
+      "windowsSdkVersion": "10.0.17763.0",
+      "intelliSenseMode": "windows-clang-arm64"
+    },
+    {
+      "cStandard": "c11",
+      "compilerPath": "/usr/local/bin/arm-none-eabi-g++",
+      "cppStandard": "c++17",
+      "defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/../../libDaisy//**",
+        "${workspaceFolder}/../../DaisySP//**"
+      ],
+      "name": "macOS"
+    }
+  ],
+  "version": 4
+}
