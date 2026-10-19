@@ -1,0 +1,73 @@
+{
+    "configurations": [
+        {
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32h7x.cfg"
+            ],
+            "cwd": "${workspaceFolder}",
+            "debuggerArgs": [
+                "-d",
+                "${workspaceRoot}"
+            ],
+            // Here's where you can put the path to the program you want to debug:
+            "executable": "${fileDirname}/build/${fileDirnameBasename}.elf",
+            "interface": "swd",
+            "name": "Debug Blink",
+            "openOCDLaunchCommands": [
+                "init",
+                "reset init",
+                "gdb_breakpoint_override hard"
+            ],
+            "preLaunchTask": "Build",
+            "preRestartCommands": [
+                "load",
+                "enable breakpoint",
+                "monitor reset"
+            ],
+            "request": "launch",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "showDevDebugOutput": "both",
+            "svdFile": "${workspaceRoot}/.vscode/STM32H750x.svd",
+            "type": "cortex-debug"
+        },
+        {
+            "name": "Debug (J-Link)",
+            "cwd": "${workspaceRoot}",
+            "device": "STM32H750IB",
+            "executable": "${fileDirname}/build/${fileDirnameBasename}.elf",
+            "interface": "swd",
+            "osx": {
+                "armToolchainPath": "/Applications/ArmGNUToolchain/12.3.rel1/arm-none-eabi/bin",
+                "serverpath": "/Applications/SEGGER/JLink/JLinkGDBServerCLExe"
+            },
+            "preLaunchTask": "Build",
+            "request": "launch",
+            "rttConfig": {
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0.000000,
+                        "type": "console"
+                    }
+                ],
+                "enabled": true
+            },
+            "runToEntryPoint": "main",
+            "serialNumber": "",
+            "servertype": "jlink",
+            "svdFile": "${workspaceFolder}/.vscode/STM32H750x.svd",
+            "type": "cortex-debug",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 4
+            },
+            "windows": {
+                "armToolchainPath": "${workspaceFolder}/tools/cortex_m_gcc13_win/bin",
+                "serverpath": "C:/Program Files/SEGGER/JLink/JLinkGDBServerCL.exe"
+            }
+        },
+    ],
+    "version": "0.2.0"
+}
