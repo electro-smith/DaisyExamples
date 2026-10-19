@@ -10,7 +10,7 @@ Three delay bundled in one. Set their delay times independently. Feedback is con
 The three delays mixed with the dry signal is available at all outputs.
 Set the dry/wet amount of this final mix with the encoder.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/MultiDelay)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/petal/MultiDelay)
 
 ## Control
 

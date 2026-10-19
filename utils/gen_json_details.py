@@ -1,7 +1,7 @@
-# Formats a .json file for the Programmer webapp to have some info for the 
+# Formats a .json file for the Programmer webapp to have some info for the
 # precompiled examples
 #
-# Secondarily, this also packs up a "bin/" directory with all precompiled 
+# Secondarily, this also packs up a "bin/" directory with all precompiled
 # examples
 #
 # TODO:
@@ -15,10 +15,10 @@
 #       "platform": "seed"
 #       "filepath": "./bin/platform/Name.bin"
 #       "description": "Short Description"
-#       "url" : "raw.githubusercontent.com/electro-smith.../README.md"
+#       "url" : "raw.githubusercontent.com/daisyaudio.../README.md"
 #   },
 #   {
-#       etc. . . 
+#       etc. . .
 #   },
 # ]
 #
@@ -34,7 +34,7 @@ class Example(object):
     def __init__(self, name, ogdir):
         self.name = name
         self.description = "no desc available yet"
-        self.url = 'https://raw.githubusercontent.com/electro-smith/'
+        self.url = 'https://raw.githubusercontent.com/daisyaudio/'
         # Special case for DaisySP examples
         if 'DaisySP' in ogdir:
             self.platform = 'seed'
@@ -86,7 +86,7 @@ def run():
 
     # Scan directories for example projects
     for d in directories:
-        examples[d] = list(o for o in os.listdir(os.path.abspath(d)) 
+        examples[d] = list(o for o in os.listdir(os.path.abspath(d))
             if os.path.isdir(os.path.sep.join((d,o))))
     olist = []
     for ex_key in examples:
@@ -98,7 +98,7 @@ def run():
     for example in olist:
         example.CopyToDeploy()
     jsonout = list(example.DumpObject() for example in olist if example.Valid())
-    
+
     # Creating JSON file
     with open('./bin/examples.json', 'w') as f:
         json.dump(jsonout, f)

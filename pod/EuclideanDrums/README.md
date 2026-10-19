@@ -4,11 +4,11 @@
 
 Ben Sergentanis
 
-## Description 
-Euclidean drum sequencer. Snare and kick drum, controls per drum for density, pattern length. Global tempo control.  
-Since the two sequencers run independently, they can have different lengths leading to complex interlocking patterns.  
+## Description
+Euclidean drum sequencer. Snare and kick drum, controls per drum for density, pattern length. Global tempo control.
+Since the two sequencers run independently, they can have different lengths leading to complex interlocking patterns.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/EuclideanDrums)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/EuclideanDrums)
 
 ## Controls
 | Control | Description | Comment |

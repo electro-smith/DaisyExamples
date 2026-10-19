@@ -8,7 +8,7 @@ Eris Fairbanks, Olivia Artz Modular + Noise Engineering
 
 FM Oscillator example for the Legio
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/legio/FMOscillator)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/legio/FMOscillator)
 
 ## Controls
 
@@ -20,6 +20,6 @@ FM Oscillator example for the Legio
 | Right Switch | Low/Mid/High Octave Control |
 
 
-## Demo 
+## Demo
 
 TODO: Add demo

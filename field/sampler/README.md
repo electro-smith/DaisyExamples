@@ -9,7 +9,7 @@ Alex Virgona
 Sampler example for Daisy field.
 8 sample slots with a dedicated record and play button per slot.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/sampler)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/field/sampler)
 
 ## Controls
 

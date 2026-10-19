@@ -24,7 +24,7 @@ class Example(object):
     def __init__(self, name, ogdir):
         self.name = name
         self.description = "no desc available yet"
-        self.url = 'https://raw.githubusercontent.com/electro-smith/'
+        self.url = 'https://raw.githubusercontent.com/daisyaudio/'
         self.platform = ogdir.replace(os.path.sep, '_')
         self.url += 'DaisyExamples/master/' + ogdir.replace(os.path.sep, '/') + '/' + self.name + '/README.md'
         self.apath = os.path.abspath('/'.join((ogdir, name)))

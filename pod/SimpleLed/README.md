@@ -5,10 +5,10 @@
 Shensley
 
 
-## Description: 
+## Description:
 Example showing basic usage of RGB LED by mapping R/G values of LED 1 to knob.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SimpleLed)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/SimpleLed)
 
 ## Controls:
 | Control | Description | Comment |

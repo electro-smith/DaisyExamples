@@ -6,9 +6,9 @@ beserge
 
 ## Description
 
-Audio passthrough with audio setting adjustment.  
-Samplerate = 16kHz. Blocksize = 4 samples.  
-For help connecting the jacks, refer to figures 1.1 and 1.8 in the [Patch SM Datasheet](https://github.com/electro-smith/DaisyPatchSM/blob/main/doc/datasheet/ES_Patch_SM_datasheet_v1.0.pdf).  
+Audio passthrough with audio setting adjustment.
+Samplerate = 16kHz. Blocksize = 4 samples.
+For help connecting the jacks, refer to figures 1.1 and 1.8 in the [Patch SM Datasheet](https://github.com/daisyaudio/DaisyPatchSM/blob/main/doc/datasheet/ES_Patch_SM_datasheet_v1.0.pdf).
 
 ## Controls
 

@@ -8,7 +8,7 @@ Ben Sergentanis
 ## Description
 Simple 8 step sequencer. Has controls per step for envelope decay, pitch, and step activation.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/StepSequencer)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/StepSequencer)
 
 ## Controls
 Edit and play mode, press encoder to switch modes. Edit is multicolored, play is green.

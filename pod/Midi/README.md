@@ -5,9 +5,9 @@
 Shensley
 
 ## Description
-Midi Controlled oscillator with resonant LPF.  
+Midi Controlled oscillator with resonant LPF.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/Midi)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/Midi)
 
 ## Controls
 | Control | Description |

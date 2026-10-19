@@ -5,9 +5,9 @@
 Ben Sergentanis
 
 ## Description
-Simple effects for incoming audio. Includes reverb, delay, downsampling, and autowah.  
+Simple effects for incoming audio. Includes reverb, delay, downsampling, and autowah.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/MultiEffect)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/petal/MultiEffect)
 
 ## Controls
 | Control | Description | Comment |

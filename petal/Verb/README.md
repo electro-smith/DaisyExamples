@@ -8,7 +8,7 @@ Shensley
 
 Simple Stereo Reverb for Daisy Petal
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/Verb)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/petal/Verb)
 
 ## Controls
 

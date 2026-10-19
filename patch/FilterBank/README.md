@@ -2,12 +2,12 @@
 
 ## Author
 
-Ben Sergentanis	
+Ben Sergentanis
 
 ## Description
 Fixed resonant peak filterbank with amplitude control per filter. Try running it with whitenoise, oscillators, or any sound source you please!
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/FilterBank)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/FilterBank)
 
 ## Controls
 

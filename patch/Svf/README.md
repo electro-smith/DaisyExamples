@@ -7,7 +7,7 @@ Ben Sergentanis
 ## Description
 State variable filter with simultaneous low pass, high pass, band pass, and notch outputs.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Svf)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/Svf)
 
 ## Controls
 | Control | Description | Comment |

@@ -8,4 +8,4 @@ Ben Sergentanis
 
 Demonstrates chorus effect on drum pattern.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/seed/chorus)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/seed/chorus)

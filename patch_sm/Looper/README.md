@@ -6,13 +6,13 @@ beserge
 
 ## Description
 
-Simple Looper for Patch SM.  
-Includes controls for record on / off / clear, Input Volume, and Loop Volume.  
-The output is a 50/50 mix of the post gain input and loop signals.  
+Simple Looper for Patch SM.
+Includes controls for record on / off / clear, Input Volume, and Loop Volume.
+The output is a 50/50 mix of the post gain input and loop signals.
 
-If you are using the patch.Init(), the controls are already connected as they should be.  
+If you are using the patch.Init(), the controls are already connected as they should be.
 
-If you are using a bare Patch SM, refer to the 1.x figures in the [Patch SM Datasheet](https://github.com/electro-smith/DaisyPatchSM/blob/main/doc/datasheet/ES_Patch_SM_datasheet_v1.0.pdf).  
+If you are using a bare Patch SM, refer to the 1.x figures in the [Patch SM Datasheet](https://github.com/daisyaudio/DaisyPatchSM/blob/main/doc/datasheet/ES_Patch_SM_datasheet_v1.0.pdf).
 
 
 ## Controls

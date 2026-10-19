@@ -4,10 +4,10 @@
 
 Shensley
 
-## Description: 
+## Description:
 Example showing a basic SimpleOscillator with controls.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SimpleOscillator)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/SimpleOscillator)
 
 ## Controls:
 | Control | Description | Comment |

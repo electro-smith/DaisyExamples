@@ -8,7 +8,7 @@ Ben Sergentanis
 
 Chorus effect for Daisy Petal.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/chorus)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/petal/chorus)
 
 ## Controls
 

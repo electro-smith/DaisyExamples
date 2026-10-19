@@ -5,16 +5,16 @@
 Ben Sergentanis
 
 ## Description
-Distorts incoming signal. There are two stages, a soft clip and a hard clip. Turn on one or both.  
-Signal path is: (pregain) -> (soft clip) -> (gain) -> (hard clip) -> (output)  
+Distorts incoming signal. There are two stages, a soft clip and a hard clip. Turn on one or both.
+Signal path is: (pregain) -> (soft clip) -> (gain) -> (hard clip) -> (output)
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/Distortion)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/petal/Distortion)
 
 ## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
 | Knob 3 | Pregain| Give the signal a small boost |
-| Knob 4 | Gain | Give the signal a BIG boost | 
+| Knob 4 | Gain | Give the signal a BIG boost |
 | Knob 5 | Dry/wet Control | |
 | Footswitch 1 | Turn soft distortion on/off | |
 | Footswitch 2 | Turn hard distortion on/off | |

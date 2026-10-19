@@ -8,7 +8,7 @@ Ben Sergentanis
 
 Simple Four Channel Audio Mixer.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadMixer)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/QuadMixer)
 
 ## Controls
 

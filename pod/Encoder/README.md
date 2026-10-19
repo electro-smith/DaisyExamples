@@ -7,7 +7,7 @@ Shensley
 ## Pod Encoder
 Simple example for Daisy Pod showing Encoder use.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/Encoder)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/Encoder)
 
 ## Controls
 | Control | Description | Comment |
