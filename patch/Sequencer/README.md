@@ -7,7 +7,7 @@ Ben Sergentanis
 ## Description
 5 Step Sequencer with gate and step outputs.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Sequencer)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/Sequencer)
 
 ## Controls
 

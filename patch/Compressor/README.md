@@ -7,7 +7,7 @@ Ben Sergentanis
 ## Description
 
 Compressor with optional sidechain input.
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/Compressor)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/Compressor)
 
 ## Controls
 

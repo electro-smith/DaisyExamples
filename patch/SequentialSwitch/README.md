@@ -10,7 +10,7 @@ Switches mutliple inputs to one output, or one output to multiple inputs.
 Clock input to trigger switch and reset in.
 Selectable one to many, or many to one modes.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/SequentialSwitch)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/SequentialSwitch)
 
 ## Controls
 

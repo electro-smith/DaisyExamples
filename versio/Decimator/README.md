@@ -8,7 +8,7 @@ Ankoor Apte, Noise Engineering
 
 Decimator example for the Versio
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/versio/Decimator)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/versio/Decimator)
 
 ## Controls
 
@@ -22,6 +22,6 @@ All controls have some effect on the LEDs
 | Knob 3 | Downsample factor (right) |
 
 
-## Demo 
+## Demo
 
 TODO: Add demo

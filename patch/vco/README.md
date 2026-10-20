@@ -7,10 +7,10 @@ Shensley
 
 ## Description
 
-VCO with sine, triangle, sawtooth, and square waveforms. 
-Both standard and bandlimited waveforms are accessible. 
+VCO with sine, triangle, sawtooth, and square waveforms.
+Both standard and bandlimited waveforms are accessible.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/vco)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/vco)
 
 ## Controls
 

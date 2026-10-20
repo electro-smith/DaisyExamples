@@ -7,7 +7,7 @@ Shensley
 ## Description
 Stereo Reverb algorithm.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/verb)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/verb)
 
 ## Controls
 | Control | Description | Comment |

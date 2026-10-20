@@ -8,7 +8,7 @@ Shensley
 ## Description
 Generate random melodies.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/MusicBox)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/MusicBox)
 
 ## Controls
 | Control | Description | Comment |

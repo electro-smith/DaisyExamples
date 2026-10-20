@@ -10,7 +10,7 @@ VCA with internal triggerable envelopes. Ins 1 and 2 are tied to env1, and Ins 3
 Each input has its own output. The raw envelope signals are also available on the CV outs.
 The envelope curves and attack/decay times ae controllable as well.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadEnvelope)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/QuadEnvelope)
 
 ## Controls
 

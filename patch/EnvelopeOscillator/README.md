@@ -7,7 +7,7 @@ C.M.Barth (allotrope ijk)
 
 Basic oscillator with built in envelope generator.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/EnvelopeOscillator)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/EnvelopeOscillator)
 
 ## Controls
 

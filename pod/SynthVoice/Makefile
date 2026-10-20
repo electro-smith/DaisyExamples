@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_SynthVoice
+TARGET = SynthVoice
 
 USE_DAISYSP_LGPL = 1
 

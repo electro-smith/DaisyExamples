@@ -3,14 +3,14 @@
 
 <!--CI Badges-->
 <p align="center">
-    <a href="https://github.com/electro-smith/libDaisy/actions/workflows/build.yml">
-      <img src="https://github.com/electro-smith/libDaisy/workflows/Build/badge.svg">
+    <a href="https://github.com/daisyaudio/libDaisy/actions/workflows/build.yml">
+      <img src="https://github.com/daisyaudio/libDaisy/workflows/Build/badge.svg">
     </a>
-    <a href="https://github.com/electro-smith/libDaisy/actions/workflows/style.yml">
-      <img src="https://github.com/electro-smith/libDaisy/workflows/Style/badge.svg">
+    <a href="https://github.com/daisyaudio/libDaisy/actions/workflows/style.yml">
+      <img src="https://github.com/daisyaudio/libDaisy/workflows/Style/badge.svg">
     </a>
     <a href="https://daisy.audio/software/">
-      <img src="https://github.com/electro-smith/libDaisy/workflows/Documentation/badge.svg">
+      <img src="https://github.com/daisyaudio/libDaisy/workflows/Documentation/badge.svg">
     </a>
 </p>
 
@@ -22,7 +22,7 @@
     <a href="https://discord.gg/ByHBnMtQTR">
         <img src="https://img.shields.io/badge/join-us%20on%20discord-gray.svg?longCache=true&logo=discord&colorB=purple">
     </a>
-    <a href="https://forum.electro-smith.com/">
+    <a href="https://community.daisy.audio/">
         <img src="https://img.shields.io/badge/chat-daisy%20forum-orange">
     </a>
 </p>
@@ -48,13 +48,13 @@ First off, there are a few ways to clone and initialize the repo (with its submo
 You can do either of the following:
 
 ```sh
-git clone --recursive https://github.com/electro-smith/DaisyExamples
+git clone --recursive https://github.com/daisyaudio/DaisyExamples
 ```
 
 or
 
 ```sh
-git clone https://github.com/electro-smith/DaisyExamples
+git clone https://github.com/daisyaudio/DaisyExamples
 git submodule update --init
 ```
 
@@ -75,7 +75,7 @@ This is the same as going to each library's directory and running `make`.
 This may take a few minutes depending on your computer's hardware. But should have the following output when finished:
 
 ```sh
-$ ./ci/build_libs.sh 
+$ ./ci/build_libs.sh
 building libDaisy . . .
 rm -fR build
 arm-none-eabi-ar: creating build/libdaisy.a
@@ -93,8 +93,8 @@ However, this may also take a few minutes. An individual example can be compiled
 
 ```sh
 cd seed/Blink
-$ make 
-arm-none-eabi-g++  -c -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard  -DUSE_HAL_DRIVER -DSTM32H750xx -DUSE_HAL_DRIVER -DHSE_VALUE=16000000 -DSTM32H750xx  -I../../libdaisy -I../../libdaisy/src/ -I../../libdaisy/src/usbd -I../../libdaisy/Drivers/CMSIS/Include/ -I../../libdaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../libdaisy/Drivers/STM32H7xx_HAL_Driver/Inc/ -I../../libdaisy/Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../../libdaisy/core/ -I../../DaisySP  -O2 -Wall -Wno-missing-attributes -fasm -fdata-sections -ffunction-sections -MMD -MP -MF"build/Blink.d" 
+$ make
+arm-none-eabi-g++  -c -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard  -DUSE_HAL_DRIVER -DSTM32H750xx -DUSE_HAL_DRIVER -DHSE_VALUE=16000000 -DSTM32H750xx  -I../../libdaisy -I../../libdaisy/src/ -I../../libdaisy/src/usbd -I../../libdaisy/Drivers/CMSIS/Include/ -I../../libdaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../libdaisy/Drivers/STM32H7xx_HAL_Driver/Inc/ -I../../libdaisy/Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../../libdaisy/core/ -I../../DaisySP  -O2 -Wall -Wno-missing-attributes -fasm -fdata-sections -ffunction-sections -MMD -MP -MF"build/Blink.d"
 -fno-exceptions -fasm -finline -finline-functions-called-once -fshort-enums -fno-move-loop-invariants -fno-unwind-tables  -std=gnu++14 -Wa,-a,-ad,-alms=build/Blink.lst Blink.cpp -o build/Blink.o
 arm-none-eabi-g++  build/system_stm32h7xx.o build/startup_stm32h750xx.o build/Blink.o   -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard --specs=nano.specs --specs=nosys.specs -T../../libdaisy/core/STM32H750IB_flash.lds -L../../libdaisy/build  -L ../../DaisySP/build -ldaisy -lc -lm -lnosys -ldaisysp -Wl,-Map=build/Blink.map,--cref -Wl,--gc-sections -o build/Blink.elf
 arm-none-eabi-size build/Blink.elf
@@ -106,7 +106,7 @@ arm-none-eabi-objcopy -O binary -S build/Blink.elf build/Blink.bin
 
 ### Flashing an example to the Daisy
 
-The example can be programmed via the [Daisy Web Programmer](https://electro-smith.github.io/Programmer/)
+The example can be programmed via the [Daisy Web Programmer](https://flash.daisy.audio/)
 Or the example can the be programmed on the commandline:
 
 ```sh
@@ -115,6 +115,27 @@ make program-dfu
 # using JTAG/SWD adaptor (like STLink)
 make program
 ```
+
+### Using VS Code
+
+If you're using VS Code, there are some tasks configured to run the above commands from the editor without having to open a terminal.
+
+First, open the DaisyExamples repo as the workspace to have access to the commands.
+
+Once you have the workspace open, you can open the source .cpp file, or Makefile for any of the included examples and build it with the "Terminal->Run Build Task" command (CMD/CTRL + SHIFT + B).
+This will compile the example you currently have selected.
+
+With the same selected file, you can press F5 or "Run->Start Debugging" to start debugging with an ST-Link debug probe.
+
+There is a second debug configuration available for using Segger J-Link debug probes.
+You can select the debug configuration from the Run and Debug panel in VS Code.
+
+In addition to those two commands, you can open the command pallet (CMD/CTRL + P), and type: "task " to see the list of commands that include:
+
+- Clean: removes the build folder for the selected example (runs: `make clean`)
+- Program (DFU): programs the example over USB DFU (runs: `make program-dfu`)
+- Program (Debug Probe): programs the example over a debug probe like an ST-Link (runs: `make program`)
+- Re-Build: cleans, and recompiles the program (useful if you edited header files that may not trigger any change without a full rebuild) (runs: `make clean && make`)
 
 ## Updating the submodules
 

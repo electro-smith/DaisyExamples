@@ -6,14 +6,14 @@ Ben Sergentanis
 
 ## Description
 
-Dual logic gates. Select between AND, OR, XOR, NAND, NOR, and XNOR gates.  
-Each input can be inverted as well.  
-Press the encoder on a number to invert that input. This is denoted with a -.  
-Press the encoder on a gate to enter the submenu and change the gate.  
-Note that the ctrl knobs have an effect, if you want to control the inputs purely with CV, turn the knobs all the way down!  
-Of course, you can also use the knobs to set the inputs high or low without CV.  
+Dual logic gates. Select between AND, OR, XOR, NAND, NOR, and XNOR gates.
+Each input can be inverted as well.
+Press the encoder on a number to invert that input. This is denoted with a -.
+Press the encoder on a gate to enter the submenu and change the gate.
+Note that the ctrl knobs have an effect, if you want to control the inputs purely with CV, turn the knobs all the way down!
+Of course, you can also use the knobs to set the inputs high or low without CV.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/logic)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/logic)
 
 ## Controls
 | Control | Description | Comment |

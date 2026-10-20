@@ -8,7 +8,7 @@ Shensley
 Keyboard based synth with 13 note polyphony, and built in reverb.
 Oscillators are each Bandlimited Saw waves.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/KeyboardTest)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/field/KeyboardTest)
 
 ## Controls
 

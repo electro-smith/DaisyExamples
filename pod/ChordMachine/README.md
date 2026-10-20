@@ -9,7 +9,7 @@ Ben Sergentanis
 ## Description
 A simple sine wave chord machine. Cycle through different chord types and inversions.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/ChordMachine)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/ChordMachine)
 
 ## Controls
 | Control | Description | Comment |
@@ -30,7 +30,7 @@ A simple sine wave chord machine. Cycle through different chord types and invers
   8. Minor/Major seven, Yellow
   9. Diminished seven, Pink
   10. Half diminished seven, Light green
-  
+
 
 
 

@@ -8,7 +8,7 @@ Shensley
 ## Description
 Simple Synth voice with resonant filter, self cycling envelope, and vibrato control.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SynthVoice)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/SynthVoice)
 
 ## Controls
 | Control | Description | Comment |

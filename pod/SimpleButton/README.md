@@ -7,7 +7,7 @@ Shensley
 ## Description:
 Example showing basic usage of pushbutton switches for momentary and latching behavior.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/pod/SimpleButton)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/pod/SimpleButton)
 
 ## Controls:
 | Control | Description |

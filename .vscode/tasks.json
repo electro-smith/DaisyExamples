@@ -4,9 +4,60 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
+            "label": "Build",
             "type": "shell",
-            "command": "make all"
+            "command": "make",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "make clean",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Program (DFU)",
+            "type": "shell",
+            "command": "make program-dfu",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Program (Debug Probe)",
+            "type": "shell",
+            "command": "make program",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Re-Build",
+            "type": "shell",
+            "command": "make clean && make",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+            }
         }
     ]
 }

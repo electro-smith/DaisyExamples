@@ -4,10 +4,10 @@
 
 C.M.Barth (allotrope ijk)
 
-## Description 
+## Description
 Mixer module for stereo and quadraphonic performances that applies final reverb pass to all audio outputs.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/QuadraphonicMixer)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/QuadraphonicMixer)
 
 ## Controls
 | Control | Description | Comment |

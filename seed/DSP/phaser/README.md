@@ -8,4 +8,4 @@ Ben Sergentanis
 
 Demonstrates the phaser effect on a simple bassline.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/seed/phaser)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/seed/phaser)

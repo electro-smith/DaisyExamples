@@ -8,7 +8,7 @@ Shensley
 
 Vegas mode on the LEDs, while all controls' data are sent out via USB.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/GeneralFunctionTest)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/petal/GeneralFunctionTest)
 
 ## TODO
 

@@ -8,7 +8,7 @@ Ben Sergentanis
 ## Description
 White noise with two resonant filters.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/MultiDelay)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/MultiDelay)
 
 ## Controls
 

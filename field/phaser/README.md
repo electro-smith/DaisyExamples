@@ -8,8 +8,8 @@ Ben Sergentanis
 
 Phaser for Daisy Field
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/field/phaser)
-  
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/field/phaser)
+
 ## Controls
 | Control | Description | Comment |
 | --- | --- | --- |

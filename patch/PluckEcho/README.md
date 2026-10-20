@@ -8,7 +8,7 @@ Shensley
 Plucked string synthesizer into lush delay and reverb algorithms.
 Really easy to create unique sonic spaces!
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/patch/PluckEcho)
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/patch/PluckEcho)
 
 ## Controls
 | Control | Description | Comment |

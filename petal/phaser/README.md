@@ -8,8 +8,8 @@ Ben Sergentanis
 
 Phaser for Daisy Petal.
 
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/petal/phaser)
-  
+[Source Code](https://github.com/daisyaudio/DaisyExamples/tree/master/petal/phaser)
+
 ## Controls
 | Control | Description | Comment |
 | --- | --- | --- |
