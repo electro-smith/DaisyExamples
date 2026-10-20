@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_Looper
+TARGET = Looper
 
 # Sources
 CPP_SOURCES = Looper.cpp

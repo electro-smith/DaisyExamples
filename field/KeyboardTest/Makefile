@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_field_keyboard_test
+TARGET = KeyboardTest
 
 USE_DAISYSP_LGPL = 1
 

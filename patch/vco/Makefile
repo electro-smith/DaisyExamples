@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_vco
+TARGET = vco
 
 # Sources
 CPP_SOURCES = ex_vco.cpp

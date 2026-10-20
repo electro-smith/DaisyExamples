@@ -1,5 +1,5 @@
 # Project Name
-TARGET = ex_verb
+TARGET = verb
 
 USE_DAISYSP_LGPL = 1
 
