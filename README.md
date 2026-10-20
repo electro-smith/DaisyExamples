@@ -116,6 +116,27 @@ make program-dfu
 make program
 ```
 
+### Using VS Code
+
+If you're using VS Code, there are some tasks configured to run the above commands from the editor without having to open a terminal.
+
+First, open the DaisyExamples repo as the workspace to have access to the commands.
+
+Once you have the workspace open, you can open the source .cpp file, or Makefile for any of the included examples and build it with the "Terminal->Run Build Task" command (CMD/CTRL + SHIFT + B).
+This will compile the example you currently have selected.
+
+With the same selected file, you can press F5 or "Run->Start Debugging" to start debugging with an ST-Link debug probe.
+
+There is a second debug configuration available for using Segger J-Link debug probes.
+You can select the debug configuration from the Run and Debug panel in VS Code.
+
+In addition to those two commands, you can open the command pallet (CMD/CTRL + P), and type: "task " to see the list of commands that include:
+
+- Clean: removes the build folder for the selected example (runs: `make clean`)
+- Program (DFU): programs the example over USB DFU (runs: `make program-dfu`)
+- Program (Debug Probe): programs the example over a debug probe like an ST-Link (runs: `make program`)
+- Re-Build: cleans, and recompiles the program (useful if you edited header files that may not trigger any change without a full rebuild) (runs: `make clean && make`)
+
 ## Updating the submodules
 
 To pull everything for the repo and submodules:
